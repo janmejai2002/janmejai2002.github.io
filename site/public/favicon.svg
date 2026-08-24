@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="Wabi Sabi">
+  <!-- An ensō: one brush stroke, deliberately left open. The site's whole
+       argument in 32 pixels. Stroke only, so it reads on light and dark tabs. -->
+  <path d="M21.5 6.47 A11 11 0 1 1 10.5 6.47"
+        fill="none" stroke="#D2543F" stroke-width="4.2" stroke-linecap="round" />
+</svg>

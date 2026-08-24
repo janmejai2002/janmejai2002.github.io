@@ -1,5 +1,6 @@
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
+import { rehypeFigure } from './plugins/rehype-figure.mjs';
 
 // GitHub Pages user site → served at the root of janmejai2002.github.io.
 // If you move this to a PROJECT repo instead (e.g. github.com/janmejai2002/wabi-sabi),
@@ -8,5 +9,8 @@ import sitemap from '@astrojs/sitemap';
 export default defineConfig({
   site: 'https://janmejai2002.github.io',
   integrations: [sitemap()],
-  markdown: { shikiConfig: { theme: 'github-dark-dimmed', wrap: true } },
+  markdown: {
+    shikiConfig: { theme: 'github-dark-dimmed', wrap: true },
+    rehypePlugins: [rehypeFigure],
+  },
 });

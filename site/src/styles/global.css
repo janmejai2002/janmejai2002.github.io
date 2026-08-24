@@ -321,6 +321,36 @@ main { flex: 1; padding: 2rem var(--gutter) 6rem; max-width: 64rem; min-width: 0
 .body th { background: var(--stone); font-weight: 700; color: var(--ink); }
 .body hr { border: 0; border-top: 1px solid var(--border); margin: 3rem 0; }
 
+/* ---------- Article imagery ----------
+   Figures are the only image container in article prose. Markdown's bare
+   `![alt](src)` is wrapped by the remark plugin so every picture gets the same
+   frame, and `aspect-ratio` is not needed because <Image> emits width/height. */
+.hero-figure { margin: 2.5rem 0 0; }
+.body figure { margin: 2.5rem 0; }
+.hero-figure img,
+.body figure img,
+.body > p > img {
+  display: block; width: 100%; height: auto;
+  border-radius: 14px; border: 1px solid var(--border);
+  background: var(--card);
+}
+.hero-figure figcaption,
+.body figcaption {
+  margin-top: .7rem; font-size: .8125rem; line-height: 1.55;
+  color: var(--ink-faint); text-align: left;
+}
+.body figcaption a { color: var(--ink-soft); }
+
+/* Diagrams are authored as inline SVG so they read the same tokens as the rest
+   of the page. They carry no background of their own — see the dark mode note
+   in the design system: nothing here may hardcode a colour. */
+.diagram {
+  margin: 2.5rem 0; padding: 1.25rem; border: 1px solid var(--border);
+  border-radius: 14px; background: var(--card); overflow-x: auto;
+}
+.diagram svg { display: block; width: 100%; height: auto; min-width: 30rem; }
+.diagram figcaption { padding-top: .25rem; }
+
 .tldr {
   background: var(--ink); color: var(--paper); padding: 1.5rem;
   border-radius: 16px; margin: 0 0 2.5rem; border-left: 4px solid var(--mizu);

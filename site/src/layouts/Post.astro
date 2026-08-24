@@ -1,14 +1,34 @@
 ---
+import { Image, getImage } from 'astro:assets';
 import Base from './Base.astro';
 
 const { post } = Astro.props;
-const { title, description, pubDate, updatedDate, keywords, readingTime } = post.data;
+const {
+  title,
+  description,
+  pubDate,
+  updatedDate,
+  keywords,
+  readingTime,
+  heroImage,
+  heroAlt,
+  heroCaption,
+  ogImage,
+} = post.data;
 
 const dateLabel = pubDate.toLocaleDateString('en-IN', {
   day: 'numeric',
   month: 'long',
   year: 'numeric',
 });
+
+// Social cards are a fixed 1200x630 crop. Deriving it from the hero at build
+// time means an author never has to hand-make a second image, and the card is
+// still a real file on disk rather than a resize hint to the crawler.
+const card = ogImage ?? heroImage;
+const social = card
+  ? await getImage({ src: card, width: 1200, height: 630, fit: 'cover', format: 'png' })
+  : undefined;
 ---
 
 <Base
@@ -18,6 +38,8 @@ const dateLabel = pubDate.toLocaleDateString('en-IN', {
   pubDate={pubDate}
   updatedDate={updatedDate}
   keywords={keywords}
+  image={social?.src}
+  imageAlt={heroAlt}
   progress={true}
 >
   <article class="article fade-up d2">
@@ -37,6 +59,22 @@ const dateLabel = pubDate.toLocaleDateString('en-IN', {
           <div class="byline__role">Machine Learning Engineer</div>
         </div>
       </div>
+
+      {
+        heroImage && (
+          <figure class="hero-figure">
+            <Image
+              src={heroImage}
+              alt={heroAlt!}
+              widths={[640, 960, 1280]}
+              sizes="(max-width: 46rem) 100vw, 44rem"
+              loading="eager"
+              fetchpriority="high"
+            />
+            {heroCaption && <figcaption>{heroCaption}</figcaption>}
+          </figure>
+        )
+      }
     </header>
 
     <div class="body">

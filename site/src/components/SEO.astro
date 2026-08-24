@@ -6,10 +6,27 @@ export interface Props {
   pubDate?: Date;
   updatedDate?: Date;
   keywords?: string[];
+  /** Path or already-absolute URL of the social card. Falls back site-wide. */
+  image?: string;
+  imageAlt?: string;
 }
-const { title, description, type = 'website', pubDate, updatedDate, keywords = [] } = Astro.props;
+const {
+  title,
+  description,
+  type = 'website',
+  pubDate,
+  updatedDate,
+  keywords = [],
+  image,
+  imageAlt,
+} = Astro.props;
 
 const canonical = new URL(Astro.url.pathname, Astro.site).href;
+// Crawlers will not resolve a relative og:image, so everything is absolutised
+// against `site`. The default card exists so `summary_large_image` is never a
+// promise the page cannot keep.
+const ogImage = new URL(image ?? '/og-default.png', Astro.site).href;
+const ogImageAlt = imageAlt ?? 'Wabi Sabi — applied AI notes by Janmejai Singh Minhas';
 const siteName = 'Wabi Sabi';
 const personId = new URL('/#person', Astro.site).href;
 
@@ -35,6 +52,7 @@ const graph =
           dateModified: (updatedDate ?? pubDate)?.toISOString(),
           author: { '@id': personId },
           publisher: { '@id': personId },
+          image: ogImage,
           mainEntityOfPage: { '@type': 'WebPage', '@id': canonical },
           ...(keywords.length ? { keywords: keywords.join(', ') } : {}),
         },
@@ -70,10 +88,20 @@ const schema = { '@context': 'https://schema.org', '@graph': graph };
 {pubDate && <meta property="article:published_time" content={pubDate.toISOString()} />}
 {updatedDate && <meta property="article:modified_time" content={updatedDate.toISOString()} />}
 
+<meta property="og:image" content={ogImage} />
+<meta property="og:image:alt" content={ogImageAlt} />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content={title} />
 <meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={ogImage} />
+<meta name="twitter:image:alt" content={ogImageAlt} />
 
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="alternate icon" href="/favicon.ico" sizes="32x32" />
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 <link rel="sitemap" href="/sitemap-index.xml" />
 <link rel="alternate" type="application/rss+xml" title={siteName} href={new URL('rss.xml', Astro.site)} />
 
