@@ -1,0 +1,87 @@
+---
+export interface Props {
+  title: string;
+  description: string;
+  type?: 'website' | 'article';
+  pubDate?: Date;
+  updatedDate?: Date;
+  keywords?: string[];
+}
+const { title, description, type = 'website', pubDate, updatedDate, keywords = [] } = Astro.props;
+
+const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const siteName = 'Wabi Sabi';
+const personId = new URL('/#person', Astro.site).href;
+
+const person = {
+  '@type': 'Person',
+  '@id': personId,
+  name: 'Janmejai Singh Minhas',
+  url: Astro.site?.href,
+  jobTitle: 'Machine Learning Engineer',
+  knowsAbout: ['Machine Learning', 'Computer Vision', 'Deep Learning', 'Applied AI', 'MLOps'],
+  sameAs: ['https://linkedin.com/in/janmejai', 'https://github.com/janmejai2002'],
+};
+
+const graph =
+  type === 'article'
+    ? [
+        person,
+        {
+          '@type': 'BlogPosting',
+          headline: title,
+          description,
+          datePublished: pubDate?.toISOString(),
+          dateModified: (updatedDate ?? pubDate)?.toISOString(),
+          author: { '@id': personId },
+          publisher: { '@id': personId },
+          mainEntityOfPage: { '@type': 'WebPage', '@id': canonical },
+          ...(keywords.length ? { keywords: keywords.join(', ') } : {}),
+        },
+      ]
+    : [
+        person,
+        {
+          '@type': 'WebSite',
+          name: siteName,
+          url: Astro.site?.href,
+          author: { '@id': personId },
+        },
+      ];
+
+const schema = { '@context': 'https://schema.org', '@graph': graph };
+---
+
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>{title}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={canonical} />
+<meta name="author" content="Janmejai Singh Minhas" />
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
+{keywords.length > 0 && <meta name="keywords" content={keywords.join(', ')} />}
+
+<meta property="og:type" content={type} />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonical} />
+<meta property="og:site_name" content={siteName} />
+<meta property="og:locale" content="en_IN" />
+{pubDate && <meta property="article:published_time" content={pubDate.toISOString()} />}
+{updatedDate && <meta property="article:modified_time" content={updatedDate.toISOString()} />}
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+
+<link rel="sitemap" href="/sitemap-index.xml" />
+<link rel="alternate" type="application/rss+xml" title={siteName} href={new URL('rss.xml', Astro.site)} />
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+  rel="stylesheet"
+/>
+
+<script type="application/ld+json" set:html={JSON.stringify(schema)} />

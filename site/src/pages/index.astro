@@ -1,0 +1,51 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+
+const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+);
+---
+
+<Base
+  title="Wabi Sabi — Applied AI, in practice"
+  description="Wabi Sabi is a journal on applied machine learning, computer vision and shipping AI systems that survive contact with production. Written by Janmejai Singh Minhas."
+  section="Applied AI"
+>
+  <section class="hero fade-up d2">
+    <span class="hanko">Wabi Sabi</span>
+    <h1>Applied AI, <span class="hl">in practice</span></h1>
+    <p>
+      Notes from building machine learning systems that have to work outside a notebook —
+      what the benchmarks leave out, what breaks in production, and what the research
+      actually says when you read past the abstract.
+    </p>
+  </section>
+
+  <ul class="postlist fade-up d3">
+    {
+      posts.length === 0 ? (
+        <li class="empty">No posts published yet.</li>
+      ) : (
+        posts.map((post) => (
+          <li>
+            <a href={`/blog/${post.id.replace(/\.md$/, '')}/`}>
+              <div class="postlist__head">
+                <time class="meta" datetime={post.data.pubDate.toISOString()}>
+                  {post.data.pubDate.toLocaleDateString('en-IN', {
+                    day: 'numeric',
+                    month: 'short',
+                    year: 'numeric',
+                  })}
+                </time>
+                {post.data.readingTime && <span class="meta">{post.data.readingTime}</span>}
+              </div>
+              <h2 class="postlist__title">{post.data.title}</h2>
+              <p class="postlist__desc">{post.data.description}</p>
+            </a>
+          </li>
+        ))
+      )
+    }
+  </ul>
+</Base>

@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wabi Sabi | Article</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <script>mermaid.initialize({startOnLoad:true});</script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .cyan-highlight {
+                @apply bg-[#00C2D1] text-[#1A2639] px-2 inline-block leading-[1.1] selection:bg-[#1A2639] selection:text-[#00C2D1];
+            }
+            .hanko-pill {
+                @apply inline-flex items-center border-[1.5px] border-[#E05A47] text-[#E05A47] text-[0.65rem] font-bold tracking-[0.1em] uppercase px-[0.6rem] py-[0.2rem] rounded;
+            }
+            .vertical-text {
+                writing-mode: vertical-rl;
+                text-orientation: mixed;
+                transform: rotate(180deg);
+            }
+            .architectural-border {
+                @apply border-[#DCD4C7];
+            }
+            .wabi-sabi-texture {
+                background-color: #F6F4EF;
+                background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.04'/%3E%3C/svg%3E");
+            }
+            .animate-fade-up {
+                animation: fadeUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            .delay-100 { animation-delay: 100ms; }
+            .delay-200 { animation-delay: 200ms; }
+            .delay-300 { animation-delay: 300ms; }
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Thoughtful Animations */
+        .prose-link {
+            @apply relative inline-block text-[#1A2639] font-medium transition-colors duration-300;
+        }
+        .prose-link::after {
+            content: '';
+            @apply absolute left-0 -bottom-0.5 w-full h-[2px] bg-[#00C2D1] origin-right transform scale-x-0 transition-transform duration-300 ease-out;
+        }
+        .prose-link:hover::after {
+            @apply origin-left scale-x-100;
+        }
+        
+        .scroll-reveal {
+            opacity: 0;
+            transform: translateY(15px);
+            transition: all 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+            filter: blur(4px);
+        }
+        .scroll-reveal.revealed {
+            opacity: 1;
+            transform: translateY(0);
+            filter: blur(0);
+        }
+        
+        #reading-progress {
+            @apply fixed top-0 left-0 h-1 bg-[#00C2D1] z-[100] transition-all duration-150 ease-out;
+            width: 0%;
+        }
+
+        /* Prose styling for the article */
+        .article-body p {
+            @apply mb-6 leading-relaxed;
+        }
+        .article-body h2 {
+            @apply text-2xl font-extrabold mt-16 mb-6;
+        }
+    </style>
+</head>
+<body class="antialiased min-h-screen selection:bg-[#00C2D1] selection:text-[#1A2639] font-sans flex justify-center wabi-sabi-texture text-[#1A2639]">
+
+    <!-- Reading Progress Bar -->
+    <div id="reading-progress"></div>
+
+    <!-- Main Wrapper -->
+    <div class="w-full max-w-7xl flex relative">
+        
+        <!-- Left Rail -->
+        <aside class="hidden md:flex flex-col w-16 shrink-0 border-r architectural-border py-8 items-center sticky top-0 h-screen z-50 bg-[#F6F4EF]/80 backdrop-blur-sm animate-fade-up">
+            <!-- Back Button to Index -->
+            <a href="index.html" class="mb-12 w-8 h-8 rounded-full border border-[#1A2639]/20 flex items-center justify-center hover:bg-[#1A2639] hover:text-[#F6F4EF] transition-all transform hover:-translate-x-1 cursor-pointer">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            </a>
+            
+            <div class="vertical-text font-bold text-sm tracking-[0.2em] uppercase whitespace-nowrap opacity-40">
+                Wabi Sabi
+            </div>
+            <div class="mt-auto vertical-text text-[10px] tracking-widest opacity-40 uppercase">
+                Strategy & Ops
+            </div>
+        </aside>
+
+        <!-- Right Content Area -->
+        <main class="flex-1 px-8 md:px-16 pt-8 pb-24 max-w-5xl">
+            
+            <!-- Top Navigation -->
+            <header class="flex justify-end gap-8 pb-6 border-b architectural-border text-[11px] font-bold tracking-widest uppercase opacity-80 animate-fade-up delay-100 sticky top-0 bg-[#F6F4EF]/90 backdrop-blur-md z-40 pt-4">
+                <a href="index.html" class="hover:text-[#00C2D1] transition-colors">Index</a>
+                <a href="#" class="text-[#00C2D1] border-b border-[#00C2D1] pb-1">Strategy</a>
+                <a href="#" class="hover:text-[#00C2D1] transition-colors">Operations</a>
+                <a href="#" class="hover:text-[#00C2D1] transition-colors">Workflows</a>
+            </header>
+
+            <!-- Article Content -->
+            <article class="pt-16 max-w-3xl animate-fade-up delay-200">
+                
+                <header class="mb-12">
+                    <div class="flex items-center gap-4 mb-6">
+                        <div class="hanko-pill cursor-default">Featured Strategy</div>
+                        <span class="text-[10px] font-bold tracking-widest uppercase opacity-40">6 Min Read</span>
+                    </div>
+                    
+                    <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold leading-[1.05] tracking-tight mb-8">
+                        The Build vs. Buy Matrix: <br/> 
+                        Why <span class="cyan-highlight">Open Weights</span> Change the ROI Math
+                    </h1>
+                    <div class="flex items-center gap-4 py-6 border-y architectural-border">
+                        <div class="w-10 h-10 rounded-full bg-[#E3E8E3] border architectural-border overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=100&q=80" alt="Author" class="w-full h-full object-cover mix-blend-multiply grayscale">
+                        </div>
+                        <div>
+                            <div class="font-bold text-sm">Alex Newman</div>
+                            <div class="text-[10px] uppercase tracking-widest opacity-50 font-bold">Automation Architect</div>
+                        </div>
+                    </div>
+                </header>
+
+                <div class="article-body text-[17px] opacity-90">
+                    
+                    <!-- Executive TL;DR Block -->
+                    <div class="bg-[#1A2639] text-[#F6F4EF] p-6 rounded-2xl mb-10 shadow-md border-l-4 border-[#00C2D1]">
+                        <h3 class="text-xs font-bold uppercase tracking-[0.15em] opacity-60 mb-3">Executive TL;DR</h3>
+                        <ul class="list-disc list-inside space-y-2 text-sm leading-relaxed opacity-90">
+                            <li>API dependency (GPT-4, Claude) is a viable start, but creates a margin squeeze at scale.</li>
+                            <li>Llama 3 and Mistral's open-weights models have closed the performance gap for 80% of enterprise workflows.</li>
+                            <li><strong>The new ROI math:</strong> If a workflow generates &gt;$500k/yr in value, fine-tuning an 8B parameter model in-house yields a 3x higher IRR over 24 months than API calls.</li>
+                        </ul>
+                    </div>
+
+                    <p class="font-medium text-xl leading-relaxed mb-10 opacity-100">
+                        The era of the "API wrapper" is closing. As enterprise AI matures from shiny prototype to core infrastructure, the financial realities of renting intelligence are coming into sharp focus.
+                    </p>
+
+                    <p>
+                        Six months ago, the conventional wisdom was simple: build on OpenAI, wait for the models to get cheaper. But the rapid commoditization of <a href="#" class="prose-link">open-weight models</a> has inverted the economics. When a locally hosted 8B parameter model can match GPT-4's performance on highly specific, domain-constrained tasks, the justification for sending your proprietary data over an API vanishes.
+                    </p>
+
+                    <h2>The Break-Even Calculus</h2>
+
+                    <!-- The Cool Stuff: Interactive GEO SEO Block -->
+                    <div class="relative group my-12">
+                        <!-- Decorative background highlight that shifts on hover -->
+                        <div class="absolute -inset-2 bg-[#E3E8E3] rounded-xl opacity-0 group-hover:opacity-50 transition-opacity duration-500 -z-10"></div>
+                        
+                        <div class="border-l-[3px] border-[#00C2D1] pl-6 py-2 relative z-10">
+                            <div class="flex items-center gap-3 mb-3">
+                                <span class="hanko-pill border-[#00C2D1] text-[#00C2D1] group-hover:bg-[#00C2D1] group-hover:text-white transition-colors duration-300">Financial Framework</span>
+                                <span class="text-[10px] font-bold uppercase tracking-widest opacity-40">AI ROI Target</span>
+                            </div>
+                            <p class="text-lg font-semibold m-0 leading-relaxed group-hover:text-black transition-colors duration-300">
+                                **The Wabi Sabi ROI Threshold:** To justify the upfront CapEx of fine-tuning and hosting an open-weight model (approx. $40,000 to $80,000 for a medium-sized enterprise), the targeted workflow must currently generate at least **1.5 million API tokens per day**, or process highly regulated data where API compliance costs exceed $5k/month.
+                            </p>
+                        </div>
+                    </div>
+
+                    <p>
+                        Mathematical proof of why renting intelligence is a trap at scale. The CapEx of fine-tuning is dropping rapidly, while the OpEx of API calls scales linearly with your success. You are being penalized for growth. 
+                    </p>
+
+                    <h2>Implementing the Matrix</h2>
+                    
+                    <p>
+                        System 1 vs System 2 deployment: Implementing a hybrid architecture requires a paradigm shift. We must build routing pipelines that send simple tasks to cheap, local open-weights (System 1), while reserving expensive frontier APIs exclusively for complex reasoning (System 2).
+                    </p>
+                    
+                    <!-- Diagram Cards with Hover States -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 my-12 scroll-reveal">
+                        <div class="bg-[#E8E3D9]/50 border architectural-border rounded-2xl p-8 aspect-[4/3] flex flex-col justify-end hover:bg-[#E8E3D9] active:scale-[0.98] transition-all cursor-pointer group">
+                            <span class="text-[10px] font-bold tracking-widest opacity-40 uppercase mb-2 group-hover:opacity-100 group-hover:text-[#E05A47] transition-colors">Fig 1.</span>
+                            <span class="font-bold text-xl leading-tight">API Monolith<br/><span class="opacity-50 font-normal text-sm">High OpEx</span></span>
+                        </div>
+                        <div class="bg-[#E8E3D9] rounded-2xl p-8 aspect-[4/3] flex flex-col justify-end border-2 border-[#00C2D1] shadow-[0_10px_30px_rgba(0,194,209,0.15)] active:scale-[0.98] transform hover:-translate-y-1 transition-all cursor-pointer group">
+                            <span class="text-[10px] font-bold tracking-widest opacity-40 uppercase mb-2 group-hover:opacity-100 transition-colors">Fig 2.</span>
+                            <span class="font-bold text-xl leading-tight">Hybrid Router<br/><span class="opacity-50 font-normal text-sm">Optimal ROI</span></span>
+                        </div>
+                    </div>
+
+                    <p>
+                        Why imperative vendor lock-in is giving way to declarative, self-optimizing pipelines. The future belongs to those who own the model, rather than those who simply talk to it.
+                    </p>
+
+                </div>
+            </article>
+
+        </main>
+    </div>
+    <!-- Thoughtful Interaction Scripts -->
+    <script>
+        // 1. Reading Progress Bar
+        const progressBar = document.getElementById('reading-progress');
+        window.addEventListener('scroll', () => {
+            const scrollTotal = document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scroll = `${(scrollTotal / height) * 100}%`;
+            progressBar.style.width = scroll;
+        });
+
+        // 2. Scroll Reveal (Blur to Sharp Focus)
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('revealed');
+                    revealObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.15 });
+
+        document.querySelectorAll('.scroll-reveal').forEach(el => revealObserver.observe(el));
+    </script>
+</body>
+</html>

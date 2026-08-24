@@ -1,0 +1,96 @@
+---
+import SEO from '../components/SEO.astro';
+import '../styles/global.css';
+
+export interface Props {
+  title: string;
+  description: string;
+  type?: 'website' | 'article';
+  pubDate?: Date;
+  updatedDate?: Date;
+  keywords?: string[];
+  section?: string;
+  progress?: boolean;
+}
+const { progress = false, section, ...seo } = Astro.props;
+const path = Astro.url.pathname;
+const nav = [
+  { href: '/', label: 'Index' },
+  { href: '/news/', label: 'Archive' },
+  { href: '/about/', label: 'About' },
+];
+const year = new Date().getFullYear();
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <SEO {...seo} />
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+    {progress && <div id="reading-progress"></div>}
+
+    <div class="shell">
+      <aside class="rail fade-up">
+        <a class="rail__home" href="/" aria-label="Back to index">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M19 12H5M12 19l-7-7 7-7" />
+          </svg>
+        </a>
+        <span class="vertical">Wabi Sabi</span>
+        <span class="vertical vertical--foot">{section ?? 'Applied AI'}</span>
+      </aside>
+
+      <main id="main">
+        <nav class="topnav fade-up d1" aria-label="Primary">
+          {nav.map((n) => (
+            <a href={n.href} aria-current={path === n.href ? 'page' : undefined}>{n.label}</a>
+          ))}
+          <a href="/rss.xml">RSS</a>
+        </nav>
+
+        <slot />
+
+        <footer>
+          <span>&copy; {year} Janmejai Singh Minhas</span>
+          <span>
+            <a href="https://github.com/janmejai2002" rel="me noopener">GitHub</a>
+            &nbsp;·&nbsp;
+            <a href="https://linkedin.com/in/janmejai" rel="me noopener">LinkedIn</a>
+          </span>
+        </footer>
+      </main>
+    </div>
+
+    <script>
+      const bar = document.getElementById('reading-progress');
+      if (bar) {
+        const onScroll = () => {
+          const el = document.documentElement;
+          const max = el.scrollHeight - el.clientHeight;
+          bar.style.width = max > 0 ? `${(el.scrollTop / max) * 100}%` : '0%';
+        };
+        addEventListener('scroll', onScroll, { passive: true });
+        onScroll();
+      }
+
+      const targets = document.querySelectorAll('.scroll-reveal');
+      if (targets.length) {
+        const io = new IntersectionObserver(
+          (entries) => {
+            for (const e of entries) {
+              if (e.isIntersecting) {
+                e.target.classList.add('revealed');
+                io.unobserve(e.target);
+              }
+            }
+          },
+          { threshold: 0.15 }
+        );
+        targets.forEach((t) => io.observe(t));
+      }
+    </script>
+  </body>
+</html>

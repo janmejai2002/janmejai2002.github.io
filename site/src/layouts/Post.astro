@@ -1,0 +1,46 @@
+---
+import Base from './Base.astro';
+
+const { post } = Astro.props;
+const { title, description, pubDate, updatedDate, keywords, readingTime } = post.data;
+
+const dateLabel = pubDate.toLocaleDateString('en-IN', {
+  day: 'numeric',
+  month: 'long',
+  year: 'numeric',
+});
+---
+
+<Base
+  title={`${title} — Wabi Sabi`}
+  description={description}
+  type="article"
+  pubDate={pubDate}
+  updatedDate={updatedDate}
+  keywords={keywords}
+  progress={true}
+>
+  <article class="article fade-up d2">
+    <header>
+      <div class="postlist__head" style="margin-bottom:1.5rem">
+        <span class="hanko">Applied AI</span>
+        {readingTime && <span class="meta">{readingTime}</span>}
+        <time class="meta" datetime={pubDate.toISOString()}>{dateLabel}</time>
+      </div>
+
+      <h1 set:html={title} />
+
+      <div class="byline">
+        <div class="byline__avatar" aria-hidden="true">JM</div>
+        <div>
+          <div class="byline__name">Janmejai Singh Minhas</div>
+          <div class="byline__role">Machine Learning Engineer</div>
+        </div>
+      </div>
+    </header>
+
+    <div class="body">
+      <slot />
+    </div>
+  </article>
+</Base>

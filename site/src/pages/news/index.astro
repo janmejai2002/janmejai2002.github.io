@@ -1,0 +1,494 @@
+---
+import Base from '../../layouts/Base.astro';
+import news from '../../data/news.json';
+
+type Item = {
+  headline: string;
+  date: string;
+  category: string;
+  summary: string;
+  angle: string;
+  source: string | null;
+};
+
+const items = (news as Item[]).slice().sort((a, b) => b.date.localeCompare(a.date));
+
+const categories = [...new Set(items.map((i) => i.category))].sort();
+const counts = Object.fromEntries(
+  categories.map((c) => [c, items.filter((i) => i.category === c).length])
+);
+
+const latest = items[0]?.date;
+const oldest = items.at(-1)?.date;
+
+const fmt = (iso: string) =>
+  new Date(iso + 'T00:00:00').toLocaleDateString('en-IN', {
+    day: 'numeric',
+    month: 'short',
+    year: 'numeric',
+  });
+
+const fmtLong = (iso: string) =>
+  new Date(iso + 'T00:00:00').toLocaleDateString('en-IN', {
+    weekday: 'long',
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  });
+
+const host = (url: string | null) => {
+  if (!url) return null;
+  try {
+    return new URL(url).hostname.replace(/^www\./, '');
+  } catch {
+    return null;
+  }
+};
+
+// group by date for the day-divider rhythm
+const byDate = items.reduce<Record<string, Item[]>>((acc, i) => {
+  (acc[i.date] ??= []).push(i);
+  return acc;
+}, {});
+const dates = Object.keys(byDate).sort((a, b) => b.localeCompare(a));
+
+const slug = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+---
+
+<Base
+  title="Interview News Archive — Wabi Sabi"
+  description={`A daily business-news digest for Indian B-school interview prep. ${items.length} stories across Finance, Marketing, Operations, Product Management and Consulting — each with the angle an interviewer would actually push on.`}
+  section="Archive"
+  keywords={[
+    'MBA interview preparation',
+    'business news for B-school interviews',
+    'current affairs for MBA placements',
+    'WAT GD PI topics India',
+  ]}
+>
+  <section class="hero fade-up d2" style="padding-bottom:2rem">
+    <span class="hanko">Archive</span>
+    <h1>Interview <span class="hl">News Archive</span></h1>
+    <p>
+      A daily business-news digest for Indian B-school placement prep. Each card carries the
+      story, and — more usefully — the angle an interviewer is likely to push on. Filter by
+      function, sort it, or just scroll.
+    </p>
+    <p class="meta" style="margin-top:1.5rem">
+      {items.length} entries &nbsp;·&nbsp; {oldest && fmt(oldest)} — {latest && fmt(latest)}
+    </p>
+  </section>
+
+  <div class="controls fade-up d3" role="region" aria-label="Filter and sort">
+    <div class="chips" role="group" aria-label="Filter by category">
+      <button class="chip is-on" data-cat="all" aria-pressed="true">
+        All <span class="chip__n">{items.length}</span>
+      </button>
+      {
+        categories.map((c) => (
+          <button class={`chip chip--${slug(c)}`} data-cat={c} aria-pressed="false">
+            {c} <span class="chip__n">{counts[c]}</span>
+          </button>
+        ))
+      }
+    </div>
+
+    <div class="controls__row">
+      <label class="field">
+        <span class="sr-only">Search headlines and summaries</span>
+        <input type="search" id="q" placeholder="Search the archive…" autocomplete="off" />
+      </label>
+
+      <label class="field field--sort">
+        <span class="sr-only">Sort by</span>
+        <select id="sort">
+          <option value="new">Newest first</option>
+          <option value="old">Oldest first</option>
+          <option value="cat">Group by function</option>
+          <option value="az">Headline A–Z</option>
+        </select>
+      </label>
+    </div>
+
+    <p class="tally" id="tally" aria-live="polite"></p>
+  </div>
+
+  <div id="archive">
+    {
+      dates.map((d) => (
+        <section class="day" data-date={d}>
+          <h2 class="day__label">
+            <time datetime={d}>{fmtLong(d)}</time>
+            <span class="day__rule" aria-hidden="true" />
+          </h2>
+          <div class="cards">
+            {byDate[d].map((i) => (
+              <article
+                class={`card card--${slug(i.category)}`}
+                data-cat={i.category}
+                data-date={i.date}
+                data-headline={i.headline.toLowerCase()}
+                data-text={`${i.headline} ${i.summary} ${i.angle}`.toLowerCase()}
+              >
+                <div class="card__top">
+                  <span class="tag">{i.category}</span>
+                  <time class="meta" datetime={i.date}>{fmt(i.date)}</time>
+                </div>
+
+                <h3 class="card__h">{i.headline}</h3>
+                <p class="card__sum">{i.summary}</p>
+
+                <div class="card__angle">
+                  <span class="card__angle-k">Interview angle</span>
+                  <p>{i.angle}</p>
+                </div>
+
+                {i.source && (
+                  <a class="card__src" href={i.source} target="_blank" rel="noopener noreferrer">
+                    {host(i.source)}
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                      stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <path d="M7 17L17 7M17 7H8M17 7v9" />
+                    </svg>
+                  </a>
+                )}
+              </article>
+            ))}
+          </div>
+        </section>
+      ))
+    }
+  </div>
+
+  <p class="noresults" id="noresults" hidden>
+    Nothing matches that. <button type="button" id="reset">Clear filters</button>
+  </p>
+</Base>
+
+<style>
+  .controls {
+    position: sticky;
+    top: 3.1rem;
+    z-index: 30;
+    background: rgba(246, 244, 239, 0.94);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
+    padding: 1rem 0 0.85rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 0.85rem;
+  }
+
+  .chip {
+    font: inherit;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0.35rem 0.7rem;
+    border-radius: 999px;
+    border: 1.5px solid var(--border);
+    background: transparent;
+    color: var(--ink);
+    cursor: pointer;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+  .chip:hover { border-color: var(--ink); }
+  .chip__n { opacity: 0.4; font-variant-numeric: tabular-nums; }
+  .chip.is-on {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: var(--paper);
+  }
+  .chip.is-on .chip__n { opacity: 0.55; }
+
+  /* category accents, matching the Notion select colours */
+  .chip--finance.is-on { background: #2F6B4F; border-color: #2F6B4F; }
+  .chip--marketing.is-on { background: #2C5A87; border-color: #2C5A87; }
+  .chip--operations.is-on { background: #9C5A22; border-color: #9C5A22; }
+  .chip--product-management.is-on { background: #5B3E86; border-color: #5B3E86; }
+  .chip--consulting.is-on { background: #A03A2E; border-color: #A03A2E; }
+
+  .controls__row { display: flex; gap: 0.6rem; flex-wrap: wrap; }
+  .field { flex: 1 1 12rem; display: block; }
+  .field--sort { flex: 0 0 auto; }
+
+  .field input,
+  .field select {
+    font: inherit;
+    font-size: 0.875rem;
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--paper);
+    color: var(--ink);
+  }
+  .field input:focus-visible,
+  .field select:focus-visible,
+  .chip:focus-visible {
+    outline: 2px solid var(--cyan);
+    outline-offset: 2px;
+  }
+
+  .tally {
+    margin: 0.7rem 0 0;
+    font-size: 0.625rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    opacity: 0.4;
+  }
+
+  .sr-only {
+    position: absolute;
+    width: 1px; height: 1px;
+    padding: 0; margin: -1px;
+    overflow: hidden; clip: rect(0 0 0 0);
+    white-space: nowrap; border: 0;
+  }
+
+  .day { margin-bottom: 3rem; }
+  .day__label {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    opacity: 0.45;
+    margin: 0 0 1.25rem;
+  }
+  .day__rule { flex: 1; height: 1px; background: var(--border); }
+
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(19rem, 1fr));
+    gap: 1rem;
+  }
+
+  .card {
+    display: flex;
+    flex-direction: column;
+    background: var(--stone);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--border);
+    border-radius: 14px;
+    padding: 1.15rem 1.25rem 1rem;
+    transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.25s;
+  }
+  .card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 28px rgba(26, 38, 57, 0.09);
+  }
+
+  .card--finance { border-left-color: #2F6B4F; }
+  .card--marketing { border-left-color: #2C5A87; }
+  .card--operations { border-left-color: #9C5A22; }
+  .card--product-management { border-left-color: #5B3E86; }
+  .card--consulting { border-left-color: #A03A2E; }
+
+  .card__top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin-bottom: 0.7rem;
+  }
+
+  .tag {
+    font-size: 0.5625rem;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    background: rgba(26, 38, 57, 0.07);
+  }
+  .card--finance .tag { color: #2F6B4F; background: rgba(47, 107, 79, 0.12); }
+  .card--marketing .tag { color: #2C5A87; background: rgba(44, 90, 135, 0.12); }
+  .card--operations .tag { color: #9C5A22; background: rgba(156, 90, 34, 0.12); }
+  .card--product-management .tag { color: #5B3E86; background: rgba(91, 62, 134, 0.12); }
+  .card--consulting .tag { color: #A03A2E; background: rgba(160, 58, 46, 0.12); }
+
+  .card__h {
+    font-size: 1rem;
+    font-weight: 800;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    margin: 0 0 0.55rem;
+    text-wrap: balance;
+  }
+
+  .card__sum {
+    font-size: 0.8125rem;
+    line-height: 1.6;
+    opacity: 0.78;
+    margin: 0 0 0.9rem;
+  }
+
+  .card__angle {
+    margin-top: auto;
+    padding-top: 0.85rem;
+    border-top: 1px dashed var(--border);
+  }
+  .card__angle-k {
+    display: block;
+    font-size: 0.5625rem;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--hanko);
+    margin-bottom: 0.3rem;
+  }
+  .card__angle p {
+    margin: 0;
+    font-size: 0.8125rem;
+    line-height: 1.55;
+    font-weight: 500;
+  }
+
+  .card__src {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    margin-top: 0.85rem;
+    font-size: 0.625rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    opacity: 0.45;
+    text-decoration: none;
+    transition: opacity 0.2s, color 0.2s;
+    align-self: flex-start;
+  }
+  .card__src:hover { opacity: 1; color: var(--cyan); }
+
+  .noresults {
+    padding: 3rem 0;
+    opacity: 0.6;
+    font-size: 0.9375rem;
+  }
+  .noresults button {
+    font: inherit;
+    background: none;
+    border: 0;
+    border-bottom: 1.5px solid var(--cyan);
+    color: var(--ink);
+    cursor: pointer;
+    padding: 0;
+  }
+
+  @media (max-width: 640px) {
+    .controls { top: 3rem; }
+    .cards { grid-template-columns: 1fr; }
+  }
+</style>
+
+<script>
+  const archive = document.getElementById('archive')!;
+  const q = document.getElementById('q') as HTMLInputElement;
+  const sort = document.getElementById('sort') as HTMLSelectElement;
+  const tally = document.getElementById('tally')!;
+  const noresults = document.getElementById('noresults')!;
+  const chips = [...document.querySelectorAll<HTMLButtonElement>('.chip')];
+  const days = [...archive.querySelectorAll<HTMLElement>('.day')];
+  const cards = [...archive.querySelectorAll<HTMLElement>('.card')];
+
+  let cat = 'all';
+
+  const apply = () => {
+    const term = q.value.trim().toLowerCase();
+    let shown = 0;
+
+    for (const card of cards) {
+      const okCat = cat === 'all' || card.dataset.cat === cat;
+      const okTerm = !term || (card.dataset.text ?? '').includes(term);
+      const show = okCat && okTerm;
+      card.hidden = !show;
+      if (show) shown++;
+    }
+
+    // hide day headers whose cards are all filtered out
+    for (const day of days) {
+      const any = [...day.querySelectorAll<HTMLElement>('.card')].some((c) => !c.hidden);
+      day.hidden = !any;
+    }
+
+    const grouped = sort.value === 'cat';
+    for (const day of days) day.querySelector('.day__label')!.toggleAttribute('hidden', grouped);
+
+    tally.textContent = `Showing ${shown} of ${cards.length}`;
+    noresults.hidden = shown > 0;
+  };
+
+  const reorder = () => {
+    const mode = sort.value;
+
+    if (mode === 'new' || mode === 'old') {
+      const ordered = [...days].sort((a, b) =>
+        mode === 'new'
+          ? b.dataset.date!.localeCompare(a.dataset.date!)
+          : a.dataset.date!.localeCompare(b.dataset.date!)
+      );
+      ordered.forEach((d) => archive.appendChild(d));
+      // restore each day's own cards to date order
+      for (const day of days) {
+        const grid = day.querySelector('.cards')!;
+        [...grid.querySelectorAll<HTMLElement>('.card')]
+          .sort((a, b) => a.dataset.headline!.localeCompare(b.dataset.headline!))
+          .forEach((c) => grid.appendChild(c));
+      }
+      return;
+    }
+
+    // 'cat' and 'az' flatten everything into the first day's grid
+    const first = days[0];
+    const grid = first.querySelector('.cards')!;
+    const all = [...cards];
+
+    all.sort((a, b) =>
+      mode === 'cat'
+        ? a.dataset.cat!.localeCompare(b.dataset.cat!) ||
+          b.dataset.date!.localeCompare(a.dataset.date!)
+        : a.dataset.headline!.localeCompare(b.dataset.headline!)
+    );
+
+    all.forEach((c) => grid.appendChild(c));
+    archive.prepend(first);
+  };
+
+  chips.forEach((chip) =>
+    chip.addEventListener('click', () => {
+      cat = chip.dataset.cat!;
+      chips.forEach((c) => {
+        const on = c === chip;
+        c.classList.toggle('is-on', on);
+        c.setAttribute('aria-pressed', String(on));
+      });
+      apply();
+    })
+  );
+
+  q.addEventListener('input', apply);
+  sort.addEventListener('change', () => {
+    reorder();
+    apply();
+  });
+
+  document.getElementById('reset')!.addEventListener('click', () => {
+    q.value = '';
+    chips[0].click();
+  });
+
+  apply();
+</script>
