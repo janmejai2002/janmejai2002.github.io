@@ -4,9 +4,9 @@ import Base from '../layouts/Base.astro';
 
 <Base
   title="About — Janmejai Singh Minhas"
-  description="Janmejai Singh Minhas is a machine learning engineer working on computer vision and applied AI, with published research in Expert Systems with Applications and Multimedia Tools and Applications."
+  description="Janmejai Singh Minhas — machine learning engineer, frontier-model red teamer (#352 on Gray Swan Arena), and published computer-vision researcher."
   section="Colophon"
-  keywords={['Janmejai Singh Minhas', 'machine learning engineer', 'computer vision', 'applied AI']}
+  keywords={['Janmejai Singh Minhas', 'AI red teaming', 'Gray Swan Arena', 'machine learning engineer', 'computer vision']}
 >
   <section class="about fade-up d2">
     <span class="hanko">Colophon</span>
@@ -14,10 +14,11 @@ import Base from '../layouts/Base.astro';
 
     <div class="body">
       <p>
-        I build machine learning systems that have to work outside a notebook. Most of my
-        work has lived in computer vision — medical imaging, mostly — where the gap between
-        a good validation score and something a clinician would actually trust is where all
-        the real engineering happens.
+        I build machine learning systems that have to work outside a notebook, and I break
+        other people's. Most of my engineering has lived in computer vision — medical
+        imaging, mostly — where the gap between a good validation score and something a
+        clinician would actually trust is where all the real work happens. These days I
+        spend as much time red-teaming frontier models as training them.
       </p>
 
       <p>
@@ -26,6 +27,35 @@ import Base from '../layouts/Base.astro';
         model meets data it was not curated for, what the research actually claims once you
         read past the abstract, and what a deployment costs when you account for the parts
         nobody benchmarks.
+      </p>
+
+      <h2>Red teaming</h2>
+
+      <p>
+        I red-team frontier models on the
+        <a href="https://app.grayswan.ai/" rel="noopener">Gray Swan Arena</a> — the platform
+        founded by CMU's Zico Kolter and Matt Fredrikson that runs adversarial testing for
+        OpenAI, Anthropic, Google DeepMind, Meta and xAI, alongside the UK AI Safety
+        Institute. Roughly 15,000 people compete to break models before anyone else does.
+      </p>
+
+      <p>
+        I sit at <strong>#352 globally</strong> with <strong>36 unique breaks</strong> and
+        1,240 points across 414 submissions, and I am in the Winner's Circle. Most of that
+        work has been in prompt injection and safeguard evasion:
+      </p>
+
+      <ul>
+        <li><strong>Safeguards</strong> — 86 breaks, ranked #117 of 590 participants.</li>
+        <li><strong>Indirect Prompt Injection</strong> — 26 breaks, ranked #59 of 377.</li>
+        <li><strong>Indirect Prompt Injection Q1 2026</strong> — 11 breaks, ranked #85 of 237.</li>
+      </ul>
+
+      <p>
+        This is the most direct version of what the rest of this site is about. A benchmark
+        tells you where a model succeeds; red teaming tells you where it fails, and the
+        failures are considerably more informative. You learn quickly that a guardrail which
+        holds against the obvious attack often collapses against a boring one.
       </p>
 
       <h2>Research</h2>
@@ -89,6 +119,13 @@ import Base from '../layouts/Base.astro';
           <div class="fact__v">
             2 peer-reviewed papers
             <span>Elsevier · Springer</span>
+          </div>
+        </div>
+        <div class="fact" style="--accent:var(--hanko);--tint:var(--wash-hanko)">
+          <div class="fact__k">Red teaming</div>
+          <div class="fact__v">
+            #352 globally · Gray Swan
+            <span>36 unique breaks · Winner's Circle</span>
           </div>
         </div>
         <div class="fact" style="--accent:var(--plum);--tint:var(--wash-plum)">
