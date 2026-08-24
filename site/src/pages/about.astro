@@ -17,6 +17,18 @@ const timeline = [
     body: 'Prompt injection and safeguard evasion against models from OpenAI, Anthropic, Google DeepMind, Meta and xAI.',
   },
   {
+    when: '2026',
+    what: 'Summer Intern — Risk Modelling',
+    where: 'American Express · Bangalore',
+    accent: 'plum',
+    body: 'Two months inside the credit risk function, on the modelling side rather than the reporting side.',
+    points: [
+      'Improved the performance of credit risk rating models covering both short- and long-term horizons for the Business portfolio of Card Members. The gains came from variable design rather than model choice — auditing the variables the models were trained on and reworking how they were constructed. The project sat under Variable Design Practices for Structural and Liquidity Risk Models.',
+      'Built custom GPTs that answer questions against dense internal model documentation, using prompting techniques aimed at suppressing hallucination and keeping answers traceable to the source document.',
+      'Spent the surrounding time learning the card economy — how the closed-loop network, interchange and risk appetite actually fit together — through the sessions Amex ran for interns.',
+    ],
+  },
+  {
     when: '2023',
     what: 'Software Developer, Python',
     where: 'MARG ERP · New Delhi',
@@ -66,13 +78,14 @@ const papers = [
 
 <Base
   title="About — Janmejai Singh Minhas"
-  description="Janmejai Singh Minhas — machine learning engineer, frontier-model red teamer (#352 on Gray Swan Arena), and published computer-vision researcher."
+  description="Janmejai Singh Minhas — ML engineer and frontier-model red teamer (#352, Gray Swan Arena). Credit risk modelling at American Express; published computer-vision research."
   section="Colophon"
   keywords={[
     'Janmejai Singh Minhas',
     'AI red teaming',
     'Gray Swan Arena',
     'machine learning engineer',
+    'credit risk modelling',
     'computer vision',
   ]}
 >
@@ -85,7 +98,8 @@ const papers = [
       other people's. Most of my engineering has been in computer vision, medical imaging
       mostly, where the gap between a good validation score and something a clinician would
       actually trust is where the real work happens. These days I spend as much time
-      red-teaming frontier models as training them.
+      red-teaming frontier models as training them, and my most recent stint was on credit
+      risk models at American Express.
     </p>
   </section>
 
@@ -205,6 +219,15 @@ const papers = [
               <h3>{t.what}</h3>
               <span class="tl__where">{t.where}</span>
               <p>{t.body}</p>
+              {
+                t.points && (
+                  <ul class="tl__points">
+                    {t.points.map((pt) => (
+                      <li>{pt}</li>
+                    ))}
+                  </ul>
+                )
+              }
             </div>
           </li>
         ))
@@ -390,6 +413,16 @@ const papers = [
   .tl__body h3 { font-size: .95rem; font-weight: 700; margin: 0 0 .2rem; color: var(--ink); }
   .tl__where { font-size: .75rem; color: var(--ink-faint); font-weight: 600; }
   .tl__body p { margin: .55rem 0 0; font-size: .875rem; line-height: 1.62; color: var(--ink-soft); }
+  .tl__points { margin: .7rem 0 0; padding: 0; list-style: none; display: grid; gap: .5rem; }
+  .tl__points li {
+    position: relative; padding-left: 1.1rem;
+    font-size: .8125rem; line-height: 1.6; color: var(--ink-soft);
+  }
+  .tl__points li::before {
+    content: ''; position: absolute; left: 0; top: .52em;
+    width: 5px; height: 5px; border-radius: 999px;
+    background: var(--accent); opacity: .75;
+  }
 
   /* ---------- Links ---------- */
   .links { display: flex; flex-wrap: wrap; gap: .5rem; }
