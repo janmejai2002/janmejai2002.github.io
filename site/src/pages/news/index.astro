@@ -259,6 +259,14 @@ const slug = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-');
   .day__rule { flex: 1; height: 1px; background: var(--border); }
   .day__n { font-variant-numeric: tabular-nums; opacity: .7; }
 
+  /* The UA's `[hidden]{display:none}` loses to any author `display` rule of
+     equal specificity, so every element we hide via the hidden attribute has
+     to opt out explicitly. Without this the filter sets hidden and nothing
+     visibly changes. */
+  .card[hidden],
+  .day[hidden],
+  .day__label[hidden] { display: none !important; }
+
   /* ---------- Cards ---------- */
   .cards {
     display: grid;
