@@ -82,6 +82,8 @@ const year = new Date().getFullYear();
             <a href="https://github.com/janmejai2002" rel="me noopener">GitHub</a>
             &nbsp;·&nbsp;
             <a href="https://linkedin.com/in/janmejai" rel="me noopener">LinkedIn</a>
+            &nbsp;·&nbsp;
+            <a href="/rss.xml">RSS</a>
           </span>
         </footer>
       </main>
@@ -97,6 +99,21 @@ const year = new Date().getFullYear();
         };
         addEventListener('scroll', onScroll, { passive: true });
         onScroll();
+      }
+
+      // The nav grows taller on mobile (bigger touch targets), so anything
+      // sticky below it must track the real height, not a hardcoded rem value.
+      const navEl = document.querySelector('.topnav');
+      if (navEl) {
+        const setNavH = () => {
+          document.documentElement.style.setProperty(
+            '--nav-h',
+            `${Math.round(navEl.getBoundingClientRect().height)}px`
+          );
+        };
+        setNavH();
+        if ('ResizeObserver' in window) new ResizeObserver(setNavH).observe(navEl);
+        addEventListener('resize', setNavH, { passive: true });
       }
 
       const toggle = document.getElementById('themetoggle');

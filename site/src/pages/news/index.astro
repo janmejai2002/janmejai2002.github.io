@@ -127,7 +127,7 @@ const slug = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-');
   <div id="archive">
     {
       dates.map((d) => (
-        <section class="day" data-date={d}>
+        <section class="day" data-date={d} style={`--n:${byDate[d].length}`}>
           <h2 class="day__label">
             <span class="day__dot" aria-hidden="true" />
             <time datetime={d}>{fmtLong(d)}</time>
@@ -186,7 +186,7 @@ const slug = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-');
 <style>
   /* ---------- Controls ---------- */
   .controls {
-    position: sticky; top: 3.35rem; z-index: 30;
+    position: sticky; top: var(--nav-h, 3.35rem); z-index: 30;
     background: color-mix(in srgb, var(--paper) 94%, transparent);
     backdrop-filter: blur(12px);
     border-bottom: 1px solid var(--border);
@@ -239,10 +239,17 @@ const slug = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-');
   /* ---------- Day groups ---------- */
   .day {
     margin-bottom: 2.75rem;
-    /* 33 groups / 221 cards — skip layout+paint for offscreen days */
+    /* 33 groups / 221 cards — skip layout+paint for offscreen days.
+       The placeholder MUST scale with the card count: a flat estimate made a
+       21-card day claim the same height as a 2-card day, so the scroll position
+       lurched every time a group actually rendered. --n is the card count;
+       --card-h is the per-card height at this breakpoint. */
+    --card-h: 16.5rem;
     content-visibility: auto;
-    contain-intrinsic-size: auto 34rem;
+    contain-intrinsic-size: auto calc(var(--n, 4) * var(--card-h) + 3.5rem);
   }
+  @media (min-width: 768px) { .day { --card-h: 9rem; } }
+  @media (min-width: 1100px) { .day { --card-h: 6.5rem; } }
   .day__label {
     display: flex; align-items: center; gap: .75rem;
     font-size: .625rem; font-weight: 800; letter-spacing: .15em;
@@ -347,7 +354,7 @@ const slug = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-');
   }
 
   @media (max-width: 640px) {
-    .controls { top: 3.2rem; padding-top: .75rem; }
+    .controls { top: var(--nav-h, 3.2rem); padding-top: .75rem; }
     .cards { grid-template-columns: 1fr; }
     .day__label { gap: .5rem; }
     .field--sort { flex: 1 1 100%; }
@@ -359,7 +366,7 @@ const slug = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-');
       scroll-snap-type: x proximity;
       -webkit-overflow-scrolling: touch;
       scrollbar-width: none;
-      margin-inline: -1.25rem; padding-inline: 1.25rem;
+      margin-inline: calc(var(--gutter) * -1); padding-inline: var(--gutter);
     }
     .chips::-webkit-scrollbar { display: none; }
     .chip {

@@ -42,6 +42,7 @@
   --font: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
   --serif: 'Newsreader', ui-serif, Georgia, 'Times New Roman', serif;
   --measure: 44rem;
+  --gutter: 1.25rem;
 }
 
 /* System dark — guarded so an explicit light choice still wins */
@@ -162,8 +163,8 @@ img { max-width: 100%; height: auto; }
 }
 .vertical--foot { margin-top: auto; font-size: .625rem; letter-spacing: .15em; }
 
-main { flex: 1; padding: 2rem 1.25rem 6rem; max-width: 64rem; min-width: 0; }
-@media (min-width: 768px) { main { padding: 2rem 4rem 6rem; } }
+main { flex: 1; padding: 2rem var(--gutter) 6rem; max-width: 64rem; min-width: 0; }
+@media (min-width: 768px) { :root { --gutter: 4rem; } }
 
 /* ---------- Nav ---------- */
 .topnav {
@@ -388,6 +389,17 @@ footer a:hover { color: var(--mizu); }
   .themetoggle { width: 44px; height: 44px; }
   .topnav { gap: 1.1rem; }
   .topnav a { padding-block: .6rem; }
+}
+
+/* Narrow phones: five links + a toggle overflow at 320px, which makes the
+   browser scale the whole page down. RSS lives in the footer instead. */
+@media (max-width: 30rem) {
+  .topnav { gap: .8rem; letter-spacing: .1em; }
+  .topnav a[href='/rss.xml'] { display: none; }
+  :root { --gutter: 1rem; }
+}
+@media (max-width: 22rem) {
+  .topnav { gap: .6rem; font-size: .625rem; }
 }
 
 .skip { position: absolute; left: -9999px; }
