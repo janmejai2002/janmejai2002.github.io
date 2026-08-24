@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://janmejai.dev/sitemap-index.xml
+Sitemap: https://janmejai2002.github.io/sitemap-index.xml

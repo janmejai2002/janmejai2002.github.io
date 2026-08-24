@@ -1,13 +1,5 @@
 [
   {
-    "headline": "Nvidia's CEO rushes to Taiwan to secure AI chip capacity from TSMC",
-    "date": "2026-08-23",
-    "category": "Operations",
-    "summary": "Jensen Huang traveled to Taiwan for closed-door talks with TSMC to lock down next-generation AI chip capacity, amid reports of AI server price hikes of over 15% driven by rising memory costs.",
-    "angle": "A sharp example of supply-constrained capacity allocation and single-source vendor dependency risk.",
-    "source": "https://finance.biggo.com/news/0cbc7540-c6ca-49a0-b1c6-522d99889d5e"
-  },
-  {
     "headline": "Lahori Zeera reclaims \"thanda\" from Coca-Cola with newspaper takeover",
     "date": "2026-08-23",
     "category": "Marketing",
@@ -16,12 +8,12 @@
     "source": "https://www.afaqs.com/news/advertising/lahori-zeeras-latest-ad-puts-desi-thanda-against-the-mncs-12421756"
   },
   {
-    "headline": "RBI's dollar-swap facility pulls in $72.85 billion",
-    "date": "2026-08-22",
-    "category": "Finance",
-    "summary": "The RBI's special USD-INR forex swap facility, opened in June to shore up the rupee, had attracted $72.85 billion in inflows by August 21 — led by FCNR(B) deposits — as the window nears its August 31 deadline for bank deposits.",
-    "angle": "A case study in unconventional RBI tools to defend the rupee without burning forex reserves or hiking rates outright.",
-    "source": "https://www.business-standard.com/finance/news/rbi-forex-swap-facility-attracts-72-85-billion-inflows-as-of-august-21-126082200553_1.html"
+    "headline": "Nvidia's CEO rushes to Taiwan to secure AI chip capacity from TSMC",
+    "date": "2026-08-23",
+    "category": "Operations",
+    "summary": "Jensen Huang traveled to Taiwan for closed-door talks with TSMC to lock down next-generation AI chip capacity, amid reports of AI server price hikes of over 15% driven by rising memory costs.",
+    "angle": "A sharp example of supply-constrained capacity allocation and single-source vendor dependency risk.",
+    "source": "https://finance.biggo.com/news/0cbc7540-c6ca-49a0-b1c6-522d99889d5e"
   },
   {
     "headline": "Flipkart's quick-commerce arm nearly catches Swiggy Instamart",
@@ -32,6 +24,14 @@
     "source": "https://techcrunch.com/2026/08/22/two-years-after-launch-walmarts-flipkart-is-closing-in-on-indias-quick-commerce-leaders/"
   },
   {
+    "headline": "RBI’s dollar-swap facility pulls in $72.85 billion",
+    "date": "2026-08-22",
+    "category": "Finance",
+    "summary": "The RBI’s special USD-INR forex swap facility, opened in June to shore up the rupee, had attracted $72.85 billion in inflows by August 21 — led by FCNR(B) deposits — as the window nears its August 31 deadline for bank deposits.",
+    "angle": "A case study in unconventional RBI tools to defend the rupee without burning forex reserves or hiking rates outright.",
+    "source": "https://www.business-standard.com/finance/news/rbi-forex-swap-facility-attracts-72-85-billion-inflows-as-of-august-21-126082200553_1.html"
+  },
+  {
     "headline": "Vadhavan mega-port project advances with global dredging bids",
     "date": "2026-08-22",
     "category": "Operations",
@@ -40,44 +40,12 @@
     "source": "https://ibgnews.com/2026/08/22/vadhavan-port-indias-ambitious-deep-draft-maritime-gateway-takes-shape/"
   },
   {
-    "headline": "Reddit tests AI-narrated audio and video for text posts",
+    "headline": "Acer signs Akshay Kumar to front its push into smart-home appliances",
     "date": "2026-08-21",
     "category": "Marketing",
-    "summary": "Reddit is testing AI-narrated audio and video versions of select text posts, letting users toggle between 'Read' and 'Play,' as it tries to reclaim the viral 'Reddit stories' format that has thrived on TikTok and YouTube.",
-    "angle": "A content-format innovation story — useful for discussing how brands and platforms adapt content strategy to AI-native formats and attention competition.",
-    "source": "https://bestmediainfo.com/mediainfo/advertising/top-advertising-marketing-and-media-news-headlines-of-today-august-21-2026-12400886"
-  },
-  {
-    "headline": "India's composite PMI rises to 54.6 in August as manufacturing cools",
-    "date": "2026-08-21",
-    "category": "Operations",
-    "summary": "India's HSBC Flash Composite PMI rose to 54.6 in August from July's 54.3, as services growth offset a manufacturing slowdown; the index has stayed above 50 for 61 straight months but posted its second-weakest reading since March 2022.",
-    "angle": "A go-to 'state of the economy' data point — can the candidate explain what a PMI reading signals and why the services-manufacturing divergence matters for India's growth mix.",
-    "source": "https://www.business-standard.com/economy/news/india-private-sector-pmi-august-services-manufacturing-hsbc-126082100396_1.html"
-  },
-  {
-    "headline": "CCPA fines Amazon Rs 1 lakh over fake 'Ram Mandir Prasad' listings",
-    "date": "2026-08-21",
-    "category": "Marketing",
-    "summary": "India's consumer protection authority fined Amazon Seller Services for hosting listings that sold ordinary sweets as authorised 'Shri Ram Mandir Ayodhya Prasad,' and ordered proof of authorisation before any such religious-branding claim.",
-    "angle": "A sharp prompt on ethical marketing and platform liability for seller-generated, misleading brand claims on marketplaces.",
-    "source": "https://inc42.com/buzz/ccpa-fines-amazon-over-fake-shree-ram-mandir-ayodhya-prasad-listing/"
-  },
-  {
-    "headline": "Colgate-Palmolive brings back Manish Anandani as India MD & CEO",
-    "date": "2026-08-21",
-    "category": "Marketing",
-    "summary": "Colgate-Palmolive India named Manish Anandani, most recently India & South Asia MD at Kenvue, as its new MD & CEO effective September 28, 2026; outgoing chief Prabha Narasimhan moves up to EVP-Marketing, Asia-Pacific.",
-    "angle": "A classic FMCG leadership-succession story — expect questions on what a strong India CEO transition looks like and how MNCs manage regional talent pipelines.",
-    "source": "https://www.storyboard18.com/brand-makers/colgate-palmolive-india-names-manish-anandani-new-md-and-ceo-ws-l-108329.htm"
-  },
-  {
-    "headline": "Grant Thornton Bharat promotes Bhaskar Dhoundiyal to Executive Director",
-    "date": "2026-08-21",
-    "category": "Consulting",
-    "summary": "Grant Thornton Bharat elevated Bhaskar Dhoundiyal, who also directs the firm's India Knowledge and Capability Centre, to Executive Director as the firm expands its senior audit and advisory leadership bench.",
-    "angle": "A good talking point on internal career progression at mid-tier consulting/audit firms versus the \"up-or-out\" model at MBB.",
-    "source": "https://www.consultancy.in/news/4552/grant-thornton-bharat-promotes-bhaskar-dhoundiyal-to-executive-director"
+    "summary": "Acer India named Akshay Kumar as brand ambassador for \"House of Acer,\" a new ecosystem bringing its PCs together with Acerpure-branded TVs, ACs and washing machines.",
+    "angle": "Useful for discussing brand extension/category diversification and using a trusted celebrity face to build credibility in an unfamiliar category.",
+    "source": "https://www.gizmochina.com/2026/08/21/acer-brand-ambassador-india/"
   },
   {
     "headline": "Car makers hike prices just as festive season begins",
@@ -88,12 +56,28 @@
     "source": "https://bestmediainfo.com/mediainfo/mediainfo-marketing/car-prices-rise-again-tata-hyundai-maruti-among-brands-entering-festive-season-with-fresh-hikes-12401801"
   },
   {
-    "headline": "Manufacturing momentum cools slightly in August",
+    "headline": "CCPA fines Amazon Rs 1 lakh over fake 'Ram Mandir Prasad' listings",
     "date": "2026-08-21",
-    "category": "Operations",
-    "summary": "India's flash Manufacturing PMI eased to 52.9 in August 2026 from 53.5 in July, per S&P Global — still comfortably in expansion territory but a signal that new-order growth is moderating after a strong run.",
-    "angle": "Useful for questions on reading leading indicators — how a PMI dip (while still above 50) is read differently from an outright contraction.",
-    "source": "https://www.business-standard.com/economy/news/india-private-sector-pmi-august-services-manufacturing-hsbc-126082100396_1.html"
+    "category": "Marketing",
+    "summary": "India's consumer protection authority fined Amazon Seller Services for hosting listings that sold ordinary sweets as authorised 'Shri Ram Mandir Ayodhya Prasad,' and ordered proof of authorisation before any such religious-branding claim.",
+    "angle": "A sharp prompt on ethical marketing and platform liability for seller-generated, misleading brand claims on marketplaces.",
+    "source": "https://inc42.com/buzz/ccpa-fines-amazon-over-fake-shree-ram-mandir-ayodhya-prasad-listing/"
+  },
+  {
+    "headline": "Colgate-Palmolive brings back a veteran marketer after eight years",
+    "date": "2026-08-21",
+    "category": "Marketing",
+    "summary": "A senior marketing leader has returned to Colgate-Palmolive after an eight-year gap, bringing experience across sales, e-commerce, consumer health and international markets, per this week’s industry headlines.",
+    "angle": "A talking point on marketing leadership continuity — why FMCG majors often rehire proven internal talent for CMO-track roles rather than go external.",
+    "source": "https://bestmediainfo.com/mediainfo/advertising/top-advertising-marketing-and-media-news-headlines-of-today-august-21-2026-12400886"
+  },
+  {
+    "headline": "Colgate-Palmolive brings back Manish Anandani as India MD & CEO",
+    "date": "2026-08-21",
+    "category": "Marketing",
+    "summary": "Colgate-Palmolive India named Manish Anandani, most recently India & South Asia MD at Kenvue, as its new MD & CEO effective September 28, 2026; outgoing chief Prabha Narasimhan moves up to EVP-Marketing, Asia-Pacific.",
+    "angle": "A classic FMCG leadership-succession story — expect questions on what a strong India CEO transition looks like and how MNCs manage regional talent pipelines.",
+    "source": "https://www.storyboard18.com/brand-makers/colgate-palmolive-india-names-manish-anandani-new-md-and-ceo-ws-l-108329.htm"
   },
   {
     "headline": "Goldman Sachs breaks into India's government share-sale advisory market",
@@ -104,11 +88,43 @@
     "source": "https://www.bloomberg.com/news/articles/2026-08-21/goldman-muscles-into-indian-banks-turf-with-state-share-deals"
   },
   {
+    "headline": "Goldman Sachs initiates coverage on 14 Indian banks, bullish on private lenders",
+    "date": "2026-08-21",
+    "category": "Finance",
+    "summary": "Goldman Sachs began research coverage of 14 Indian banks, naming ICICI Bank and Kotak Mahindra Bank top \"Buy\" picks while rating YES Bank and PNB \"Sell,\" citing diverging earnings trajectories between private and PSU lenders.",
+    "angle": "Classic prompt on why global brokerages favor private banks over PSU banks on asset quality, RoE and digital lending.",
+    "source": "https://www.businesstoday.in/markets/stocks/story/sell-yes-bank-pnb-shares-buy-hdfc-bank-icici-bank-stocks-says-goldman-sachs-550487-2026-08-21"
+  },
+  {
+    "headline": "Grant Thornton Bharat promotes Bhaskar Dhoundiyal to Executive Director",
+    "date": "2026-08-21",
+    "category": "Consulting",
+    "summary": "Grant Thornton Bharat elevated Bhaskar Dhoundiyal, who also directs the firm’s India Knowledge and Capability Centre, to Executive Director as the firm expands its senior audit and advisory leadership bench.",
+    "angle": "A good talking point on internal career progression at mid-tier consulting/audit firms versus the “up-or-out” model at MBB.",
+    "source": "https://www.consultancy.in/news/4552/grant-thornton-bharat-promotes-bhaskar-dhoundiyal-to-executive-director"
+  },
+  {
+    "headline": "India's composite PMI rises to 54.6 in August as manufacturing cools",
+    "date": "2026-08-21",
+    "category": "Operations",
+    "summary": "India's HSBC Flash Composite PMI rose to 54.6 in August from July's 54.3, as services growth offset a manufacturing slowdown; the index has stayed above 50 for 61 straight months but posted its second-weakest reading since March 2022.",
+    "angle": "A go-to 'state of the economy' data point — can the candidate explain what a PMI reading signals and why the services-manufacturing divergence matters for India's growth mix.",
+    "source": "https://www.business-standard.com/economy/news/india-private-sector-pmi-august-services-manufacturing-hsbc-126082100396_1.html"
+  },
+  {
     "headline": "India's factory growth slows to a 5-year low despite services rebound",
     "date": "2026-08-21",
     "category": "Operations",
     "summary": "HSBC Flash PMI showed India's manufacturing PMI slipped to 52.9 in August, the weakest improvement in factory output in five years, with manufacturing employment falling for the first time in 2.5 years.",
     "angle": "A classic WAT/GD prompt on whether India's manufacturing-led growth story is losing steam versus services.",
+    "source": "https://www.business-standard.com/economy/news/india-private-sector-pmi-august-services-manufacturing-hsbc-126082100396_1.html"
+  },
+  {
+    "headline": "Manufacturing momentum cools slightly in August",
+    "date": "2026-08-21",
+    "category": "Operations",
+    "summary": "India’s flash Manufacturing PMI eased to 52.9 in August 2026 from 53.5 in July, per S&P Global — still comfortably in expansion territory but a signal that new-order growth is moderating after a strong run.",
+    "angle": "Useful for questions on reading leading indicators — how a PMI dip (while still above 50) is read differently from an outright contraction.",
     "source": "https://www.business-standard.com/economy/news/india-private-sector-pmi-august-services-manufacturing-hsbc-126082100396_1.html"
   },
   {
@@ -120,28 +136,20 @@
     "source": "https://yourstory.com/2026/08/startup-news-and-updates-daily-roundup-august-21-2026"
   },
   {
-    "headline": "Acer signs Akshay Kumar to front its push into smart-home appliances",
-    "date": "2026-08-21",
-    "category": "Marketing",
-    "summary": "Acer India named Akshay Kumar as brand ambassador for \"House of Acer,\" a new ecosystem bringing its PCs together with Acerpure-branded TVs, ACs and washing machines.",
-    "angle": "Useful for discussing brand extension/category diversification and using a trusted celebrity face to build credibility in an unfamiliar category.",
-    "source": "https://www.gizmochina.com/2026/08/21/acer-brand-ambassador-india/"
-  },
-  {
-    "headline": "Goldman Sachs initiates coverage on 14 Indian banks, bullish on private lenders",
-    "date": "2026-08-21",
-    "category": "Finance",
-    "summary": "Goldman Sachs began research coverage of 14 Indian banks, naming ICICI Bank and Kotak Mahindra Bank top \"Buy\" picks while rating YES Bank and PNB \"Sell,\" citing diverging earnings trajectories between private and PSU lenders.",
-    "angle": "Classic prompt on why global brokerages favor private banks over PSU banks on asset quality, RoE and digital lending.",
-    "source": "https://www.businesstoday.in/markets/stocks/story/sell-yes-bank-pnb-shares-buy-hdfc-bank-icici-bank-stocks-says-goldman-sachs-550487-2026-08-21"
-  },
-  {
     "headline": "PwC India rehires Akshita Summan as Director after her PepsiCo stint",
     "date": "2026-08-21",
     "category": "Consulting",
     "summary": "PwC India appointed Akshita Summan as Director for people strategy, organisational transformation and AI-capability building, marking her return after leading talent strategy at PepsiCo.",
     "angle": "A telling data point on consulting firms recruiting \"boomerang\" industry-side talent for AI-change-management work.",
     "source": "https://www.consultancy.in/news/4555/akshita-summan-returns-to-pwc-india-as-director"
+  },
+  {
+    "headline": "Reddit tests AI-narrated audio and video for text posts",
+    "date": "2026-08-21",
+    "category": "Marketing",
+    "summary": "Reddit is testing AI-narrated audio and video versions of select text posts, letting users toggle between 'Read' and 'Play,' as it tries to reclaim the viral 'Reddit stories' format that has thrived on TikTok and YouTube.",
+    "angle": "A content-format innovation story — useful for discussing how brands and platforms adapt content strategy to AI-native formats and attention competition.",
+    "source": "https://bestmediainfo.com/mediainfo/advertising/top-advertising-marketing-and-media-news-headlines-of-today-august-21-2026-12400886"
   },
   {
     "headline": "Tata Motors hikes car and SUV prices for the third time in 2026",
@@ -160,36 +168,20 @@
     "source": "https://bestmediainfo.com/insights/amid-7-tv-ad-volume-drop-google-makes-giant-leap-into-top-10-fmcg-stays-dominant-12405003"
   },
   {
-    "headline": "Jio Financial unveils new corporate identity, keeps smallcase separate",
+    "headline": "Aditya Birla Capital enters gold loans, plans 1,000 branches in three years",
     "date": "2026-08-20",
     "category": "Marketing",
-    "summary": "Reliance's Jio Financial Services is rolling out one unified corporate identity across model portfolios, investor tools, secured credit and asset management, while its smallcase acquisition continues as a standalone consumer brand.",
-    "angle": "A clean 'house of brands vs. branded house' question — why unify some businesses under one name but deliberately keep another separate?",
-    "source": "https://bestmediainfo.com/mediainfo/advertising/top-advertising-marketing-and-media-news-headlines-of-today-august-20-2026-12397604"
+    "summary": "Aditya Birla Capital's NBFC arm launched a gold loan business, targeting 200-300 branches by March 2027 and roughly 1,000 pan-India within three years, combining branch-led service with digital channels.",
+    "angle": "A go-to-market case study: entering a crowded category against Muthoot and Manappuram via an omnichannel branch-plus-digital play, cross-selling to an existing customer base.",
+    "source": "https://www.business-standard.com/companies/news/aditya-birla-capital-enters-gold-loans-biz-plans-1-000-branches-126082000285_1.html"
   },
   {
-    "headline": "KRAFTON hands BGMI's ad business to Neptune's India arm",
-    "date": "2026-08-20",
-    "category": "Marketing",
-    "summary": "Neptune's India subsidiary will now manage advertising operations for KRAFTON's Battlegrounds Mobile India (BGMI), with plans to expand into gaming, entertainment and community ad inventory.",
-    "angle": "Tests whether you see in-game and esports advertising as a fast-growing, still under-measured media channel brands are only beginning to systematize.",
-    "source": "https://bestmediainfo.com/mediainfo/advertising/top-advertising-marketing-and-media-news-headlines-of-today-august-20-2026-12397604"
-  },
-  {
-    "headline": "RBI approves Mahesh Muralidhar Pai as South Indian Bank's new MD & CEO",
+    "headline": "Aditya Birla Capital enters the gold loan business",
     "date": "2026-08-20",
     "category": "Finance",
-    "summary": "The RBI approved Mahesh Muralidhar Pai's appointment as Managing Director and CEO of South Indian Bank for a three-year term starting October 1, 2026.",
-    "angle": "A leadership-continuity question for mid-sized private banks, and how RBI's 'fit and proper' approval process works for top bank management.",
-    "source": "https://www.bankingfinance.in/reserve-bank-updates-for-august-2026.html"
-  },
-  {
-    "headline": "India's industrial and warehousing leasing up 15% YoY in H1 2026: Knight Frank",
-    "date": "2026-08-20",
-    "category": "Operations",
-    "summary": "Industrial and warehousing leasing across India's eight primary markets rose 15% YoY to 36.8 million sq ft in H1 2026, with Knight Frank citing manufacturing expansion and outsourced logistics as the key drivers for continued H2 growth.",
-    "angle": "A macro data point on India's supply-chain infrastructure buildout — good for discussing PLI-linked manufacturing growth and third-party logistics outsourcing trends.",
-    "source": "https://www.indiasnews.net/news/279253971/india-warehousing-market-set-for-strong-h2-growth-as-manufacturing-3rd-party-logistics-drive-demand-knight-frank"
+    "summary": "Aditya Birla Capital’s NBFC arm announced its foray into direct gold lending, targeting 200–300 branches by March 2027 and around 1,000 branches within three years, joining banks and NBFCs chasing India’s gold-loan boom.",
+    "angle": "Tests diversification strategy for large NBFCs and the competitive dynamics of gold loans as a low-risk, high-growth lending category.",
+    "source": "https://www.business-standard.com/markets/capital-market-news/aditya-birla-capital-forays-into-gold-loan-biz-126082000212_1.html"
   },
   {
     "headline": "Bank of Maharashtra's advances jump 27% YoY to Rs 3.06 trillion",
@@ -200,12 +192,12 @@
     "source": "https://www.bankingfinance.in/banking-news-for-august-2026.html"
   },
   {
-    "headline": "Aditya Birla Capital enters gold loans, plans 1,000 branches in three years",
+    "headline": "Forbes names Accenture, Deloitte, McKinsey top global consulting firms for 2026",
     "date": "2026-08-20",
-    "category": "Marketing",
-    "summary": "Aditya Birla Capital's NBFC arm launched a gold loan business, targeting 200-300 branches by March 2027 and roughly 1,000 pan-India within three years, combining branch-led service with digital channels.",
-    "angle": "A go-to-market case study: entering a crowded category against Muthoot and Manappuram via an omnichannel branch-plus-digital play, cross-selling to an existing customer base.",
-    "source": "https://www.business-standard.com/companies/news/aditya-birla-capital-enters-gold-loans-biz-plans-1-000-branches-126082000285_1.html"
+    "category": "Consulting",
+    "summary": "Forbes' 2026 \"World's Best Management Consulting Firms\" ranking put Accenture first, followed by Deloitte, McKinsey and BCG, based on a 31-country survey of consultants and clients.",
+    "angle": "Useful for \"why this firm\" PI questions and how client perception of the Big 3 vs. Big 4 vs. tech-consulting hybrids is shifting.",
+    "source": "https://www.forbes.com/sites/haniyarae/2026/08/20/meet-the-worlds-best-management-consulting-firms-2026/"
   },
   {
     "headline": "Google launches 'Ask Gemini' as a unified AI command line inside Chat",
@@ -216,44 +208,36 @@
     "source": "https://workspaceupdates.googleblog.com/2026/08/ask-gemini-in-chat.html"
   },
   {
-    "headline": "RBI rolls out digital-fraud compensation framework, holds repo rate at 5.25%",
-    "date": "2026-08-20",
-    "category": "Finance",
-    "summary": "The RBI kept the repo rate unchanged at 5.25% and unveiled a framework requiring banks to compensate customers up to Rs 25,000 for small-value fraudulent digital transactions, alongside tighter rules on mis-selling and recovery practices.",
-    "angle": "Tests the difference between monetary policy and regulatory/consumer-protection policy, and how RBI balances bank liability with customer protection.",
-    "source": "https://moneylife.in/article/rbi-keeps-repo-rate-unchanged-at-525-percentage-announces-digital-fraud-compensation-rules-against-misselling/79589.html"
-  },
-  {
-    "headline": "Welspun One commits Rs 2,150 crore for Karnataka-Tamil Nadu warehousing land bank",
+    "headline": "India's industrial and warehousing leasing up 15% YoY in H1 2026: Knight Frank",
     "date": "2026-08-20",
     "category": "Operations",
-    "summary": "Welspun One Logistics Parks committed Rs 2,150 crore across 260 acres of new warehousing land in Karnataka (Hoskote, Devanahalli) and Tamil Nadu, part of a plan to build a 20-25 million sq ft portfolio over five years.",
-    "angle": "Reinforces the warehousing capex theme — good for a follow-up question on how developers are betting on Tier-1/2 logistics demand ahead of actual tenant commitments.",
-    "source": "https://www.business-standard.com/companies/news/welspun-one-logistics-investment-karnataka-tamil-nadu-warehousing-125082000729_1.html"
+    "summary": "Industrial and warehousing leasing across India's eight primary markets rose 15% YoY to 36.8 million sq ft in H1 2026, with Knight Frank citing manufacturing expansion and outsourced logistics as the key drivers for continued H2 growth.",
+    "angle": "A macro data point on India's supply-chain infrastructure buildout — good for discussing PLI-linked manufacturing growth and third-party logistics outsourcing trends.",
+    "source": "https://www.indiasnews.net/news/279253971/india-warehousing-market-set-for-strong-h2-growth-as-manufacturing-3rd-party-logistics-drive-demand-knight-frank"
   },
   {
-    "headline": "Aditya Birla Capital enters the gold loan business",
-    "date": "2026-08-20",
-    "category": "Finance",
-    "summary": "Aditya Birla Capital's NBFC arm announced its foray into direct gold lending, targeting 200–300 branches by March 2027 and around 1,000 branches within three years, joining banks and NBFCs chasing India's gold-loan boom.",
-    "angle": "Tests diversification strategy for large NBFCs and the competitive dynamics of gold loans as a low-risk, high-growth lending category.",
-    "source": "https://www.business-standard.com/markets/capital-market-news/aditya-birla-capital-forays-into-gold-loan-biz-126082000212_1.html"
-  },
-  {
-    "headline": "RBI's hawkish MPC minutes rattle bond markets",
-    "date": "2026-08-20",
-    "category": "Finance",
-    "summary": "Minutes from the RBI's August policy meeting showed several MPC members flagging inflation risks and floating a rate hike later this year — a sharp shift from the \"extended pause\" markets had priced in, sending bond yields higher.",
-    "angle": "Strong WAT/GD fodder on monetary policy communication risk — how a central bank's minutes can move markets more than the rate decision itself.",
-    "source": "https://www.business-standard.com/markets/news/rbi-s-hawkish-minutes-rattle-bond-market-investors-put-rate-hikes-in-play-126082000491_1.html"
-  },
-  {
-    "headline": "India's warehousing leasing jumps 15% in H1 2026",
+    "headline": "India’s warehousing leasing jumps 15% in H1 2026",
     "date": "2026-08-20",
     "category": "Operations",
-    "summary": "Knight Frank India's H1 2026 report shows industrial and warehousing leasing across India's top eight markets rose 15% YoY to 36.8 million sq ft, with manufacturing (46% share) and third-party logistics (30% share) the biggest demand drivers.",
-    "angle": "A strong data point for questions on India's manufacturing-led logistics real estate growth and PLI spillover effects.",
+    "summary": "Knight Frank India’s H1 2026 report shows industrial and warehousing leasing across India’s top eight markets rose 15% YoY to 36.8 million sq ft, with manufacturing (46% share) and third-party logistics (30% share) the biggest demand drivers.",
+    "angle": "A strong data point for questions on India’s manufacturing-led logistics real estate growth and PLI spillover effects.",
     "source": "https://aninews.in/news/business/india-warehousing-market-set-for-strong-h2-growth-as-manufacturing-3rd-party-logistics-drive-demand-knight-frank20260820132734/"
+  },
+  {
+    "headline": "Jio Financial Unveils New Corporate Identity, Keeps smallcase Separate",
+    "date": "2026-08-20",
+    "category": "Marketing",
+    "summary": "Reliance's Jio Financial Services is rolling out one unified corporate identity across model portfolios, investor tools, secured credit and asset management, while its smallcase acquisition continues as a standalone consumer brand.",
+    "angle": "A clean 'house of brands vs. branded house' question — why unify some businesses under one name but deliberately keep another separate?",
+    "source": "https://bestmediainfo.com/mediainfo/advertising/top-advertising-marketing-and-media-news-headlines-of-today-august-20-2026-12397604"
+  },
+  {
+    "headline": "KRAFTON Hands BGMI's Ad Business to Neptune's India Arm",
+    "date": "2026-08-20",
+    "category": "Marketing",
+    "summary": "Neptune's India subsidiary will now manage advertising operations for KRAFTON's Battlegrounds Mobile India (BGMI), with plans to expand into gaming, entertainment and community ad inventory.",
+    "angle": "Tests whether you see in-game and esports advertising as a fast-growing, still under-measured media channel brands are only beginning to systematize.",
+    "source": "https://bestmediainfo.com/mediainfo/advertising/top-advertising-marketing-and-media-news-headlines-of-today-august-20-2026-12397604"
   },
   {
     "headline": "Push to keep UPI free for small merchants as Parliament clears way for fees",
@@ -264,20 +248,36 @@
     "source": "https://www.freepressjournal.in/business/india-must-retain-zero-mdr-for-small-merchants-to-protect-upis-inclusion-gains-industry-experts"
   },
   {
-    "headline": "Forbes names Accenture, Deloitte, McKinsey top global consulting firms for 2026",
+    "headline": "RBI approves Mahesh Muralidhar Pai as South Indian Bank's new MD & CEO",
     "date": "2026-08-20",
-    "category": "Consulting",
-    "summary": "Forbes' 2026 \"World's Best Management Consulting Firms\" ranking put Accenture first, followed by Deloitte, McKinsey and BCG, based on a 31-country survey of consultants and clients.",
-    "angle": "Useful for \"why this firm\" PI questions and how client perception of the Big 3 vs. Big 4 vs. tech-consulting hybrids is shifting.",
-    "source": "https://www.forbes.com/sites/haniyarae/2026/08/20/meet-the-worlds-best-management-consulting-firms-2026/"
+    "category": "Finance",
+    "summary": "The RBI approved Mahesh Muralidhar Pai's appointment as Managing Director and CEO of South Indian Bank for a three-year term starting October 1, 2026.",
+    "angle": "A leadership-continuity question for mid-sized private banks, and how RBI's 'fit and proper' approval process works for top bank management.",
+    "source": "https://www.bankingfinance.in/reserve-bank-updates-for-august-2026.html"
   },
   {
-    "headline": "Colgate-Palmolive hands Palmolive's D2C and e-commerce business to Bombay Shaving Company",
-    "date": "2026-08-19",
-    "category": "Marketing",
-    "summary": "Colgate-Palmolive India will let D2C specialist Bombay Shaving Company run Palmolive's consumer-facing digital advertising, e-commerce and customer relationships, while Colgate retains manufacturing and supply chain control.",
-    "angle": "A legacy FMCG giant outsourcing digital-first marketing capability to a nimbler D2C startup illustrates the \"build vs partner\" dilemma large incumbents face in India's e-commerce-led growth.",
-    "source": "https://bestmediainfo.com/mediainfo/mediainfo-marketing/colgate-palmolive-hands-palmolives-d2c-and-e-commerce-business-to-bombay-shaving-company-12392641"
+    "headline": "RBI rolls out digital-fraud compensation framework, holds repo rate at 5.25%",
+    "date": "2026-08-20",
+    "category": "Finance",
+    "summary": "The RBI kept the repo rate unchanged at 5.25% and unveiled a framework requiring banks to compensate customers up to Rs 25,000 for small-value fraudulent digital transactions, alongside tighter rules on mis-selling and recovery practices.",
+    "angle": "Tests the difference between monetary policy and regulatory/consumer-protection policy, and how RBI balances bank liability with customer protection.",
+    "source": "https://moneylife.in/article/rbi-keeps-repo-rate-unchanged-at-525-percentage-announces-digital-fraud-compensation-rules-against-misselling/79589.html"
+  },
+  {
+    "headline": "RBI’s hawkish MPC minutes rattle bond markets",
+    "date": "2026-08-20",
+    "category": "Finance",
+    "summary": "Minutes from the RBI’s August policy meeting showed several MPC members flagging inflation risks and floating a rate hike later this year — a sharp shift from the “extended pause” markets had priced in, sending bond yields higher.",
+    "angle": "Strong WAT/GD fodder on monetary policy communication risk — how a central bank’s minutes can move markets more than the rate decision itself.",
+    "source": "https://www.business-standard.com/markets/news/rbi-s-hawkish-minutes-rattle-bond-market-investors-put-rate-hikes-in-play-126082000491_1.html"
+  },
+  {
+    "headline": "Welspun One commits Rs 2,150 crore for Karnataka-Tamil Nadu warehousing land bank",
+    "date": "2026-08-20",
+    "category": "Operations",
+    "summary": "Welspun One Logistics Parks committed Rs 2,150 crore across 260 acres of new warehousing land in Karnataka (Hoskote, Devanahalli) and Tamil Nadu, part of a plan to build a 20-25 million sq ft portfolio over five years.",
+    "angle": "Reinforces the warehousing capex theme — good for a follow-up question on how developers are betting on Tier-1/2 logistics demand ahead of actual tenant commitments.",
+    "source": "https://www.business-standard.com/companies/news/welspun-one-logistics-investment-karnataka-tamil-nadu-warehousing-125082000729_1.html"
   },
   {
     "headline": "Ad industry groups back Google in court fight over age-based ad targeting",
@@ -288,20 +288,12 @@
     "source": "https://www.mediapost.com/publications/article/417310/ad-industry-backs-google-in-fight-over-age-based-t.html?edition=143570"
   },
   {
-    "headline": "WARC: global retail media spend to hit $200.4 billion in 2026",
+    "headline": "Colgate-Palmolive hands Palmolive's D2C and e-commerce business to Bombay Shaving Company",
     "date": "2026-08-19",
     "category": "Marketing",
-    "summary": "WARC Media's latest forecast pegs 2026 global retail media spend at $200.4 billion, even as growth cools and heavier ad loads raise concerns about shopper experience.",
-    "angle": "Opens a discussion on retail media as marketing's fastest-growing channel, and the tension between monetising shelf space and preserving user experience.",
-    "source": "https://bestmediainfo.com/mediainfo/advertising/top-advertising-marketing-and-media-news-headlines-of-today-august-19-2026-12394194"
-  },
-  {
-    "headline": "YouTube to redefine how a 'view' is counted, effective August 24",
-    "date": "2026-08-19",
-    "category": "Marketing",
-    "summary": "From August 24, 2026, YouTube will count a public view from the moment a video begins playing at the first frame, a change that could reset creator pricing and campaign benchmarks industry-wide.",
-    "angle": "Good prompt on marketing measurement — how a single platform metric redefinition can force brands to rebuild media-buying benchmarks overnight.",
-    "source": "https://bestmediainfo.com/mediainfo/advertising/top-advertising-marketing-and-media-news-headlines-of-today-august-19-2026-12394194"
+    "summary": "Colgate-Palmolive India will let D2C specialist Bombay Shaving Company run Palmolive's consumer-facing digital advertising, e-commerce and customer relationships, while Colgate retains manufacturing and supply chain control.",
+    "angle": "A legacy FMCG giant outsourcing digital-first marketing capability to a nimbler D2C startup illustrates the \"build vs partner\" dilemma large incumbents face in India's e-commerce-led growth.",
+    "source": "https://bestmediainfo.com/mediainfo/mediainfo-marketing/colgate-palmolive-hands-palmolives-d2c-and-e-commerce-business-to-bombay-shaving-company-12392641"
   },
   {
     "headline": "D&AD's AI & Creativity Report 2026 surveys 197 global creative leaders",
@@ -312,60 +304,20 @@
     "source": "https://bestmediainfo.com/mediainfo/advertising/top-advertising-marketing-and-media-news-headlines-of-today-august-19-2026-12394194"
   },
   {
-    "headline": "KKR to acquire minority stake in BookMyShow",
+    "headline": "Foxtale bets on Shah Rukh Khan for 70+ city billboard blitz",
     "date": "2026-08-19",
     "category": "Marketing",
-    "summary": "Global investment firm KKR signed a definitive agreement for a minority stake in BookMyShow, with the capital earmarked to fuel BookMyShow Live's expansion into concerts, theatricals and sports across India.",
-    "angle": "Connects PE investment logic to marketing strategy — rising discretionary spend and IP-led live experiences as the next growth lever beyond ticketing commissions.",
-    "source": "https://www.business-standard.com/companies/news/kkr-bookmyshow-minority-stake-live-entertainment-india-126081900221_1.html"
+    "summary": "D2C skincare brand Foxtale rolled out a large OOH campaign (\"Let Your Glow Through\") across 70+ billboards in Mumbai, Bengaluru and Delhi featuring newly-signed brand ambassador Shah Rukh Khan.",
+    "angle": "Good discussion point on digital-native/D2C brands \"graduating\" to mass-media celebrity endorsement to build trust and scale.",
+    "source": "https://www.afaqs.com/news/newbizwins/a-simple-agency-bags-foxtales-ooh-mandate-featuring-shah-rukh-khan-12394815"
   },
   {
-    "headline": "Indian Bank raises $400 million via its GIFT City branch",
-    "date": "2026-08-19",
-    "category": "Finance",
-    "summary": "Indian Bank's IFSC branch at GIFT City raised a $400 million, four-year offshore US-dollar facility, per a stock exchange filing.",
-    "angle": "Why are Indian banks increasingly tapping GIFT City for offshore dollar funding instead of borrowing onshore?",
-    "source": "https://www.tradingview.com/news/reuters.com,2026:newsml_FWN44G0BA:0-indian-bank-s-gift-city-branch-has-raised-long-term-usd-funds-amounting-to-400-million/"
-  },
-  {
-    "headline": "Zepto, Blinkit dark stores hit by food-safety crackdowns in Bengaluru, Mumbai",
-    "date": "2026-08-19",
-    "category": "Operations",
-    "summary": "Karnataka's food safety authority sealed a Zepto warehouse in Bengaluru and Maharashtra's regulator suspended a Blinkit facility in Mumbai after inspections found unhygienic conditions, poor cold-storage practices and expired stock.",
-    "angle": "A live case on quality control and last-mile operations risk — how 10-minute delivery promises can strain food-safety compliance at scale.",
-    "source": "https://www.medianama.com/2026/08/223-zepto-blinkit-regulatory-food-safety-violations/"
-  },
-  {
-    "headline": "Welspun One to build India's largest single-location warehouse in Navi Mumbai",
-    "date": "2026-08-19",
-    "category": "Operations",
-    "summary": "Welspun One unveiled plans for India's largest single-location Grade A warehousing and industrial park at the JNPA SEZ in Navi Mumbai, a Rs 2,700 crore investment spanning 55 acres and 3.95 million sq ft of warehousing space.",
-    "angle": "Illustrates how e-commerce and manufacturing growth is driving India's warehousing real estate boom — useful for a 'scale vs speed' operations discussion.",
-    "source": "https://www.businessworld.in/article/welspun-one-unveils-indias-largest-single-location-warehouse-with-rs-2700-cr-investment-540524"
-  },
-  {
-    "headline": "Seven IPOs worth about Rs 6,400 crore hit India's primary market this week",
-    "date": "2026-08-19",
-    "category": "Finance",
-    "summary": "India's primary market saw seven companies look to raise around Rs 6,400 crore via IPOs this week, including Tempsens Instruments (up to Rs 650 crore) and Symbiotec Pharmalab (Rs 1,757 crore).",
-    "angle": "Gauges whether a candidate can read primary-market activity as a proxy for investor risk appetite and corporate capex confidence.",
-    "source": "https://www.indiaipo.in/daily-reporter/india-ipo-daily-market-ipo-updates-19th-august-2026"
-  },
-  {
-    "headline": "Mamaearth-parent Honasa's ad spend grows slower than revenue in Q1 FY27",
+    "headline": "HUL sues Beco over \"War on What's Hidden\" comparative ad campaign",
     "date": "2026-08-19",
     "category": "Marketing",
-    "summary": "Honasa Consumer's Q1 FY27 revenue rose 27% YoY to Rs 756 crore and profit more than doubled to Rs 90.45 crore, even as ad spend grew a slower 16.7% to Rs 241 crore.",
-    "angle": "Tests whether a candidate can read a P&L for marketing efficiency — revenue outpacing ad-spend growth signals improving brand pull, not just higher spend.",
-    "source": "https://bestmediainfo.com/mediainfo/mediainfo-marketing/honasa-consumer-raises-ad-spend-167-to-rs-241-crore-in-q1-fy27-as-revenue-growth-outpaces-marketing-investment-12259044"
-  },
-  {
-    "headline": "TH Global Capital advises AI-in-BFSI startup LUMIQ on growth round",
-    "date": "2026-08-19",
-    "category": "Consulting",
-    "summary": "Boutique advisory firm TH Global Capital advised Bengaluru-based AI/data firm LUMIQ on a ₹50 crore growth-equity round led by Bajaj Finserv Ventures and Info Edge, valuing the company at roughly ₹440 crore — its 35th fintech/BFSI deal globally.",
-    "angle": "Illustrates the advisory (not just strategy) side of consulting — how boutique M&A shops build a reputation through sector specialisation.",
-    "source": "https://www.consultancy.in/news/4546/th-global-capital-advises-lumiq-on-growth-equity-investment-from-bajaj-finserv-and-info-edge"
+    "summary": "Hindustan Unilever moved the Delhi High Court against D2C challenger Beco over ads claiming Surf Excel and Vim contain \"harmful chemicals,\" alleging commercial disparagement and trademark infringement; the court issued notice to Beco on August 19.",
+    "angle": "Classic case for a GD/PI on comparative advertising ethics, ASCI/legal limits on disparagement, and how challenger D2C brands position against incumbents.",
+    "source": "https://www.barandbench.com/news/litigation/hul-moves-delhi-hc-against-becos-harmful-chemicals-ad-campaign-targeting-surf-excel-vim"
   },
   {
     "headline": "HUL sues Beco over #WarOnWhatsHidden ad campaign",
@@ -376,12 +328,20 @@
     "source": "https://www.business-standard.com/companies/news/hul-sues-beco-hul-moves-delhi-hc-against-beco-parent-over-surf-excel-vim-ad-campaign-126081900893_1.html"
   },
   {
-    "headline": "Zoho ships its biggest-ever Cliq update",
+    "headline": "HUL takes Beco to Delhi HC over “War on What’s Hidden” campaign",
     "date": "2026-08-19",
-    "category": "Product Management",
-    "summary": "Zoho launched Cliq 7.0, its most comprehensive upgrade yet, adding multi-LLM AI support (Claude, Gemini, ChatGPT, Zia), no-code bots, picture-in-picture meetings, and accessibility features like sign-language mode.",
-    "angle": "Illustrates platform-strategy thinking — bundling many small feature bets into one release to defend an enterprise collaboration suite against Slack/Teams.",
-    "source": "https://www.zoho.com/blog/cliq/zoho-cliq-7-built-to-keep-work-flowing.html"
+    "category": "Marketing",
+    "summary": "Hindustan Unilever moved the Delhi High Court against Beco’s parent Kwick Living, alleging commercial disparagement and trademark infringement over ads claiming Surf Excel and Vim contain “harmful chemicals.” The court issued notice to Beco but has not granted an injunction, and is examining whether it has jurisdiction to hear the case.",
+    "angle": "A classic test of where comparative advertising ends and disparagement begins — useful for questions on brand ethics, legal risk in challenger-brand marketing, and D2C-vs-FMCG incumbent dynamics.",
+    "source": "https://www.business-standard.com/companies/news/delhi-hc-seeks-beco-s-response-in-disparagement-suit-filed-by-hul-126081901204_1.html"
+  },
+  {
+    "headline": "Indian Bank Raises $400 Million via Its GIFT City Branch",
+    "date": "2026-08-19",
+    "category": "Finance",
+    "summary": "Indian Bank's IFSC branch at GIFT City raised a $400 million, four-year offshore US-dollar facility, per a stock exchange filing.",
+    "angle": "Why are Indian banks increasingly tapping GIFT City for offshore dollar funding instead of borrowing onshore?",
+    "source": "https://www.tradingview.com/news/reuters.com,2026:newsml_FWN44G0BA:0-indian-bank-s-gift-city-branch-has-raised-long-term-usd-funds-amounting-to-400-million/"
   },
   {
     "headline": "Industrial robot installations hit record highs as labor shortages deepen",
@@ -392,28 +352,28 @@
     "source": "https://www.globenewswire.com/news-release/2026/08/19/3347633/0/en/industrial-robot-installations-hit-record-highs-as-global-labor-shortages-deepen.html"
   },
   {
+    "headline": "KKR to acquire minority stake in BookMyShow",
+    "date": "2026-08-19",
+    "category": "Marketing",
+    "summary": "Global investment firm KKR signed a definitive agreement for a minority stake in BookMyShow, with the capital earmarked to fuel BookMyShow Live's expansion into concerts, theatricals and sports across India.",
+    "angle": "Connects PE investment logic to marketing strategy — rising discretionary spend and IP-led live experiences as the next growth lever beyond ticketing commissions.",
+    "source": "https://www.business-standard.com/companies/news/kkr-bookmyshow-minority-stake-live-entertainment-india-126081900221_1.html"
+  },
+  {
+    "headline": "Mamaearth-parent Honasa's ad spend grows slower than revenue in Q1 FY27",
+    "date": "2026-08-19",
+    "category": "Marketing",
+    "summary": "Honasa Consumer's Q1 FY27 revenue rose 27% YoY to Rs 756 crore and profit more than doubled to Rs 90.45 crore, even as ad spend grew a slower 16.7% to Rs 241 crore.",
+    "angle": "Tests whether a candidate can read a P&L for marketing efficiency — revenue outpacing ad-spend growth signals improving brand pull, not just higher spend.",
+    "source": "https://bestmediainfo.com/mediainfo/mediainfo-marketing/honasa-consumer-raises-ad-spend-167-to-rs-241-crore-in-q1-fy27-as-revenue-growth-outpaces-marketing-investment-12259044"
+  },
+  {
     "headline": "OpenAI expands ChatGPT Ads to 31 European markets",
     "date": "2026-08-19",
     "category": "Marketing",
     "summary": "OpenAI confirmed ChatGPT Ads would go live across 31 European markets from August 24, its largest ad rollout yet, sold initially via agency partners like Publicis and Omnicom.",
-    "angle": "A go-to case for \"AI in marketing\" questions — how AI platforms are becoming ad channels and how privacy regulation constrains AI advertising.",
+    "angle": "A go-to case for \"AI in marketing\" questions - how AI platforms are becoming ad channels and how privacy regulation constrains AI advertising.",
     "source": "https://digiday.com/marketing/openais-ads-business-hits-europe-at-the-six-month-mark/"
-  },
-  {
-    "headline": "Rupee stuck near record lows as oil prices squeeze the currency",
-    "date": "2026-08-19",
-    "category": "Finance",
-    "summary": "The rupee has held near a two-to-three-week low around ₹95.70-95.78/USD as elevated crude prices and importer dollar-hedging pressured the currency, with the RBI intervening almost daily to defend the 96/USD level.",
-    "angle": "A staple WAT/PI topic linking oil imports, current account deficit, and RBI's forex reserve management.",
-    "source": "https://www.fxstreet.com/news/indian-rupee-holds-onto-two-week-losses-against-us-dollar-202608190531"
-  },
-  {
-    "headline": "Foxtale bets on Shah Rukh Khan for 70+ city billboard blitz",
-    "date": "2026-08-19",
-    "category": "Marketing",
-    "summary": "D2C skincare brand Foxtale rolled out a large OOH campaign (\"Let Your Glow Through\") across 70+ billboards in Mumbai, Bengaluru and Delhi featuring newly-signed brand ambassador Shah Rukh Khan.",
-    "angle": "Good discussion point on digital-native/D2C brands \"graduating\" to mass-media celebrity endorsement to build trust and scale.",
-    "source": "https://www.afaqs.com/news/newbizwins/a-simple-agency-bags-foxtales-ooh-mandate-featuring-shah-rukh-khan-12394815"
   },
   {
     "headline": "Panama Canal draft cuts add fresh pressure to transpacific shipping",
@@ -424,6 +384,70 @@
     "source": "https://metro.global/2026/08/19/panama-canal-constraints-add-another-layer-of-pressure-to-transpacific-shipping/"
   },
   {
+    "headline": "Rupee stuck near record lows as oil prices squeeze the currency",
+    "date": "2026-08-19",
+    "category": "Finance",
+    "summary": "The rupee has held near a two-to-three-week low around ₹95.70-95.78/USD as elevated crude prices and importer dollar-hedging pressured the currency, with the RBI intervening almost daily to defend the 96/USD level.",
+    "angle": "A staple WAT/PI topic linking oil imports, current account deficit, and RBI's forex reserve management.",
+    "source": "https://www.fxstreet.com/news/indian-rupee-holds-onto-two-week-losses-against-us-dollar-202608190531"
+  },
+  {
+    "headline": "Seven IPOs worth about Rs 6,400 crore hit India's primary market this week",
+    "date": "2026-08-19",
+    "category": "Finance",
+    "summary": "India's primary market saw seven companies look to raise around Rs 6,400 crore via IPOs this week, including Tempsens Instruments (up to Rs 650 crore) and Symbiotec Pharmalab (Rs 1,757 crore).",
+    "angle": "Gauges whether a candidate can read primary-market activity as a proxy for investor risk appetite and corporate capex confidence.",
+    "source": "https://www.indiaipo.in/daily-reporter/india-ipo-daily-market-ipo-updates-19th-august-2026"
+  },
+  {
+    "headline": "TH Global Capital advises AI-in-BFSI startup LUMIQ on growth round",
+    "date": "2026-08-19",
+    "category": "Consulting",
+    "summary": "Boutique advisory firm TH Global Capital advised Bengaluru-based AI/data firm LUMIQ on a ₹50 crore growth-equity round led by Bajaj Finserv Ventures and Info Edge, valuing the company at roughly ₹440 crore — its 35th fintech/BFSI deal globally.",
+    "angle": "Illustrates the advisory (not just strategy) side of consulting — how boutique M&A shops build a reputation through sector specialisation.",
+    "source": "https://www.consultancy.in/news/4546/th-global-capital-advises-lumiq-on-growth-equity-investment-from-bajaj-finserv-and-info-edge"
+  },
+  {
+    "headline": "WARC: global retail media spend to hit $200.4 billion in 2026",
+    "date": "2026-08-19",
+    "category": "Marketing",
+    "summary": "WARC Media's latest forecast pegs 2026 global retail media spend at $200.4 billion, even as growth cools and heavier ad loads raise concerns about shopper experience.",
+    "angle": "Opens a discussion on retail media as marketing's fastest-growing channel, and the tension between monetising shelf space and preserving user experience.",
+    "source": "https://bestmediainfo.com/mediainfo/advertising/top-advertising-marketing-and-media-news-headlines-of-today-august-19-2026-12394194"
+  },
+  {
+    "headline": "Welspun One to build India's largest single-location warehouse in Navi Mumbai",
+    "date": "2026-08-19",
+    "category": "Operations",
+    "summary": "Welspun One unveiled plans for India's largest single-location Grade A warehousing and industrial park at the JNPA SEZ in Navi Mumbai, a Rs 2,700 crore investment spanning 55 acres and 3.95 million sq ft of warehousing space.",
+    "angle": "Illustrates how e-commerce and manufacturing growth is driving India's warehousing real estate boom — useful for a 'scale vs speed' operations discussion.",
+    "source": "https://www.businessworld.in/article/welspun-one-unveils-indias-largest-single-location-warehouse-with-rs-2700-cr-investment-540524"
+  },
+  {
+    "headline": "YouTube to redefine how a 'view' is counted, effective August 24",
+    "date": "2026-08-19",
+    "category": "Marketing",
+    "summary": "From August 24, 2026, YouTube will count a public view from the moment a video begins playing at the first frame, a change that could reset creator pricing and campaign benchmarks industry-wide.",
+    "angle": "Good prompt on marketing measurement — how a single platform metric redefinition can force brands to rebuild media-buying benchmarks overnight.",
+    "source": "https://bestmediainfo.com/mediainfo/advertising/top-advertising-marketing-and-media-news-headlines-of-today-august-19-2026-12394194"
+  },
+  {
+    "headline": "Zepto, Blinkit dark stores hit by food-safety crackdowns in Bengaluru, Mumbai",
+    "date": "2026-08-19",
+    "category": "Operations",
+    "summary": "Karnataka's food safety authority sealed a Zepto warehouse in Bengaluru and Maharashtra's regulator suspended a Blinkit facility in Mumbai after inspections found unhygienic conditions, poor cold-storage practices and expired stock.",
+    "angle": "A live case on quality control and last-mile operations risk — how 10-minute delivery promises can strain food-safety compliance at scale.",
+    "source": "https://www.medianama.com/2026/08/223-zepto-blinkit-regulatory-food-safety-violations/"
+  },
+  {
+    "headline": "Zoho ships its biggest-ever Cliq update",
+    "date": "2026-08-19",
+    "category": "Product Management",
+    "summary": "Zoho launched Cliq 7.0, its most comprehensive upgrade yet, adding multi-LLM AI support (Claude, Gemini, ChatGPT, Zia), no-code bots, picture-in-picture meetings, and accessibility features like sign-language mode.",
+    "angle": "Illustrates platform-strategy thinking — bundling many small feature bets into one release to defend an enterprise collaboration suite against Slack/Teams.",
+    "source": "https://www.zoho.com/blog/cliq/zoho-cliq-7-built-to-keep-work-flowing.html"
+  },
+  {
     "headline": "Beco's ad war forces HUL to defend Surf Excel, Vim",
     "date": "2026-08-18",
     "category": "Marketing",
@@ -432,12 +456,44 @@
     "source": "https://www.afaqs.com/news/advertising/why-did-beco-attack-huls-star-brands-surf-excel-and-vim-12348117"
   },
   {
-    "headline": "Razorpay launches \"Vulcan,\" an AI foundation model built for payments",
+    "headline": "Brent crude tops $91 as Gulf tensions escalate, pressuring India's import bill",
     "date": "2026-08-18",
-    "category": "Product Management",
-    "summary": "Razorpay unveiled Vulcan, described as India's first transformer-based AI foundation model built specifically for payments, developed with NVIDIA and AWS and trained on nearly 3 trillion data points from over 4 billion transactions to improve payment routing, fraud detection, and checkout success rates.",
-    "angle": "A strong example of vertical/domain-specific AI product strategy in Indian fintech — useful for discussing how B2B platforms are building proprietary AI moats rather than just wrapping general LLMs.",
-    "source": "https://www.techtimes.com/articles/324832/20260818/razorpay-vulcan-routes-indian-payments-transformer-ai-what-it-knows-about-you.htm"
+    "category": "Operations",
+    "summary": "Brent crude crossed $91 a barrel on August 18, 2026, after the US-Iran ceasefire lapsed and Iran signaled a more offensive posture, raising fears of a prolonged Gulf conflict and pushing Indian equities and the rupee lower.",
+    "angle": "Connects global geopolitical risk directly to India's operations costs — since India imports roughly 85% of its crude, this feeds into freight/fuel surcharges, inflation, and inventory-hedging decisions for operations managers.",
+    "source": "https://www.equentis.com/blog/crude-tops-91-impact-of-us-iran-tensions-on-india-and-markets/"
+  },
+  {
+    "headline": "Deloitte expands India footprint to 16 cities with new Indore office",
+    "date": "2026-08-18",
+    "category": "Consulting",
+    "summary": "Deloitte opened a new office in Indore, Madhya Pradesh, taking its India presence to 16 cities, with plans to reach 18-20 cities by the end of next year, offering strategy, M&A, tax, risk and transformation services locally.",
+    "angle": "Tests understanding of Tier-2 city expansion strategy in professional services — chasing talent and clients beyond the traditional metro hubs.",
+    "source": "https://www.consultancy.in/news/4484/deloitte-expands-india-footprint-to-16-cities-with-new-office-in-indore"
+  },
+  {
+    "headline": "Eight semiconductor projects worth ₹1.6 lakh crore race toward first output",
+    "date": "2026-08-18",
+    "category": "Operations",
+    "summary": "Of India's approved semiconductor plants, two to three (including Tata Electronics' Gujarat and Assam facilities) are on track for commercial chip production by end-2026, ahead of September's Semicon India summit.",
+    "angle": "Tests grasp of India's PLI-driven import-substitution strategy and the operational lead times involved in standing up fab capacity from scratch.",
+    "source": "https://www.businesstoday.in/latest/trends/photo/indias-rs1-6-lakh-crore-chip-gamble-8-plants-that-could-change-what-your-gadgets-run-on-549605-2026-08-18"
+  },
+  {
+    "headline": "FM asks public sector banks to ramp up farm credit for pulses and oilseeds",
+    "date": "2026-08-18",
+    "category": "Finance",
+    "summary": "At Day 2 of PSB Confluence 2026, Sitharaman urged PSBs to boost farm credit for pulses and oilseeds to cut India's import dependence, alongside a push on priority sector lending and credit card business reform.",
+    "angle": "Links banking policy to the broader \"atmanirbharta\"/import-substitution agenda — useful for questions connecting finance to agriculture and trade policy.",
+    "source": "https://www.business-standard.com/economy/news/fm-asks-psbs-to-boost-farm-credit-for-pulses-oilseeds-cut-imports-126081801411_1.html"
+  },
+  {
+    "headline": "Indo-MIM’s profit jumps 32% on operating leverage",
+    "date": "2026-08-18",
+    "category": "Finance",
+    "summary": "Precision-engineering firm Indo-MIM posted a 31.6% YoY jump in Q1 FY27 net profit to ₹240 crore on just 9.4% revenue growth, as falling raw-material costs and operating leverage widened margins; the stock hit a fresh all-time high.",
+    "angle": "A textbook example of operating leverage — profit growing much faster than revenue — a favourite WAT/finance-GD concept.",
+    "source": "https://www.businesstoday.in/markets/stocks/story/indo-mim-recent-market-debutant-hits-10-upper-circuit-trigger-behind-the-rally-549704-2026-08-18"
   },
   {
     "headline": "Landmark Meta trial begins over alleged child-targeted design of Facebook and Instagram",
@@ -454,5 +510,1261 @@
     "summary": "The National Stock Exchange is marketing shares at ₹2,000–2,100 apiece to investors, potentially valuing it at up to ₹5.26 trillion ($55 billion) in what would be India's largest-ever IPO.",
     "angle": "A great talking point on capital markets development and India's IPO boom — candidates can discuss valuation, exchange economics, and market depth.",
     "source": "https://www.bloomberg.com/news/articles/2026-08-18/nse-said-to-seek-up-to-55-billion-valuation-in-record-india-ipo"
+  },
+  {
+    "headline": "OpenAI Launches 'ChatGPT for Teens' With Built-In Guardrails",
+    "date": "2026-08-18",
+    "category": "Product Management",
+    "summary": "OpenAI introduced a teen-specific ChatGPT experience on August 18, 2026, with stronger default safety protections, parental controls, and study-focused tools like Study Mode and homework reminders.",
+    "angle": "Product-safety-by-design for a new user segment — how do you build age-appropriate defaults without fragmenting the core product experience?",
+    "source": "https://openai.com/index/chatgpt-for-teens/"
+  },
+  {
+    "headline": "OpenAI launches a separate, safety-first ChatGPT for teens",
+    "date": "2026-08-18",
+    "category": "Product Management",
+    "summary": "OpenAI rolled out ChatGPT for Teens (ages 13–17) with age-prediction auto-routing and blocks on self-harm and romantic/sexual conversations, years after teens had already been using the adult product.",
+    "angle": "A strong case on designing for a vulnerable user segment — trading capability for safety, and building age-detection into the core product rather than bolting it on.",
+    "source": "https://techcrunch.com/2026/08/18/openai-launches-a-safer-chatgpt-for-teens-years-after-teens-started-using-it/"
+  },
+  {
+    "headline": "Perplexity's free AI push drives a surge in Indian users",
+    "date": "2026-08-18",
+    "category": "Product Management",
+    "summary": "TechCrunch reported that Perplexity's free-tier offer in India sharply grew its user base and revenue, with monthly net mobile revenue climbing from roughly $34,000 in early 2025 to $156,000 by July 2026, even as ChatGPT and Claude downloads stayed comparatively flat.",
+    "angle": "Good talking point on freemium growth strategy and how global AI products compete for India's massive, price-sensitive user base.",
+    "source": "https://techcrunch.com/2026/08/18/perplexitys-free-ai-offer-left-it-with-millions-more-users-in-india/"
+  },
+  {
+    "headline": "Perplexity's India revenue climbs after its free Airtel bundle ends",
+    "date": "2026-08-18",
+    "category": "Product Management",
+    "summary": "After Perplexity's year-long free-with-Airtel offer expired for new users, its India monthly net mobile revenue still rose to about $156,000 in July, up from about $34,000 in January 2025.",
+    "angle": "A live case on converting a subsidized user base into payers, relevant for monetization strategy in a price-sensitive market.",
+    "source": "https://techcrunch.com/2026/08/18/perplexitys-free-ai-offer-left-it-with-millions-more-users-in-india/"
+  },
+  {
+    "headline": "Philips India signs actor Yash for 'Trimmers Ka Baap' grooming campaign",
+    "date": "2026-08-18",
+    "category": "Marketing",
+    "summary": "Philips India named actor Yash as brand ambassador for its men's grooming portfolio, launching the 'Trimmers Ka Baap' campaign around its BeardSense trimmer and tying in with his upcoming film \"Toxic\" as official grooming partner.",
+    "angle": "A textbook example of celebrity-led category leadership positioning combined with entertainment-marketing (film tie-in) to drive premium personal-care sales in India.",
+    "source": "https://aninews.in/news/business/philips-india-names-rocking-star-yash-as-brand-ambassador-for-mens-grooming-joins-toxic-a-fairy-tale-for-grown-ups-as-official-grooming-partner20260818172541/"
+  },
+  {
+    "headline": "Razorpay launches \"Vulcan,\" an AI foundation model built for payments",
+    "date": "2026-08-18",
+    "category": "Product Management",
+    "summary": "Razorpay unveiled Vulcan, described as India's first transformer-based AI foundation model built specifically for payments, developed with NVIDIA and AWS and trained on nearly 3 trillion data points from over 4 billion transactions to improve payment routing, fraud detection, and checkout success rates.",
+    "angle": "A strong example of vertical/domain-specific AI product strategy in Indian fintech — useful for discussing how B2B platforms are building proprietary AI moats rather than just wrapping general LLMs.",
+    "source": "https://www.techtimes.com/articles/324832/20260818/razorpay-vulcan-routes-indian-payments-transformer-ai-what-it-knows-about-you.htm"
+  },
+  {
+    "headline": "SEMICON India 2026 to host 500+ exhibitors as India pushes semiconductor self-reliance",
+    "date": "2026-08-18",
+    "category": "Operations",
+    "summary": "Announced on August 18, 2026, the fifth edition of SEMICON India (September 17-19, New Delhi) will feature more than 500 exhibitors, including 294 international firms from 40+ countries, under the theme \"Silicon to Systems: Building the Ecosystem.\"",
+    "angle": "A concrete data point on India's move from low-value chip assembly/testing toward a fuller semiconductor value chain — ties into PLI/India Semiconductor Mission incentives and the broader China+1 manufacturing shift.",
+    "source": "https://aninews.in/news/business/semicon-india-2026-to-bring-500-exhibitors-firms-from-40-countries-to-showcase-indias-semiconductor-push20260818115309/"
+  },
+  {
+    "headline": "Swiggy launches 'Scenes' to take on Zomato's event-ticketing app 'District'",
+    "date": "2026-08-18",
+    "category": "Product Management",
+    "summary": "Swiggy rolled out Scenes, an in-app feature letting users book tickets to restaurant-hosted live events in Bengaluru, Delhi-NCR and Mumbai, weeks after Zomato launched its standalone ticketing app District.",
+    "angle": "A textbook feature-war case: should a PM ship a bolt-on feature inside the core app or spin up a separate product, and what does that choice signal about strategy?",
+    "source": "https://www.techloy.com/swiggy-is-taking-on-zomatos-live-events-feature/"
+  },
+  {
+    "headline": "Swiggy shareholders approve 49.5% foreign ownership cap, clearing path to IOCC status",
+    "date": "2026-08-18",
+    "category": "Finance",
+    "summary": "Swiggy's AGM passed a special resolution capping aggregate foreign ownership at 49.5%, moving the company toward \"Indian-owned and controlled\" status, which is key for its Instamart quick-commerce arm.",
+    "angle": "Connects FDI policy in inventory-led retail to a listed company's ownership structuring — a sharp finance-meets-regulation story.",
+    "source": "https://www.business-standard.com/companies/news/swiggy-shareholders-approve-iocc-status-cap-foreign-ownership-at-49-5-126081801418_1.html"
+  },
+  {
+    "headline": "Uber adds train ticket booking to its app via ixigo partnership",
+    "date": "2026-08-18",
+    "category": "Product Management",
+    "summary": "Uber launched in-app train ticket booking and PNR status checks in India through a partnership with ixigo, letting riders book trains and also arrange first/last-mile cab rides within a single app — its second tie-up with ixigo's group after a bus-ticketing partnership with Abhibus earlier in the year.",
+    "angle": "A textbook case of product platformization/super-app strategy through partnerships (build vs. buy vs. integrate) in India's mobility and travel-tech space.",
+    "source": "https://www.business-standard.com/companies/news/uber-train-ticket-booking-ixigo-partnership-india-126081800635_1.html"
+  },
+  {
+    "headline": "Vizhinjam International Seaport begins full EXIM operations",
+    "date": "2026-08-18",
+    "category": "Operations",
+    "summary": "Kerala's Adani-operated Vizhinjam Port launched full export-import operations on August 18 after CBIC clearance, shifting from a transshipment hub to a full-fledged global cargo gateway.",
+    "angle": "Strong for discussing India's container-port capacity gap and why transshipment volumes have historically leaked to Colombo and Singapore.",
+    "source": "https://www.theweek.in/news/maritime/2026/08/17/can-vizhinjam-port-become-vande-bharat-of-shipping-exim-ops-to-start-from-august-18-but-bottlenecks-loom.html"
+  },
+  {
+    "headline": "WPP Media wins integrated media mandate for LT Foods' Daawat brand",
+    "date": "2026-08-18",
+    "category": "Marketing",
+    "summary": "Global holding company WPP Media was appointed as the end-to-end media strategy, planning and buying partner for LT Foods' flagship rice brand Daawat in India.",
+    "angle": "Shows how global ad holding companies are chasing India-specific FMCG/agri-food accounts as a growth engine even as their home markets slow down — a good talking point on agency-client dynamics.",
+    "source": "https://www.exchange4media.com/marketing-news/wpp-media-secures-integrated-media-mandate-for-lt-foods-daawat-in-india-157430.html"
+  },
+  {
+    "headline": "Zepto pushes category expansion with Zepto Cafe and 10-minute pharmacy",
+    "date": "2026-08-18",
+    "category": "Product Management",
+    "summary": "As Blinkit leads India's quick-commerce market with 46% share versus Zepto's 22%, Zepto is leaning on category expansion — Zepto Cafe and a 10-minute pharmacy offering — to close the scale gap ahead of its IPO.",
+    "angle": "A classic 'expand the basket vs defend the core' PM question for a challenger in a market it doesn't lead.",
+    "source": "https://quashbugs.com/blog/blinkit-surpasses-zomato-in-quick-commerce"
+  },
+  {
+    "headline": "Ather Energy expands EV product line into Nepal with 450X Overtones",
+    "date": "2026-08-17",
+    "category": "Product Management",
+    "summary": "Ather Energy launched the 450X Overtones Series in Nepal with new tone-on-tone color options and features like Magic Twist, Infinite Cruise, and Voice on Ather, extending its international product portfolio beyond the original 450 Series and Rizta.",
+    "angle": "A relevant example of an Indian EV unicorn's international market entry and product-line extension strategy, useful for GTM/international expansion discussions.",
+    "source": "https://www.bwdisrupt.com/article/ather-introduces-450x-overtones-series-in-nepal-619708"
+  },
+  {
+    "headline": "BARC ratings blackout clouds festive ad planning",
+    "date": "2026-08-17",
+    "category": "Marketing",
+    "summary": "With BARC's TV ratings still suspended over a landing-page compliance dispute and broadcast bodies IBDF/NBDA just proposing third-party monitoring as a fix, advertisers head into the crucial festive season without reliable audience-measurement data.",
+    "angle": "Tests understanding of how measurement infrastructure underpins media buying, and what marketers do when their core planning currency disappears.",
+    "source": "https://bestmediainfo.com/mediainfo/television/landing-page-fix-is-in-but-when-will-barc-ratings-return-industry-remains-divided-12266625"
+  },
+  {
+    "headline": "Beco takes on HUL's Vim and Surf Excel with a comparative \"toxic ingredients\" ad campaign",
+    "date": "2026-08-17",
+    "category": "Marketing",
+    "summary": "Sustainable home-care D2C brand Beco launched #WarOnWhatsHidden, a campaign citing independent lab tests that found BIT in Surf Excel Matic Liquid and high LAS levels in Vim Dishwash Gel, positioning its own products as toxin-free alternatives.",
+    "angle": "A direct, evidence-based comparative attack on category leader HUL is a sharp case study on the legal/ethical limits of comparative advertising under the ASCI Code and India's Consumer Protection Act.",
+    "source": "https://www.medianews4u.com/beco-launches-waronwhatshidden-campaign-to-spotlight-ingredient-transparency-in-home-care/"
+  },
+  {
+    "headline": "Bengaluru startup opens India's first quantum chip foundry",
+    "date": "2026-08-17",
+    "category": "Consulting",
+    "summary": "QpiAI inaugurated an 8-inch quantum processing unit fabrication facility at Jakkur, Bengaluru, calling it Asia's largest, currently able to produce 128-qubit superconducting processors with a planned third phase targeting 10,000-qubit capacity by 2027.",
+    "angle": "A concrete example for discussing India's deep-tech 'Make in India' ambitions and whether homegrown manufacturing can create a strategic edge in a frontier technology dominated by the US and China.",
+    "source": "https://thequantuminsider.com/2026/08/17/qpiai-opens-quantum-chip-foundry-in-india-targets-10000-qubit-processors/"
+  },
+  {
+    "headline": "Blackstone-backed Horizon Industrial Parks launches Rs 2,600-cr IPO",
+    "date": "2026-08-17",
+    "category": "Finance",
+    "summary": "Horizon Industrial Parks, which owns 61.1 million sq ft of industrial/logistics space across 45 assets, opened its Rs 2,600 crore IPO (price band Rs 57-60) on August 17; it was subscribed just 0.15 times on Day 1, with proceeds earmarked to cut debt and fund a 33-million-sq-ft pipeline.",
+    "angle": "A good prompt on private equity exit strategies via IPO, India's industrial/warehousing real estate boom, and how muted retail demand signals investor caution on pure real-asset plays.",
+    "source": "https://www.5paisa.com/news/horizon-industrial-parks-ipo-subscription-status"
+  },
+  {
+    "headline": "Blackstone-backed Horizon Industrial Parks opens ₹2,600 crore IPO",
+    "date": "2026-08-17",
+    "category": "Finance",
+    "summary": "Horizon Industrial Parks Ltd, backed by Blackstone, opened its ₹2,600.04 crore IPO (price band ₹57–60) for subscription from August 17–19, 2026, after raising ₹1,167.75 crore from anchor investors.",
+    "angle": "A live example of PE-backed exits via IPO and India's warehousing/industrial real estate growth story — relevant for PE/real estate finance discussions.",
+    "source": "https://univest.in/blogs/horizon-industrial-parks-initial-public-offering-day-1-august-17-2026"
+  },
+  {
+    "headline": "EY India and SRCC launch 'AI VIBE' industry-academia programme",
+    "date": "2026-08-17",
+    "category": "Consulting",
+    "summary": "EY India and Shri Ram College of Commerce launched a 12-month, EY-sponsored programme in AI, machine learning, data analytics and blockchain to prepare commerce students for AI-enabled careers.",
+    "angle": "Speaks directly to interview prep — signals what skills Big Four recruiters now expect from campus hires, and how firms are building their own talent pipelines.",
+    "source": "https://www.ey.com/en_in/newsroom/2026/08/ey-india-and-shri-ram-college-of-commerce-launch-ai-vibe-to-prepare-students-for-ai-enabled-careers"
+  },
+  {
+    "headline": "EY India and SRCC launch \"AI VIBE\" to prepare students for AI-enabled careers",
+    "date": "2026-08-17",
+    "category": "Consulting",
+    "summary": "EY India and Shri Ram College of Commerce launched a 12-month industry-academia programme (AI VIBE) combining coursework, hackathons and EY mentoring in machine learning, data analytics and blockchain for commerce undergraduates.",
+    "angle": "Signals how Big Four firms are investing directly in campus AI-talent pipelines in India, a relevant talking point on how consulting firms are responding to the AI skills gap.",
+    "source": "https://www.ey.com/en_in/newsroom/2026/08/ey-india-and-shri-ram-college-of-commerce-launch-ai-vibe-to-prepare-students-for-ai-enabled-careers"
+  },
+  {
+    "headline": "Festive hiring to create up to 2.7 lakh gig and logistics jobs",
+    "date": "2026-08-17",
+    "category": "Operations",
+    "summary": "A staffing industry report says temporary hiring across e-commerce, quick commerce, logistics and retail will rise 15-20% this festive season, generating 2.5-2.7 lakh jobs, even as ~80% of employers report frontline talent shortages.",
+    "angle": "Classic ops-meets-HR question on how quick-commerce and logistics firms scale a contingent workforce for demand spikes without sacrificing service quality or blowing up attrition costs.",
+    "source": "https://www.business-standard.com/industry/news/festive-season-hiring-expected-to-generate-up-to-270-000-gig-jobs-report-126081700743_1.html"
+  },
+  {
+    "headline": "Government to set up high-powered \"Banking for Viksit Bharat\" reforms committee",
+    "date": "2026-08-17",
+    "category": "Finance",
+    "summary": "FM Nirmala Sitharaman said a high-level committee to chart the future of India's banking sector for the next two decades will be announced soon, building on inputs from the two-day PSB Confluence 2026 in Delhi.",
+    "angle": "A classic \"policy direction\" question — candidates should be able to discuss how India is preparing its banking sector (PSBs especially) for a $10-trillion-economy trajectory.",
+    "source": "https://www.business-standard.com/finance/news/govt-to-set-up-high-level-banking-committee-very-soon-126081700501_1.html"
+  },
+  {
+    "headline": "India eases government consultancy tender rules to boost domestic firms",
+    "date": "2026-08-17",
+    "category": "Consulting",
+    "summary": "India's Finance Ministry directed government bodies to stop imposing excessive turnover/staff-strength criteria on consultancy tenders, shifting evaluation weight toward project-team qualifications to help smaller domestic firms compete against Deloitte, PwC, EY and KPMG.",
+    "angle": "Directly testable in a GD/WAT on whether the government should favor homegrown consulting firms over global majors.",
+    "source": "https://www.business-standard.com/industry/news/centre-eases-consultancy-tender-rules-boost-competition-finance-ministry-126081700779_1.html"
+  },
+  {
+    "headline": "L&T wins Rs 15,000+ crore ultra-mega offshore order in the Middle East",
+    "date": "2026-08-17",
+    "category": "Operations",
+    "summary": "On August 17, 2026, L&T Energy Hydrocarbon Offshore secured an \"ultra-mega\" order worth over ₹15,000 crore to develop multiple offshore facilities for a Middle East client, its second major Gulf energy win after an ONGC order earlier the same month.",
+    "angle": "Illustrates how large Indian EPC (engineering-procurement-construction) firms are becoming global operations partners for complex energy infrastructure — a good \"Make in India for the world\" execution-at-scale example.",
+    "source": "https://www.larsentoubro.com/pressreleases/2026/2026-08-17-lt-secures-ultra-mega-order-for-strategic-offshore-development-project-in-the-middle-east"
+  },
+  {
+    "headline": "Ola Electric bets on battery storage, not just EVs",
+    "date": "2026-08-17",
+    "category": "Product Management",
+    "summary": "On India's Independence Day, Ola Electric unveiled an expanded 'Shakti' energy storage portfolio spanning home batteries (Shakti Gen2), commercial/infra racks (Shakti Rack), and utility-scale storage (Mahashakti), built on its in-house LFP cell technology.",
+    "angle": "A clean example of platform diversification — a loss-making EV company leveraging its vertically-integrated battery manufacturing to enter the trillion-rupee energy storage market, useful for discussing core-competency leverage and business-model pivots.",
+    "source": "https://www.business-standard.com/companies/news/ola-electric-unveils-expansion-of-shakti-energy-storage-portfolio-126081700354_1.html"
+  },
+  {
+    "headline": "Oliver Wyman hires ex-McKinsey partner for Health & Life Sciences practice",
+    "date": "2026-08-17",
+    "category": "Consulting",
+    "summary": "Oliver Wyman brought on Chirag Adatia, a former McKinsey partner, to join its Health & Life Sciences practice in India, as the firm builds out sector depth to compete with the larger MBB players.",
+    "angle": "A lateral-hire story useful for discussing how mid-size strategy firms build credibility in specialist sectors by poaching MBB talent.",
+    "source": "https://www.consultancy.in/news"
+  },
+  {
+    "headline": "PharmEasy parent turns debt-free via Thyrocare stake sale",
+    "date": "2026-08-17",
+    "category": "Consulting",
+    "summary": "API Holdings, the ultimate parent of PharmEasy, repaid its entire Rs 1,050 crore debt by selling roughly 9.9% of its stake in listed subsidiary Thyrocare Technologies plus internal accruals, freeing the remaining pledged Thyrocare shares.",
+    "angle": "Illustrates how a distressed, once-troubled unicorn can engineer a balance-sheet turnaround by monetizing a listed asset — good fodder for a startup governance and capital-structure discussion.",
+    "source": "https://aninews.in/news/business/api-holdings-turns-debt-free-repays-83771050-crore-frees-thyrocare-shares-from-pledge20260817172725/"
+  },
+  {
+    "headline": "PharmEasy's parent API Holdings becomes debt-free",
+    "date": "2026-08-17",
+    "category": "Finance",
+    "summary": "API Holdings repaid its entire outstanding debt of Rs 1,050 crore, funded via a partial stake sale in Thyrocare Technologies and internal accruals, releasing the pledge on remaining Thyrocare shares.",
+    "angle": "A case study in startup deleveraging and turnaround after PharmEasy's near-listing troubles — useful for discussing new-age tech company governance and path to profitability/IPO.",
+    "source": "https://www.business-standard.com/content/press-releases-ani/api-holdings-turns-debt-free-repays-1-050-crore-frees-thyrocare-shares-from-pledge-126081701263_1.html"
+  },
+  {
+    "headline": "PhysicsWallah stock jumps 9% as Q1 losses narrow sharply",
+    "date": "2026-08-17",
+    "category": "Consulting",
+    "summary": "Edtech firm PhysicsWallah's consolidated Q1 loss narrowed to Rs 77.5 crore from Rs 120 crore a year earlier, on 24% revenue growth to Rs 1,054 crore, sending shares up as much as 9% and prompting a broker upgrade to 'Buy'.",
+    "angle": "A ready case for discussing India's edtech sector pivoting from growth-at-all-costs to unit-economics discipline after a wave of listings and past scandals (e.g., Byju's).",
+    "source": "https://www.business-standard.com/markets/news/physicswallah-share-price-rallies-9-as-q1-loss-narrows-revenue-rises-24-126081700219_1.html"
+  },
+  {
+    "headline": "QpiAI opens quantum chip foundry in Bengaluru, targets 10,000-qubit processors",
+    "date": "2026-08-17",
+    "category": "Product Management",
+    "summary": "Bengaluru-based QpiAI inaugurated an 8-inch quantum processing unit manufacturing facility (Phase 2 of its R&D center), capable of fabricating superconducting quantum chips with up to 128 qubits today, with plans to scale to 10,000-qubit processors by 2027.",
+    "angle": "Illustrates India's push into deep-tech/hardware product manufacturing (not just software), relevant for discussions on Make in India and the National Quantum Mission.",
+    "source": "https://thequantuminsider.com/2026/08/17/qpiai-opens-quantum-chip-foundry-in-india-targets-10000-qubit-processors/"
+  },
+  {
+    "headline": "Rare-earth magnet manufacturing scheme draws 20 bidders in India",
+    "date": "2026-08-17",
+    "category": "Operations",
+    "summary": "India's Rs 7,280-crore scheme to build domestic sintered rare-earth permanent magnet (REPM) capacity attracted 20 bids, including from L&T, Coal India and ReNew, as the country tries to cut dependence on Chinese magnet supply critical to EVs and electronics.",
+    "angle": "A ready-made China+1/import-substitution case: candidates can be asked why a single upstream input (magnets) can bottleneck an entire downstream industry like EVs.",
+    "source": "https://www.digitimes.com/news/a20260817VL212/india-rare-earth-manufacturing-capacity-2026.html"
+  },
+  {
+    "headline": "RBI advances FCNR(B) swap window closure to August 31 as inflows cross $52 billion",
+    "date": "2026-08-17",
+    "category": "Finance",
+    "summary": "RBI moved up the deadline for fresh FCNR(B) deposits under its special dollar-rupee swap facility to August 31 from September 30, after inflows jumped to $52.3 billion, up $15.6 billion in under two weeks.",
+    "angle": "A strong WAT/GD prompt on how RBI manages rupee volatility and capital inflows via forex-swap windows without touching headline rates.",
+    "source": "https://www.business-standard.com/markets/capital-market-news/rbi-to-close-fcnr-b-forex-swap-facility-window-on-31-august-126081700102_1.html"
+  },
+  {
+    "headline": "RBI moves up FCNR(B) forex swap window closure to August 31",
+    "date": "2026-08-17",
+    "category": "Finance",
+    "summary": "The RBI advanced the deadline for its special FCNR(B) deposit swap facility to August 31 (from a later date) after the scheme attracted over $56.8 billion in inflows since its June 2026 launch; ECB/OFCB swap windows remain open till December 31.",
+    "angle": "Shows how RBI actively manages forex inflows and rupee stability using targeted monetary tools rather than just the repo rate — good example of unconventional liquidity/forex management.",
+    "source": "https://www.business-standard.com/markets/capital-market-news/rbi-to-close-fcnr-b-forex-swap-facility-window-on-31-august-126081700102_1.html"
+  },
+  {
+    "headline": "RBI proposes ending revolving credit at most NBFCs",
+    "date": "2026-08-17",
+    "category": "Finance",
+    "summary": "RBI's draft norms would restrict most NBFCs to offering only fixed-schedule term loans, banning flexi-credit lines; industry body FIDC warns this could push over ₹2 trillion in flexi-credit business toward banks.",
+    "angle": "Good discussion point on regulatory arbitrage between banks and NBFCs and RBI's tightening stance on unsecured lending.",
+    "source": "https://www.business-standard.com/finance/news/fidc-to-flag-nbfc-concerns-over-rbi-s-proposed-revolving-credit-ban-126081701161_1.html"
+  },
+  {
+    "headline": "RBI shuts special dollar-deposit swap window early",
+    "date": "2026-08-17",
+    "category": "Finance",
+    "summary": "RBI advanced the deadline for banks to mobilise FCNR(B) deposits under its zero-cost swap facility to August 31 (from September 30), after inflows hit $52.3 billion by August 13 — far above expectations; the swap facility itself stays open till September 11.",
+    "angle": "Tests understanding of how RBI manages forex inflows, rupee stability and banks' dollar funding costs — a classic monetary-policy/BoP transmission question.",
+    "source": "https://www.businesstoday.in/india/story/rbis-fcnr-b-swap-window-saw-strong-inflows-why-then-was-it-closed-early-549630-2026-08-17"
+  },
+  {
+    "headline": "RBI shuts special NRI deposit swap window early after $52 billion rush",
+    "date": "2026-08-17",
+    "category": "Finance",
+    "summary": "RBI is closing its concessional FCNR(B) dollar-rupee swap facility for NRI deposits on August 31, a month early, after the scheme attracted a stronger-than-expected $52.3 billion in inflows.",
+    "angle": "Illustrates active RBI capital-flow management to shore up forex reserves, good for a WAT on RBI's role beyond interest rates.",
+    "source": "https://www.business-standard.com/finance/news/rbi-fcnr-b-window-nri-dollar-swap-deposit-scheme-deadline-forex-126081700609_1.html"
+  },
+  {
+    "headline": "Rupee holds steady as Fed rate-cut bets rise and oil prices ease",
+    "date": "2026-08-17",
+    "category": "Finance",
+    "summary": "The Indian rupee steadied around the mid-95s per dollar as the US Dollar weakened on growing Fed rate-cut expectations and a pullback in crude oil prices, even as RBI's early FCNR swap closure added a domestic factor.",
+    "angle": "Tests whether candidates can connect global Fed policy expectations to Indian currency and import-cost dynamics — a recurring GD/PI theme.",
+    "source": "https://www.fxstreet.com/news/indian-rupee-holds-ground-despite-rbi-ending-fcnr-forex-swap-window-early-202608170440"
+  },
+  {
+    "headline": "SEBI pushes ahead on bond tokenization, cyber resilience",
+    "date": "2026-08-17",
+    "category": "Finance",
+    "summary": "At its Symposium on Cyber Defence in Mumbai on August 17, SEBI chief Tuhin Kanta Pandey kept a DLT-based corporate bond tokenization pilot on the 2026-27 agenda and urged regulated entities to build a 'cryptographic bill of materials' ahead of post-quantum security risks.",
+    "angle": "Opens discussion on fintech regulation, blockchain in capital markets, and how Indian regulators are getting ahead of emerging tech risk rather than reacting to it.",
+    "source": "https://www.cryptotimes.io/2026/08/17/sebi-details-indias-quantum-strategy-keeps-tokenization-pilot-on-agenda/"
+  },
+  {
+    "headline": "Sensex, Nifty fall as IT stocks slide, crude nears $90",
+    "date": "2026-08-17",
+    "category": "Finance",
+    "summary": "Sensex dropped 281 points (0.36%) to 77,728 and Nifty fell 78 points to 24,287 on August 17 as IT majors like Infosys and HCLTech sank nearly 2-3%, while Brent crude climbed above $90/barrel on fading hopes of a Middle East ceasefire.",
+    "angle": "Links geopolitical risk (oil supply shocks) to India's twin vulnerabilities — IT export earnings and an oil-import-heavy current account — a good macro linkage question.",
+    "source": "https://hdfcsky.com/news/stock-market-close-report-today-august-17-2026-nifty-sensex-extend-caution-from-last-week-as-benchmarks-decline"
+  },
+  {
+    "headline": "Strait of Hormuz traffic collapses as US-Iran ceasefire deadline expires",
+    "date": "2026-08-17",
+    "category": "Operations",
+    "summary": "The 60-day US-Iran ceasefire/MOU expired on August 17, 2026, and daily commercial ship transits through the Strait of Hormuz fell to roughly 3-7 vessels — about 90% below normal levels — leaving a large backlog of tankers and cargo ships waiting offshore.",
+    "angle": "A live case of chokepoint risk in global supply chains, testing whether candidates understand how a single geopolitical flashpoint can freeze a route carrying ~25% of the world's seaborne oil trade.",
+    "source": "https://www.unitedagainstnucleariran.com/analysis/iran-shipping-update-august-17-2026"
+  },
+  {
+    "headline": "Vizhinjam Port begins full EXIM operations, cutting India's reliance on foreign transshipment hubs",
+    "date": "2026-08-17",
+    "category": "Operations",
+    "summary": "Kerala's Adani-run Vizhinjam International Seaport moved from pure transshipment to full import-export cargo handling from August 18, 2026, with Kerala's CM flagging off the first export container; currently over 75% of India's container transshipment volume is routed through foreign ports like Colombo and Singapore.",
+    "angle": "A ready example of India building deep-draft domestic port capacity to cut logistics costs and transit times — directly relevant to discussions on India's high logistics-cost-to-GDP ratio.",
+    "source": "https://www.theweek.in/news/maritime/2026/08/17/can-vizhinjam-port-become-vande-bharat-of-shipping-exim-ops-to-start-from-august-18-but-bottlenecks-loom.html"
+  },
+  {
+    "headline": "Vizhinjam Port launches EXIM operations amid connectivity bottlenecks",
+    "date": "2026-08-17",
+    "category": "Operations",
+    "summary": "Kerala's Vizhinjam International Seaport, built as a transshipment hub, begins full export-import (EXIM) operations from August 18, but faces immediate constraints from delayed hinterland highway and rail links.",
+    "angle": "Tests whether a candidate can separate 'capacity built' from 'capacity usable' — a port is only as good as its last-mile road/rail connectivity, a recurring India infrastructure theme.",
+    "source": "https://www.theweek.in/news/maritime/2026/08/17/can-vizhinjam-port-become-vande-bharat-of-shipping-exim-ops-to-start-from-august-18-but-bottlenecks-loom.html"
+  },
+  {
+    "headline": "Anthropic's Claude goes down globally for 36 minutes",
+    "date": "2026-08-16",
+    "category": "Product Management",
+    "summary": "On the evening of August 16, 2026, an authentication failure took down Claude.ai, Claude Code, Claude Cowork, Console and the API for about 36 minutes before Anthropic restored service.",
+    "angle": "Raises the question of reliability as a core product feature once AI tools sit inside enterprise workflows, and the concentration risk of businesses depending on a single AI vendor.",
+    "source": "https://www.bleepingcomputer.com/news/artificial-intelligence/anthropic-confirms-claude-is-down-in-major-outage-affecting-multiple-services/"
+  },
+  {
+    "headline": "Flipkart's obituary-style sale ad sparks boycott calls",
+    "date": "2026-08-16",
+    "category": "Marketing",
+    "summary": "Flipkart's Independence Day 'Freedom Sale' print ad used obituary-page formatting with photos of living people under the line 'we aren't sad at all,' triggering backlash, with author Shobhaa De publicly calling for a consumer boycott.",
+    "angle": "A ready case study on creative risk, cultural sensitivity in advertising, and how far shock-value creative can go before it damages brand trust.",
+    "source": "https://www.businesstoday.in/latest/trends/story/flipkart-faces-backlash-for-using-obituary-notices-to-promote-its-independence-day-freedom-sale-549459-2026-08-16"
+  },
+  {
+    "headline": "McKinsey says India's growth story is broadening beyond IT/services",
+    "date": "2026-08-16",
+    "category": "Consulting",
+    "summary": "A new McKinsey report finds India's growth engines are diversifying into banking, autos, e-commerce and private capital, with Indian banks hitting a decade-high 1.4% return on assets and gross NPAs at a 13-year low of 2.2% in FY25, even as margin pressure and unsecured-retail stress build.",
+    "angle": "Candidates can cite this to show awareness of which sectors are now driving Indian GDP growth beyond the traditional IT-services narrative, and the emerging asset-quality risks in retail lending.",
+    "source": "https://aninews.in/news/business/indias-growth-story-broadens-as-banks-autos-e-commerce-and-private-capital-gain-momentum-mckinsey20260816090438/"
+  },
+  {
+    "headline": "McKinsey: India's growth engines are diversifying beyond IT",
+    "date": "2026-08-16",
+    "category": "Consulting",
+    "summary": "A new McKinsey & Company research series says India's growth story is broadening past traditional drivers, with banks posting a decade-high 1.4% return on assets and 13-year-low gross NPAs of 2.2%, while auto-components exports could grow over 20% annually through 2030 even as banking margins face pressure from unsecured retail lending stress.",
+    "angle": "Tests whether a candidate can move past the generic 'IT and consumption' narrative and discuss India's diversifying, domestically-anchored growth engines and their sector-specific risks.",
+    "source": "https://aninews.in/news/business/indias-growth-story-broadens-as-banks-autos-e-commerce-and-private-capital-gain-momentum-mckinsey20260816090438/"
+  },
+  {
+    "headline": "BCG-FICCI-IBA playbook says Indian banks must make agentic AI a core strategy",
+    "date": "2026-08-15",
+    "category": "Consulting",
+    "summary": "A report launched at FIBAC 2026 by BCG, FICCI and the Indian Banks' Association argues Indian banks need to move from AI experimentation to enterprise-wide redesign of lending, recovery, and operations using agentic AI to meet rising credit-growth and productivity demands.",
+    "angle": "Useful for BFSI-sector GD/PI questions on how Indian banks are operationalizing AI beyond pilots, a common \"future of banking\" case theme.",
+    "source": "https://aninews.in/news/business/ai-era-to-reshape-banking-operations-unlock-productivity-beyond-digitisation-report20260815121318/"
+  },
+  {
+    "headline": "Flipkart enters food delivery in Bengaluru via ONDC at a 10% commission",
+    "date": "2026-08-15",
+    "category": "Product Management",
+    "summary": "Flipkart launched food delivery in Bengaluru on the government-backed ONDC network, undercutting Swiggy and Zomato's 16-30% commissions with a roughly 10% rate, timed against a restaurant boycott threat against the incumbents.",
+    "angle": "A build-vs-partner and pricing-strategy question: entering via an open network instead of a closed marketplace, and using commission as the wedge.",
+    "source": "https://www.storyboard18.com/brand-marketing/flipkart-eyes-august-15-bengaluru-food-delivery-launch-with-10-commission-report-106367.htm"
+  },
+  {
+    "headline": "Flipkart enters food delivery in Bengaluru via ONDC, undercutting on commission",
+    "date": "2026-08-15",
+    "category": "Product Management",
+    "summary": "Flipkart launched a food-delivery pilot in Bengaluru on the ONDC network, charging restaurants roughly 10% commission versus the 16-30% charged by Swiggy and Zomato.",
+    "angle": "Classic platform-strategy question — can a lower take-rate, network-based entrant dislodge incumbents with strong two-sided network effects?",
+    "source": "https://www.ciol.com/news/flipkart-to-launch-bengaluru-food-delivery-by-mid-august-on-1011-commission-12224466"
+  },
+  {
+    "headline": "Flipkart Enters Food Delivery, Undercutting Swiggy-Zomato on Commission",
+    "date": "2026-08-15",
+    "category": "Product Management",
+    "summary": "Flipkart launched a food-delivery app in Bengaluru on August 15, 2026, charging restaurants roughly 10% commission versus the 16-30% typically charged by Swiggy and Zomato, timed with a restaurant boycott of the incumbents.",
+    "angle": "Textbook two-sided marketplace strategy — using price as the wedge into an entrenched duopoly; what quality or retention risk does 10% commission create?",
+    "source": "https://www.businesstoday.in/latest/trends/photo/zomato-swiggy-and-now-flipkart-indias-food-delivery-war-just-got-a-powerful-new-player-547178-2026-08-04"
+  },
+  {
+    "headline": "India tops global AI adoption among managers and leaders: BCG",
+    "date": "2026-08-15",
+    "category": "Consulting",
+    "summary": "BCG's 'AI at Work 2026' report found India led all surveyed markets in regular AI usage among managers and leaders, with 70% of employees reporting they save a full workday's worth of time each week using AI tools.",
+    "angle": "A GenAI-in-the-workplace data point interviewers love — can the candidate connect adoption numbers to real productivity claims versus hype?",
+    "source": "https://www.storyboard18.com/amp/how-it-works/india-tops-global-ai-workplace-adoption-70-save-a-full-workday-weekly-bcg-report-100083.htm"
+  },
+  {
+    "headline": "Meta centralises WhatsApp Ads campaign setup, tests 'Custom AIs' on Instagram",
+    "date": "2026-08-15",
+    "category": "Product Management",
+    "summary": "Meta Ads Manager now lets advertisers reuse the same creatives, setup flow and budget for WhatsApp Ads via 'centralised campaigns,' while Meta separately began rolling out user-buildable 'Custom AIs' for Instagram users in the EU.",
+    "angle": "Good for discussing platform-level product decisions that reduce advertiser friction (unifying ad surfaces) versus consumer-facing experimentation (custom AI personas).",
+    "source": "https://admakeai.com/blog/meta-ads-updates-august-2026"
+  },
+  {
+    "headline": "Apple ramps iPhone 18 Pro production in India for global export",
+    "date": "2026-08-14",
+    "category": "Operations",
+    "summary": "Apple has begun full-scale production of the iPhone 18 Pro and Pro Max across its Foxconn and Tata Electronics plants in India ahead of the September launch, with Tata Electronics taking a larger share of Pro-model manufacturing this cycle.",
+    "angle": "Shows India's PLI-driven shift from low-value assembly toward premium, export-grade product manufacturing — good for a 'value-chain upgrade' discussion.",
+    "source": "https://www.outlookbusiness.com/corporate/apple-begins-iphone-18-pro-series-production-in-india-tata-share-set-to-grow"
+  },
+  {
+    "headline": "BCG and McKinsey engaged to reform India's digital government infrastructure",
+    "date": "2026-08-14",
+    "category": "Consulting",
+    "summary": "The Indian government engaged BCG to restructure the National Informatics Centre and McKinsey to reform Digital India Corporation, the entities behind government cloud, network and public-procurement platforms.",
+    "angle": "A live example of public-sector consulting scope — restructuring versus strategy advisory, and how firms compete for government mandates.",
+    "source": "https://www.consultancy.in/news/3993/bcg-and-mckinsey-advising-government-on-digital-infrastructure-reform"
+  },
+  {
+    "headline": "Government scraps 12-minute-per-hour TV ad cap",
+    "date": "2026-08-14",
+    "category": "Marketing",
+    "summary": "The I&B Ministry removed the 2006-era rule capping television ads at 12 minutes per hour, citing unfettered digital competition and India's growth from 62 to over 900 TV channels; the change takes effect once formally gazetted.",
+    "angle": "Opens a discussion on media deregulation, TV-vs-digital ad economics, and how policy shifts reshape broadcaster monetization strategy.",
+    "source": "https://www.freepressjournal.in/business/govt-removes-12-minute-tv-ad-cap-allows-channels-greater-monetisation"
+  },
+  {
+    "headline": "PhysicsWallah pivots from exam-prep to full K-12 platform",
+    "date": "2026-08-14",
+    "category": "Product Management",
+    "summary": "PhysicsWallah's Q1 FY27 results showed revenue up 24% YoY and net loss narrowing to about Rs 88 crore, with its K-12/early-learning segment revenue jumping 88% to Rs 105 crore as the edtech firm expands beyond JEE/NEET into 16+ exam categories.",
+    "angle": "A textbook TAM-expansion case — moving from a single high-intent exam-prep product to a broad K-12 platform, useful for discussing product-market widening and unit-economics trade-offs.",
+    "source": "https://www.business-standard.com/companies/quarterly-results/physicswallah-q1fy27-net-loss-narrows-to-rs-88-crore-revenue-rises-24-126081401822_1.html"
+  },
+  {
+    "headline": "Brands swap tricolour clichés for personal-freedom themes this Independence Day",
+    "date": "2026-08-13",
+    "category": "Marketing",
+    "summary": "For India's 80th Independence Day, brands including redBus, Orient Electric, SolarSquare and Flipkart built campaigns around everyday, category-specific freedom instead of standard patriotic imagery.",
+    "angle": "Unpack the positioning risk on both sides: playing a national-occasion campaign too safe versus too narrow for rivals to credibly borrow.",
+    "source": "https://bestmediainfo.com/ad-craft/heres-how-brands-are-finding-new-meaning-of-freedom-through-independence-day-campaigns-2026-12255730"
+  },
+  {
+    "headline": "Deloitte India deepens its CrowdStrike partnership",
+    "date": "2026-08-13",
+    "category": "Consulting",
+    "summary": "Deloitte India expanded its global partnership with CrowdStrike to offer managed cybersecurity services built on the AI-native Falcon platform, aiming to help Indian enterprises consolidate tools and cut breakout-detection times.",
+    "angle": "A case of consulting firms building alliance-led service lines (versus pure headcount-led delivery) to capture recurring managed-services revenue.",
+    "source": "https://www.consultancy.in/news/4534/deloitte-india-partners-with-crowdstrike-to-modernise-security-operations"
+  },
+  {
+    "headline": "Deloitte India expands CrowdStrike partnership for AI-era cybersecurity",
+    "date": "2026-08-13",
+    "category": "Consulting",
+    "summary": "Deloitte India announced a local expansion of Deloitte's global CrowdStrike alliance, pairing the AI-native Falcon platform with its managed security services to help Indian clients counter AI-driven cyberattacks.",
+    "angle": "Illustrates how consulting firms are bundling technology-vendor partnerships into service delivery.",
+    "source": "https://www.deloitte.com/in/en/about/press-room/deloitte-india-partners-with-crowdstrike-to-modernise-security-operations.html"
+  },
+  {
+    "headline": "Deloitte India expands CrowdStrike partnership for AI-native cybersecurity",
+    "date": "2026-08-13",
+    "category": "Consulting",
+    "summary": "Deloitte India expanded its global CrowdStrike partnership to pair the Falcon platform with Deloitte's managed security services, aimed at helping clients consolidate cybersecurity operations.",
+    "angle": "A live example of how Big Four firms are bundling managed services on top of a tech vendor's platform to build recurring, AI-linked revenue streams.",
+    "source": "https://www.deloitte.com/in/en/about/press-room/deloitte-india-partners-with-crowdstrike-to-modernize-cybersecurity-operations-in-india.html"
+  },
+  {
+    "headline": "Deloitte India Expands CrowdStrike Partnership Into Managed Security Services",
+    "date": "2026-08-13",
+    "category": "Consulting",
+    "summary": "Deloitte India announced on August 13, 2026 an expanded partnership with CrowdStrike to offer managed security services built on the Falcon platform, aimed at consolidating fragmented cybersecurity tooling for Indian clients.",
+    "angle": "Why are Big 4 firms increasingly building recurring managed-service revenue lines (like security operations) on top of one-time advisory engagements?",
+    "source": "https://www.deloitte.com/in/en/about/press-room/deloitte-india-partners-with-crowdstrike-to-modernize-cybersecurity-operations-in-india.html"
+  },
+  {
+    "headline": "Deloitte India expands CrowdStrike partnership to modernize cybersecurity operations",
+    "date": "2026-08-13",
+    "category": "Consulting",
+    "summary": "Deloitte India announced a local expansion of its global CrowdStrike alliance, building managed detection-and-response (MXDR) services on the AI-native Falcon platform for Indian enterprise clients.",
+    "angle": "Illustrates how Big Four firms are building tech-alliance-led service lines (cybersecurity-as-a-service) rather than pure headcount-based consulting, relevant to \"future of consulting business models\" discussions.",
+    "source": "https://www.deloitte.com/in/en/about/press-room/deloitte-india-partners-with-crowdstrike-to-modernize-cybersecurity-operations-in-india.html"
+  },
+  {
+    "headline": "Google's Gemini 3.7 Flash undercuts rivals on price",
+    "date": "2026-08-13",
+    "category": "Product Management",
+    "summary": "Google released Gemini 3.7 Flash on August 13, 2026, cutting introductory API pricing roughly in half versus its predecessor while lifting agentic-coding benchmark scores (DeepSWE v1.1 rose from 49% to 65.3%).",
+    "angle": "Illustrates price-performance warfare in the AI model market and how cheaper, faster foundation models reshape product strategy for startups building on top of them — directly relevant to India's AI-native app ecosystem.",
+    "source": "https://memeburn.com/gemini-3-7-flash-review-pricing-benchmarks-2026/"
+  },
+  {
+    "headline": "India's trade deficit hits record even as exports scale new high",
+    "date": "2026-08-13",
+    "category": "Operations",
+    "summary": "India's merchandise exports rose 19.6% YoY to a record $44.24 billion in July, but the trade deficit still widened sharply as imports (led by crude oil) grew even faster, pushing the four-month FY27 deficit up 53% YoY.",
+    "angle": "Good WAT/GD prompt: is rising export volume a false positive for 'Make in India' success when import-intensity of production is rising just as fast?",
+    "source": "https://www.tribuneindia.com/news/business/indias-trade-deficit-widens-31-5-to-15-billion-in-july-despite-record-exports/"
+  },
+  {
+    "headline": "India's trade deficit widens to six-month high of $32 billion",
+    "date": "2026-08-13",
+    "category": "Finance",
+    "summary": "India's July 2026 exports rose 19.6% YoY to a record $44.24 billion, but imports surged faster (17.5%) to $76.22 billion, pushing the trade deficit to a six-month high of $31.98 billion.",
+    "angle": "Ties directly into currency (rupee) pressure, the US tariff/trade-deal backdrop, and whether record exports are being offset by an equally strong import bill — a solid macro WAT topic.",
+    "source": "https://www.business-standard.com/economy/news/india-trade-deficit-six-month-high-july-2026-126081301078_1.html"
+  },
+  {
+    "headline": "Microsoft Begins Merging Copilot Apps Into a Unified 'Super App'",
+    "date": "2026-08-13",
+    "category": "Product Management",
+    "summary": "Microsoft started consolidating Copilot Chat, Copilot Cowork, GitHub Copilot and its Autopilot agent layer into one app spanning consumer and commercial users, a plan Satya Nadella confirmed on Microsoft's July 29 earnings call.",
+    "angle": "Product bundling/unbundling trade-off — what's gained and lost when four distinct products merge into one surface?",
+    "source": "https://fortune.com/2026/08/13/microsoft-begins-merge-consumer-and-enterprise-copilot-ai-apps/"
+  },
+  {
+    "headline": "Microsoft merges its two Copilot apps into one",
+    "date": "2026-08-13",
+    "category": "Product Management",
+    "summary": "Microsoft began rolling out a single unified Copilot app that merges the consumer Copilot and Microsoft 365 Copilot experiences across personal, work and school accounts, while confirming it will retire the Group Chat, Podcasts and Deep Research features starting August 18, 2026.",
+    "angle": "Good prompt on product portfolio rationalization — why a company merges two competing product lines, the cost of sunsetting features users relied on, and bundling as a strategy against fragmented AI assistants.",
+    "source": "https://www.geekwire.com/2026/microsoft-starts-merging-its-copilot-consumer-and-business-apps-in-advance-of-super-app-rollout/"
+  },
+  {
+    "headline": "Microsoft merges its two Copilot apps into one, ahead of a \"super app\" push",
+    "date": "2026-08-13",
+    "category": "Product Management",
+    "summary": "Microsoft began rolling out a unified Copilot app, merging the consumer and Microsoft 365 Copilot apps into one experience while keeping personal and work data separated.",
+    "angle": "Why does maintaining two overlapping apps create user confusion and engineering overhead, and what risks must a PM manage when merging products?",
+    "source": "https://www.theregister.com/ai-and-ml/2026/08/13/microsofts-dueling-copilot-apps-have-combined-into-a-single-entity/5287512"
+  },
+  {
+    "headline": "OpenAI Previews 'Ultrafast' Mode Running 14x Faster",
+    "date": "2026-08-13",
+    "category": "Product Management",
+    "summary": "OpenAI previewed an Ultrafast mode for GPT-5.6 Sol on August 13, 2026, running at up to 14 times normal speed.",
+    "angle": "Latency as a product feature — when does 'faster' change how and where an AI product gets used, not just how it feels?",
+    "source": "https://releasebot.io/updates/openai"
+  },
+  {
+    "headline": "Rupee slips to 95.40/USD as FII outflows and elevated crude weigh on the currency",
+    "date": "2026-08-13",
+    "category": "Finance",
+    "summary": "The rupee fell to 95.40/USD on continued FII selling and Brent crude near $87.89/barrel; the rupee has depreciated ~5% YTD, among the weakest major Asian currencies in 2026.",
+    "angle": "Who wins and loses from a weaker rupee (IT/pharma exporters vs. oil importers/dollar-debt firms), and should RBI intervene?",
+    "source": "https://apacnewsnetwork.com/2026/08/rupee-falls-7-paise-to-95-40-against-us-dollar-fii-outflows/"
+  },
+  {
+    "headline": "Auto-parts maker Jaya Hind Industries to invest Rs 600 crore in expansion",
+    "date": "2026-08-12",
+    "category": "Operations",
+    "summary": "Die-casting components maker Jaya Hind Industries announced a phased Rs 600-crore investment over two years to expand capacity at its Pune and Chennai plants, adding 12+ high-pressure die-casting machines and a new Chennai facility.",
+    "angle": "A concrete mid-cap capex example for discussing how India's auto-component ecosystem is localising and scaling ahead of the EV transition.",
+    "source": "https://www.autocarpro.in/news/jaya-hind-industries-announces-rs-600-crore-phased-investment-plan-134044"
+  },
+  {
+    "headline": "EY report: IT services M&A stayed resilient at $14.8B in H1 2026 as AI reshapes buyer priorities",
+    "date": "2026-08-12",
+    "category": "Consulting",
+    "summary": "EY's H1 2026 deal-insights report found 449 IT-services M&A deals worth a disclosed $14.8 billion, broadly flat versus H1 2025, with AI pushing buyers toward targets with scale, sector depth and ecosystem strength (cloud, data/analytics, cybersecurity, managed services led activity).",
+    "angle": "Gives candidates a data point for \"how is AI changing consulting/IT-services M&A strategy\" questions, showing dealmaking resilience despite softer discretionary tech spending.",
+    "source": "https://www.ey.com/en_in/newsroom/2026/08/it-services-m-a-records-449-deals-worth-us-dollor-14-point-8-billion-in-h1-2026-as-ai-reshapes-buyer-priorities"
+  },
+  {
+    "headline": "EY: IT services M&A hits 449 deals worth $14.8 billion in H1 2026 as AI reshapes buyer priorities",
+    "date": "2026-08-12",
+    "category": "Consulting",
+    "summary": "EY's H1 2026 deal report finds IT services M&A activity held broadly steady on volume, with cloud, data/analytics and cybersecurity targets leading deal-making even as discretionary spending stays soft.",
+    "angle": "Good material on how AI is shifting the rationale for M&A from pure scale to sector depth and ecosystem strength — a useful consulting/corp-strategy talking point.",
+    "source": "https://www.ey.com/en_in/newsroom/2026/08/it-services-m-a-records-449-deals-worth-us-dollor-14-point-8-billion-in-h1-2026-as-ai-reshapes-buyer-priorities"
+  },
+  {
+    "headline": "Gold rallies to $4,399/oz as rate-cut bets and central bank buying drive demand",
+    "date": "2026-08-12",
+    "category": "Finance",
+    "summary": "Gold rose to $4,399/oz driven by falling odds of further Fed hikes and continued central-bank buying; UBS projects a retest of $5,000 in H1 2027 (bank forecast, not fact).",
+    "angle": "Connect record gold prices ahead of India's festive/wedding season to import-bill and current-account-deficit concerns — a recurring WAT theme.",
+    "source": "https://www.cnbc.com/2026/08/12/gold-prices-metals-fed-rate-hike-inflation.html"
+  },
+  {
+    "headline": "Google's \"Made by Google\" event pushes Gemini deeper into hardware and paid tiers",
+    "date": "2026-08-12",
+    "category": "Product Management",
+    "summary": "Google unveiled Pixel 11 with Gemini-powered features, a Pixel Tag tracker, and a tiered AI subscription ladder from $4.99 to $199.99 bundling Google Home Premium and YouTube Premium.",
+    "angle": "Is bundling AI features into premium subscription tiers genuine ambient-computing value or primarily an upsell/lock-in play, and how would a PM measure the difference?",
+    "source": "https://techstartups.com/2026/08/13/top-tech-news-today-august-13-2026-anthropic-deepmind-google-lenovo-microsoft-spacexai-more/"
+  },
+  {
+    "headline": "India's management consulting market set to nearly double to $17 billion by 2031",
+    "date": "2026-08-12",
+    "category": "Consulting",
+    "summary": "India's management consulting market is estimated at roughly $9.4 billion in 2026 and is projected to grow about 12.7% annually to reach $17 billion by 2031, with MBB firms running large India offices and BCG India alone fielding 460+ consultants.",
+    "angle": "Useful market-sizing context for 'why consulting, why now in India' questions, and to discuss what's fueling demand (govt digitisation, GenAI advisory, PE-led diligence).",
+    "source": "https://www.roadtooffer.com/blog/consulting-firms-in-india"
+  },
+  {
+    "headline": "India’s retail inflation hits a 19-month high",
+    "date": "2026-08-12",
+    "category": "Finance",
+    "summary": "India’s CPI inflation rose to 4.45% in July 2026, up from 4.38% in June and the highest reading in 19 months, driven by rising food and energy prices linked to the Middle East conflict’s impact on crude and the rupee.",
+    "angle": "Directly feeds the RBI rate-hike debate — candidates should connect inflation data to the central bank’s next policy move.",
+    "source": "https://www.forbesindia.com/amp/article/news/july-retail-inflation-inches-up-to-4-45-percent/2997013/1"
+  },
+  {
+    "headline": "Klook launches global AI-generated brand platform across 15 markets",
+    "date": "2026-08-12",
+    "category": "Marketing",
+    "summary": "Klook and BBH Singapore unveiled a new global brand platform using an AI production system generating thousands of localized visual assets tuned to local travel trends.",
+    "angle": "Discuss the tension between letting AI generate near-infinite localized creative variants and holding one coherent brand identity across 15 markets.",
+    "source": "https://www.mi-3.com.au/12-08-2026/klook-unveils-get-your-travel-right-campaign-bbh-singapore"
+  },
+  {
+    "headline": "Molbio Diagnostics IPO subscribed 70x as investors chase India's primary market boom",
+    "date": "2026-08-12",
+    "category": "Finance",
+    "summary": "Molbio Diagnostics' Rs 939.7-crore IPO was subscribed 70.27x; grey market premium implied a listing price near Rs 953, roughly 18% over the upper price band.",
+    "angle": "Does 70x oversubscription reflect genuine confidence in Molbio's diagnostics platform, or momentum-chasing in India's 2026 IPO wave?",
+    "source": "https://www.indiainfoline.com/news/ipo/molbio-diagnostics-ipo-opens-today-check-gmp-price-band-lot-size-subscription-allotment-financials-and-listing-date"
+  },
+  {
+    "headline": "Nifty IT slides as AI-automation fears and Accenture's guidance cut spook investors",
+    "date": "2026-08-12",
+    "category": "Finance",
+    "summary": "TCS, Infosys and HCL Tech fell up to 2% after Accenture cut FY26 revenue guidance to 3-4%, fueling worries AI adoption will shrink outsourcing demand; Nifty IT trades near 16x forward earnings vs Accenture's 10x.",
+    "angle": "Argue whether Indian IT's valuation premium is justified given AI-driven demand risk, and what pivot each major IT firm needs to defend margins.",
+    "source": "https://www.business-standard.com/markets/capital-market-news/nifty-settles-below-24-450-level-it-shares-tumble-126081201253_1.html"
+  },
+  {
+    "headline": "Shiprocket's ₹1,617-crore IPO opens, testing appetite for loss-making enablement platforms",
+    "date": "2026-08-12",
+    "category": "Product Management",
+    "summary": "E-commerce enablement platform Shiprocket opened its IPO despite a consolidated net loss of ₹79.24 crore on ₹2,024 crore revenue for FY26.",
+    "angle": "How should a PM at a maturing B2B SaaS/logistics-enablement platform prioritize unit economics and monetization features as it approaches public markets?",
+    "source": "https://www.business-standard.com/markets/ipo/shiprocket-s-1-617-5-crore-ipo-to-open-aug-12-price-band-fixed-at-92-97-126080602040_1.html"
+  },
+  {
+    "headline": "Tata Motors Q1 FY27: consolidated profit up 83%, standalone up just 8%",
+    "date": "2026-08-12",
+    "category": "Finance",
+    "summary": "Tata Motors posted consolidated net profit of Rs 2,560 crore (up 83% YoY); standalone CV business profit was Rs 1,528 crore (up 8%) on revenue up 23% and CV volumes up 26%.",
+    "angle": "Explain the gap between the 83% consolidated jump and 8% standalone growth — which subsidiary is carrying the group, and what that implies about relying on one segment.",
+    "source": "https://www.business-standard.com/companies/quarterly-results/tata-motors-q1-profit-jumps-83-on-strong-cv-demand-flags-price-hikes-126081201739_1.html"
+  },
+  {
+    "headline": "Tata Sons chairman Chandrasekaran to step down, reopening succession crisis",
+    "date": "2026-08-12",
+    "category": "Consulting",
+    "summary": "N. Chandrasekaran announced he will exit as Tata Sons chairman when his term ends in February 2027, after months of boardroom deadlock over his reappointment.",
+    "angle": "How does a leadership vacuum at the holding-company level threaten execution of Tata's ~$120B capex plan across semiconductors, aviation and EVs?",
+    "source": "https://www.business-standard.com/companies/news/chandrasekaran-resigns-tata-sons-succession-battle-ratan-noel-cyrus-mistry-126081201111_1.html"
+  },
+  {
+    "headline": "US inflation cools to 3.4% in July, keeping September Fed rate-cut bets alive",
+    "date": "2026-08-12",
+    "category": "Finance",
+    "summary": "US CPI rose 3.4% YoY in July (down from 3.5%); core CPI rose 2.5% YoY, reinforcing market expectations of a Fed rate cut at the September FOMC meeting.",
+    "angle": "How would a Fed rate cut transmit to India — cheaper dollar funding and FII inflows, versus a stronger case for RBI to hold given above-target inflation?",
+    "source": "https://www.cnbc.com/2026/08/12/cpi-inflation-report-july-2026.html"
+  },
+  {
+    "headline": "Blinkit dark store's food licence suspended in Mumbai over hygiene violations",
+    "date": "2026-08-11",
+    "category": "Product Management",
+    "summary": "Maharashtra's FDA suspended a Blinkit dark store's food licence in Malad, Mumbai after finding cockroach infestations, expired stock, and failure to follow FIFO/FEFO norms.",
+    "angle": "How should a PM at a quick-commerce company balance dark-store expansion speed against building scalable, auditable quality/trust-and-safety systems?",
+    "source": "https://www.businesstoday.in/india/story/expired-food-products-cockroaches-rusty-racks-licence-of-blinkit-store-suspended-in-mumbai-after-inspection-548421-2026-08-11"
+  },
+  {
+    "headline": "ChatGPT ads go global, land in five new markets",
+    "date": "2026-08-11",
+    "category": "Marketing",
+    "summary": "OpenAI expanded its ChatGPT ad pilot beyond the US to the UK, Mexico, Brazil, Japan and South Korea from August 11, showing ads only to logged-in free-tier users while keeping paid subscription tiers ad-free.",
+    "angle": "A global analogy for how AI chat interfaces are becoming a new advertising and discovery channel, useful for discussing the future of search-driven marketing in India.",
+    "source": "https://www.ghacks.net/2026/08/13/openai-expands-chatgpt-ads-test-to-uk-mexico-brazil-japan-and-south-korea/"
+  },
+  {
+    "headline": "Danube Group explains its Bigg Boss 19 branded-entertainment bet",
+    "date": "2026-08-11",
+    "category": "Marketing",
+    "summary": "Dubai developer Danube Group built a \"Danube Apartment\" into the Bigg Boss 19 house, rather than running a conventional logo sponsorship, to sell real estate to Indian/NRI buyers.",
+    "angle": "Argue whether branded entertainment can move a high-ticket purchase like real estate the way it moves impulse categories.",
+    "source": "https://bestmediainfo.com/mediainfo/television/we-did-not-want-danube-to-be-seen-only-as-a-logo-rizwan-sajan-on-bigg-boss-19-12249358"
+  },
+  {
+    "headline": "FMCG giants pour more ad money into quick commerce",
+    "date": "2026-08-11",
+    "category": "Marketing",
+    "summary": "Nestle India raised ad spend over 40% YoY in Q1 FY27 while HUL spent roughly Rs 1,657 crore on advertising and promotions in the June quarter, as FMCG majors rebalance brand-building against growing visibility demands on Blinkit, Zepto and Instamart.",
+    "angle": "A strong prompt on how retail/commerce media is disrupting traditional ATL budget allocation for large FMCG advertisers.",
+    "source": "https://indiantelevision.com/iworld/fmcg-giants-raise-ad-spends-as-quick-commerce-reshapes-brand-strategy/"
+  },
+  {
+    "headline": "Global port congestion update: Felixstowe omissions, Hormuz risk, Guinea storage crunch",
+    "date": "2026-08-11",
+    "category": "Operations",
+    "summary": "Carriers are skipping calls at UK's Felixstowe due to congestion, maritime risk remains elevated in the Strait of Hormuz, and Guinea's Conakry port faces ~13.6-day waits from limited storage.",
+    "angle": "Contrast two system responses to congestion — rerouting around a constrained node versus a chokepoint with no reroute option — for a discussion on network resilience.",
+    "source": "https://mykn.kuehne-nagel.com/news/article/port-operational-updates-from-11-08-2026"
+  },
+  {
+    "headline": "Govt directive bans \"tip for a faster ride\" prompts on Uber, Ola, Rapido",
+    "date": "2026-08-11",
+    "category": "Product Management",
+    "summary": "Following an MoRTH crackdown, aggregators covered under the Motor Vehicles Act were directed to stop repeated tipping and add-on prompts, after a survey found 78% of users faced pop-ups even after declining.",
+    "angle": "A sharp prompt on dark patterns in product design — where does persuasive UX end and manipulative UX begin, and how should PMs self-regulate before the regulator steps in?",
+    "source": "https://www.outlookbusiness.com/industry/govt-cracks-down-on-uber-ola-rapido-tip-to-get-a-ride-faster-prompts-morth"
+  },
+  {
+    "headline": "India's Russian crude imports hit a record for a second straight month",
+    "date": "2026-08-11",
+    "category": "Operations",
+    "summary": "India's purchases of Russian crude rose to a fresh record in July for the second consecutive month, even as refiners navigate Western sanctions on Rosneft and Lukoil.",
+    "angle": "A recurring favourite — sourcing strategy under geopolitical constraint, and how refiners balance cost, compliance and energy security.",
+    "source": "https://newstodaynet.com/2026/08/11/indias-russian-crude-imports-hit-record-manages-a-rise-for-second-straight-month/"
+  },
+  {
+    "headline": "L&T joins the race to build rare-earth magnets in India, chasing a government incentive",
+    "date": "2026-08-11",
+    "category": "Operations",
+    "summary": "L&T is preparing to bid for India's Rs 7,280 crore incentive scheme to build domestic rare-earth magnet capacity, as China's ~90% grip on global magnet production threatens EV/electronics production.",
+    "angle": "A response to single-source dependency risk — why subsidize capacity creation rather than just diversifying suppliers, given the lead time and technology gap?",
+    "source": "https://www.business-standard.com/companies/news/larsen-toubro-planning-to-manufacture-rare-earth-magnets-in-india-126081100813_1.html"
+  },
+  {
+    "headline": "McKinsey: India's chemicals industry to nearly double to $255 billion by 2030",
+    "date": "2026-08-11",
+    "category": "Consulting",
+    "summary": "McKinsey projects India's chemicals sector growing from ~$160B to $230-255B by 2030 (8-9% CAGR), led by eight arenas including semiconductors, EVs/batteries and renewables.",
+    "angle": "Pick one of the eight \"arenas\" and build a market-entry thesis, while questioning whether this growth is structural or a China+1 sourcing-shift tailwind.",
+    "source": "https://www.ibef.org/news/india-s-chemicals-industry-projected-to-reach-up-to-us-255-billion-by-2030-mckinsey-report"
+  },
+  {
+    "headline": "SBI Research pegs India's Q1 FY27 GDP growth at 8%, a point above RBI's forecast",
+    "date": "2026-08-11",
+    "category": "Finance",
+    "summary": "SBI Research's nowcasting model projects 8% Q1 FY27 GDP growth vs. RBI's 7%, citing 24.1% YoY passenger vehicle growth and capex running at 27.8% of budget estimates.",
+    "angle": "Which high-frequency proxies (capex execution, auto sales, credit growth) would you lean on to defend either number until the official GDP print?",
+    "source": "https://www.business-standard.com/economy/news/india-s-q1-fy27-gdp-growth-projected-at-8-says-sbi-research-report-126081101611_1.html"
+  },
+  {
+    "headline": "Swiggy agrees to refund restaurants as boycott deadline pushed to September",
+    "date": "2026-08-11",
+    "category": "Product Management",
+    "summary": "Facing a threatened delisting by 1,000+ Bengaluru restaurants over undisclosed ad charges and high commissions, Swiggy agreed to refund the disputed promotional deductions, with the boycott deadline pushed to September 1.",
+    "angle": "A clean two-sided-marketplace conflict on platform commission and fee transparency versus supply-side trust.",
+    "source": "https://inc42.com/buzz/after-boycott-calls-swiggy-to-refund-alleged-unauthorised-charges-to-restaurants/"
+  },
+  {
+    "headline": "Toyota recalls over 508,000 Camry Hybrids for a two-year-old software defect",
+    "date": "2026-08-11",
+    "category": "Operations",
+    "summary": "Toyota is recalling 508,354 Camry Hybrids after a software initialization error disabled instrument clusters and turn signals; the intermittent fault took regulators two years to confirm.",
+    "angle": "Intermittent software defects escape traditional QA sampling and the lack of an OTA fallback multiplies recall cost — how should fail-safes be designed for software-defined products?",
+    "source": "https://www.bizzycar.com/blog/august-2026-toyota-recall-for-blank-instrument-cluster-and-inoperative-turn-signals-affecting-508354-vehicles"
+  },
+  {
+    "headline": "US court dismisses fraud case against Gautam Adani days before MSCI review",
+    "date": "2026-08-11",
+    "category": "Consulting",
+    "summary": "A US federal court dismissed with prejudice the DOJ's securities-fraud indictment against Gautam Adani, Sagar Adani and a former Adani Green CEO, just before MSCI's quarterly index review.",
+    "angle": "Does legal relief alone restore investor trust and reopen passive-fund inflows, or is structural governance reform still needed for a leveraged infrastructure group?",
+    "source": "https://www.theweek.in/news/biz-tech/2026/08/11/gautam-adani-charges-dismissed-us-court.html"
+  },
+  {
+    "headline": "Air India will restore most flights it cut this summer over fuel costs and airspace curbs",
+    "date": "2026-08-10",
+    "category": "Operations",
+    "summary": "Air India will restore most of the 145 weekly international flights and ~20-22% of domestic capacity it suspended over record jet fuel prices and airspace restrictions, from September 1.",
+    "angle": "A case of reactive capacity throttling in response to volatile input costs — could proactive network/fuel-hedging planning have avoided blanket route suspensions?",
+    "source": "https://www.outlooktraveller.com/News/air-india-to-bring-back-suspended-international-flights-as-fuel-prices-ease"
+  },
+  {
+    "headline": "Blackstone's Safe Harbor to buy MarineMax for $1.5 billion",
+    "date": "2026-08-10",
+    "category": "Consulting",
+    "summary": "Blackstone-owned marina operator Safe Harbor agreed to acquire boat retailer MarineMax at a roughly 96% premium, merging marina infrastructure with retail, brokerage and financing.",
+    "angle": "Why would a marina-real-estate owner want the retail/dealership layer too, and does the steep premium signal scarcity value or overpayment?",
+    "source": "https://www.businesswire.com/news/home/20260809836761/en/MarineMax-Enters-into-Definitive-Agreement-to-be-Acquired-by-Blackstone-Infrastructure-Portfolio-Company-Safe-Harbor-in-a-$1.5-Billion-All-Cash-Transaction"
+  },
+  {
+    "headline": "Cadbury Celebrations refreshes its Raksha Bandhan gifting range",
+    "date": "2026-08-10",
+    "category": "Marketing",
+    "summary": "Cadbury Celebrations, with Ogilvy India, launched '#ThisTakraarIsSweet' alongside a redesigned premium gifting portfolio spanning Rs 100 to Rs 575 price points.",
+    "angle": "Discuss how a legacy chocolate-gifting category defends share against modern D2C gifting brands by widening its price architecture.",
+    "source": "https://www.medianews4u.com/cadbury-celebrations-refreshes-raksha-bandhan-portfolio-with-premium-gifting-range-and-thistakraarissweet-campaign/"
+  },
+  {
+    "headline": "Doctors demand a watershed ban on junk food ads to children",
+    "date": "2026-08-10",
+    "category": "Marketing",
+    "summary": "Over 30 doctors urged the health ministry to ban HFSS food advertising 6am-11pm, mandate warning labels, and bar sales in school canteens.",
+    "angle": "Form a point of view on whether FMCG/QSR brands should get ahead of this with voluntary reformulation, or resist it — and what that signals about trading category growth for trust.",
+    "source": "https://www.counterview.net/2026/08/health-experts-urge-nadda-to-impose.html"
+  },
+  {
+    "headline": "IES Holdings to acquire structural-steel platform DBM Global for $650 million",
+    "date": "2026-08-10",
+    "category": "Consulting",
+    "summary": "IES Holdings agreed to buy DBM Global, a structural-steel fabrication and industrial-services platform, creating a new \"Structural\" business line alongside its existing segments.",
+    "angle": "Does adding an adjacent-but-distinct construction vertical smooth cyclicality across IES's portfolio, or is it \"diworsification\" that stretches management focus?",
+    "source": "https://www.globenewswire.com/news-release/2026/08/10/3341777/29106/en/index.html"
+  },
+  {
+    "headline": "Mahindra Group consolidates real estate, hospitality under new CSO",
+    "date": "2026-08-10",
+    "category": "Consulting",
+    "summary": "Mahindra Group named Shveta Arya (outgoing MD of Cummins India) as Group Chief Strategy Officer effective September 15, while consolidating its Mahindra Lifespace (real estate) and Mahindra Holidays (hospitality) businesses into a single strategic vertical led by Amit Kumar Sinha.",
+    "angle": "A textbook conglomerate-portfolio-strategy case — bundling secondary 'growth gem' businesses under focused leadership to unlock capital and operational synergies, useful for discussing diversified Indian business group strategy.",
+    "source": "https://www.business-standard.com/industry/news/mahindra-group-dedicated-focus-real-estate-hospitality-growth-126081000773_1.html"
+  },
+  {
+    "headline": "Meta open-sources Muse Glimmer, a 30B-parameter on-device AI model",
+    "date": "2026-08-10",
+    "category": "Product Management",
+    "summary": "Meta released Muse Glimmer, an Apache 2.0-licensed 30-billion-parameter multimodal model designed to run locally on a single consumer GPU, positioning itself against OpenAI and Anthropic's closed offerings.",
+    "angle": "A strong prompt on open-source vs. closed AI models as a platform strategy to compete on developer distribution.",
+    "source": "https://www.cnbc.com/2026/08/10/meta-muse-glimmer-open-weight-ai.html"
+  },
+  {
+    "headline": "Shah Rukh Khan fronts Google's Gemini campaign for \"Bharat\"",
+    "date": "2026-08-10",
+    "category": "Marketing",
+    "summary": "Google India launched a multilingual Gemini campaign starring Shah Rukh Khan, developed with McCann India, aimed at India's ~470 million Tier 2/3 internet users.",
+    "angle": "Explain why a global AI brand borrows a legacy Bollywood icon's trust equity, rather than a digital-native creator, to cross the language barrier into non-metro India.",
+    "source": "https://campaignbriefasia.com/2026/08/10/google-india-makes-gemini-more-approachable-with-shah-rukh-khan-and-prasoon-joshi/"
+  },
+  {
+    "headline": "Teledyne to acquire X-ray imaging maker Varex Imaging for $1.1 billion",
+    "date": "2026-08-10",
+    "category": "Consulting",
+    "summary": "Teledyne agreed to buy Varex Imaging, adding X-ray tubes and photon-counting detectors to its digital-imaging portfolio, citing largely non-overlapping product lines.",
+    "angle": "Is the acquirer's \"limited overlap\" framing a strength (true capability adjacency) or a red flag (thin synergy case)?",
+    "source": "https://www.teledyne.com/en-us/news/Pages/teledyne-to-acquire-varex-imaging-corporation.aspx"
+  },
+  {
+    "headline": "US judge dismisses DOJ's bribery case against Gautam Adani, but criticizes DOJ's conduct",
+    "date": "2026-08-10",
+    "category": "Finance",
+    "summary": "A Brooklyn federal judge granted the DOJ's own request to drop the bribery indictment against Adani, but called the DOJ's reasoning \"concerning\" and kept charges against five co-defendants.",
+    "angle": "Does removing personal legal risk change Adani Group's cost of capital, or does the judge's public rebuke still create an overhang with international investors?",
+    "source": "https://www.cbsnews.com/news/judge-doj-gautam-adani-india-trump-administration/"
+  },
+  {
+    "headline": "Vodafone Idea narrows Q1 loss, posts first subscriber gain since merger",
+    "date": "2026-08-10",
+    "category": "Consulting",
+    "summary": "Vodafone Idea cut its Q1 FY27 net loss to ₹3,754 crore as revenue rose 6% and ARPU climbed to ₹195, its first quarter of positive net subscriber additions since the merger.",
+    "angle": "Is this a genuine ARPU-led premiumization strategy or survival-mode financial engineering, given content bundling is trivially copyable by Jio and Airtel?",
+    "source": "https://www.businesstoday.in/markets/stocks/story/vodafone-idea-q1-results-loss-narrows-to-rs3754-crore-as-revenue-rises-customer-arpu-reaches-rs195-548396-2026-08-10"
+  },
+  {
+    "headline": "India plans a PLI scheme for polysilicon to plug a gap in its solar supply chain",
+    "date": "2026-08-09",
+    "category": "Operations",
+    "summary": "A planned PLI scheme targets 10+ GW of domestic polysilicon capacity; India has built 200+ GW of module and 32+ GW of cell capacity but remains import-dependent on upstream polysilicon.",
+    "angle": "A capacity mismatch across a value chain — why does backward integration matter more than headline downstream capacity numbers?",
+    "source": "https://ianslive.in/india-plans-pli-scheme-for-polysilicon-manufacturing-to-reduce-solar-import-dependence--20260809181624"
+  },
+  {
+    "headline": "OpenAI shuts down its standalone Atlas browser, folds features into ChatGPT",
+    "date": "2026-08-09",
+    "category": "Product Management",
+    "summary": "OpenAI's Atlas browser, launched October 2025, was retired on August 9, 2026, with its browser-agent capabilities absorbed into ChatGPT itself.",
+    "angle": "When should a PM kill a standalone product surface rather than keep investing in it — what signals justify folding a feature back into the core platform?",
+    "source": "https://www.techrepublic.com/article/news-chatgpt-atlas-shutdown-migration/"
+  },
+  {
+    "headline": "A US Senate Russia-sanctions bill could expose Indian exports to 100% tariffs",
+    "date": "2026-08-08",
+    "category": "Operations",
+    "summary": "The US Senate passed a Russia/Iran sanctions bill; India buys ~30% of its crude from Russia, and continued purchases could trigger tariffs up to 100% on Indian exports to the US.",
+    "angle": "A sourcing decision made for cost efficiency (cheap Russian crude) created concentrated geopolitical exposure across an unrelated value chain — discuss supplier concentration risk beyond cost/lead time.",
+    "source": "https://www.business-standard.com/india-news/russia-sanctions-bill-may-expose-indian-exports-to-100-us-tariff-gtri-126080801067_1.html"
+  },
+  {
+    "headline": "Ola Electric's Q1 FY27 turnaround leans on operating discipline, not just volume",
+    "date": "2026-08-08",
+    "category": "Operations",
+    "summary": "Ola Electric's deliveries nearly doubled sequentially to ~39,200 units and market share rose to 8.4%, while operating expenses fell 22%, aided by in-house 4680 cell production.",
+    "angle": "Discuss how a manufacturer converts capacity utilization gains from vertical integration into margin rather than just top-line growth.",
+    "source": "https://cofacto.ai/market-news/olaelec-q1-fy27-earnings-call"
+  },
+  {
+    "headline": "Sarla Aviation gets India's first eVTOL design approval, clearing path to air taxis",
+    "date": "2026-08-08",
+    "category": "Product Management",
+    "summary": "Bengaluru-based Sarla Aviation received Design Organisation Approval from India's DGCA, the first ever under India's 2024 VTOL certification framework, moving toward type certification.",
+    "angle": "For deep-tech hardware products, regulatory milestones function as gated release stages — how should a PM sequence a roadmap around external approval dependencies?",
+    "source": "https://www.techtimes.com/articles/323848/20260810/dgca-grants-sarla-aviation-first-evtol-design-approval-under-indias-2024-air-taxi-framework.htm"
+  },
+  {
+    "headline": "Airbus and Boeing stuck a decade from unblocking their composite-curing bottleneck",
+    "date": "2026-08-07",
+    "category": "Operations",
+    "summary": "Both planemakers are exploring out-of-autoclave composite curing because current autoclaves are extremely capacity-constrained, capping production below needed narrowbody rates.",
+    "angle": "A textbook single-resource bottleneck sets the ceiling for an entire production system — why doesn't fixing everywhere except the constraint move total throughput?",
+    "source": "https://leehamnews.com/2026/08/07/how-far-away-is-out-of-autoclave-aerostructure-production-for-airbus-and-boeing/"
+  },
+  {
+    "headline": "Amazon, Flipkart, Myntra open Independence Day sale season",
+    "date": "2026-08-07",
+    "category": "Marketing",
+    "summary": "Amazon's Great Freedom Festival and Flipkart's Freedom Sale launched with up to 80-90% off and bank-card tie-ups, ahead of Myntra's Aug 12-18 sale window.",
+    "angle": "Discuss whether stacking sale calendars onto every national holiday erodes discount-led acquisition's long-term defensibility versus brand loyalty.",
+    "source": "https://www.91mobiles.com/hub/flipkart-freedom-sale-2026-date-bank-offers-announced/"
+  },
+  {
+    "headline": "ASCI finds 98% of summer ad claims failed compliance",
+    "date": "2026-08-07",
+    "category": "Marketing",
+    "summary": "ASCI's \"The Heat Is On\" report reviewed 40 summer-season ads across sunscreens, coolers, air purifiers, personal care and wearables, and found 39 required correction or withdrawal for unsubstantiated claims.",
+    "angle": "Be ready to argue whether claims-heavy seasonal advertising is a rational bet on short attention spans, or a trust liability once a regulator starts publishing violator rates by category.",
+    "source": "https://www.medianews4u.com/98-of-summer-advertising-claims-failed-compliance-checks-asci/"
+  },
+  {
+    "headline": "Dentsu Names India Its Top APAC Growth Market",
+    "date": "2026-08-07",
+    "category": "Marketing",
+    "summary": "Dentsu Group reported India as its single biggest growth market across Asia-Pacific in H1 FY2026, as global ad holding companies rebalance investment toward the market.",
+    "angle": "Why is India outgrowing the rest of APAC for global ad agencies right now — what's actually driving the spend (digital, e-commerce, D2C)?",
+    "source": "https://bostoninstituteofanalytics.org/blog/weekly-digital-marketing-news-roundup-july-31-august-7-2026-google-openai-meta-india-marketing-updates/"
+  },
+  {
+    "headline": "Government Readies a Dedicated PLI Scheme for Polysilicon",
+    "date": "2026-08-07",
+    "category": "Operations",
+    "summary": "The Ministry of New and Renewable Energy is developing a new PLI scheme to support over 10 GW of domestic polysilicon manufacturing — the key upstream raw material for solar cells and semiconductor chips.",
+    "angle": "Import-substitution operations strategy — India is trying to build an upstream raw-material layer it currently doesn't have at all.",
+    "source": "https://www.theweek.in/news/biz-tech/2026/08/08/polysilicon-pli-scheme-india.html"
+  },
+  {
+    "headline": "India's last-mile delivery boom is outrunning its B2B logistics backbone",
+    "date": "2026-08-07",
+    "category": "Operations",
+    "summary": "Quick-commerce dark stores scaled ~48% YoY to 5,000+ locations, but the upstream B2B logistics layer connecting factories, warehouses and distributors remains manual and fragmented.",
+    "angle": "A Theory-of-Constraints trap — explain why optimizing the visible bottleneck (last-mile) without fixing the upstream flow doesn't raise system throughput.",
+    "source": "https://www.theweek.in/news/biz-tech/2026/08/07/guest-opinion-primary-secondary-logistics.html"
+  },
+  {
+    "headline": "KKR-backed LEAP India opens Rs 2,480-crore IPO, heavy on offer-for-sale",
+    "date": "2026-08-07",
+    "category": "Finance",
+    "summary": "LEAP India's IPO comprised a Rs 480-crore fresh issue and ~Rs 2,000-crore offer-for-sale (~80% of issue size) at a price band of Rs 151-159.",
+    "angle": "With ~80% of the issue as OFS, is this IPO primarily about funding LEAP India's growth or KKR monetizing its stake?",
+    "source": "https://www.inkl.com/news/leap-india-ipo-day-2-check-gmp-subscription-status-issue-details-should-you-subscribe"
+  },
+  {
+    "headline": "RBI's draft ban on revolving credit erases Rs 55,000 crore from Bajaj group in a day",
+    "date": "2026-08-07",
+    "category": "Finance",
+    "summary": "RBI's draft norms propose banning revolving/flexi-credit products for most NBFCs; Bajaj Finance and Bajaj Finserv shares fell ~6% and ~4%, wiping out roughly Rs 55,000 crore in combined market value.",
+    "angle": "Explain why a ban on \"restore-after-repayment\" credit lines hits Bajaj Finance's flexi-loan book harder than peers, and whether this is prudent de-risking or regulatory overreach.",
+    "source": "https://www.business-standard.com/finance/news/rbi-s-draft-revolving-credit-curbs-drag-nbfc-stocks-bajaj-finance-down-6-126080701605_1.html"
+  },
+  {
+    "headline": "YouTube to Count Views From the First Frame",
+    "date": "2026-08-07",
+    "category": "Marketing",
+    "summary": "From August 24, 2026, YouTube will count a public 'view' from the moment a video starts playing rather than after a few seconds of watch time, changing a metric advertisers and creators have relied on for years.",
+    "angle": "'What gets measured gets managed' in action — how should a brand's campaign benchmarks and creator-pricing deals adjust when the metric itself changes?",
+    "source": "https://bostoninstituteofanalytics.org/blog/weekly-digital-marketing-news-roundup-july-31-august-7-2026-google-openai-meta-india-marketing-updates/"
+  },
+  {
+    "headline": "Nielsen to acquire ad-verification firm DoubleVerify for $2.15 billion",
+    "date": "2026-08-06",
+    "category": "Consulting",
+    "summary": "Nielsen agreed to buy DoubleVerify, combining audience measurement with ad-verification and brand-safety data into a single platform expected to generate over $4B in combined revenue.",
+    "angle": "Does combined measurement-plus-verification data create real switching costs for advertisers, or could rivals replicate the value through partnerships instead of a merger?",
+    "source": "https://www.nielsen.com/news-center/2026/nielsen-to-acquire-doubleverify-creating-a-leading-independent-media-intelligence/"
+  },
+  {
+    "headline": "PhonePe expands into fixed deposits and daily micro-savings, deepening its super-app bet",
+    "date": "2026-08-06",
+    "category": "Product Management",
+    "summary": "PhonePe launched fixed deposit distribution with partner banks/NBFCs and a Daily Recurring Deposit product starting at Rs 100/day.",
+    "angle": "Weigh distribution-led adjacent expansion (aggregating partner FDs) against the risk of diluting the core payments use case.",
+    "source": "https://ianslive.in/phonepe-launches-fixed-deposit-distribution-in-partnership-with-leading-banks-nbfcs--20260806152608"
+  },
+  {
+    "headline": "Punt Creative wins PizzaExpress India’s communications mandate",
+    "date": "2026-08-06",
+    "category": "Marketing",
+    "summary": "Punt Creative was appointed as PizzaExpress India’s communications agency following a competitive multi-agency pitch, taking charge of digital strategy, social media, content and integrated campaigns.",
+    "angle": "Useful for agency-client pitch dynamics and how QSR/casual-dining brands build digital-first engagement in India.",
+    "source": "https://bestmediainfo.com/mediainfo/mediainfo-marketing/punt-creative-wins-pizzaexpress-india-communications-mandate-12234270"
+  },
+  {
+    "headline": "RBI to Pilot India's First Polymer ₹10 and ₹20 Notes",
+    "date": "2026-08-06",
+    "category": "Finance",
+    "summary": "Governor Sanjay Malhotra confirmed a pilot of polymer currency notes beginning FY28 (1 billion pieces each of ₹10 and ₹20), with a tender for polymer substrate sheets closing August 18, 2026.",
+    "angle": "Currency-management economics — why pilot cautiously rather than switch India's whole note supply to more durable polymer at once?",
+    "source": "https://www.republicworld.com/business/rbi-to-roll-out-india-s-first-polymer-rs-10-rs-20-currency-notes-at-start-of-next-financial-year-2026-08-06-134110"
+  },
+  {
+    "headline": "WhatsApp starts testing age verification for Indian users ahead of DPDP Act rollout",
+    "date": "2026-08-06",
+    "category": "Product Management",
+    "summary": "WhatsApp began testing a feature in India asking users to confirm date of birth, aimed at identifying under-18 users to comply with the DPDP Act's parental-consent requirements.",
+    "angle": "How does a PM design a low-friction compliance feature like age-gating without tanking activation/signup conversion?",
+    "source": "https://www.bloomberg.com/news/articles/2026-08-06/whatsapp-tests-age-confirmation-in-largest-market-india"
+  },
+  {
+    "headline": "WhatsApp tests age verification for Indian users",
+    "date": "2026-08-06",
+    "category": "Product Management",
+    "summary": "WhatsApp began testing a feature asking users in India to submit their date of birth, getting ahead of upcoming Indian laws that require platforms to verify user age.",
+    "angle": "A good prompt on compliance-driven product roadmaps — building a feature not for engagement but to pre-empt regulation in your largest market.",
+    "source": "https://www.bloomberg.com/news/articles/2026-08-06/whatsapp-tests-age-confirmation-in-largest-market-india"
+  },
+  {
+    "headline": "Kim Kardashian’s SKIMS enters India via exclusive Reliance Brands tie-up",
+    "date": "2026-08-05",
+    "category": "Marketing",
+    "summary": "Reliance Brands Limited signed an exclusive partnership to launch SKIMS, the shapewear and loungewear label co-founded by Kim Kardashian, in India — starting with stores in Delhi and Mumbai across physical and digital channels.",
+    "angle": "A good prompt on market-entry strategy for global celebrity-founded brands — why a local-partner model over a standalone launch in India.",
+    "source": "https://insideretail.asia/2026/08/07/kim-kardashians-skims-enters-india-with-reliance-retail/"
+  },
+  {
+    "headline": "Manipal Health Enterprises lists at 11% premium in India's second-largest 2026 IPO",
+    "date": "2026-08-05",
+    "category": "Finance",
+    "summary": "Manipal Health Enterprises' ₹9,275-crore IPO debuted at an 11% premium over its issue price, taking its market cap to roughly ₹77,600 crore despite muted retail demand.",
+    "angle": "A good case to discuss IPO pricing and valuation of healthcare assets, and why institutional demand outpaced retail enthusiasm.",
+    "source": "https://www.business-standard.com/markets/news/manipal-health-share-price-lists-at-11-premium-beats-gmp-expectations-126080500123_1.html"
+  },
+  {
+    "headline": "RBI Holds Repo Rate at 5.25% for a Fourth Straight Meeting",
+    "date": "2026-08-05",
+    "category": "Finance",
+    "summary": "The RBI's Monetary Policy Committee unanimously kept the repo rate at 5.25% and its stance 'Neutral', while raising the FY26 GDP growth forecast to 6.7% even as June inflation crossed the 4% target for the first time in 17 months.",
+    "angle": "Classic WAT/GD prompt — why hold rates instead of cutting or hiking when growth is 'resilient' but inflation is turning up?",
+    "source": "https://www.outlookmoney.com/banking/rbi-mpc-august-2026-meeting-live-updates-governor-sanjay-malhotra-speech-repo-rate-inflation-gdp-news"
+  },
+  {
+    "headline": "RBI holds repo rate at 5.25% for fourth straight meeting, lifts FY27 growth forecast to 6.7%",
+    "date": "2026-08-05",
+    "category": "Finance",
+    "summary": "The RBI's MPC unanimously kept the repo rate unchanged at 5.25% in its August policy review, while raising India's GDP growth projection to 6.7% on resilient domestic demand and robust exports.",
+    "angle": "Staple GD/PI topic — link a \"neutral\" policy stance with June's above-target inflation print and the growth-inflation trade-off the RBI is managing.",
+    "source": "https://www.outlookmoney.com/banking/rbi-mpc-august-2026-meeting-live-updates-governor-sanjay-malhotra-speech-repo-rate-inflation-gdp-news"
+  },
+  {
+    "headline": "RBI proposes harmonised interest-rate framework across regulated entities",
+    "date": "2026-08-05",
+    "category": "Finance",
+    "summary": "The RBI proposed standardising how banks and NBFCs set and disclose interest rates on advances, aiming for greater transparency in loan pricing and stronger monetary transmission.",
+    "angle": "Useful for questions on monetary policy transmission — why uniform pricing rules help rate cuts actually reach borrowers faster.",
+    "source": "https://www.business-standard.com/finance/news/rbi-proposes-uniform-interest-rate-framework-for-regulated-entities-126080500369_1.html"
+  },
+  {
+    "headline": "RBI proposes on-tap licensing for Urban Co-operative Banks after a 20-year pause",
+    "date": "2026-08-05",
+    "category": "Finance",
+    "summary": "The RBI will issue draft guidelines allowing eligible credit cooperatives (minimum ₹10,000 crore deposits, 12% CRAR) to apply for fresh UCB licences year-round, ending a near two-decade freeze.",
+    "angle": "Tests understanding of financial inclusion versus systemic risk — why the RBI paused UCB licensing after the PMC Bank crisis and what safeguards justify reopening it now.",
+    "source": "https://www.business-standard.com/finance/news/rbi-proposes-on-tap-ucb-licensing-with-10-000-crore-deposit-norm-126080501700_1.html"
+  },
+  {
+    "headline": "Flipkart times food-delivery entry to Bengaluru restaurants' boycott of Swiggy and Zomato",
+    "date": "2026-08-04",
+    "category": "Product Management",
+    "summary": "Flipkart is launching food delivery in Bengaluru via ONDC at a 10-11% restaurant commission, as local restaurants threaten to stop accepting Swiggy/Zomato orders over 24-25% commissions.",
+    "angle": "How does a new entrant exploit supply-side dissatisfaction and existing platform assets to disrupt an incumbent's commission-based business model?",
+    "source": "https://www.businesstoday.in/latest/trends/photo/zomato-swiggy-and-now-flipkart-indias-food-delivery-war-just-got-a-powerful-new-player-547178-2026-08-04"
+  },
+  {
+    "headline": "Rapido's Zero-Commission 'Ownly' Grabs Early Share From Swiggy-Zomato",
+    "date": "2026-08-03",
+    "category": "Product Management",
+    "summary": "Rapido's flat-fee food-delivery product Ownly has scaled to over 40,000 orders across 25,000 restaurants in Bengaluru, capturing an estimated 7-10% of the market within months.",
+    "angle": "Pricing-model innovation (flat fee vs. commission) as the core product lever for winning restaurant supply in a two-sided market.",
+    "source": "https://www.theweek.in/news/biz-tech/2026/08/03/swiggy-zomato-boycott-did-flipkart-luck-out-in-its-food-delivery-launch-timing.html"
+  },
+  {
+    "headline": "Maruti Suzuki posts highest-ever monthly production as new Gujarat plant ramps up",
+    "date": "2026-08-02",
+    "category": "Operations",
+    "summary": "Maruti Suzuki produced a record 248,845 units in July 2026, up 33% year-on-year, as its new Plant D at Hansalpur pushed total manufacturing capacity to 29 lakh units annually.",
+    "angle": "Good for capacity-planning questions — how phased plant commissioning helps a manufacturer match a demand upswing without overbuilding.",
+    "source": "https://www.business-standard.com/industry/auto/maruti-suzuki-clocks-record-monthly-production-in-july-at-248-845-units-126080200207_1.html"
+  },
+  {
+    "headline": "15% Surcharge on Newspaper Ads Takes Effect",
+    "date": "2026-08-01",
+    "category": "Marketing",
+    "summary": "A surcharge mandated by the Indian Newspaper Society added 15% to the cost of print advertising from August 1, 2026, pushing brands and agencies to rework media-spend plans.",
+    "angle": "Good prompt on media-mix reallocation — would you defend or cut print spend as costs rise even as circulation keeps declining?",
+    "source": "https://bostoninstituteofanalytics.org/blog/weekly-digital-marketing-news-roundup-july-31-august-7-2026-google-openai-meta-india-marketing-updates/"
+  },
+  {
+    "headline": "GSTN Tightens E-Invoice and E-Way Bill Validation Rules",
+    "date": "2026-08-01",
+    "category": "Operations",
+    "summary": "From August 1, 2026, GSTN made the Ship-to GSTIN field mandatory in e-Invoice and e-Way Bill API validations whenever Ship-to information is present, tightening compliance checks on interstate goods movement.",
+    "angle": "Operations-compliance intersection — how must ERP and logistics systems adapt when tax authorities tighten invoice-level validation for shipments?",
+    "source": "https://www.mondaq.com/india/sales-taxes-vat-gst/1830492/customs-and-gst-alert-august-2026"
+  },
+  {
+    "headline": "India's Factory PMI Slips to a 4½-Year Low",
+    "date": "2026-08-01",
+    "category": "Operations",
+    "summary": "India's manufacturing PMI fell to its weakest reading in four-and-a-half years, even as the government keeps expanding PLI-driven capacity.",
+    "angle": "Tension between long-term capacity building ('Make in India') and near-term order softness — what operational levers would you pull first?",
+    "source": "https://tradingeconomics.com/india/manufacturing-pmi/news/535817"
+  },
+  {
+    "headline": "Ola Electric Registrations Nearly Double Quarter-on-Quarter",
+    "date": "2026-08-01",
+    "category": "Operations",
+    "summary": "Ola Electric registered 16,144 vehicles in June 2026, continuing a recovery in production and delivery after well-publicized quality and service issues.",
+    "angle": "What operational fixes (supply chain, service network, QC) typically underlie a turnaround like this, and how would you verify it's durable?",
+    "source": "https://www.autocarpro.in/news/weekly-news-wrap-tata-motors-ev-plans-ma-moves-olas-pli-boost-and-mm-seals-no-2-position-130327"
+  },
+  {
+    "headline": "SEBI's New Mutual Fund Rules Force a Scheme Name-Portfolio Match",
+    "date": "2026-08-01",
+    "category": "Finance",
+    "summary": "Under SEBI's Mutual Funds Regulations 2026 (effective April 1), fund houses had a roughly six-month window, running into August 2026, to ensure scheme names accurately reflect what they actually invest in, alongside stricter cost-disclosure norms.",
+    "angle": "Investor protection vs. innovation trade-off — does forcing stricter naming/categorization limit a fund house's ability to launch niche products?",
+    "source": "https://www.indmoney.com/blog/mutual-funds/sebi-new-mutual-fund-rules-2026-explained"
+  },
+  {
+    "headline": "Flipkart adds Pay Later across its entire app family",
+    "date": "2026-07-30",
+    "category": "Product Management",
+    "summary": "Flipkart, partnering with PayU Finance, launched “Flipkart Pay Later” with Pay Later, Pay-in-3 and EMI options — live simultaneously across Flipkart, Myntra and Flipkart Minutes.",
+    "angle": "Tests cross-platform feature rollout strategy — how a single credit product gets embedded across a company’s entire app portfolio to lift conversion.",
+    "source": "https://stories.flipkart.com/announcement/flipkart-launches-pay-later-making-flexible-credit-more-accessible-for-millions-of-indian-shoppers"
+  },
+  {
+    "headline": "Google gives robots a “high-level brain”",
+    "date": "2026-07-30",
+    "category": "Product Management",
+    "summary": "Google DeepMind launched Gemini Robotics ER 2, an embodied-reasoning model that processes video, language and sensor data to plan multi-step tasks and coordinate multiple robots, now live in preview on the Gemini Enterprise Agent Platform.",
+    "angle": "A live example of the “reasoning model + action model” split in agentic AI product architecture — useful for any AI-PM system-design discussion.",
+    "source": "https://blog.google/innovation-and-ai/models-and-research/google-deepmind/gemini-robotics-er-2/"
+  },
+  {
+    "headline": "Tata Motors to Launch Four New EVs in 12-18 Months",
+    "date": "2026-07-30",
+    "category": "Operations",
+    "summary": "Chairman N Chandrasekaran confirmed new-generation Nexon, Altroz and Tigor EVs are coming, with the premium Avinya brand to follow later.",
+    "angle": "How should an incumbent auto major sequence plant retooling and multiple EV model launches off one shared manufacturing base?",
+    "source": "https://www.meraev.com/blog/tata-four-new-electric-cars-2026-2027-roadmap"
+  },
+  {
+    "headline": "PwC: Indian manufacturers back AI for growth but lag China on innovation",
+    "date": "2026-07-29",
+    "category": "Consulting",
+    "summary": "A PwC study of 443 industrial manufacturers finds 59% of Indian firms see AI as key to strategic goals, yet only 16% anchor strategy in product leadership, versus 63% of Chinese peers.",
+    "angle": "Great for a consulting-style \"so what\": strong AI adoption doesn't automatically translate into strategic differentiation — candidates can discuss the gap between tool adoption and capability building.",
+    "source": "https://www.business-standard.com/industry/news/indian-manufacturers-back-ai-for-growth-but-lag-on-innovation-pwc-report-126072901419_1.html"
+  },
+  {
+    "headline": "PwC: Indian manufacturers embrace AI but lag China on innovation",
+    "date": "2026-07-29",
+    "category": "Consulting",
+    "summary": "A PwC study of 51 Indian and 51 Chinese manufacturers found 59% of Indian firms see AI as core to their five-year strategy, yet only 16% anchor strategy in product leadership versus 63% in China — a gap PwC says could cap margins and export sophistication.",
+    "angle": "Rich material for “India vs China manufacturing” GD prompts — Indian firms adopt AI for customer-facing use cases, China for shop-floor efficiency and product innovation.",
+    "source": "https://www.consultancy.in/news/4537/indian-manufacturers-race-ahead-on-ai-but-lag-china-on-innovation"
+  },
+  {
+    "headline": "Tata Motors' Sanand plants hit by Gujarat floods, supplier network disrupted",
+    "date": "2026-07-27",
+    "category": "Operations",
+    "summary": "Torrential rain (300-500mm in 24 hours) and flooding in Gujarat halted production at Tata Motors' Sanand plants (Nexon, Tiago, Tigor, Sierra) and disrupted several component suppliers, with recovery underway.",
+    "angle": "A textbook case for single-location manufacturing risk and multi-tier supplier resilience planning in operations strategy.",
+    "source": "https://www.businesstoday.in/auto/story/tata-motors-flags-severe-disruption-at-sanand-plant-in-gujarat-due-to-floods-545546-2026-07-27"
+  },
+  {
+    "headline": "Amazon India ships AI seller assistant, built on Bedrock, Nova and Claude, to 1.7 million sellers",
+    "date": "2026-06-10",
+    "category": "Product Management",
+    "summary": "Amazon rolled out a 24/7 AI assistant (in English and Hinglish) that helps its 1.7 million India sellers with listings, pricing and global expansion, cutting listing errors by 10% and operational effort by 70%.",
+    "angle": "A strong case for AI-feature ROI — how a PM would define and measure success metrics (error rate, effort reduction) for an agentic AI feature at marketplace scale.",
+    "source": "https://www.aboutamazon.in/news/small-business/amazon-seller-assistant-ai-tool-india"
+  },
+  {
+    "headline": "PhonePe launches SmartPages, an AI page-builder for merchants",
+    "date": "2026-06-10",
+    "category": "Product Management",
+    "summary": "PhonePe introduced SmartPages inside its Payment Gateway dashboard, letting merchants describe their product in plain language, including vernacular, and have AI generate a ready-to-use payment page.",
+    "angle": "Useful to discuss cutting merchant onboarding friction as a growth lever for a payments platform, and vernacular AI as a product differentiator in India.",
+    "source": "https://www.business-standard.com/amp/companies/news/phonepe-launches-ai-tool-to-help-merchants-build-payment-pages-in-minutes-126061000756_1.html"
+  },
+  {
+    "headline": "Welspun One to nearly double its warehousing footprint",
+    "date": "2026-06-02",
+    "category": "Operations",
+    "summary": "Warehousing developer Welspun One plans to lease over 10 million sq ft of industrial and logistics space over the next three years, betting on continued demand from e-commerce, manufacturers and 3PL operators.",
+    "angle": "A good example of capacity-planning and expansion strategy riding India’s logistics realty boom.",
+    "source": "https://www.business-standard.com/companies/news/welspun-one-plans-leasing-over-10-million-sq-ft-in-next-3-years-126060201006_1.html"
+  },
+  {
+    "headline": "Port congestion exposes cracks in India’s logistics chain",
+    "date": "2026-05-24",
+    "category": "Operations",
+    "summary": "Cargo backlogs at Nhava Sheva and Mundra ports were driven not by vessel or terminal capacity but by shortages of trailers, drivers and diesel for inland evacuation — exposing weak links in India’s freight network beyond the port gate.",
+    "angle": "A sharp case for discussing where India’s logistics bottleneck really sits — rarely the port itself, but the inland supply chain feeding it.",
+    "source": "https://www.business-standard.com/opinion/columns/mundra-nhava-sheva-disruptions-show-weak-links-in-india-s-logistics-chain-126052400425_1.html"
+  },
+  {
+    "headline": "McKinsey Plans to Cut ~10% of Its Workforce as AI Hits Back-Office Roles",
+    "date": "2026-04-23",
+    "category": "Consulting",
+    "summary": "McKinsey is planning to cut roughly 10% of staff in non-client-facing roles — back-office functions, junior research and support — over the next 12-18 months, as generative AI compresses delivery timelines.",
+    "angle": "The advisor becomes the advised — what does it say about the consulting model that AI is now reshaping the firms that sell AI transformation to everyone else?",
+    "source": "https://qz.com/mckinsey-layoffs-white-collar-jobs-ai"
+  },
+  {
+    "headline": "Deloitte: Indian Enterprises Lead Global Peers in At-Scale AI Adoption",
+    "date": "2026-03-24",
+    "category": "Consulting",
+    "summary": "A Deloitte report found Indian enterprises deploying AI at scale most strongly in product development (62%), strategy & operations (56%), marketing & sales (55%) and supply chain (48%), ahead of the global average.",
+    "angle": "If India is ahead on AI adoption by function, where specifically should a consulting engagement add value beyond the technology itself?",
+    "source": "https://www.deloitte.com/in/en/about/press-room/indian-enterprises-lead-global-peers-in-at-scale-ai-adoption-across-most-functions.html"
+  },
+  {
+    "headline": "BCG Tops IIM Ahmedabad's 2026 Placements as Finance and Consulting Lead Hiring",
+    "date": "2026-02-04",
+    "category": "Consulting",
+    "summary": "At IIM Ahmedabad's PGP final placements (February 2026), Boston Consulting Group was the largest recruiter with 33 offers in the first cluster alone, as finance and consulting firms dominated hiring across a 100%-placed batch.",
+    "angle": "Why does consulting keep winning the recruiting race at top B-schools even as the industry talks about AI-driven headcount cuts?",
+    "source": "https://news.careers360.com/iim-ahmedabad-pgp-final-placements-2026-100-percent-26-cohorts-bcg-mckinsey-goldman-sachs-essar-finance-consulting"
+  },
+  {
+    "headline": "PwC frames a $550 billion AI opportunity for India",
+    "date": "2026-01-26",
+    "category": "Consulting",
+    "summary": "PwC India’s “AI Edge for Viksit Bharat” framework estimates AI could add $550 billion in value across agriculture, healthcare, energy, education and manufacturing by 2035, built on real pilots like AI-driven TB detection and smart metering.",
+    "angle": "Useful for macro/GD questions on AI-and-development — moving the conversation from productivity buzzwords to sector-specific, India-relevant economic modelling.",
+    "source": "https://www.consultancy.in/news/4549/ai-could-unlock-550-billion-in-value-for-india-by-2035-says-pwc"
   }
 ]
