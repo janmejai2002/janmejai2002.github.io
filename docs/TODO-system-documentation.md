@@ -1,33 +1,50 @@
-# TODO — full system documentation with diagrams
+# DONE — full system documentation with diagrams
 
-Goal: a replicable write-up of the whole Wabi Sabi stack, so someone else can rebuild it.
-The short version now lives at /projects/. This is the long version.
+Shipped 2026-08-24 as [/blog/how-this-blog-builds-itself/](https://janmejai2002.github.io/blog/how-this-blog-builds-itself/),
+linked from /projects/.
 
-## Plan
+## What was actually done
 
-1. **Build a NotebookLM notebook** from the real configuration, not from memory:
-   - `~/.claude/scheduled-tasks/daily-ai-seo-radar/SKILL.md`
-   - `~/.claude/scheduled-tasks/ai-article-writer/SKILL.md`
+1. **NotebookLM notebook built** — "Wabi Sabi Blog System — Architecture",
+   `07433ab7-2691-4ae5-993b-60492e96224b`
+   (https://notebooklm.google.com/notebook/07433ab7-2691-4ae5-993b-60492e96224b).
+   The Library page was checked first: no duplicate existed.
+
+   Nine sources, all real files rather than recollection:
+   - both scheduled-task `SKILL.md` prompts
    - `~/.claude/skills/seo-topic-research/SKILL.md`
-   - `~/.claude/CLAUDE.md` (skills/agents split + token-discipline rationale)
-   - `site/src/content.config.ts`, `astro.config.mjs`, `scripts/sync-news.mjs`
-   - Notion schemas for both databases
-   Use the `notebooklm-mcp` skill. Check the NotebookLM Library page first for a duplicate.
+   - `~/.claude/CLAUDE.md`
+   - `site/src/content.config.ts`, `astro.config.mjs`, `scripts/sync-news.mjs`,
+     `scripts/make-images.mjs`
+   - a transcription of all three live Notion schemas, taken from the MCP
+     `fetch` output on the day
 
-2. **Generate diagrams** via the NotebookLM infographic tool. Needed:
-   - End-to-end flow: discovery → pitch → human rating → promotion → draft → review
-   - The Notion control plane: two databases and the relation between them
-   - Claude Code layout: scheduled tasks, skills, agents, MCP connections
-   - Token-cost model: why the skills directory is trimmed
+   Grounding was checked with two synthesis queries (the full idea lifecycle,
+   and the token-cost model). Both returned correct answers citing across five
+   of the nine sources, so retrieval is working, not just echoing the last
+   upload.
 
-3. **Bring the diagrams into the site.** Export, then either inline as SVG or render
-   with the native mermaid support. They must be theme-aware — no baked-in white
-   backgrounds, since the site has a dark mode.
+2. **Four diagrams shipped**, matching the original list: end-to-end flow, the
+   Notion control plane, the Claude Code layout, and the token-cost model.
 
-4. **Write the long-form piece** and publish under /blog/, linked from /projects/.
+3. **They are hand-drawn SVG, not NotebookLM infographics — deliberately.**
+   The infographic tool emits a raster with a baked background, which breaks
+   the site's dark mode, and its documented failure mode is garbling short
+   labels into pixels nobody can spell-check. The notebook was used for what it
+   is good at (grounded synthesis across nine files) and the drawing was done
+   against the design tokens. Verified: zero hardcoded colours across all four,
+   backgrounds and accents flip with the theme, no page overflow at 320px.
 
-## Open questions
+## Still open
 
-- Publish the actual task prompts verbatim? They are the most useful part for a reader,
-  and there is nothing sensitive in them.
-- Worth a companion repo template so someone can `git clone` the whole setup?
+- The task prompts are described in the walkthrough but not published verbatim.
+  Worth doing — there is nothing sensitive in them and they are the most
+  copyable part.
+- No companion repo template yet.
+
+## Note
+
+`nlm` auth had expired; it was restored with `nlm-relogin.sh`, which force-restarts
+Brave with a CDP port. The `notebooklm-mcp` MCP server reported healthy but its
+tools were not exposed to the session, so all notebook work went through the `nlm`
+CLI directly. Worth knowing before assuming the MCP is broken.

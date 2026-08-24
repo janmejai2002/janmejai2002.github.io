@@ -348,7 +348,10 @@ main { flex: 1; padding: 2rem var(--gutter) 6rem; max-width: 64rem; min-width: 0
   margin: 2.5rem 0; padding: 1.25rem; border: 1px solid var(--border);
   border-radius: 14px; background: var(--card); overflow-x: auto;
 }
-.diagram svg { display: block; width: 100%; height: auto; min-width: 30rem; }
+/* Diagrams scroll rather than scale down. Letting a 700-unit viewBox shrink to
+   a 320px screen would render 11px labels at 7px, which is unreadable — the
+   same reason `.body table` scrolls instead of wrapping. */
+.diagram svg { display: block; width: 100%; height: auto; min-width: 42rem; }
 .diagram figcaption { padding-top: .25rem; }
 
 .tldr {

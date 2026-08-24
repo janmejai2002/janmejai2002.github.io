@@ -2,9 +2,13 @@
 
 You are picking up a working, deployed system. Read this whole file before touching anything.
 
-**Two goals this session:**
-1. Run the content pipeline end to end and publish a new article — **with images**, which the site does not support yet.
-2. Build the NotebookLM notebook and generate the architecture diagrams for the system walkthrough.
+**Both goals from the previous handoff are done (2026-08-24).** Sections 3 and 4 below
+are kept as the record of what was asked; see `docs/SESSION-2026-08-24.md` for what was
+actually built, what changed since, and the two decisions still waiting on the owner.
+
+In short: the site now has full image support (schema, `<Image>` hero, derived OG cards,
+markdown figures, favicons), one article was published end to end through the real
+pipeline, and the `/projects/` walkthrough with four diagrams now exists.
 
 ---
 
