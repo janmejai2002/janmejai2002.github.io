@@ -1,6 +1,6 @@
 ---
 title: 'The 95% Number Everyone Quotes Is Measuring Something Else'
-description: 'MIT did not find that 95% of GenAI pilots failed technically. It found they had no measurable P&L impact — mostly because nobody recorded a baseline. That distinction changes what you should fix.'
+description: "MIT didn't find that 95% of GenAI pilots failed technically. It found they showed no measurable P&L impact — mostly because nobody recorded a baseline."
 pubDate: 2026-08-24
 keywords:
   - AI pilot failure rate
