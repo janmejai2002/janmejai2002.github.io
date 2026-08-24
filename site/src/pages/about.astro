@@ -10,13 +10,6 @@ const maxBreaks = Math.max(...breaks.map((b) => b.n));
 
 const timeline = [
   {
-    when: '2026 —',
-    what: 'Red teaming frontier models',
-    where: 'Gray Swan Arena',
-    accent: 'hanko',
-    body: 'Prompt injection and safeguard evasion against models from OpenAI, Anthropic, Google DeepMind, Meta and xAI.',
-  },
-  {
     when: '2026',
     what: 'Summer Intern — Risk Modelling',
     where: 'American Express · Bangalore',
@@ -388,23 +381,27 @@ const papers = [
   .paper__pub { color: var(--ink-faint); border: 1px solid var(--border); }
   .paper__if { color: var(--ink-faint); border: 1px solid var(--border); font-variant-numeric: tabular-nums; }
 
-  /* ---------- Timeline ---------- */
+  /* ---------- Timeline ----------
+     Every li rule below is scoped with `>` on purpose: the role entries can
+     contain a nested <ul class="tl__points">, and an unscoped `.tl li` also
+     matched those bullets — turning each one into a two-column grid that
+     crushed its text into the 7.5rem date column. */
   .tl { list-style: none; margin: 0; padding: 0; position: relative; }
   .tl::before {
     content: ''; position: absolute; left: 5px; top: .5rem; bottom: .5rem; width: 1px;
     background: var(--border);
   }
   @media (min-width: 620px) { .tl::before { left: 7.5rem; } }
-  .tl li { position: relative; padding: 0 0 1.75rem 1.75rem; }
+  .tl > li { position: relative; padding: 0 0 1.75rem 1.75rem; }
   @media (min-width: 620px) {
-    .tl li { display: grid; grid-template-columns: 7.5rem 1fr; gap: 1.75rem; padding-left: 0; }
+    .tl > li { display: grid; grid-template-columns: 7.5rem 1fr; gap: 1.75rem; padding-left: 0; }
   }
-  .tl li::before {
+  .tl > li::before {
     content: ''; position: absolute; left: 0; top: .42rem;
     width: 11px; height: 11px; border-radius: 999px;
     background: var(--paper); border: 2.5px solid var(--accent); z-index: 1;
   }
-  @media (min-width: 620px) { .tl li::before { left: calc(7.5rem - 5px); } }
+  @media (min-width: 620px) { .tl > li::before { left: calc(7.5rem - 5px); } }
   .tl__when {
     font-size: .625rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase;
     color: var(--accent); display: block; margin-bottom: .35rem;
