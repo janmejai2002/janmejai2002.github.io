@@ -5,47 +5,155 @@ import Base from '../layouts/Base.astro';
 const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
   (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
 );
+
+// Rotate the earth palette across cards so the index reads as a set, not a list.
+const accents = ['mizu', 'ochre', 'moss', 'plum', 'hanko', 'indigo'] as const;
 ---
 
 <Base
   title="Wabi Sabi — Applied AI, in practice"
-  description="Wabi Sabi is a journal on applied machine learning, computer vision and shipping AI systems that survive contact with production. Written by Janmejai Singh Minhas."
+  description="Wabi Sabi: an applied-AI journal on the systems that are never finished. What benchmarks leave out, what breaks in production, and what the research says past the abstract."
   section="Applied AI"
 >
-  <section class="hero fade-up d2">
+  <section class="hero fade-up d1">
     <span class="hanko">Wabi Sabi</span>
-    <h1>Applied AI, <span class="hl">in practice</span></h1>
+    <h1>The models are <span class="hl">never finished</span></h1>
+
     <p>
-      Notes from building machine learning systems that have to work outside a notebook —
-      what the benchmarks leave out, what breaks in production, and what the research
-      actually says when you read past the abstract.
+      <em>Wabi-sabi</em> is the Japanese idea that things are beautiful precisely because
+      they are imperfect, impermanent and incomplete — the crack in the bowl, the weathered
+      timber, the repair left visible.
+    </p>
+
+    <p>
+      That is also an honest description of every machine learning system I have ever
+      shipped. Accuracy drifts. Context rots. The benchmark that looked settled turns out to
+      have measured the wrong thing. We keep writing about AI as though it were converging on
+      something finished, when the interesting work is entirely in the cracks.
+    </p>
+
+    <p>
+      So this is a journal about the cracks: what benchmarks leave out, what breaks the
+      moment a model meets data nobody curated, and what the research actually says once you
+      read past the abstract.
     </p>
   </section>
+
+  <div class="rulebar fade-up d2" aria-hidden="true">
+    <span></span><span></span><span></span><span></span><span></span><span></span>
+  </div>
 
   <ul class="postlist fade-up d3">
     {
       posts.length === 0 ? (
         <li class="empty">No posts published yet.</li>
       ) : (
-        posts.map((post) => (
-          <li>
-            <a href={`/blog/${post.id.replace(/\.md$/, '')}/`}>
-              <div class="postlist__head">
-                <time class="meta" datetime={post.data.pubDate.toISOString()}>
-                  {post.data.pubDate.toLocaleDateString('en-IN', {
-                    day: 'numeric',
-                    month: 'short',
-                    year: 'numeric',
-                  })}
-                </time>
-                {post.data.readingTime && <span class="meta">{post.data.readingTime}</span>}
-              </div>
-              <h2 class="postlist__title">{post.data.title}</h2>
-              <p class="postlist__desc">{post.data.description}</p>
-            </a>
-          </li>
-        ))
+        posts.map((post, n) => {
+          const a = accents[n % accents.length];
+          return (
+            <li class="scroll-reveal" style={`transition-delay:${Math.min(n, 6) * 60}ms`}>
+              <a
+                href={`/blog/${post.id.replace(/\.md$/, '')}/`}
+                style={`--accent:var(--${a});--tint:var(--wash-${a})`}
+              >
+                <div class="postlist__head">
+                  <time class="meta" datetime={post.data.pubDate.toISOString()}>
+                    {post.data.pubDate.toLocaleDateString('en-IN', {
+                      day: 'numeric',
+                      month: 'short',
+                      year: 'numeric',
+                    })}
+                  </time>
+                  {post.data.readingTime && <span class="meta">{post.data.readingTime}</span>}
+                </div>
+                <h2 class="postlist__title">{post.data.title}</h2>
+                <p class="postlist__desc">{post.data.description}</p>
+                <span class="postlist__go">
+                  Read
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                    stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M5 12h14M13 6l6 6-6 6" />
+                  </svg>
+                </span>
+              </a>
+            </li>
+          );
+        })
       )
     }
   </ul>
+
+  <section class="plug scroll-reveal">
+    <div>
+      <span class="meta" style="color:var(--ochre)">Also here</span>
+      <h2>Interview News Archive</h2>
+      <p>
+        A daily business-news digest for Indian B-school placement prep — each story paired
+        with the angle an interviewer is likely to push on.
+      </p>
+    </div>
+    <a href="/news/" class="plug__cta">
+      Browse the archive
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+        stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M5 12h14M13 6l6 6-6 6" />
+      </svg>
+    </a>
+  </section>
 </Base>
+
+<style>
+  /* six-stripe rule: the palette, stated once, as a divider */
+  .rulebar { display: flex; gap: 3px; margin: 2.5rem 0 0; }
+  .rulebar span {
+    height: 3px; flex: 1; border-radius: 2px;
+    transform-origin: left; animation: stretch .8s cubic-bezier(.2,.8,.2,1) both;
+  }
+  .rulebar span:nth-child(1) { background: var(--mizu); animation-delay: .15s; }
+  .rulebar span:nth-child(2) { background: var(--ochre); animation-delay: .22s; }
+  .rulebar span:nth-child(3) { background: var(--moss); animation-delay: .29s; }
+  .rulebar span:nth-child(4) { background: var(--plum); animation-delay: .36s; }
+  .rulebar span:nth-child(5) { background: var(--hanko); animation-delay: .43s; }
+  .rulebar span:nth-child(6) { background: var(--indigo); animation-delay: .5s; }
+  @keyframes stretch { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+
+  .postlist__go {
+    display: inline-flex; align-items: center; gap: .35rem; margin-top: 1rem;
+    font-size: .625rem; font-weight: 800; letter-spacing: .15em; text-transform: uppercase;
+    color: var(--accent, var(--mizu)); opacity: 0; transform: translateX(-6px);
+    transition: opacity .3s, transform .3s;
+  }
+  .postlist__go svg { width: 12px; height: 12px; }
+  .postlist a:hover .postlist__go,
+  .postlist a:focus-visible .postlist__go { opacity: 1; transform: none; }
+
+  .plug {
+    margin-top: 3.5rem; padding: 1.75rem; border-radius: 18px;
+    background: var(--wash-ochre); border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 1.5rem; flex-wrap: wrap;
+  }
+  .plug h2 { font-size: 1.25rem; font-weight: 800; margin: .5rem 0 .5rem; letter-spacing: -.015em; }
+  .plug p { margin: 0; font-size: .9375rem; line-height: 1.6; color: var(--ink-soft); max-width: 32rem; }
+  .plug__cta {
+    display: inline-flex; align-items: center; gap: .45rem; flex-shrink: 0;
+    font-size: .6875rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase;
+    text-decoration: none; color: var(--paper); background: var(--ink);
+    padding: .7rem 1.1rem; border-radius: 999px; transition: transform .25s, background .25s;
+  }
+  .plug__cta svg { width: 12px; height: 12px; transition: transform .25s; }
+  .plug__cta:hover { transform: translateY(-2px); }
+  .plug__cta:hover svg { transform: translateX(3px); }
+
+  @media (max-width: 640px) {
+    .postlist a { padding: 1.35rem 1.25rem; }
+    .postlist__title { font-size: 1.2rem; }
+    .plug { padding: 1.35rem; }
+    .plug__cta { width: 100%; justify-content: center; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .rulebar span { animation: none; transform: none; }
+    .postlist__go { opacity: 1; transform: none; }
+  }
+</style>

@@ -12,21 +12,26 @@ type Item = {
 };
 
 const items = (news as Item[]).slice().sort((a, b) => b.date.localeCompare(a.date));
-
 const categories = [...new Set(items.map((i) => i.category))].sort();
 const counts = Object.fromEntries(
   categories.map((c) => [c, items.filter((i) => i.category === c).length])
 );
 
+// Each function gets one of the six earths.
+const accentOf: Record<string, string> = {
+  Finance: 'moss',
+  Marketing: 'indigo',
+  Operations: 'ochre',
+  'Product Management': 'plum',
+  Consulting: 'hanko',
+};
+const accent = (c: string) => accentOf[c] ?? 'mizu';
+
 const latest = items[0]?.date;
 const oldest = items.at(-1)?.date;
 
 const fmt = (iso: string) =>
-  new Date(iso + 'T00:00:00').toLocaleDateString('en-IN', {
-    day: 'numeric',
-    month: 'short',
-    year: 'numeric',
-  });
+  new Date(iso + 'T00:00:00').toLocaleDateString('en-IN', { day: 'numeric', month: 'short' });
 
 const fmtLong = (iso: string) =>
   new Date(iso + 'T00:00:00').toLocaleDateString('en-IN', {
@@ -45,19 +50,17 @@ const host = (url: string | null) => {
   }
 };
 
-// group by date for the day-divider rhythm
 const byDate = items.reduce<Record<string, Item[]>>((acc, i) => {
   (acc[i.date] ??= []).push(i);
   return acc;
 }, {});
 const dates = Object.keys(byDate).sort((a, b) => b.localeCompare(a));
-
 const slug = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-');
 ---
 
 <Base
   title="Interview News Archive — Wabi Sabi"
-  description={`A daily business-news digest for Indian B-school interview prep. ${items.length} stories across Finance, Marketing, Operations, Product Management and Consulting — each with the angle an interviewer would actually push on.`}
+  description={`A daily business-news digest for Indian B-school interview prep. ${items.length} stories across Finance, Marketing, Operations, Product Management and Consulting, each with the angle an interviewer would push on.`}
   section="Archive"
   keywords={[
     'MBA interview preparation',
@@ -66,27 +69,31 @@ const slug = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-');
     'WAT GD PI topics India',
   ]}
 >
-  <section class="hero fade-up d2" style="padding-bottom:2rem">
+  <section class="hero fade-up d1" style="padding-bottom:1.75rem">
     <span class="hanko">Archive</span>
-    <h1>Interview <span class="hl">News Archive</span></h1>
+    <h1>Interview <span class="hl hl--ochre">News Archive</span></h1>
     <p>
-      A daily business-news digest for Indian B-school placement prep. Each card carries the
-      story, and — more usefully — the angle an interviewer is likely to push on. Filter by
-      function, sort it, or just scroll.
+      A daily business-news digest for Indian B-school placement prep. Every card carries the
+      story — and, more usefully, the angle an interviewer is likely to push on.
     </p>
-    <p class="meta" style="margin-top:1.5rem">
-      {items.length} entries &nbsp;·&nbsp; {oldest && fmt(oldest)} — {latest && fmt(latest)}
+    <p class="meta" style="margin-top:1.25rem">
+      {items.length} entries · {oldest && fmtLong(oldest).split(',')[1]} — {latest && fmtLong(latest).split(',')[1]}
     </p>
   </section>
 
-  <div class="controls fade-up d3" role="region" aria-label="Filter and sort">
-    <div class="chips" role="group" aria-label="Filter by category">
+  <div class="controls fade-up d2" role="region" aria-label="Filter and sort">
+    <div class="chips" role="group" aria-label="Filter by function">
       <button class="chip is-on" data-cat="all" aria-pressed="true">
         All <span class="chip__n">{items.length}</span>
       </button>
       {
         categories.map((c) => (
-          <button class={`chip chip--${slug(c)}`} data-cat={c} aria-pressed="false">
+          <button
+            class="chip"
+            data-cat={c}
+            aria-pressed="false"
+            style={`--accent:var(--${accent(c)});--tint:var(--wash-${accent(c)})`}
+          >
             {c} <span class="chip__n">{counts[c]}</span>
           </button>
         ))
@@ -95,7 +102,11 @@ const slug = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-');
 
     <div class="controls__row">
       <label class="field">
-        <span class="sr-only">Search headlines and summaries</span>
+        <span class="sr-only">Search headlines, summaries and angles</span>
+        <svg class="field__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+          stroke-width="2" stroke-linecap="round" aria-hidden="true">
+          <circle cx="11" cy="11" r="7" /><path d="M20 20l-3.5-3.5" />
+        </svg>
         <input type="search" id="q" placeholder="Search the archive…" autocomplete="off" />
       </label>
 
@@ -118,21 +129,28 @@ const slug = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-');
       dates.map((d) => (
         <section class="day" data-date={d}>
           <h2 class="day__label">
+            <span class="day__dot" aria-hidden="true" />
             <time datetime={d}>{fmtLong(d)}</time>
             <span class="day__rule" aria-hidden="true" />
+            <span class="day__n">{byDate[d].length}</span>
           </h2>
+
           <div class="cards">
             {byDate[d].map((i) => (
               <article
-                class={`card card--${slug(i.category)}`}
+                class="card"
                 data-cat={i.category}
                 data-date={i.date}
                 data-headline={i.headline.toLowerCase()}
                 data-text={`${i.headline} ${i.summary} ${i.angle}`.toLowerCase()}
+                style={`--accent:var(--${accent(i.category)});--tint:var(--wash-${accent(i.category)})`}
               >
                 <div class="card__top">
-                  <span class="tag">{i.category}</span>
-                  <time class="meta" datetime={i.date}>{fmt(i.date)}</time>
+                  <span class="tag">
+                    <span class="tag__dot" aria-hidden="true" />
+                    {i.category}
+                  </span>
+                  <time class="card__date" datetime={i.date}>{fmt(i.date)}</time>
                 </div>
 
                 <h3 class="card__h">{i.headline}</h3>
@@ -145,9 +163,9 @@ const slug = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-');
 
                 {i.source && (
                   <a class="card__src" href={i.source} target="_blank" rel="noopener noreferrer">
-                    {host(i.source)}
-                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                      stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <span>{host(i.source)}</span>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                      stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                       <path d="M7 17L17 7M17 7H8M17 7v9" />
                     </svg>
                   </a>
@@ -166,237 +184,193 @@ const slug = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-');
 </Base>
 
 <style>
+  /* ---------- Controls ---------- */
   .controls {
-    position: sticky;
-    top: 3.1rem;
-    z-index: 30;
-    background: rgba(246, 244, 239, 0.94);
-    backdrop-filter: blur(10px);
+    position: sticky; top: 3.35rem; z-index: 30;
+    background: color-mix(in srgb, var(--paper) 94%, transparent);
+    backdrop-filter: blur(12px);
     border-bottom: 1px solid var(--border);
-    padding: 1rem 0 0.85rem;
-    margin-bottom: 2.5rem;
+    padding: .9rem 0 .8rem; margin-bottom: 2.5rem;
   }
 
-  .chips {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    margin-bottom: 0.85rem;
-  }
+  .chips { display: flex; flex-wrap: wrap; gap: .4rem; margin-bottom: .8rem; }
 
   .chip {
-    font: inherit;
-    font-size: 0.6875rem;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    padding: 0.35rem 0.7rem;
-    border-radius: 999px;
-    border: 1.5px solid var(--border);
-    background: transparent;
-    color: var(--ink);
-    cursor: pointer;
-    transition: all 0.2s;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4rem;
+    font: inherit; font-size: .625rem; font-weight: 800; letter-spacing: .09em;
+    text-transform: uppercase; padding: .38rem .75rem; border-radius: 999px;
+    border: 1.5px solid var(--border); background: transparent; color: var(--ink-soft);
+    cursor: pointer; transition: all .22s cubic-bezier(.2,.8,.2,1);
+    display: inline-flex; align-items: center; gap: .4rem;
   }
-  .chip:hover { border-color: var(--ink); }
-  .chip__n { opacity: 0.4; font-variant-numeric: tabular-nums; }
+  .chip:hover { border-color: var(--accent, var(--ink)); color: var(--ink); transform: translateY(-1px); }
+  .chip__n { font-variant-numeric: tabular-nums; opacity: .5; }
   .chip.is-on {
-    background: var(--ink);
-    border-color: var(--ink);
+    background: var(--accent, var(--ink)); border-color: var(--accent, var(--ink));
     color: var(--paper);
   }
-  .chip.is-on .chip__n { opacity: 0.55; }
+  .chip.is-on .chip__n { opacity: .7; }
+  .chip[data-cat='all'].is-on { background: var(--ink); border-color: var(--ink); }
 
-  /* category accents, matching the Notion select colours */
-  .chip--finance.is-on { background: #2F6B4F; border-color: #2F6B4F; }
-  .chip--marketing.is-on { background: #2C5A87; border-color: #2C5A87; }
-  .chip--operations.is-on { background: #9C5A22; border-color: #9C5A22; }
-  .chip--product-management.is-on { background: #5B3E86; border-color: #5B3E86; }
-  .chip--consulting.is-on { background: #A03A2E; border-color: #A03A2E; }
-
-  .controls__row { display: flex; gap: 0.6rem; flex-wrap: wrap; }
-  .field { flex: 1 1 12rem; display: block; }
+  .controls__row { display: flex; gap: .5rem; flex-wrap: wrap; }
+  .field { flex: 1 1 12rem; display: block; position: relative; }
   .field--sort { flex: 0 0 auto; }
-
-  .field input,
-  .field select {
-    font: inherit;
-    font-size: 0.875rem;
-    width: 100%;
-    padding: 0.5rem 0.75rem;
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    background: var(--paper);
-    color: var(--ink);
+  .field__icon {
+    position: absolute; left: .7rem; top: 50%; transform: translateY(-50%);
+    width: 14px; height: 14px; color: var(--ink-faint); pointer-events: none;
   }
-  .field input:focus-visible,
-  .field select:focus-visible,
-  .chip:focus-visible {
-    outline: 2px solid var(--cyan);
-    outline-offset: 2px;
+  .field input, .field select {
+    font: inherit; font-size: .875rem; width: 100%;
+    padding: .55rem .8rem; border: 1px solid var(--border); border-radius: 10px;
+    background: var(--card); color: var(--ink); transition: border-color .25s;
   }
+  .field input { padding-left: 2rem; }
+  .field input:hover, .field select:hover { border-color: var(--ink-faint); }
 
   .tally {
-    margin: 0.7rem 0 0;
-    font-size: 0.625rem;
-    font-weight: 700;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    opacity: 0.4;
+    margin: .65rem 0 0; font-size: .625rem; font-weight: 700;
+    letter-spacing: .15em; text-transform: uppercase; color: var(--ink-faint);
   }
 
   .sr-only {
-    position: absolute;
-    width: 1px; height: 1px;
-    padding: 0; margin: -1px;
-    overflow: hidden; clip: rect(0 0 0 0);
-    white-space: nowrap; border: 0;
+    position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+    overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
   }
 
+  /* ---------- Day groups ---------- */
   .day {
-    margin-bottom: 3rem;
-    /* 33 day-groups / 221 cards: let the browser skip layout+paint for
-       offscreen groups. The intrinsic size keeps the scrollbar honest. */
+    margin-bottom: 2.75rem;
+    /* 33 groups / 221 cards — skip layout+paint for offscreen days */
     content-visibility: auto;
-    contain-intrinsic-size: auto 32rem;
+    contain-intrinsic-size: auto 34rem;
   }
   .day__label {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    font-size: 0.6875rem;
-    font-weight: 700;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    opacity: 0.45;
-    margin: 0 0 1.25rem;
+    display: flex; align-items: center; gap: .75rem;
+    font-size: .625rem; font-weight: 800; letter-spacing: .15em;
+    text-transform: uppercase; color: var(--ink-faint); margin: 0 0 1.1rem;
   }
+  .day__dot { width: 5px; height: 5px; border-radius: 999px; background: var(--mizu); flex-shrink: 0; }
   .day__rule { flex: 1; height: 1px; background: var(--border); }
+  .day__n { font-variant-numeric: tabular-nums; opacity: .7; }
 
+  /* ---------- Cards ---------- */
   .cards {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(19rem, 1fr));
-    gap: 1rem;
+    grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
+    gap: .9rem;
   }
 
   .card {
-    display: flex;
-    flex-direction: column;
-    background: var(--stone);
-    border: 1px solid var(--border);
-    border-left: 3px solid var(--border);
-    border-radius: 14px;
-    padding: 1.15rem 1.25rem 1rem;
-    transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.25s;
+    position: relative; display: flex; flex-direction: column; overflow: hidden;
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 16px; padding: 1.2rem 1.3rem 1.1rem;
+    transition: transform .3s cubic-bezier(.2,.8,.2,1), box-shadow .3s, border-color .3s;
+  }
+  /* the tint bleeds in from the top-left corner, like ink on paper */
+  .card::before {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(120% 90% at 0% 0%, var(--tint), transparent 62%);
+    opacity: .85; pointer-events: none; transition: opacity .3s;
+  }
+  /* accent spine, grows on hover */
+  .card::after {
+    content: ''; position: absolute; left: 0; top: 1.2rem; bottom: 1.2rem;
+    width: 3px; border-radius: 0 3px 3px 0; background: var(--accent);
+    transform: scaleY(.32); transform-origin: top;
+    transition: transform .4s cubic-bezier(.2,.8,.2,1);
   }
   .card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 12px 28px rgba(26, 38, 57, 0.09);
+    transform: translateY(-4px);
+    box-shadow: 0 16px 34px var(--shadow);
+    border-color: color-mix(in srgb, var(--accent) 45%, var(--border));
   }
-
-  .card--finance { border-left-color: #2F6B4F; }
-  .card--marketing { border-left-color: #2C5A87; }
-  .card--operations { border-left-color: #9C5A22; }
-  .card--product-management { border-left-color: #5B3E86; }
-  .card--consulting { border-left-color: #A03A2E; }
+  .card:hover::after { transform: scaleY(1); }
+  .card:hover::before { opacity: 1; }
+  .card > * { position: relative; z-index: 1; }
 
   .card__top {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 0.75rem;
-    margin-bottom: 0.7rem;
+    display: flex; align-items: center; justify-content: space-between;
+    gap: .75rem; margin-bottom: .75rem;
   }
-
   .tag {
-    font-size: 0.5625rem;
-    font-weight: 800;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    padding: 0.2rem 0.5rem;
-    border-radius: 4px;
-    background: rgba(26, 38, 57, 0.07);
+    display: inline-flex; align-items: center; gap: .4rem;
+    font-size: .5625rem; font-weight: 800; letter-spacing: .12em;
+    text-transform: uppercase; color: var(--accent);
   }
-  .card--finance .tag { color: #2F6B4F; background: rgba(47, 107, 79, 0.12); }
-  .card--marketing .tag { color: #2C5A87; background: rgba(44, 90, 135, 0.12); }
-  .card--operations .tag { color: #9C5A22; background: rgba(156, 90, 34, 0.12); }
-  .card--product-management .tag { color: #5B3E86; background: rgba(91, 62, 134, 0.12); }
-  .card--consulting .tag { color: #A03A2E; background: rgba(160, 58, 46, 0.12); }
+  .tag__dot { width: 5px; height: 5px; border-radius: 999px; background: var(--accent); }
+  .card__date {
+    font-size: .5625rem; font-weight: 800; letter-spacing: .1em;
+    text-transform: uppercase; color: var(--ink-faint);
+    font-variant-numeric: tabular-nums;
+  }
 
   .card__h {
-    font-size: 1rem;
-    font-weight: 800;
-    line-height: 1.3;
-    letter-spacing: -0.01em;
-    margin: 0 0 0.55rem;
+    font-size: 1.02rem; font-weight: 800; line-height: 1.32;
+    letter-spacing: -.012em; margin: 0 0 .55rem; color: var(--ink);
     text-wrap: balance;
   }
-
   .card__sum {
-    font-size: 0.8125rem;
-    line-height: 1.6;
-    opacity: 0.78;
-    margin: 0 0 0.9rem;
+    font-size: .8125rem; line-height: 1.62; color: var(--ink-soft); margin: 0 0 1rem;
   }
 
+  /* the angle is the product — give it a seal-stamp treatment */
   .card__angle {
-    margin-top: auto;
-    padding-top: 0.85rem;
-    border-top: 1px dashed var(--border);
+    margin-top: auto; padding: .75rem .85rem;
+    background: color-mix(in srgb, var(--paper) 62%, transparent);
+    border: 1px solid var(--border-soft);
+    border-left: 2px solid var(--accent);
+    border-radius: 0 10px 10px 0;
   }
   .card__angle-k {
-    display: block;
-    font-size: 0.5625rem;
-    font-weight: 800;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--hanko);
-    margin-bottom: 0.3rem;
+    display: block; font-size: .5rem; font-weight: 800; letter-spacing: .18em;
+    text-transform: uppercase; color: var(--accent); margin-bottom: .35rem;
   }
   .card__angle p {
-    margin: 0;
-    font-size: 0.8125rem;
-    line-height: 1.55;
-    font-weight: 500;
+    margin: 0; font-size: .8125rem; line-height: 1.55;
+    font-weight: 500; color: var(--ink);
   }
 
   .card__src {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.3rem;
-    margin-top: 0.85rem;
-    font-size: 0.625rem;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    opacity: 0.45;
-    text-decoration: none;
-    transition: opacity 0.2s, color 0.2s;
-    align-self: flex-start;
+    display: inline-flex; align-items: center; gap: .3rem; margin-top: .85rem;
+    font-size: .5625rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase;
+    color: var(--ink-faint); text-decoration: none; align-self: flex-start;
+    transition: color .25s; max-width: 100%;
   }
-  .card__src:hover { opacity: 1; color: var(--cyan); }
+  .card__src span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .card__src svg { width: 10px; height: 10px; flex-shrink: 0; transition: transform .25s; }
+  .card__src:hover { color: var(--accent); }
+  .card__src:hover svg { transform: translate(2px, -2px); }
 
-  .noresults {
-    padding: 3rem 0;
-    opacity: 0.6;
-    font-size: 0.9375rem;
-  }
+  .noresults { padding: 3rem 0; color: var(--ink-soft); font-size: .9375rem; }
   .noresults button {
-    font: inherit;
-    background: none;
-    border: 0;
-    border-bottom: 1.5px solid var(--cyan);
-    color: var(--ink);
-    cursor: pointer;
-    padding: 0;
+    font: inherit; background: none; border: 0;
+    border-bottom: 1.5px solid var(--mizu); color: var(--ink); cursor: pointer; padding: 0;
   }
 
   @media (max-width: 640px) {
-    .controls { top: 3rem; }
+    .controls { top: 3.2rem; padding-top: .75rem; }
     .cards { grid-template-columns: 1fr; }
+    .day__label { gap: .5rem; }
+    .field--sort { flex: 1 1 100%; }
+
+    /* touch targets: 25px chips fail the 44px minimum on a phone */
+    .chips {
+      gap: .4rem;
+      display: flex; flex-wrap: nowrap; overflow-x: auto;
+      scroll-snap-type: x proximity;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      margin-inline: -1.25rem; padding-inline: 1.25rem;
+    }
+    .chips::-webkit-scrollbar { display: none; }
+    .chip {
+      min-height: 44px; padding: .5rem .9rem;
+      flex: 0 0 auto; scroll-snap-align: start;
+    }
+    .field input, .field select { min-height: 44px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .card::after { transform: scaleY(1); }
   }
 </style>
 
@@ -424,14 +398,15 @@ const slug = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-');
       if (show) shown++;
     }
 
-    // hide day headers whose cards are all filtered out
     for (const day of days) {
       const any = [...day.querySelectorAll<HTMLElement>('.card')].some((c) => !c.hidden);
       day.hidden = !any;
     }
 
-    const grouped = sort.value === 'cat';
-    for (const day of days) day.querySelector('.day__label')!.toggleAttribute('hidden', grouped);
+    const grouped = sort.value === 'cat' || sort.value === 'az';
+    for (const day of days) {
+      day.querySelector('.day__label')!.toggleAttribute('hidden', grouped);
+    }
 
     tally.textContent = `Showing ${shown} of ${cards.length}`;
     noresults.hidden = shown > 0;
@@ -441,35 +416,34 @@ const slug = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-');
     const mode = sort.value;
 
     if (mode === 'new' || mode === 'old') {
-      const ordered = [...days].sort((a, b) =>
-        mode === 'new'
-          ? b.dataset.date!.localeCompare(a.dataset.date!)
-          : a.dataset.date!.localeCompare(b.dataset.date!)
-      );
-      ordered.forEach((d) => archive.appendChild(d));
-      // restore each day's own cards to date order
+      // put every card back in its own day, then order the days
       for (const day of days) {
         const grid = day.querySelector('.cards')!;
-        [...grid.querySelectorAll<HTMLElement>('.card')]
-          .sort((a, b) => a.dataset.headline!.localeCompare(b.dataset.headline!))
+        cards
+          .filter((c) => c.dataset.date === day.dataset.date)
           .forEach((c) => grid.appendChild(c));
       }
+      [...days]
+        .sort((a, b) =>
+          mode === 'new'
+            ? b.dataset.date!.localeCompare(a.dataset.date!)
+            : a.dataset.date!.localeCompare(b.dataset.date!)
+        )
+        .forEach((d) => archive.appendChild(d));
       return;
     }
 
-    // 'cat' and 'az' flatten everything into the first day's grid
+    // flatten into the first day's grid for a continuous sorted run
     const first = days[0];
     const grid = first.querySelector('.cards')!;
-    const all = [...cards];
-
-    all.sort((a, b) =>
-      mode === 'cat'
-        ? a.dataset.cat!.localeCompare(b.dataset.cat!) ||
-          b.dataset.date!.localeCompare(a.dataset.date!)
-        : a.dataset.headline!.localeCompare(b.dataset.headline!)
-    );
-
-    all.forEach((c) => grid.appendChild(c));
+    [...cards]
+      .sort((a, b) =>
+        mode === 'cat'
+          ? a.dataset.cat!.localeCompare(b.dataset.cat!) ||
+            b.dataset.date!.localeCompare(a.dataset.date!)
+          : a.dataset.headline!.localeCompare(b.dataset.headline!)
+      )
+      .forEach((c) => grid.appendChild(c));
     archive.prepend(first);
   };
 
@@ -490,7 +464,6 @@ const slug = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-');
     reorder();
     apply();
   });
-
   document.getElementById('reset')!.addEventListener('click', () => {
     q.value = '';
     chips[0].click();
