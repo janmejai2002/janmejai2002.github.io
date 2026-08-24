@@ -1,167 +1,443 @@
 ---
 import Base from '../layouts/Base.astro';
+
+const breaks = [
+  { name: 'Safeguards', n: 86, rank: 117, of: 590, accent: 'hanko' },
+  { name: 'Indirect Prompt Injection', n: 26, rank: 59, of: 377, accent: 'ochre' },
+  { name: 'Indirect Prompt Injection Q1 2026', n: 11, rank: 85, of: 237, accent: 'plum' },
+];
+const maxBreaks = Math.max(...breaks.map((b) => b.n));
+
+const timeline = [
+  {
+    when: '2026 —',
+    what: 'Red teaming frontier models',
+    where: 'Gray Swan Arena',
+    accent: 'hanko',
+    body: 'Prompt injection and safeguard evasion against models from OpenAI, Anthropic, Google DeepMind, Meta and xAI.',
+  },
+  {
+    when: '2023',
+    what: 'Software Developer, Python',
+    where: 'MARG ERP · New Delhi',
+    accent: 'mizu',
+    body: 'OCR-based receipt processing that cut manual data-entry time by ~80%, and automated the spreadsheet pipelines finance teams maintained by hand.',
+  },
+  {
+    when: '2021 – 22',
+    what: 'AI Project Lead',
+    where: 'Design Innovation Centre, MDaRT · Chandigarh',
+    accent: 'ochre',
+    body: 'Led the AI and web teams — about twenty interns — across computer-aided diagnosis projects. Ran deep-learning workshops for roughly sixty students a cohort.',
+  },
+  {
+    when: '2021 – 22',
+    what: 'Project Fellow (Remote)',
+    where: 'Nottingham Trent University · UK',
+    accent: 'indigo',
+    body: 'Heat-transfer optimisation for lithium-ion battery packs. Different domain, same problem: making measurements say something reliable.',
+  },
+  {
+    when: '2020 – 21',
+    what: 'Deep Learning Research Intern',
+    where: 'Design Innovation Centre, MDaRT',
+    accent: 'moss',
+    body: 'Glaucoma diagnosis from OCT images, pancreatic cancer identification from CT, COVID classification from chest X-rays.',
+  },
+];
+
+const papers = [
+  {
+    title: 'Fused framework for glaucoma diagnosis using Optical Coherence Tomography images',
+    venue: 'Expert Systems with Applications',
+    pub: 'Elsevier',
+    impact: '8.6',
+    accent: 'moss',
+  },
+  {
+    title: 'Denoising techniques for cephalometric X-ray images: a comprehensive review',
+    venue: 'Multimedia Tools and Applications',
+    pub: 'Springer',
+    impact: '3.6',
+    accent: 'indigo',
+  },
+];
 ---
 
 <Base
   title="About — Janmejai Singh Minhas"
   description="Janmejai Singh Minhas — machine learning engineer, frontier-model red teamer (#352 on Gray Swan Arena), and published computer-vision researcher."
   section="Colophon"
-  keywords={['Janmejai Singh Minhas', 'AI red teaming', 'Gray Swan Arena', 'machine learning engineer', 'computer vision']}
+  keywords={[
+    'Janmejai Singh Minhas',
+    'AI red teaming',
+    'Gray Swan Arena',
+    'machine learning engineer',
+    'computer vision',
+  ]}
 >
-  <section class="about fade-up d2">
+  <section class="about fade-up d1">
     <span class="hanko">Colophon</span>
     <h1>Janmejai Singh <span class="hl">Minhas</span></h1>
 
-    <div class="body">
-      <p>
-        I build machine learning systems that have to work outside a notebook, and I break
-        other people's. Most of my engineering has lived in computer vision — medical
-        imaging, mostly — where the gap between a good validation score and something a
-        clinician would actually trust is where all the real work happens. These days I
-        spend as much time red-teaming frontier models as training them.
-      </p>
+    <p class="lede">
+      I build machine learning systems that have to work outside a notebook — and I break
+      other people's. Most of my engineering has been in computer vision, medical imaging
+      mostly, where the gap between a good validation score and something a clinician would
+      actually trust is where the real work happens. These days I spend as much time
+      red-teaming frontier models as training them.
+    </p>
+  </section>
 
-      <p>
-        That gap is what this journal is about. Benchmarks are easy to read and easy to
-        overfit to. What is harder, and more useful, is writing down what breaks when a
-        model meets data it was not curated for, what the research actually claims once you
-        read past the abstract, and what a deployment costs when you account for the parts
-        nobody benchmarks.
-      </p>
+  <!-- ---------- Stat band ---------- -->
+  <div class="statband fade-up d2">
+    <div class="stat" style="--accent:var(--hanko)">
+      <span class="stat__n" data-count="352" data-prefix="#">#352</span>
+      <span class="stat__k">Gray Swan global rank</span>
+    </div>
+    <div class="stat" style="--accent:var(--mizu)">
+      <span class="stat__n" data-count="36">36</span>
+      <span class="stat__k">Unique model breaks</span>
+    </div>
+    <div class="stat" style="--accent:var(--ochre)">
+      <span class="stat__n" data-count="414">414</span>
+      <span class="stat__k">Attack submissions</span>
+    </div>
+    <div class="stat" style="--accent:var(--moss)">
+      <span class="stat__n" data-count="2">2</span>
+      <span class="stat__k">Peer-reviewed papers</span>
+    </div>
+  </div>
 
-      <h2>Red teaming</h2>
+  <!-- ---------- Red teaming ---------- -->
+  <section class="sec scroll-reveal" style="--accent:var(--hanko)">
+    <h2 class="sec__h">
+      <span class="sec__icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+          stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+          <path d="M9.5 11.5l1.8 1.8 3.2-3.6" />
+        </svg>
+      </span>
+      Red teaming
+    </h2>
 
-      <p>
-        I red-team frontier models on the
-        <a href="https://app.grayswan.ai/" rel="noopener">Gray Swan Arena</a> — the platform
-        founded by CMU's Zico Kolter and Matt Fredrikson that runs adversarial testing for
-        OpenAI, Anthropic, Google DeepMind, Meta and xAI, alongside the UK AI Safety
-        Institute. Roughly 15,000 people compete to break models before anyone else does.
-      </p>
+    <p>
+      I red-team frontier models on the
+      <a href="https://app.grayswan.ai/" rel="noopener">Gray Swan Arena</a>, founded by
+      CMU's Zico Kolter and Matt Fredrikson. It runs adversarial testing for OpenAI,
+      Anthropic, Google DeepMind, Meta and xAI, alongside the UK AI Safety Institute — around
+      15,000 people competing to break models before anyone else does. I am in the Winner's
+      Circle.
+    </p>
 
-      <p>
-        I sit at <strong>#352 globally</strong> with <strong>36 unique breaks</strong> and
-        1,240 points across 414 submissions, and I am in the Winner's Circle. Most of that
-        work has been in prompt injection and safeguard evasion:
-      </p>
+    <ul class="bars">
+      {
+        breaks.map((b) => (
+          <li style={`--accent:var(--${b.accent})`}>
+            <div class="bars__top">
+              <span class="bars__name">{b.name}</span>
+              <span class="bars__n">{b.n} breaks</span>
+            </div>
+            <div class="bars__track">
+              <div class="bars__fill" style={`--w:${Math.round((b.n / maxBreaks) * 100)}%`} />
+            </div>
+            <span class="bars__rank">Ranked #{b.rank} of {b.of} participants</span>
+          </li>
+        ))
+      }
+    </ul>
 
-      <ul>
-        <li><strong>Safeguards</strong> — 86 breaks, ranked #117 of 590 participants.</li>
-        <li><strong>Indirect Prompt Injection</strong> — 26 breaks, ranked #59 of 377.</li>
-        <li><strong>Indirect Prompt Injection Q1 2026</strong> — 11 breaks, ranked #85 of 237.</li>
-      </ul>
+    <blockquote class="pull">
+      A benchmark tells you where a model succeeds. Red teaming tells you where it fails —
+      and a guardrail that holds against the clever attack often collapses against a boring
+      one.
+    </blockquote>
+  </section>
 
-      <p>
-        This is the most direct version of what the rest of this site is about. A benchmark
-        tells you where a model succeeds; red teaming tells you where it fails, and the
-        failures are considerably more informative. You learn quickly that a guardrail which
-        holds against the obvious attack often collapses against a boring one.
-      </p>
+  <!-- ---------- Research ---------- -->
+  <section class="sec scroll-reveal" style="--accent:var(--moss)">
+    <h2 class="sec__h">
+      <span class="sec__icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+          stroke-linecap="round" stroke-linejoin="round">
+          <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+          <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+        </svg>
+      </span>
+      Published research
+    </h2>
 
-      <h2>Research</h2>
+    <div class="papers">
+      {
+        papers.map((p) => (
+          <article class="paper" style={`--accent:var(--${p.accent})`}>
+            <h3>{p.title}</h3>
+            <div class="paper__meta">
+              <span class="paper__venue">{p.venue}</span>
+              <span class="paper__pub">{p.pub}</span>
+              <span class="paper__if">IF {p.impact}</span>
+            </div>
+          </article>
+        ))
+      }
+    </div>
+  </section>
 
-      <p>
-        Two peer-reviewed papers, both from work on diagnostic imaging:
-      </p>
+  <!-- ---------- Timeline ---------- -->
+  <section class="sec scroll-reveal" style="--accent:var(--mizu)">
+    <h2 class="sec__h">
+      <span class="sec__icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+          stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" />
+        </svg>
+      </span>
+      Where I have worked
+    </h2>
 
-      <ul>
-        <li>
-          <strong>Fused framework for glaucoma diagnosis using Optical Coherence Tomography
-          images</strong> — <em>Expert Systems with Applications</em> (Elsevier).
-        </li>
-        <li>
-          <strong>Denoising techniques for cephalometric X-ray images: a comprehensive
-          review</strong> — <em>Multimedia Tools and Applications</em> (Springer).
-        </li>
-      </ul>
+    <ol class="tl">
+      {
+        timeline.map((t) => (
+          <li style={`--accent:var(--${t.accent})`}>
+            <span class="tl__when">{t.when}</span>
+            <div class="tl__body">
+              <h3>{t.what}</h3>
+              <span class="tl__where">{t.where}</span>
+              <p>{t.body}</p>
+            </div>
+          </li>
+        ))
+      }
+    </ol>
+  </section>
 
-      <p>
-        Both came out of the Design Innovation Centre (MDaRT) at Panjab University, where I
-        worked on computer-aided diagnosis — glaucoma detection from OCT scans, pancreatic
-        cancer identification from CT, and COVID classification from chest X-rays. I later
-        led the AI and web teams there, running a group of about twenty interns and teaching
-        deep learning workshops that put roughly sixty students each through a summer
-        program.
-      </p>
+  <!-- ---------- Education + elsewhere ---------- -->
+  <section class="sec scroll-reveal" style="--accent:var(--plum)">
+    <h2 class="sec__h">
+      <span class="sec__icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+          stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 9L12 4 2 9l10 5 10-5z" /><path d="M6 11.5V17c0 1 3 3 6 3s6-2 6-3v-5.5" />
+        </svg>
+      </span>
+      Education &amp; stack
+    </h2>
 
-      <h2>Engineering</h2>
-
-      <p>
-        At <strong>MARG ERP</strong> in New Delhi I worked as a Python developer, building
-        OCR-based receipt processing that cut manual data-entry time by around 80% and
-        automating the spreadsheet pipelines finance teams were maintaining by hand.
-      </p>
-
-      <p>
-        Before that, a remote research fellowship with <strong>Nottingham Trent
-        University</strong> on heat-transfer optimisation for lithium-ion battery packs —
-        sensor-data analysis in Python to map thermal management arrangements. Different
-        domain, same underlying problem: making measurements say something reliable.
-      </p>
-
-      <div class="factgrid">
-        <div class="fact" style="--accent:var(--mizu);--tint:var(--wash-mizu)">
-          <div class="fact__k">Education</div>
-          <div class="fact__v">
-            B.E. Information Technology
-            <span>Panjab University, Chandigarh · GPA 8.32/10</span>
-          </div>
-        </div>
-        <div class="fact" style="--accent:var(--ochre);--tint:var(--wash-ochre)">
-          <div class="fact__k">Focus</div>
-          <div class="fact__v">
-            Computer Vision &amp; Applied ML
-            <span>TensorFlow, PyTorch, OpenCV, MLOps</span>
-          </div>
-        </div>
-        <div class="fact" style="--accent:var(--moss);--tint:var(--wash-moss)">
-          <div class="fact__k">Published</div>
-          <div class="fact__v">
-            2 peer-reviewed papers
-            <span>Elsevier · Springer</span>
-          </div>
-        </div>
-        <div class="fact" style="--accent:var(--hanko);--tint:var(--wash-hanko)">
-          <div class="fact__k">Red teaming</div>
-          <div class="fact__v">
-            #352 globally · Gray Swan
-            <span>36 unique breaks · Winner's Circle</span>
-          </div>
-        </div>
-        <div class="fact" style="--accent:var(--plum);--tint:var(--wash-plum)">
-          <div class="fact__k">Also</div>
-          <div class="fact__v">
-            Debater
-            <span>Won the 2019 Inter-College Parliamentary Debate, UIET</span>
-          </div>
+    <div class="factgrid">
+      <div class="fact" style="--accent:var(--plum);--tint:var(--wash-plum)">
+        <div class="fact__k">Degree</div>
+        <div class="fact__v">
+          B.E. Information Technology
+          <span>Panjab University, Chandigarh · 8.32/10</span>
         </div>
       </div>
+      <div class="fact" style="--accent:var(--mizu);--tint:var(--wash-mizu)">
+        <div class="fact__k">Core</div>
+        <div class="fact__v">
+          Python · TensorFlow · PyTorch
+          <span>OpenCV, scikit-learn, FastAPI</span>
+        </div>
+      </div>
+      <div class="fact" style="--accent:var(--ochre);--tint:var(--wash-ochre)">
+        <div class="fact__k">Deployment</div>
+        <div class="fact__v">
+          MLOps &amp; edge
+          <span>MLflow, TFLite, TF.js, GCP, AWS</span>
+        </div>
+      </div>
+    </div>
+  </section>
 
-      <h2>Side projects</h2>
-
-      <p>
-        <strong>Wabi Sabi Interview News Archive.</strong> A daily business-news digest built
-        for Indian B-school students preparing for placement interviews. Every entry pairs
-        the story with the thing an interviewer would actually push on — why a PMI dip above
-        50 reads differently from a contraction, where comparative advertising stops being
-        comparison and becomes disparagement, what a late entrant buying its way into
-        quick-commerce says about scale economics.
-      </p>
-
-      <p>
-        It is categorised across Finance, Marketing, Operations, Product Management and
-        Consulting, and archived by day. The interesting part was not the summarising — it
-        was deciding what makes a news item <em>useful</em> under interview conditions, which
-        turns out to be a much narrower filter than "important".
-      </p>
-
-      <h2>Elsewhere</h2>
-
-      <p>
-        Code on <a href="https://github.com/janmejai2002" rel="me noopener">GitHub</a>,
-        professional history on <a href="https://linkedin.com/in/janmejai" rel="me noopener">LinkedIn</a>,
-        and new essays via <a href="/rss.xml">RSS</a>.
-      </p>
+  <section class="sec scroll-reveal" style="--accent:var(--indigo)">
+    <h2 class="sec__h">
+      <span class="sec__icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+          stroke-linecap="round" stroke-linejoin="round">
+          <path d="M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7" />
+          <path d="M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7" />
+        </svg>
+      </span>
+      Elsewhere
+    </h2>
+    <div class="links">
+      <a href="https://github.com/janmejai2002" rel="me noopener">GitHub</a>
+      <a href="https://linkedin.com/in/janmejai" rel="me noopener">LinkedIn</a>
+      <a href="https://app.grayswan.ai/" rel="noopener">Gray Swan</a>
+      <a href="/projects/">Projects</a>
+      <a href="/rss.xml">RSS</a>
     </div>
   </section>
 </Base>
+
+<style>
+  .about { padding-top: 3rem; max-width: var(--measure); }
+  .lede { font-size: 1.0625rem; line-height: 1.72; color: var(--ink-soft); margin: 0; }
+  @media (min-width: 768px) { .lede { font-size: 1.15rem; } }
+
+  /* ---------- Stat band ---------- */
+  .statband {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+    gap: .6rem; margin: 2.5rem 0 1rem; max-width: var(--measure);
+  }
+  .stat {
+    padding: 1.1rem 1rem; border-radius: 14px;
+    border: 1px solid var(--border); border-bottom: 3px solid var(--accent);
+    background: var(--card); transition: transform .3s cubic-bezier(.2,.8,.2,1);
+  }
+  .stat:hover { transform: translateY(-3px); }
+  .stat__n {
+    display: block; font-size: 1.75rem; font-weight: 800; letter-spacing: -.03em;
+    color: var(--accent); font-variant-numeric: tabular-nums; line-height: 1;
+  }
+  .stat__k {
+    display: block; margin-top: .45rem; font-size: .5625rem; font-weight: 800;
+    letter-spacing: .13em; text-transform: uppercase; color: var(--ink-faint);
+  }
+
+  /* ---------- Section shell ---------- */
+  .sec { max-width: var(--measure); margin-top: 3.25rem; }
+  .sec__h {
+    display: flex; align-items: center; gap: .7rem;
+    font-size: .6875rem; font-weight: 800; letter-spacing: .16em; text-transform: uppercase;
+    color: var(--accent); margin: 0 0 1.25rem;
+  }
+  .sec__icon {
+    width: 1.9rem; height: 1.9rem; border-radius: 9px; flex-shrink: 0;
+    display: inline-flex; align-items: center; justify-content: center;
+    border: 1px solid var(--border);
+    background: color-mix(in srgb, var(--accent) 12%, transparent);
+  }
+  .sec__icon svg { width: 15px; height: 15px; }
+  .sec > p { font-size: 1rem; line-height: 1.72; color: var(--ink-soft); margin: 0 0 1.5rem; }
+  .sec a { color: var(--ink); font-weight: 500; text-decoration: none;
+    box-shadow: inset 0 -1.5px 0 var(--accent); transition: background .25s; }
+  .sec a:hover { background: color-mix(in srgb, var(--accent) 18%, transparent); }
+
+  /* ---------- Break bars ---------- */
+  .bars { list-style: none; margin: 0 0 1.75rem; padding: 0; display: grid; gap: 1.1rem; }
+  .bars__top { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; }
+  .bars__name { font-size: .875rem; font-weight: 700; color: var(--ink); }
+  .bars__n {
+    font-size: .625rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase;
+    color: var(--accent); font-variant-numeric: tabular-nums; white-space: nowrap;
+  }
+  .bars__track {
+    height: 7px; border-radius: 999px; margin: .5rem 0 .35rem;
+    background: color-mix(in srgb, var(--accent) 14%, transparent);
+    overflow: hidden;
+  }
+  .bars__fill {
+    height: 100%; width: var(--w); border-radius: 999px; background: var(--accent);
+    transform: scaleX(0); transform-origin: left;
+    transition: transform 1s cubic-bezier(.2,.8,.2,1);
+  }
+  .revealed .bars__fill, .sec.revealed .bars__fill { transform: scaleX(1); }
+  .bars li:nth-child(2) .bars__fill { transition-delay: .12s; }
+  .bars li:nth-child(3) .bars__fill { transition-delay: .24s; }
+  .bars__rank { font-size: .6875rem; color: var(--ink-faint); }
+
+  .pull {
+    margin: 0; padding: 1rem 1.25rem; border-left: 3px solid var(--accent);
+    border-radius: 0 12px 12px 0;
+    background: color-mix(in srgb, var(--accent) 9%, transparent);
+    font-size: 1rem; line-height: 1.6; font-weight: 550; color: var(--ink);
+  }
+
+  /* ---------- Papers ---------- */
+  .papers { display: grid; gap: .7rem; }
+  .paper {
+    padding: 1.1rem 1.25rem; border-radius: 14px; border: 1px solid var(--border);
+    border-left: 3px solid var(--accent); background: var(--card);
+    transition: transform .3s cubic-bezier(.2,.8,.2,1), box-shadow .3s;
+  }
+  .paper:hover { transform: translateY(-2px); box-shadow: 0 12px 26px var(--shadow); }
+  .paper h3 {
+    font-size: .95rem; font-weight: 700; line-height: 1.4; margin: 0 0 .6rem;
+    color: var(--ink); text-wrap: balance;
+  }
+  .paper__meta { display: flex; flex-wrap: wrap; gap: .45rem; align-items: center; }
+  .paper__venue, .paper__pub, .paper__if {
+    font-size: .5625rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase;
+    padding: .22rem .5rem; border-radius: 5px;
+  }
+  .paper__venue { color: var(--accent); background: color-mix(in srgb, var(--accent) 13%, transparent); }
+  .paper__pub { color: var(--ink-faint); border: 1px solid var(--border); }
+  .paper__if { color: var(--ink-faint); border: 1px solid var(--border); font-variant-numeric: tabular-nums; }
+
+  /* ---------- Timeline ---------- */
+  .tl { list-style: none; margin: 0; padding: 0; position: relative; }
+  .tl::before {
+    content: ''; position: absolute; left: 5px; top: .5rem; bottom: .5rem; width: 1px;
+    background: var(--border);
+  }
+  @media (min-width: 620px) { .tl::before { left: 7.5rem; } }
+  .tl li { position: relative; padding: 0 0 1.75rem 1.75rem; }
+  @media (min-width: 620px) {
+    .tl li { display: grid; grid-template-columns: 7.5rem 1fr; gap: 1.75rem; padding-left: 0; }
+  }
+  .tl li::before {
+    content: ''; position: absolute; left: 0; top: .42rem;
+    width: 11px; height: 11px; border-radius: 999px;
+    background: var(--paper); border: 2.5px solid var(--accent); z-index: 1;
+  }
+  @media (min-width: 620px) { .tl li::before { left: calc(7.5rem - 5px); } }
+  .tl__when {
+    font-size: .625rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase;
+    color: var(--accent); display: block; margin-bottom: .35rem;
+  }
+  @media (min-width: 620px) { .tl__when { text-align: right; margin-bottom: 0; padding-top: .12rem; } }
+  .tl__body h3 { font-size: .95rem; font-weight: 700; margin: 0 0 .2rem; color: var(--ink); }
+  .tl__where { font-size: .75rem; color: var(--ink-faint); font-weight: 600; }
+  .tl__body p { margin: .55rem 0 0; font-size: .875rem; line-height: 1.62; color: var(--ink-soft); }
+
+  /* ---------- Links ---------- */
+  .links { display: flex; flex-wrap: wrap; gap: .5rem; }
+  .links a {
+    box-shadow: none; padding: .55rem 1rem; border-radius: 999px;
+    border: 1px solid var(--border); font-size: .6875rem; font-weight: 800;
+    letter-spacing: .1em; text-transform: uppercase; color: var(--ink-soft);
+    transition: all .25s;
+  }
+  .links a:hover {
+    background: var(--accent); border-color: var(--accent);
+    color: var(--paper); transform: translateY(-2px);
+  }
+
+  @media (pointer: coarse) { .links a { min-height: 44px; display: inline-flex; align-items: center; } }
+
+  @media (prefers-reduced-motion: reduce) {
+    .bars__fill { transform: scaleX(1); }
+  }
+</style>
+
+<script>
+  // Count the stat numbers up once, when they scroll into view.
+  const stats = [...document.querySelectorAll<HTMLElement>('.stat__n')];
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (stats.length && !reduce) {
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          if (!e.isIntersecting) continue;
+          const el = e.target as HTMLElement;
+          io.unobserve(el);
+          const target = Number(el.dataset.count ?? 0);
+          const prefix = el.dataset.prefix ?? '';
+          const dur = 900;
+          const t0 = performance.now();
+          const tick = (now: number) => {
+            const p = Math.min((now - t0) / dur, 1);
+            const eased = 1 - Math.pow(1 - p, 3);
+            el.textContent = prefix + Math.round(target * eased).toLocaleString('en-IN');
+            if (p < 1) requestAnimationFrame(tick);
+          };
+          requestAnimationFrame(tick);
+        }
+      },
+      { threshold: 0.4 }
+    );
+    stats.forEach((s) => io.observe(s));
+  }
+</script>
