@@ -40,7 +40,7 @@ export const TRACKS = [
     accent: 'moss',
     ask: 'For people who want precedent',
     blurb:
-      'What a named company actually did with AI in marketing and distribution — the mechanism, the numbers they published, and how much weight the evidence really carries.',
+      'What a named company actually did with AI — in marketing, operations, support, engineering, anywhere real work happens — the mechanism, the published numbers, how much the evidence carries, and what you could apply.',
     cta: 'Read the case studies',
   },
   {
