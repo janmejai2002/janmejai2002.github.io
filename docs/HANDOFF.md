@@ -121,6 +121,20 @@ back to Notion, but only after verifying the URL actually serves.
 | `site/scripts/close-loop.mjs` | Verifies the URL is live, then reconciles Notion. |
 | `.github/workflows/publish-from-notion.yml` | Polls every 30 min, builds, opens a PR. |
 | `close-loop` job in `deploy.yml` | Runs after every Pages deploy. `continue-on-error`. |
+| `site/scripts/sync-news.mjs` | Refreshes `src/data/news.json` from the news archive database. |
+| `.github/workflows/sync-news.yml` | Runs the above daily at 04:35 and **commits straight to main**. |
+
+**Why the news sync commits directly while articles get a PR:** an article is a
+generated draft that still needs artwork, a TL;DR and a read-through, so a diff
+is where that gets caught. A news card is data the human already curated in
+Notion — there is nothing for a reviewer to add. The build still gates both.
+
+**Gotcha now encoded in `sync-news.yml`:** a push made with the default
+`GITHUB_TOKEN` does **not** trigger other workflows (GitHub blocks that to
+prevent recursion), and `deploy.yml` listens on `push: branches: [main]`. Any
+future bot that commits to main must dispatch `deploy.yml` explicitly — and needs
+`actions: write` to do it — or its commit will sit unpublished until the next
+human push.
 
 `NOTION_TOKEN` is set as a repository secret and **both halves have been
 verified running in CI**. Detection is polling, not push — Notion cannot reach
