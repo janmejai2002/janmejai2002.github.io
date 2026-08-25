@@ -23,5 +23,11 @@
  * An empty string renders no tag at all, which is the correct default.
  */
 
-export const GOOGLE_SITE_VERIFICATION = '';
-export const BING_SITE_VERIFICATION = '';
+export const GOOGLE_SITE_VERIFICATION = 'p0b2exN0HT0XuhCK0iFkliuB2OZiIy2VhNDTYWKQS1M';
+export const BING_SITE_VERIFICATION = '8AE472167560C6B10D02A15F64EA2389';
+
+// Google is verified twice over, deliberately: the meta tag above and the file
+// at public/googlea1340fe9bfe1e41a.html, which deploys to the site root. Either
+// alone is sufficient. Google's instruction is not to remove the file even
+// after verification succeeds, so it stays — and having both means a future
+// refactor of the <head> cannot silently un-verify the property.

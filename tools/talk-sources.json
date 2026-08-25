@@ -1,0 +1,70 @@
+{
+  "_comment": [
+    "The allowlist for the Talks theme. Quality is bounded by this file and",
+    "nothing else — the routine will not wander outside it. Edit freely; it is",
+    "read fresh on every run.",
+    "",
+    "'url' must be a channel videos page or a playlist. 'weight' is a nudge, not",
+    "a rule: higher means prefer it when several candidates are equally good.",
+    "Set 'active': false to mute a source without losing it."
+  ],
+  "maxAgeDays": 10,
+  "sources": [
+    {
+      "name": "Two Minute Papers",
+      "url": "https://www.youtube.com/@TwoMinutePapers/videos",
+      "kind": "research-summary",
+      "weight": 2,
+      "active": true
+    },
+    {
+      "name": "Y Combinator",
+      "url": "https://www.youtube.com/@ycombinator/videos",
+      "kind": "builder-talks",
+      "weight": 2,
+      "active": true
+    },
+    {
+      "name": "Lex Fridman",
+      "url": "https://www.youtube.com/@lexfridman/videos",
+      "kind": "long-interview",
+      "weight": 1,
+      "active": true
+    },
+    {
+      "name": "Google DeepMind",
+      "url": "https://www.youtube.com/@GoogleDeepMind/videos",
+      "kind": "lab",
+      "weight": 3,
+      "active": true
+    },
+    {
+      "name": "OpenAI",
+      "url": "https://www.youtube.com/@OpenAI/videos",
+      "kind": "lab",
+      "weight": 3,
+      "active": true
+    },
+    {
+      "name": "Microsoft Research",
+      "url": "https://www.youtube.com/@MicrosoftResearch/videos",
+      "kind": "lab",
+      "weight": 2,
+      "active": true
+    },
+    {
+      "name": "Stanford Online",
+      "url": "https://www.youtube.com/@stanfordonline/videos",
+      "kind": "academic",
+      "weight": 2,
+      "active": true
+    },
+    {
+      "name": "MIT CSAIL",
+      "url": "https://www.youtube.com/@MITCSAIL/videos",
+      "kind": "academic",
+      "weight": 1,
+      "active": true
+    }
+  ]
+}
