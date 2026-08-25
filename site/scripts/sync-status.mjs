@@ -18,7 +18,7 @@ import { PIPELINE_DS, PRODUCTION_DS, queryAll, plain } from './lib/notion.mjs';
 const here = dirname(fileURLToPath(import.meta.url));
 const OUT = join(here, '..', 'src', 'data', 'status.json');
 
-const TRACKS = ['Technical', 'Business', 'Basics'];
+const TRACKS = ['Technical', 'Business', 'Basics', 'Case Studies', 'Talks'];
 const sel = (p, name) => p[name]?.select?.name ?? null;
 const dateOf = (p, name) => p[name]?.date?.start ?? null;
 

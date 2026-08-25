@@ -9,10 +9,14 @@ import news from '../data/news.json';
 // computed at build time, so the page is a snapshot of the last deploy.
 const posts = await getCollection('blog', ({ data }) => !data.draft);
 
+// hasRadar: Case Studies and Talks are written directly by their own routines
+// and never pass through the radar, so "topics found" is not a number for them.
 const TRACKS = [
-  { id: 'technical', label: 'Technical', notion: 'Technical', accent: 'mizu' },
-  { id: 'business', label: 'Business', notion: 'Business', accent: 'ochre' },
-  { id: 'basics', label: 'Basics', notion: 'Basics', accent: 'plum' },
+  { id: 'technical', label: 'Technical', notion: 'Technical', accent: 'mizu', hasRadar: true },
+  { id: 'business', label: 'Business', notion: 'Business', accent: 'ochre', hasRadar: true },
+  { id: 'basics', label: 'Basics', notion: 'Basics', accent: 'plum', hasRadar: true },
+  { id: 'case-studies', label: 'Case Studies', notion: 'Case Studies', accent: 'moss', hasRadar: false },
+  { id: 'talks', label: 'Talks', notion: 'Talks', accent: 'hanko', hasRadar: false },
 ] as const;
 
 const newestPost = posts
@@ -114,7 +118,7 @@ const waiting = status.radar.unrated;
           TRACKS.map((t) => (
             <tr style={`--accent:var(--${t.accent})`}>
               <th scope="row"><span class="dot" aria-hidden="true" />{t.label}</th>
-              <td>{status.radar.byTrack[t.notion] ?? 0}</td>
+              <td>{t.hasRadar ? (status.radar.byTrack[t.notion] ?? 0) : '—'}</td>
               <td>{status.production.byTrack[t.notion] ?? 0}</td>
               <td>{posts.filter((p) => p.data.track === t.id).length}</td>
             </tr>
