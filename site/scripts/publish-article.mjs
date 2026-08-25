@@ -109,23 +109,48 @@ function wrapTldr(markdown) {
  * children, so reading only the block itself silently loses the slug — which is
  * how the first test run produced a 69-character filename from the title.
  */
-async function parseHeaderCallout(list) {
-  if (list[0]?.type !== 'callout') return { header: null, body: list };
+/**
+ * Reads the metadata header the writer routine puts above the article.
+ *
+ * It accepts a **callout or a quote**, and a run of them, because that is what
+ * the routine actually produces. Notion turns `> **Meta description:** ...` into
+ * a quote, not a callout, and the two drafts approved on 2026-08-25 were both
+ * rejected as "no Meta description found" when they had a perfectly good one —
+ * it was just in the other block type. Insisting on `callout` was the bug.
+ *
+ * A multi-line callout is also split across the block's own rich_text *and its
+ * children*; reading only the block silently loses the slug. See HANDOFF §6.
+ */
+const HEADER_TYPES = new Set(['callout', 'quote']);
 
-  const parts = [plain(list[0].callout.rich_text)];
-  if (list[0].has_children) {
-    for (const child of await blocks(list[0].id)) {
-      parts.push(plain(child[child.type]?.rich_text));
+async function parseHeader(list) {
+  // Consume the leading run — the description and slug are sometimes one block
+  // with a line break, sometimes two consecutive blocks.
+  let end = 0;
+  while (end < list.length && HEADER_TYPES.has(list[end]?.type)) end++;
+  if (end === 0) return { header: null, body: list };
+
+  const parts = [];
+  for (const block of list.slice(0, end)) {
+    parts.push(plain(block[block.type]?.rich_text));
+    if (block.has_children) {
+      for (const child of await blocks(block.id)) {
+        parts.push(plain(child[child.type]?.rich_text));
+      }
     }
   }
   const text = parts.filter(Boolean).join('\n');
 
+  // Tolerates "Meta description:", "**Meta description:**", and stray bold
+  // markers, and stops at the end of the line so the slug does not get swept in.
   const grab = (label) =>
-    text.match(new RegExp(`${label}\\s*:?\\s*\\**\\s*(.+)`, 'i'))?.[1]?.trim() || null;
+    text.match(new RegExp(`\\**\\s*${label}\\s*\\**\\s*:?\\s*\\**\\s*([^\\n]+)`, 'i'))?.[1]
+      ?.replace(/\*+$/, '')
+      .trim() || null;
 
   return {
     header: { description: grab('Meta description'), slug: grab('Slug') },
-    body: list.slice(1),
+    body: list.slice(end),
   };
 }
 
@@ -145,7 +170,17 @@ const rows = await queryAll(PRODUCTION_DS, {
 
 const written = [];
 const skipped = [];
+
+// Rejections used to be strings printed to a log nobody reads. The run went red
+// in Actions and the human, who works in Notion, never found out why their
+// approved article did not appear. Each entry now carries the page it belongs
+// to so the reason can be written back to the row itself.
 const problems = [];
+const blocked = (id, title, reason) => problems.push({ id, title, reason, fatal: true });
+const note = (id, title, reason) => problems.push({ id, title, reason, fatal: false });
+// Rows that published cleanly this run, so any Blocked Reason left over from a
+// previous failure can be wiped.
+const clearBlocked = [];
 
 for (const page of rows) {
   const p = page.properties;
@@ -158,9 +193,12 @@ for (const page of rows) {
   }
 
   const list = await blocks(id);
-  const { header, body } = await parseHeaderCallout(list);
+  const { header, body } = await parseHeader(list);
 
-  const slug = header?.slug || slugify(title);
+  // The routine writes the slug as a path ("/mcp-stateless-spec-..."), so strip
+  // the slashes — otherwise the leading one lands in the filename and the post
+  // is written to the wrong place.
+  const slug = (header?.slug || slugify(title)).replace(/^\/+|\/+$/g, '').trim();
   const description = header?.description ?? '';
   const file = join(BLOG, `${slug}.md`);
 
@@ -172,15 +210,23 @@ for (const page of rows) {
   // Fail loudly and specifically. These caps are deliberate: they already
   // caught a 193-character description that search would have truncated.
   if (title.length > MAX_TITLE) {
-    problems.push(`"${title}" — title is ${title.length} chars, max ${MAX_TITLE}. Shorten it in Notion.`);
+    blocked(id, title, `Title is ${title.length} characters; the maximum is ${MAX_TITLE}. Shorten the page name.`);
     continue;
   }
   if (!description) {
-    problems.push(`"${title}" — no "Meta description:" found in the opening callout.`);
+    blocked(
+      id,
+      title,
+      'No "Meta description:" line found in the opening callout. Add a callout at the top of this page containing a line like "Meta description: <under 160 characters>".'
+    );
     continue;
   }
   if (description.length > MAX_DESC) {
-    problems.push(`"${title}" — description is ${description.length} chars, max ${MAX_DESC}.`);
+    blocked(
+      id,
+      title,
+      `Meta description is ${description.length} characters; the maximum is ${MAX_DESC}. Shorten it in the opening callout.`
+    );
     continue;
   }
 
@@ -194,22 +240,25 @@ for (const page of rows) {
     .filter(Boolean);
   const pubDate = p['Draft Completed']?.date?.start ?? new Date().toISOString().slice(0, 10);
 
-  // Editorial track. Notion holds it title-cased ("Systems"); the content
+  // Editorial theme. Notion holds it title-cased ("Technical"); the content
   // schema wants the lowercase id. Anything unset or unrecognised falls back to
-  // systems, which is also the schema default — a missing Track must never be
-  // able to fail a build.
-  const TRACKS = ['systems', 'practice', 'demand'];
+  // technical, which is also the schema default — a missing Track must never be
+  // able to fail a build. These three strings must match the enum in
+  // src/content.config.ts and the Notion select exactly.
+  const TRACKS = ['technical', 'business', 'basics'];
   const rawTrack = (p['Track']?.select?.name ?? '').trim().toLowerCase();
-  const track = TRACKS.includes(rawTrack) ? rawTrack : 'systems';
+  const track = TRACKS.includes(rawTrack) ? rawTrack : 'technical';
   if (rawTrack && !TRACKS.includes(rawTrack)) {
-    problems.push(`"${title}" — unknown Track "${rawTrack}"; filed under systems.`);
+    note(id, title, `Unknown Track "${rawTrack}" — filed under technical.`);
   }
 
   // The reader question the piece answers. Optional, capped to match the schema.
   const question = plain(p['Reader Question']?.rich_text).trim();
   if (question.length > MAX_QUESTION) {
-    problems.push(
-      `"${title}" — Reader Question is ${question.length} chars, max ${MAX_QUESTION}. Shorten it in Notion.`
+    blocked(
+      id,
+      title,
+      `Reader Question is ${question.length} characters; the maximum is ${MAX_QUESTION}. Shorten it.`
     );
     continue;
   }
@@ -218,8 +267,10 @@ for (const page of rows) {
   // used to be silent, and "the generator does not write a TL;DR" then sat in
   // the docs as a permanent manual step.
   if (!hasTldr) {
-    problems.push(
-      `"${title}" — no "## Executive TL;DR" section at the top; the post will publish without the summary plate.`
+    note(
+      id,
+      title,
+      'No "Executive TL;DR" heading at the top, so this published without the summary plate the other posts open with.'
     );
   }
 
@@ -252,20 +303,72 @@ for (const page of rows) {
   mkdirSync(BLOG, { recursive: true });
   writeFileSync(file, frontmatter + markdown + trailer, 'utf8');
   written.push(`${slug}.md (${words} words)`);
+  clearBlocked.push({ id, title });
 }
 
 for (const s of skipped) console.log(`· ${s}`);
 for (const w of written) console.log(`+ ${w}`);
-for (const p of problems) console.error(`✗ ${p}`);
+for (const p of problems) console.error(`${p.fatal ? '✗' : '!'} "${p.title}" — ${p.reason}`);
+
+// Tell Notion, not just the log.
+//
+// The whole point of the Approved gate is that a human flips it and walks away.
+// When the generator then refuses, the only signal used to be a red run in
+// GitHub Actions — a place nobody watches. So an approved article could sit
+// unpublished indefinitely with no indication of why. The reason now goes back
+// onto the row the human is already looking at, and anything blocking is moved
+// out of Approved so the queue reflects reality.
+const fatal = problems.filter((p) => p.fatal);
+if (!dryRun && fatal.length) {
+  for (const p of fatal) {
+    try {
+      await api(`/pages/${p.id}`, {
+        method: 'PATCH',
+        body: {
+          properties: {
+            'Draft Status': { select: { name: 'Needs Revision' } },
+            'Blocked Reason': {
+              rich_text: [
+                {
+                  type: 'text',
+                  text: { content: `${p.reason} (checked ${new Date().toISOString().slice(0, 16).replace('T', ' ')} UTC)`.slice(0, 2000) },
+                },
+              ],
+            },
+          },
+        },
+      });
+      console.error(`  ↳ marked "${p.title}" Needs Revision in Notion`);
+    } catch (err) {
+      // Never let the write-back mask the original problem.
+      console.error(`  ↳ could not update Notion for "${p.title}": ${err.message}`);
+    }
+  }
+}
+
+// Clear a stale block off anything that has now published successfully.
+if (!dryRun) {
+  for (const { id, title } of clearBlocked) {
+    try {
+      await api(`/pages/${id}`, {
+        method: 'PATCH',
+        body: { properties: { 'Blocked Reason': { rich_text: [] } } },
+      });
+    } catch {
+      console.error(`  ↳ could not clear Blocked Reason for "${title}"`);
+    }
+  }
+}
 
 if (written.length) {
   console.log(
     `\n${written.length} article(s) staged. Still needed before these are worth shipping:\n` +
-      `  · artwork — see docs/ARTWORK.md, then npm run images\n` +
-      `  · an Executive TL;DR block, to match the other posts\n`
+      `  · artwork — the brief is in an HTML comment at the foot of the file; see docs/ARTWORK.md, then npm run images\n` +
+      `  · a read-through — these were drafted by a routine\n`
   );
 }
 if (!written.length && !problems.length) console.log('Nothing approved and unpublished.');
 
-// A malformed draft is a real failure and should turn the run red.
-process.exit(problems.length ? 1 : 0);
+// A malformed draft is a real failure and should turn the run red — but only a
+// blocking one. A note is a review remark, not a broken pipeline.
+process.exit(fatal.length ? 1 : 0);

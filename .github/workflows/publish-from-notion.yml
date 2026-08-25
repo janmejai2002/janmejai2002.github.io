@@ -13,9 +13,20 @@ name: Publish from Notion
 on:
   schedule:
     # Every 30 minutes, offset off the hour so it is not competing with the
-    # thundering herd of :00 cron jobs.
+    # thundering herd of :00 cron jobs. This is the safety net, not the primary
+    # path — see repository_dispatch below.
     - cron: '17,47 * * * *'
   workflow_dispatch:
+  # Reactive trigger. A Notion database automation on "Draft Status is Approved"
+  # can POST to
+  #   https://api.github.com/repos/janmejai2002/janmejai2002.github.io/dispatches
+  #   { "event_type": "notion-changed" }
+  # with an Authorization header, and this runs within seconds instead of within
+  # half an hour. The polling schedule stays as the fallback: if the webhook is
+  # ever removed, misconfigured, or its token expires, nothing silently stops
+  # working — it just gets slower again. See docs/PUBLISHING.md.
+  repository_dispatch:
+    types: [notion-changed]
 
 concurrency:
   group: publish-from-notion

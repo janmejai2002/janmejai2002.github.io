@@ -24,6 +24,13 @@ on:
     # hour to avoid the :00 cron crowd.
     - cron: '35 4 * * *'
   workflow_dispatch:
+  # Same reactive trigger as the publish workflow: a Notion automation on the
+  # news archive can fire `news-changed` and have the site rebuilt within a
+  # minute. Because /status/ is rendered at build time from status.json, a
+  # rebuild-on-change is what makes that page behave like a live dashboard
+  # without the site needing a runtime API to call.
+  repository_dispatch:
+    types: [news-changed]
 
 concurrency:
   group: sync-news

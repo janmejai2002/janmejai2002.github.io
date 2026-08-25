@@ -126,6 +126,59 @@ it silently lose a paragraph.
 
 ---
 
+## When it refuses, it tells Notion
+
+`publish-article.mjs` used to reject a malformed draft by printing a line and
+exiting 1. The run went red in GitHub Actions and that was the entire signal —
+so an approved article could sit unpublished indefinitely while the person who
+approved it, who works in Notion, had no idea anything was wrong. That is
+exactly what happened on 2026-08-25.
+
+A blocking problem now writes itself back onto the row:
+
+- `Draft Status` → **Needs Revision**, so it leaves the Approved queue
+- `Blocked Reason` → the specific, actionable reason and a UTC timestamp
+
+Fix the row, set it back to Approved, and the next run picks it up and clears
+`Blocked Reason`. Non-blocking remarks (a missing TL;DR, an unknown Track) are
+printed and do **not** fail the run or move the row.
+
+## Making it reactive instead of polled
+
+Both workflows accept a `repository_dispatch` event, so Notion can trigger them
+directly rather than the pipeline waiting up to half an hour to notice:
+
+| Workflow | Event type |
+|---|---|
+| `publish-from-notion.yml` | `notion-changed` |
+| `sync-news.yml` | `news-changed` |
+
+**To wire it up** (this needs you — it involves creating a token, which is not
+something an agent should do on your behalf):
+
+1. Create a **fine-grained personal access token** scoped to this repository
+   only, with **Contents: read and write** and **Actions: read and write**. No
+   other scopes, no other repos — that is the entire blast radius.
+2. In Notion, on ✍️ Article Production, add an automation: **when `Draft Status`
+   becomes `Approved` → Send webhook**, to
+   `https://api.github.com/repos/janmejai2002/janmejai2002.github.io/dispatches`
+   with headers `Authorization: Bearer <token>`,
+   `Accept: application/vnd.github+json`, and body
+   `{"event_type": "notion-changed"}`.
+3. Repeat on the news archive database with `{"event_type": "news-changed"}` if
+   you want the archive live too.
+
+**The polling schedule stays.** It is the fallback: if the webhook is removed,
+misconfigured, or its token expires, the pipeline gets slower rather than
+silently stopping. Reactive on the happy path, polled underneath.
+
+**Why this also gives you a live dashboard.** `/status/` is rendered at build
+time from `status.json`. A rebuild-on-change means the page reflects Notion
+within about a minute of an edit, without the site needing to call an API at
+runtime — which it could not do anyway, since that would mean putting a Notion
+token in the browser. Reactive rebuilds get the liveness without giving up the
+static-site property or adding a server.
+
 ## Known limits
 
 - **Polling, not push.** Notion cannot reach this repo directly without a public
