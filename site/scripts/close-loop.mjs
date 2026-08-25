@@ -61,7 +61,16 @@ for (const post of posts) {
   }
 
   const pipeline = await api(`/pages/${pipelineId}`);
-  if (pipeline.properties?.Status?.select?.name === 'Published') {
+
+  // Both rows are checked independently. They used to be coupled: the script
+  // read only the radar row, and if that already said Published it skipped the
+  // article entirely — so a production row left at "Draft Ready" could never
+  // catch up. That is exactly what happened to the first four articles, and it
+  // made the /status/ page report drafts awaiting review that were already live.
+  const radarDone = pipeline.properties?.Status?.select?.name === 'Published';
+  const productionDone = production.properties?.['Draft Status']?.select?.name === 'Published';
+
+  if (radarDone && productionDone) {
     console.log(`· ${post.slug}: already Published`);
     continue;
   }
@@ -74,23 +83,35 @@ for (const post of posts) {
     continue;
   }
 
+  const todo = [!radarDone && 'radar', !productionDone && 'production'].filter(Boolean);
+
   if (dryRun) {
-    console.log(`+ ${post.slug}: would set Published + Post URL [dry run]`);
+    console.log(`+ ${post.slug}: would mark ${todo.join(' + ')} Published [dry run]`);
     updated++;
     continue;
   }
 
-  await api(`/pages/${pipelineId}`, {
-    method: 'PATCH',
-    body: {
-      properties: {
-        Status: { select: { name: 'Published' } },
-        'Post URL': { url },
-        'Publish Date': { date: { start: new Date().toISOString().slice(0, 10) } },
+  if (!radarDone) {
+    await api(`/pages/${pipelineId}`, {
+      method: 'PATCH',
+      body: {
+        properties: {
+          Status: { select: { name: 'Published' } },
+          'Post URL': { url },
+          'Publish Date': { date: { start: new Date().toISOString().slice(0, 10) } },
+        },
       },
-    },
-  });
-  console.log(`+ ${post.slug}: Published, ${url}`);
+    });
+  }
+
+  if (!productionDone) {
+    await api(`/pages/${post.notionId}`, {
+      method: 'PATCH',
+      body: { properties: { 'Draft Status': { select: { name: 'Published' } } } },
+    });
+  }
+
+  console.log(`+ ${post.slug}: ${todo.join(' + ')} → Published, ${url}`);
   updated++;
 }
 
