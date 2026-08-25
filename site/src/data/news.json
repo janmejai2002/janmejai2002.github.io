@@ -1,5 +1,37 @@
 [
   {
+    "headline": "FSSAI shuts down Marche Retail for a month",
+    "date": "2026-08-24",
+    "category": "Marketing",
+    "summary": "FSSAI suspended the food licence of Marche Retail (Le Marche) for 30 days after inspections found serious hygiene and labelling non-compliances, part of a wider crackdown on food brands.",
+    "angle": "A reminder that marketing claims and packaging must survive regulatory scrutiny, not just consumer appeal.",
+    "source": "https://www.businesstoday.in/india/story/after-scrutiny-of-top-food-chains-like-burger-king-pizza-hut-fssai-suspends-marche-retail-licence-for-30-days-550866-2026-08-24"
+  },
+  {
+    "headline": "India's factories are growing faster than the world's",
+    "date": "2026-08-24",
+    "category": "Operations",
+    "summary": "A new report finds India's manufacturing sector logged double-digit growth in FY26, with schemes like PLI, Make in India and PM Gati Shakti pulling more of the global supply chain toward India.",
+    "angle": "Ties directly to \"why is India becoming a manufacturing alternative to China\" — a recurring ops/strategy question.",
+    "source": "https://ianslive.in/govt-schemes-accelerate-indias-manufacturing-growth-attract-global-supplychain-shifts-report--20260824133618"
+  },
+  {
+    "headline": "KPMG Australia's layoffs seen as just the start",
+    "date": "2026-08-24",
+    "category": "Consulting",
+    "summary": "Reporting this week described KPMG Australia's recent staff cuts as likely the beginning of a multi-year squeeze on consulting earnings, salaries and job tenure at the firm.",
+    "angle": "Useful for \"what's happening to the consulting business model\" — signals margin pressure spreading beyond the US market.",
+    "source": "https://www.goingconcern.com/monday-morning-accounting-news-brief-the-newspaper-says-its-probably-for-the-best-if-you-got-laid-off-from-kpmg-irs-employee-union-has-beef-with-ceo-role-8-24-26/"
+  },
+  {
+    "headline": "YouTube redefines what counts as a \"view\"",
+    "date": "2026-08-24",
+    "category": "Marketing",
+    "summary": "From August 24, YouTube counts a public view from the moment a video starts playing at the first frame, changing how creators and advertisers benchmark reach.",
+    "angle": "Shows how a single metric-definition change can ripple through campaign pricing and ROI measurement — a good prompt on marketing analytics rigor.",
+    "source": "https://bestmediainfo.com/mediainfo/advertising/top-advertising-marketing-and-media-news-headlines-of-today-august-24-2026-12425257"
+  },
+  {
     "headline": "Lahori Zeera reclaims \"thanda\" from Coca-Cola with newspaper takeover",
     "date": "2026-08-23",
     "category": "Marketing",
@@ -192,6 +224,14 @@
     "source": "https://www.bankingfinance.in/banking-news-for-august-2026.html"
   },
   {
+    "headline": "Domestic funds now dominate India's private credit market",
+    "date": "2026-08-20",
+    "category": "Finance",
+    "summary": "EY's H1 2026 Private Credit Report shows domestic funds accounted for 74% of India's $3.5 billion private credit deal value, up sharply as global funds' share fell from 68% to 26% year-on-year.",
+    "angle": "Signals a structural shift in who finances Indian companies outside traditional bank lending — relevant to any \"alternative financing\" discussion.",
+    "source": "https://www.ey.com/en_in/newsroom/2026/08/domestic-funds-drive-indias-private-credit-market-as-investments-reach-us-dollor-3-point-5-billion-in-h1-2026-ey-report"
+  },
+  {
     "headline": "Forbes names Accenture, Deloitte, McKinsey top global consulting firms for 2026",
     "date": "2026-08-20",
     "category": "Consulting",
@@ -326,6 +366,14 @@
     "summary": "Hindustan Unilever has sued Beco's parent Kwick Living in the Delhi High Court, alleging its comparative campaign disparages Surf Excel and Vim by claiming they contain harmful chemicals; the court declined an interim injunction and asked Beco to respond by August 20.",
     "angle": "A live case study on the legal limits of comparative advertising and brand disparagement — how far a challenger brand can go before \"informative comparison\" becomes actionable trade libel.",
     "source": "https://www.business-standard.com/companies/news/hul-sues-beco-hul-moves-delhi-hc-against-beco-parent-over-surf-excel-vim-ad-campaign-126081900893_1.html"
+  },
+  {
+    "headline": "HUL takes Beco to court over its \"toxin-free\" ad war",
+    "date": "2026-08-19",
+    "category": "Marketing",
+    "summary": "Hindustan Unilever sued Beco's parent Kwick Living in the Delhi High Court, alleging its #WarOnWhatsHidden campaign disparages Surf Excel and Vim by claiming they contain harmful chemicals.",
+    "angle": "Tests whether a candidate understands the legal and brand-risk limits of comparative advertising — when \"call-out marketing\" tips into disparagement.",
+    "source": "https://bestmediainfo.com/mediainfo/advertising/hul-sues-beco-over-waronwhatshidden-comparative-campaign-12394729"
   },
   {
     "headline": "HUL takes Beco to Delhi HC over “War on What’s Hidden” campaign",
@@ -510,6 +558,14 @@
     "summary": "The National Stock Exchange is marketing shares at ₹2,000–2,100 apiece to investors, potentially valuing it at up to ₹5.26 trillion ($55 billion) in what would be India's largest-ever IPO.",
     "angle": "A great talking point on capital markets development and India's IPO boom — candidates can discuss valuation, exchange economics, and market depth.",
     "source": "https://www.bloomberg.com/news/articles/2026-08-18/nse-said-to-seek-up-to-55-billion-valuation-in-record-india-ipo"
+  },
+  {
+    "headline": "OpenAI builds a separate ChatGPT for teenagers",
+    "date": "2026-08-18",
+    "category": "Product Management",
+    "summary": "OpenAI launched ChatGPT for Teens, a 13-17 age-gated experience with parental controls, \"quiet hours\" and study-mode safeguards, rolling out globally from August 18.",
+    "angle": "A strong case study on designing safety-first product experiences for a vulnerable user segment without fragmenting the core product.",
+    "source": "https://techcrunch.com/2026/08/18/openai-launches-a-safer-chatgpt-for-teens-years-after-teens-started-using-it/"
   },
   {
     "headline": "OpenAI Launches 'ChatGPT for Teens' With Built-In Guardrails",
@@ -896,6 +952,22 @@
     "source": "https://aninews.in/news/business/ai-era-to-reshape-banking-operations-unlock-productivity-beyond-digitisation-report20260815121318/"
   },
   {
+    "headline": "Flipkart barges into food delivery at half the commission",
+    "date": "2026-08-15",
+    "category": "Marketing",
+    "summary": "Flipkart launched food delivery in Bengaluru on ONDC rails, charging restaurants around 10% commission versus Swiggy and Zomato's 16-30%, timed with a restaurant boycott of the incumbents.",
+    "angle": "A sharp example of price-based disruption and platform positioning against entrenched incumbents.",
+    "source": "https://www.outlookbusiness.com/corporate/flipkart-targets-august-15-food-delivery-launch-in-bengaluru-with-lower-commissions"
+  },
+  {
+    "headline": "Flipkart builds its food-delivery play on rented rails",
+    "date": "2026-08-15",
+    "category": "Product Management",
+    "summary": "Instead of building a closed marketplace, Flipkart chose to launch its Bengaluru food-delivery service on the government-backed ONDC network, undercutting rivals on commission.",
+    "angle": "A live \"build vs. leverage open infrastructure\" decision that a PM must justify — speed and cost versus control.",
+    "source": "https://www.outlookbusiness.com/corporate/flipkart-targets-august-15-food-delivery-launch-in-bengaluru-with-lower-commissions"
+  },
+  {
     "headline": "Flipkart enters food delivery in Bengaluru via ONDC at a 10% commission",
     "date": "2026-08-15",
     "category": "Product Management",
@@ -1072,6 +1144,14 @@
     "source": "https://releasebot.io/updates/openai"
   },
   {
+    "headline": "OpenAI previews a 14x-faster model tier",
+    "date": "2026-08-13",
+    "category": "Product Management",
+    "summary": "OpenAI previewed \"Ultrafast\" mode for GPT-5.6 Sol, powered by Cerebras hardware, generating up to 750 tokens/second for latency-sensitive API workflows — currently in limited preview.",
+    "angle": "Illustrates how PMs segment a single model into speed/cost/quality tiers for different customer workflows.",
+    "source": "https://openai.com/index/previewing-ultrafast/"
+  },
+  {
     "headline": "Rupee slips to 95.40/USD as FII outflows and elevated crude weigh on the currency",
     "date": "2026-08-13",
     "category": "Finance",
@@ -1176,6 +1256,14 @@
     "source": "https://www.business-standard.com/companies/quarterly-results/tata-motors-q1-profit-jumps-83-on-strong-cv-demand-flags-price-hikes-126081201739_1.html"
   },
   {
+    "headline": "Tata Motors' margins slip even as sales jump",
+    "date": "2026-08-12",
+    "category": "Finance",
+    "summary": "Tata Motors' Q1 FY27 standalone revenue rose 23% year-on-year, but EBITDA margin fell 60 bps to 11.7% as commodity costs bit into profitability.",
+    "angle": "Good case for \"growth vs. margin\" trade-off discussions in auto/manufacturing finance.",
+    "source": "https://www.investing.com/news/company-news/tata-motors-q1-fy27-slides-26-volume-surge-margin-pressure-persists-93CH-4855485"
+  },
+  {
     "headline": "Tata Sons chairman Chandrasekaran to step down, reopening succession crisis",
     "date": "2026-08-12",
     "category": "Consulting",
@@ -1214,6 +1302,14 @@
     "summary": "Dubai developer Danube Group built a \"Danube Apartment\" into the Bigg Boss 19 house, rather than running a conventional logo sponsorship, to sell real estate to Indian/NRI buyers.",
     "angle": "Argue whether branded entertainment can move a high-ticket purchase like real estate the way it moves impulse categories.",
     "source": "https://bestmediainfo.com/mediainfo/television/we-did-not-want-danube-to-be-seen-only-as-a-logo-rizwan-sajan-on-bigg-boss-19-12249358"
+  },
+  {
+    "headline": "Deloitte tells the government to rethink import duties",
+    "date": "2026-08-11",
+    "category": "Consulting",
+    "summary": "Deloitte India's latest Economic Outlook projects 6.5-6.8% FY27 GDP growth and urges the government to rationalise customs duties and reform Special Economic Zones ahead of the Budget.",
+    "angle": "Shows how Big Four economic research becomes direct policy input — a good example of a consulting firm's advisory \"product.\"",
+    "source": "https://www.business-standard.com/economy/news/deloitte-projects-india-s-fy27-gdp-growth-at-6-5-6-8-sees-h2-recovery-126071900223_1.html"
   },
   {
     "headline": "FMCG giants pour more ad money into quick commerce",
@@ -1262,6 +1358,14 @@
     "summary": "McKinsey projects India's chemicals sector growing from ~$160B to $230-255B by 2030 (8-9% CAGR), led by eight arenas including semiconductors, EVs/batteries and renewables.",
     "angle": "Pick one of the eight \"arenas\" and build a market-entry thesis, while questioning whether this growth is structural or a China+1 sourcing-shift tailwind.",
     "source": "https://www.ibef.org/news/india-s-chemicals-industry-projected-to-reach-up-to-us-255-billion-by-2030-mckinsey-report"
+  },
+  {
+    "headline": "OpenAI widens its ChatGPT ad experiment",
+    "date": "2026-08-11",
+    "category": "Product Management",
+    "summary": "OpenAI expanded its ChatGPT ads test — shown only to logged-in Free/Go tier users — to the UK, Mexico, Brazil, Japan and South Korea, after starting in the US earlier in 2026.",
+    "angle": "A textbook monetization-vs-user-experience trade-off for a PM to reason through, including why ads are tier-gated.",
+    "source": "https://www.ghacks.net/2026/08/13/openai-expands-chatgpt-ads-test-to-uk-mexico-brazil-japan-and-south-korea/"
   },
   {
     "headline": "SBI Research pegs India's Q1 FY27 GDP growth at 8%, a point above RBI's forecast",
@@ -1334,6 +1438,22 @@
     "summary": "IES Holdings agreed to buy DBM Global, a structural-steel fabrication and industrial-services platform, creating a new \"Structural\" business line alongside its existing segments.",
     "angle": "Does adding an adjacent-but-distinct construction vertical smooth cyclicality across IES's portfolio, or is it \"diworsification\" that stretches management focus?",
     "source": "https://www.globenewswire.com/news-release/2026/08/10/3341777/29106/en/index.html"
+  },
+  {
+    "headline": "IFC bets ₹225 crore on India's warehousing gap",
+    "date": "2026-08-10",
+    "category": "Operations",
+    "summary": "The International Finance Corporation will invest ₹225 crore in NDR Smart Spaces to build about 20 million sq ft of Grade-A dry and cold-storage warehousing across 14 tier-2/3 Indian cities.",
+    "angle": "Highlights the logistics infrastructure gap in smaller Indian cities and why global capital is chasing it now.",
+    "source": "https://www.business-standard.com/companies/news/ifc-to-invest-225-crore-in-ndr-smart-spaces-for-warehousing-expansion-126081000466_1.html"
+  },
+  {
+    "headline": "India gets its first standalone ammonia import terminal",
+    "date": "2026-08-10",
+    "category": "Operations",
+    "summary": "Aegis Logistics commissioned a 36,000-tonne ammonia storage terminal at Pipavav Port, backed by a 15-year take-or-pay agreement with Hindustan Zinc to feed a new fertiliser plant.",
+    "angle": "A concrete example of long-term offtake contracts de-risking infrastructure investment — useful for supply-chain and capex questions.",
+    "source": "https://splash247.com/aegis-brings-36000-tonne-ammonia-terminal-online-at-pipavav/"
   },
   {
     "headline": "Mahindra Group consolidates real estate, hospitality under new CSO",
@@ -1552,12 +1672,36 @@
     "source": "https://insideretail.asia/2026/08/07/kim-kardashians-skims-enters-india-with-reliance-retail/"
   },
   {
+    "headline": "Kim Kardashian's SKIMS enters India via Reliance",
+    "date": "2026-08-05",
+    "category": "Marketing",
+    "summary": "Reliance Brands signed an exclusive partnership to launch SKIMS in India, opening first stores in Delhi and Mumbai as part of a phased retail and digital rollout.",
+    "angle": "A classic market-entry case — why a global brand licenses distribution to a local conglomerate instead of going direct.",
+    "source": "https://www.business-standard.com/companies/news/reliance-brands-to-launch-kim-kardashian-s-skims-in-india-market-126080501200_1.html"
+  },
+  {
     "headline": "Manipal Health Enterprises lists at 11% premium in India's second-largest 2026 IPO",
     "date": "2026-08-05",
     "category": "Finance",
     "summary": "Manipal Health Enterprises' ₹9,275-crore IPO debuted at an 11% premium over its issue price, taking its market cap to roughly ₹77,600 crore despite muted retail demand.",
     "angle": "A good case to discuss IPO pricing and valuation of healthcare assets, and why institutional demand outpaced retail enthusiasm.",
     "source": "https://www.business-standard.com/markets/news/manipal-health-share-price-lists-at-11-premium-beats-gmp-expectations-126080500123_1.html"
+  },
+  {
+    "headline": "North Central Railway's freight loading jumps 7.6%",
+    "date": "2026-08-05",
+    "category": "Operations",
+    "summary": "North Central Railway's freight loading rose 7.6% year-on-year to 7.24 million tonnes in April-July FY27, with the Prayagraj division up 30% on surging foodgrain and cement volumes.",
+    "angle": "A live data point for \"how is Indian Railways improving freight efficiency\" — relevant to logistics and modal-shift discussions.",
+    "source": "https://english.hindusthansamachar.in/Encyc/2026/8/5/freight-loading-record-NC-Rly.php"
+  },
+  {
+    "headline": "RBI holds rates, raises growth forecast",
+    "date": "2026-08-05",
+    "category": "Finance",
+    "summary": "The RBI's MPC kept the repo rate unchanged at 5.25% in its August review while raising India's FY27 GDP growth forecast to 6.7%, even as CPI inflation ticked up to 4.4%.",
+    "angle": "Core \"explain the current monetary policy stance\" question — neutral stance, inflation above target but growth resilient.",
+    "source": "https://www.outlookmoney.com/banking/rbi-mpc-august-2026-meeting-live-updates-governor-sanjay-malhotra-speech-repo-rate-inflation-gdp-news"
   },
   {
     "headline": "RBI Holds Repo Rate at 5.25% for a Fourth Straight Meeting",
@@ -1592,6 +1736,14 @@
     "source": "https://www.business-standard.com/finance/news/rbi-proposes-on-tap-ucb-licensing-with-10-000-crore-deposit-norm-126080501700_1.html"
   },
   {
+    "headline": "RBI to reopen cooperative bank licensing after 20 years",
+    "date": "2026-08-05",
+    "category": "Finance",
+    "summary": "The RBI will issue draft guidelines for \"on-tap\" licensing of Urban Cooperative Banks, requiring a minimum ₹10,000 crore deposit base, ending a pause that has held since 2004.",
+    "angle": "Tests understanding of financial-sector consolidation and why regulators gate entry into banking.",
+    "source": "https://www.business-standard.com/finance/news/rbi-draft-norms-urban-cooperative-bank-licensing-malhotra-126080500363_1.html"
+  },
+  {
     "headline": "Flipkart times food-delivery entry to Bengaluru restaurants' boycott of Swiggy and Zomato",
     "date": "2026-08-04",
     "category": "Product Management",
@@ -1624,6 +1776,14 @@
     "source": "https://bostoninstituteofanalytics.org/blog/weekly-digital-marketing-news-roundup-july-31-august-7-2026-google-openai-meta-india-marketing-updates/"
   },
   {
+    "headline": "GST tightens the e-way bill net",
+    "date": "2026-08-01",
+    "category": "Operations",
+    "summary": "From August 1, GSTN made the \"Ship-to GSTIN\" field mandatory in e-Invoice and e-Way Bill APIs whenever shipping details differ from the billing party, closing a compliance gap in multi-location dispatches.",
+    "angle": "A practical example of how tax-compliance plumbing changes ripple into daily logistics and dispatch operations.",
+    "source": "https://www.mondaq.com/india/sales-taxes-vat-gst/1830492/customs-and-gst-alert-august-2026"
+  },
+  {
     "headline": "GSTN Tightens E-Invoice and E-Way Bill Validation Rules",
     "date": "2026-08-01",
     "category": "Operations",
@@ -1640,6 +1800,14 @@
     "source": "https://tradingeconomics.com/india/manufacturing-pmi/news/535817"
   },
   {
+    "headline": "McKinsey names a new country boss for Germany and Austria",
+    "date": "2026-08-01",
+    "category": "Consulting",
+    "summary": "McKinsey appointed Andreas Venus as Managing Partner for Germany and Austria from August 1, succeeding Fabian Billing, who moves to the firm's global Shareholders Council.",
+    "angle": "A window into how partnerships handle leadership succession — relevant if asked about the consulting firm ownership/governance model.",
+    "source": "https://www.consultancy.eu/news/14120/mckinsey-appoints-andreas-venus-as-managing-partner-for-germany-and-austria"
+  },
+  {
     "headline": "Ola Electric Registrations Nearly Double Quarter-on-Quarter",
     "date": "2026-08-01",
     "category": "Operations",
@@ -1654,6 +1822,14 @@
     "summary": "Under SEBI's Mutual Funds Regulations 2026 (effective April 1), fund houses had a roughly six-month window, running into August 2026, to ensure scheme names accurately reflect what they actually invest in, alongside stricter cost-disclosure norms.",
     "angle": "Investor protection vs. innovation trade-off — does forcing stricter naming/categorization limit a fund house's ability to launch niche products?",
     "source": "https://www.indmoney.com/blog/mutual-funds/sebi-new-mutual-fund-rules-2026-explained"
+  },
+  {
+    "headline": "Maruti Suzuki's volumes surge, but profitability cracks",
+    "date": "2026-07-31",
+    "category": "Finance",
+    "summary": "Maruti Suzuki's Q1 FY27 volumes grew 29.3% year-on-year to 682,724 units, yet EBITDA margin fell sharply to 8.6% from 12.6%, dragging the stock down.",
+    "angle": "Pairs well with Tata Motors as a sector-wide story on how top-line growth can mask margin erosion.",
+    "source": "https://www.investing.com/news/company-news/maruti-suzuki-q1-fy27-slides-volumes-surge-29-margins-contract-93CH-4828282"
   },
   {
     "headline": "Flipkart adds Pay Later across its entire app family",
@@ -1766,5 +1942,13 @@
     "summary": "PwC India’s “AI Edge for Viksit Bharat” framework estimates AI could add $550 billion in value across agriculture, healthcare, energy, education and manufacturing by 2035, built on real pilots like AI-driven TB detection and smart metering.",
     "angle": "Useful for macro/GD questions on AI-and-development — moving the conversation from productivity buzzwords to sector-specific, India-relevant economic modelling.",
     "source": "https://www.consultancy.in/news/4549/ai-could-unlock-550-billion-in-value-for-india-by-2035-says-pwc"
+  },
+  {
+    "headline": "Consulting keeps winning the campus placement race at IIMs",
+    "date": "2025-10-18",
+    "category": "Consulting",
+    "summary": "IIM Bangalore's 2026 summer placements saw consulting offers jump to a record 46% of the batch, led by Accenture Strategy, BCG, Bain and McKinsey; IIM Ahmedabad's final placements showed BCG (33), McKinsey (21) and Bain (20) as top recruiters.",
+    "angle": "Directly relevant to the reader's own placement prospects — shows which firms are hiring most aggressively right now.",
+    "source": "https://insideiim.com/iim-bangalore-concludes-summer-placements-2026-with-record-46-consulting-offers-largest-batch-among-all-iims-placed-in-six-days"
   }
 ]

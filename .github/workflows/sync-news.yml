@@ -1,0 +1,101 @@
+name: Sync news archive
+
+# Refreshes site/src/data/news.json from the "Wabi Sabi - Interview News Archive"
+# Notion database and commits it straight to main, which deploys.
+#
+# This was the last manual link in the system. sync-news.mjs existed and worked,
+# but nothing ran it, so the archive only refreshed when someone remembered to
+# run it locally and commit the result — and on 2026-08-25 that had left the site
+# 23 entries behind Notion.
+#
+# Why this one commits directly while publish-from-notion opens a PR: an article
+# is a generated draft that still needs artwork, a TL;DR and a read-through, so a
+# diff is the right place to catch that. A news card is data the human already
+# wrote and curated in Notion; there is nothing for a reviewer to add, and a PR
+# per day would just be noise. The build still has to pass first, so a broken
+# archive cannot reach main either way.
+#
+# Requires the NOTION_TOKEN repository secret, and the archive database must be
+# shared with that integration (database → ••• → Connections).
+
+on:
+  schedule:
+    # Once a day, after the morning entries are typically in. Offset off the
+    # hour to avoid the :00 cron crowd.
+    - cron: '35 4 * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: sync-news
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  # Needed to dispatch deploy.yml by hand — see the Deploy step for why that is
+  # not optional here.
+  actions: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install
+        working-directory: site
+        run: npm ci
+
+      - name: Refresh news.json from Notion
+        working-directory: site
+        env:
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+        run: node scripts/sync-news.mjs
+
+      - name: Check whether anything changed
+        id: diff
+        run: |
+          if [ -n "$(git status --porcelain site/src/data/news.json)" ]; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            echo "count=$(node -e "console.log(require('./site/src/data/news.json').length)")" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      # Nothing reaches main without building, including check-build. A malformed
+      # row in Notion should fail this job, not the live site.
+      - name: Build
+        if: steps.diff.outputs.changed == 'true'
+        working-directory: site
+        run: npm run build
+
+      - name: Commit
+        if: steps.diff.outputs.changed == 'true'
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add site/src/data/news.json
+          git commit -m "Sync news archive from Notion (${{ steps.diff.outputs.count }} entries)"
+          git push
+
+      # A push made with the default GITHUB_TOKEN does NOT trigger other
+      # workflows — GitHub blocks that to prevent recursive runs. deploy.yml
+      # listens on `push: branches: [main]`, so without this the archive would
+      # be committed and then sit there, unpublished, until some unrelated
+      # human push happened to deploy it. Dispatch it explicitly instead.
+      - name: Deploy
+        if: steps.diff.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh workflow run deploy.yml --ref main
+
+      - name: Report
+        run: |
+          if [ "${{ steps.diff.outputs.changed }}" = "true" ]; then
+            echo "Synced ${{ steps.diff.outputs.count }} entries and pushed to main." >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "News archive already up to date; nothing committed." >> "$GITHUB_STEP_SUMMARY"
+          fi
