@@ -9,6 +9,7 @@ keywords:
   - vector store vs filesystem memory
   - agent memory architecture
 readingTime: '9 min read'
+notionId: '3c6ced67-050a-812e-8606-dd7db630d0b1'
 heroImage: '../../assets/art/agent-memory-filesystem-light.webp'
 heroImageDark: '../../assets/art/agent-memory-filesystem-dark.webp'
 heroAlt: 'A hairline rule splits the frame. To its left, dozens of small circles drift with no structure. To its right, a regular four-by-three grid of cards, each ruled with two short lines, except one position which is drawn only as a dashed outline.'

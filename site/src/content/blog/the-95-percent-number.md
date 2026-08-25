@@ -9,6 +9,7 @@ keywords:
   - AI project ROI measurement
   - production AI reliability
 readingTime: '8 min read'
+notionId: '3c6ced67-050a-81cb-9aef-dfaa1d599b2e'
 heroImage: '../../assets/art/the-95-percent-number-light.webp'
 heroImageDark: '../../assets/art/the-95-percent-number-dark.webp'
 heroAlt: 'A heavy circular arc covers almost all of a circle but stops just short of closing. At the centre, where an origin point would be, there is only a faint dashed cross and an empty dashed square. A measuring scale down the left side has its lowest mark faded almost to nothing.'

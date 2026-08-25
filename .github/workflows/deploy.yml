@@ -50,3 +50,29 @@ jobs:
     steps:
       - id: deploy
         uses: actions/deploy-pages@v4
+
+  # Records in Notion what is actually live. Separated from deploy so a Notion
+  # outage can never fail a deployment, and so it only ever runs after Pages
+  # has finished serving the new build.
+  close-loop:
+    needs: deploy
+    runs-on: ubuntu-latest
+    if: ${{ github.ref == 'refs/heads/main' }}
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Mark published articles in Notion
+        working-directory: site
+        env:
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+        run: |
+          if [ -z "$NOTION_TOKEN" ]; then
+            echo "No NOTION_TOKEN secret set — skipping. See docs/PUBLISHING.md."
+            exit 0
+          fi
+          node scripts/close-loop.mjs

@@ -19,6 +19,9 @@ const blog = defineCollection({
         keywords: z.array(z.string()).default([]),
         draft: z.boolean().default(false),
         readingTime: z.string().optional(),
+        // Back-reference to the Article Production row this came from. It is
+        // what lets close-loop.mjs find the Notion row again after a deploy.
+        notionId: z.string().optional(),
 
         // Artwork ships as a light/dark pair so nothing carries a baked-in
         // background into the wrong theme. See docs/ARTWORK.md.
