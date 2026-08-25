@@ -58,3 +58,22 @@ The standing architectural rule on this project. It is why `talks-writer` reads
 public captions anonymously instead of using NotebookLM, and it is why IndexNow
 (a static key file, no login, no token) fits this system so well. It has thrown
 out more otherwise-good designs here than any question about model choice.
+
+## An automated PR branch will destroy anything a human adds to it
+
+`publish-from-notion` polls twice an hour and `peter-evans/create-pull-request`
+resets `notion/approved-articles` from main on every run. Artwork or a TL;DR
+committed to that branch survives only until the next poll, for as long as the
+Notion rows are still approved and unpublished. The durable move is to put
+additions on `main`, and the real fix is to generate them before the PR is opened
+so the branch never needs a human commit at all. Generalises: any branch a bot
+owns is a branch a human should not commit to.
+
+## Check what the pipeline generates, not just that it generated something
+
+The first two articles through the publish pipeline both shipped a body `# H1`
+duplicating the frontmatter title the layout already renders, and neither carried
+the `Executive TL;DR` its own writer prompt requires. The build passed and
+`check-build` passed, because neither asserts on those. A green pipeline says the
+plumbing works, not that the output is right.
+

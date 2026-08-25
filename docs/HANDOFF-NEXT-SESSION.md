@@ -56,12 +56,9 @@ and would have broken every radar run.
 
 ## Blocked on the owner — nothing else moves until these happen
 
-1. **Allow Actions to open PRs.** github.com/janmejai2002/janmejai2002.github.io
-   → Settings → Actions → General → Workflow permissions → tick *"Allow GitHub
-   Actions to create and approve pull requests"*. Off by default, and it is why
-   `publish-from-notion` has never once succeeded at its final step. **Two
-   finished articles are sitting on the `notion/approved-articles` branch right
-   now** waiting for this.
+1. ~~Allow Actions to open PRs.~~ **Done 2026-08-26.** The setting is on, the
+   workflow opened PR #1, and both stranded articles are live with artwork. The
+   publish pipeline has now completed end to end once.
 2. **Click Verify** in Google Search Console (URL-prefix property) and Bing
    Webmaster Tools. Both tokens are live and confirmed serving. Then submit
    `sitemap-index.xml`.

@@ -180,6 +180,29 @@ There is also no way to reach a returning reader today: no newsletter, no
 subscription, nothing owned. For sponsorship, an owned list is usually worth
 more than traffic.
 
+### D-adjacent: automating the artwork step (the owner asked for this)
+
+The owner asked whether artwork can be produced by a triggered routine. It can,
+and doing so also fixes defect 1 above — **generate the artwork before the PR is
+opened rather than after, and there is nothing left for a human to add to the
+branch for the poll to destroy.** The workflow already runs `publish-article.mjs`
+and then builds; the step slots in between.
+
+Two shapes were put to the owner and the choice is open:
+
+- **A scheduled routine**, like the other seven: reads the article, decides what
+  its argument looks like, authors the SVG, runs `npm run images`, commits, and
+  reports what it drew and why. Real judgement, same cold-start discipline as the
+  writers, no external credential needed. Slower, and costs a run.
+- **A deterministic fallback**: a script composing a mark from geometric
+  primitives seeded by track and slug. Always valid and on-palette, instant,
+  cannot mean anything.
+
+The recommendation put to the owner was the routine, with the deterministic
+version as a backstop so no article ever ships bare — and to fold the missing
+`Executive TL;DR` into the same routine, since it is the same gap at the same
+point in the pipeline.
+
 ### D. Review the machine (their items 3, 6, 7)
 
 **Outcome:** the stack and the seven routines are examined by someone looking for
@@ -198,6 +221,26 @@ problems, and the owner gets a list of what is worth changing.
   ceremony. Tell them apart rather than trimming indiscriminately.
 - One known trap to check while in there: theme names are hardcoded in five
   places including every routine prompt, and a rename has already missed one.
+
+**Three defects surfaced the first time the publish pipeline actually ran, on
+2026-08-26. None is fixed. All three will recur on every future article.**
+
+1. **The polling loop destroys human work on the PR branch.** The workflow polls
+   twice an hour and `peter-evans/create-pull-request` resets
+   `notion/approved-articles` from `main` on each run, so artwork, a TL;DR or any
+   edit a human adds to that branch is wiped at the next poll while the rows are
+   still approved and unpublished. Worked around once by landing artwork on
+   `main` separately; it needs a real fix.
+2. **Generated drafts ship with a duplicated `<h1>`.** Both articles opened with
+   a body `# Heading` repeating the frontmatter title, which `Post.astro` already
+   renders — two `<h1>` elements per page, one a copy of the other. No
+   hand-written post has this, so it comes from the routine or from
+   `publish-article.mjs`. Fixed by hand on those two; the source is still there.
+   `check-build.mjs` does not currently assert on it, and should.
+3. **Generated drafts arrive with no `Executive TL;DR`.** The writer prompt
+   requires one and the PR checklist asks a human to add it, which means the
+   requirement is being quietly missed rather than enforced. It is also the most
+   citable block on the page — see workstream B.
 - **Item 7 is an explicit invitation** to propose what the owner doesn't know to
   ask for. Take it seriously, and prefer ideas that exploit what already exists
   here over ideas that add new machinery.
@@ -222,20 +265,24 @@ problems, and the owner gets a list of what is worth changing.
 
 ## 6. State as of this brief
 
-At `870ed15` on `main`. Working tree clean, build green, `check-build` passing,
-11 pages, 5 published articles.
+At `d241edb` on `main`. Working tree clean, build green, `check-build` passing,
+**7 published articles**, no open pull requests.
 
 Just shipped: the rename to `wAIbi-sabi` with a `Wordmark` component, the logo
 the owner has since rejected, the BSchool and Setups heading fixes, a rewrite of
 `/blog/how-this-blog-builds-itself/`, and `/status/` corrected to show all five
 themes instead of three.
 
-**Still blocked on the owner** (re-checked 2026-08-26 via the API,
-`can_approve_pull_request_reviews: false`): Actions cannot open pull requests, so
-`publish-from-notion` still fails at its last step and **two finished articles
-are stranded on the `notion/approved-articles` branch**. Settings → Actions →
-General → Workflow permissions. Also still waiting: clicking Verify in Google
-Search Console and Bing Webmaster Tools, and rating the 5 unrated radar ideas.
+**The publish pipeline completed end to end for the first time.** The owner
+enabled "Allow GitHub Actions to create and approve pull requests", the workflow
+opened PR #1, and the two stranded articles are now live with artwork. Notion
+reconciled itself: both pipeline rows carry `Published`, the live post URL and a
+publish date, written only after `close-loop` fetched each URL and confirmed it
+served. That path is proven now and no longer needs babysitting.
+
+**Still waiting on the owner:** clicking Verify in Google Search Console and Bing
+Webmaster Tools, and rating the 5 unrated radar ideas. Nothing is blocked on
+code.
 
 Read `docs/HANDOFF.md` for the system, the Notion control plane, the publish
 pipeline and the hard-won gotchas; `docs/HANDOFF-NEXT-SESSION.md` for recent
@@ -304,6 +351,12 @@ plan built on real numbers, and a review of the stack and the seven routine
 prompts. Plus: tell me what I'm missing. I have limited knowledge here and you
 have the internet.
 
+The publish pipeline ran end to end for the first time yesterday and it exposed
+three defects that will recur on every article — they're listed in the brief
+under workstream D. I also want the artwork step automated so a generated draft
+arrives complete instead of waiting on me; the brief has two options and a
+recommendation, pick one and tell me why.
+
 You're authorised to spawn parallel subagents freely for this — research
 specialists on Sonnet, findings to disk, short receipts back. Don't ask first,
 and don't block waiting on them.
@@ -326,8 +379,4 @@ Verify with `npm run build` in site/ (dev server stopped — it runs check-build
 and check live routes for actual content, not just a 200. Ground what you tell
 me in what actually ran; if something's unverified, say so. Commit in logical
 chunks and push — pushing deploys.
-
-Also check whether I've enabled "Allow GitHub Actions to create and approve pull
-requests" yet, because two finished articles are still stuck behind it:
-gh api repos/janmejai2002/janmejai2002.github.io/actions/permissions/workflow
 ```
