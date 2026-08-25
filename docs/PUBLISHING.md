@@ -133,7 +133,30 @@ it silently lose a paragraph.
   matter. If it ever does, a Notion webhook automation posting to GitHub's
   `repository_dispatch` would make it instant — at the price of storing a GitHub
   token inside Notion.
-- **The generator does not write a TL;DR.** The other posts open with one, so a
-  generated article looks inconsistent until someone adds it.
 - **Second and later runs on the same PR branch** amend the existing
   `notion/approved-articles` branch rather than opening a new PR.
+
+## What the generator now handles itself
+
+Two of the three items that used to be on every publish PR are automated.
+
+**The Executive TL;DR.** The writer routine opens the article with an H2 reading
+exactly `Executive TL;DR` and 4-6 bullets, as an ordinary Notion heading and
+list. `wrapTldr()` in `publish-article.mjs` wraps that section in the styled
+`.tldr` plate. The blank lines it inserts around the content are load-bearing —
+they are what let the markdown inside the div still parse as markdown. Note this
+is the *opposite* of the inline-`<svg>` rule in HANDOFF §6, where a blank line
+terminates the HTML block. If the heading text does not match, no wrap happens
+and the script reports it rather than failing.
+
+**The artwork brief.** The routine appends an `## Artwork brief` section —
+argument in one sentence, geometry, accent, and the deliberate imperfection.
+`liftArtworkBrief()` strips it out of the article and re-emits it as an HTML
+comment at the end of the file, so it shows up in the PR diff beside the work it
+describes and renders as nothing. Deciding *what* to draw was the slow half of
+that job; the drawing itself still follows `docs/ARTWORK.md` and is still a
+human's call.
+
+**The read-through stays manual, deliberately.** That is the one step worth a
+person's time, and after the 2026-08-25 fact-check it is the step that matters
+most.

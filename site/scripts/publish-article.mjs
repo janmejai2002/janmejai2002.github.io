@@ -40,6 +40,69 @@ function readingTime(words) {
 }
 
 /**
+ * Lifts the trailing "## Artwork brief" section out of the article body.
+ *
+ * The writer routine appends it because it has just read every source and is
+ * the right one to decide what the plate should mean — but it is a note to
+ * whoever draws the artwork, not something a reader should ever see. It is
+ * re-emitted as an HTML comment at the end of the file, so it travels in the
+ * PR diff, sits next to the work it describes, and renders as nothing.
+ */
+function liftArtworkBrief(markdown) {
+  const lines = markdown.split('\n');
+  const start = lines.findIndex((l) => /^##\s+Artwork brief\s*$/i.test(l));
+  if (start === -1) return { markdown, brief: null };
+
+  // Runs to the next H2, or to the end — it is normally the last section.
+  let end = lines.length;
+  for (let i = start + 1; i < lines.length; i++) {
+    if (/^##\s+/.test(lines[i])) {
+      end = i;
+      break;
+    }
+  }
+
+  const brief = lines
+    .slice(start + 1, end)
+    .join('\n')
+    .trim();
+  const rest = [...lines.slice(0, start), ...lines.slice(end)].join('\n').trimEnd();
+  return { markdown: rest + '\n', brief: brief || null };
+}
+
+/**
+ * Wraps a leading "## Executive TL;DR" section in the .tldr plate.
+ *
+ * The writer routine emits the TL;DR as an ordinary Notion heading plus bullets,
+ * because asking it to hand-write raw HTML into a Notion block is a good way to
+ * get a broken div. The markup is applied here instead, where it is
+ * deterministic and testable.
+ *
+ * The blank lines around the content are load-bearing: they are what let the
+ * markdown inside the div still be parsed as markdown. Do not "tidy" them away
+ * — and note this is the opposite of the rule for inline <svg>, where a blank
+ * line terminates the HTML block and breaks it. See docs/HANDOFF.md §6.
+ */
+function wrapTldr(markdown) {
+  const lines = markdown.split('\n');
+  const start = lines.findIndex((l) => l.trim() !== '');
+  if (start === -1 || !/^##\s+Executive TL;DR\s*$/i.test(lines[start])) return markdown;
+
+  // The section runs until the next H2, or to the end if it is the only one.
+  let end = lines.length;
+  for (let i = start + 1; i < lines.length; i++) {
+    if (/^##\s+/.test(lines[i])) {
+      end = i;
+      break;
+    }
+  }
+
+  const body = lines.slice(start, end).join('\n').trimEnd();
+  const rest = lines.slice(end).join('\n').trimStart();
+  return `<div class="tldr">\n\n${body}\n\n</div>\n\n${rest}`;
+}
+
+/**
  * The writer routine opens every draft with a callout holding slug + meta.
  *
  * Notion splits a multi-line callout across the block's own rich_text and its
@@ -121,8 +184,10 @@ for (const page of rows) {
     continue;
   }
 
-  const markdown = toMarkdown(body);
+  const lifted = liftArtworkBrief(toMarkdown(body));
+  const markdown = wrapTldr(lifted.markdown);
   const words = markdown.split(/\s+/).filter((w) => /\w/.test(w)).length;
+  const hasTldr = markdown.startsWith('<div class="tldr">');
   const keywords = plain(p['SEO Keywords']?.rich_text)
     .split(',')
     .map((k) => k.trim())
@@ -149,6 +214,15 @@ for (const page of rows) {
     continue;
   }
 
+  // Not fatal — a missing TL;DR is a review note, not a broken article. But it
+  // used to be silent, and "the generator does not write a TL;DR" then sat in
+  // the docs as a permanent manual step.
+  if (!hasTldr) {
+    problems.push(
+      `"${title}" — no "## Executive TL;DR" section at the top; the post will publish without the summary plate.`
+    );
+  }
+
   const frontmatter = [
     '---',
     `title: ${yaml(title)}`,
@@ -169,8 +243,14 @@ for (const page of rows) {
     continue;
   }
 
+  // The artwork brief rides along as a comment so it is visible in the PR diff,
+  // right where the artwork still needs drawing, and invisible to readers.
+  const trailer = lifted.brief
+    ? `\n<!--\nArtwork brief — from the writer routine. Draw per docs/ARTWORK.md,\nthen delete this comment.\n\n${lifted.brief}\n-->\n`
+    : '';
+
   mkdirSync(BLOG, { recursive: true });
-  writeFileSync(file, frontmatter + markdown, 'utf8');
+  writeFileSync(file, frontmatter + markdown + trailer, 'utf8');
   written.push(`${slug}.md (${words} words)`);
 }
 
