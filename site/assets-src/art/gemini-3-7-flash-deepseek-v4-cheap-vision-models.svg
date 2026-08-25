@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" role="img">
+  <title>A descending staircase passing through the line assumed to be its floor</title>
+  <desc>A stepped line falls steeply from the upper left, its steps growing shorter and shallower as it goes. A long horizontal dashed rule crosses the frame. The staircase meets that rule, continues below it, and runs off the lower right edge.</desc>
+  <filter id="grain" x="0" y="0" width="100%" height="100%">
+    <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch"/>
+  </filter>
+  <rect width="1600" height="900" fill="{{paper}}"/>
+  <line x1="120" y1="600" x2="1520" y2="600" stroke="{{ink}}" stroke-width="3" stroke-dasharray="14 16" opacity="0.34"/>
+  <path d="M 150 190 L 340 190 M 340 190 L 340 300 M 340 300 L 500 300 M 500 300 L 500 392 M 500 392 L 640 392 M 640 392 L 640 470 M 640 470 L 760 470 M 760 470 L 760 530 M 760 530 L 864 530 M 864 530 L 864 574 M 864 574 L 952 574 M 952 574 L 952 606 M 952 606 L 1028 606 M 1028 606 L 1028 630 M 1028 630 L 1094 630 M 1094 630 L 1094 650 M 1094 650 L 1152 650 M 1152 650 L 1152 668 M 1152 668 L 1204 668 M 1204 668 L 1204 684 M 1204 684 L 1252 684 M 1252 684 L 1252 700 M 1252 700 L 1560 700 M 1560 700 L 1560 716" fill="none" stroke="{{ochre}}" stroke-width="13" stroke-linecap="square"/>
+  <circle cx="150" cy="190" r="16" fill="{{ochre}}"/>
+  <g stroke="{{ink}}" stroke-width="3" opacity="0.28">
+    <line x1="120" y1="190" x2="120" y2="760"/>
+    <line x1="112" y1="190" x2="120" y2="190"/>
+    <line x1="112" y1="600" x2="120" y2="600"/>
+  </g>
+  <rect width="1600" height="900" filter="url(#grain)" opacity="0.055"/>
+</svg>
