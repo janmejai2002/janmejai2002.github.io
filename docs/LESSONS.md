@@ -69,6 +69,16 @@ additions on `main`, and the real fix is to generate them before the PR is opene
 so the branch never needs a human commit at all. Generalises: any branch a bot
 owns is a branch a human should not commit to.
 
+## A catch block can hide that a feature never worked at all
+
+`publish-article.mjs` used `api()` for its tell-Notion write-back without ever
+importing it. Every call threw `ReferenceError: api is not defined` — inside a
+try/catch whose message ("could not update Notion for …") made the failure look
+like a transient API problem instead of dead code. The write-back machinery was
+documented, reasoned about, and load-bearing in the docs, and had never once
+run. When a catch prints a generic message, log `err.message` verbatim and read
+it once from a real run before trusting the feature exists.
+
 ## Check what the pipeline generates, not just that it generated something
 
 The first two articles through the publish pipeline both shipped a body `# H1`

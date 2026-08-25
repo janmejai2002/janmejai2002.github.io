@@ -3,9 +3,15 @@
 ## The short version
 
 You flip `Draft Status` to **Approved** in Article Production. Within half an
-hour a pull request appears with the article as markdown. You add artwork and a
-TL;DR, merge, and it deploys. Notion gets updated automatically once the URL is
-actually serving.
+hour a pull request appears with the article as markdown, **complete**: the
+Executive TL;DR is enforced at generation, and artwork arrives with it —
+routine-drawn from the Notion page when the artwork routine has been there,
+deterministic fallback art otherwise. You read it through, merge, and it
+deploys. Notion gets updated automatically once the URL is actually serving.
+
+**Do not commit to the PR branch** — the poll regenerates
+`notion/approved-articles` from main twice an hour and destroys anything added
+there. Post-merge improvements (better artwork, edits) go to `main`.
 
 Nothing else needs your laptop to be on.
 
@@ -102,8 +108,8 @@ do not have one.
 `notionId` is the link between a file and its Notion row. Delete it and the row
 will never be marked Published.
 
-Artwork fields are **not** generated — `heroImage`, `heroImageDark` and
-`heroAlt` are added by hand after the piece is drawn. See `docs/ARTWORK.md`.
+Artwork fields (`heroImage`, `heroImageDark`, `heroAlt`) **are** generated as
+of 2026-08-26 — see "What the generator now handles itself" below.
 
 ---
 
@@ -191,25 +197,56 @@ static-site property or adding a server.
 
 ## What the generator now handles itself
 
-Two of the three items that used to be on every publish PR are automated.
+Everything that used to be on the publish PR checklist except the read-through.
 
-**The Executive TL;DR.** The writer routine opens the article with an H2 reading
-exactly `Executive TL;DR` and 4-6 bullets, as an ordinary Notion heading and
-list. `wrapTldr()` in `publish-article.mjs` wraps that section in the styled
-`.tldr` plate. The blank lines it inserts around the content are load-bearing —
-they are what let the markdown inside the div still parse as markdown. Note this
-is the *opposite* of the inline-`<svg>` rule in HANDOFF §6, where a blank line
-terminates the HTML block. If the heading text does not match, no wrap happens
-and the script reports it rather than failing.
+**The Executive TL;DR — enforced, not just wrapped.** The writer routine opens
+the article with an H2 reading exactly `Executive TL;DR` and 4-6 bullets, as an
+ordinary Notion heading and list. `wrapTldr()` in `publish-article.mjs` wraps
+that section in the styled `.tldr` plate. The blank lines it inserts around the
+content are load-bearing — they are what let the markdown inside the div still
+parse as markdown (the *opposite* of the inline-`<svg>` rule in HANDOFF §6). As
+of 2026-08-26 a draft with **no** TL;DR is blocked: the row is moved to Needs
+Revision with the reason, because the first two pipeline articles proved a
+log-only note is a requirement being quietly missed. The artwork routine
+(below) backfills a missing TL;DR at Draft Ready time, so a bounce should be
+rare. `check-build` also asserts the plate on every article page.
 
-**The artwork brief.** The routine appends an `## Artwork brief` section —
-argument in one sentence, geometry, accent, and the deliberate imperfection.
-`liftArtworkBrief()` strips it out of the article and re-emits it as an HTML
-comment at the end of the file, so it shows up in the PR diff beside the work it
-describes and renders as nothing. Deciding *what* to draw was the slow half of
-that job; the drawing itself still follows `docs/ARTWORK.md` and is still a
-human's call.
+**A leading body H1 is stripped.** The layout renders the frontmatter title as
+the page `<h1>`; both first-run articles opened with a duplicate `# Title`,
+which also sat above the TL;DR heading and silently defeated the wrap.
+`check-build` asserts exactly one `<h1>` per page.
+
+**Artwork.** Two sources, in order:
+
+1. **Routine-authored.** The `artwork-routine` scheduled task (every 4 hours,
+   :35 past 01/05/09/13/17/21) picks up `Draft Ready`/`Approved` rows, reads
+   the article and its Artwork brief, draws the plate per `docs/ARTWORK.md`,
+   and files it into the Notion page as an `## Artwork SVG` section — an
+   `Alt:` line plus a code block. `liftArtworkSvg()` extracts and validates it
+   (palette placeholders, no hex, alt present), writes
+   `assets-src/art/<slug>.svg`, and wires the hero frontmatter. Travelling
+   through Notion means no new credential and nothing for the poll to destroy.
+2. **Deterministic fallback** (`scripts/lib/fallback-art.mjs`): an on-spec
+   plate seeded from the slug — track accent, one deliberate imperfection,
+   grain — byte-identical on every poll. It cannot mean anything; it exists so
+   no article ever ships bare. Replace it on `main` after merge if it deserves
+   better.
+
+A pre-existing hand-drawn `assets-src/art/<slug>.svg` is never overwritten;
+hero fields are left to its author. The publish workflow renders new art with
+`node scripts/make-images.mjs --new-art-only` before building — new sources
+only, fixed assets untouched, because sharp output is not byte-stable across
+environments and re-encoding everything would churn the PR diff.
 
 **The read-through stays manual, deliberately.** That is the one step worth a
 person's time, and after the 2026-08-25 fact-check it is the step that matters
 most.
+
+## IndexNow
+
+After every successful Pages deploy from a push, the `indexnow` job in
+`deploy.yml` diffs the pushed range, maps changed files to routes, and submits
+only those URLs via `scripts/indexnow.mjs`. The key is a static text file in
+`site/public/` (no login, no token — nothing to expire). The script treats
+`429` as back-off and never exits non-zero, so a ping can never fail a deploy.
+Bing, Yandex, Seznam and Naver consume IndexNow; Google does not.

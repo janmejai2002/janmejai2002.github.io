@@ -125,9 +125,12 @@ CPC or rank), `viral-hooks`, `storytelling`, and `anti-ai-writing` as a
 Full detail in **`docs/PUBLISHING.md`**. Summary:
 
 You set `Draft Status = Approved` → within 30 minutes `publish-from-notion.yml`
-opens a PR with the article as markdown → you add artwork and a TL;DR → merge →
-deploys → the `close-loop` job writes `Published`, `Post URL` and `Publish Date`
-back to Notion, but only after verifying the URL actually serves.
+opens a PR with the article as markdown, complete with TL;DR (enforced) and
+artwork (routine-drawn from Notion, or deterministic fallback) → you read it
+through → merge → deploys → the `close-loop` job writes `Published`, `Post URL`
+and `Publish Date` back to Notion, but only after verifying the URL actually
+serves. **Never commit to the PR branch** — the poll destroys additions; put
+improvements on `main` after merge. The `indexnow` job then pings changed URLs.
 
 | Piece | What it does |
 |---|---|
