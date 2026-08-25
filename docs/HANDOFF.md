@@ -313,9 +313,14 @@ reporting a defect. And if something is unverified, say so.
 - ~~The blog has no final name.~~ **Resolved 2026-08-26: `wAIbi-sabi`.** The
   literal string is used in titles, JSON-LD and RSS; the rendered wordmark
   (`src/components/Wordmark.astro`) colours the `AI` in hanko and defeats any
-  inherited text-transform so the casing survives. The favicon/mark is the open
-  ensō with a geometric `AI` drawn as strokes inside it. No domain bought;
-  `astro.config.mjs` points at `janmejai2002.github.io`.
+  inherited text-transform so the casing survives. **The mark is the kintsugi
+  wordmark as of 2026-08-26** (owner-chosen, replacing the rejected ensō): an
+  ochre fracture through the name with the pieces set out of true, and the
+  final `i` drawn as a blinking caret (steady under reduced motion). The rail
+  uses `<Wordmark plain />` — vertical writing rotates the drawn pieces. The
+  favicon is the kintsugi plate: square vessel, gold crack, dark-mode colours
+  embedded in the SVG. No domain bought; `astro.config.mjs` points at
+  `janmejai2002.github.io`.
 - **The About stat band** leads with three Gray Swan numbers against one research
   number. Red teaming is a **hobby, not work** — it was removed from the work
   timeline for that reason. The band may want rebalancing.

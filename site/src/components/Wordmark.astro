@@ -1,17 +1,41 @@
 ---
 /**
- * The site's name, set as its logo. "AI" surfaces inside "wabi" — the two
- * capitals are the one deliberate break in the lowercase order, per
- * docs/ARTWORK.md, so the casing IS the mark. `.wordmark` exists to defeat
- * any inherited text-transform that would erase it. Where the name appears
- * as plain data (titles, JSON-LD, RSS) use the literal string "wAIbi-sabi".
+ * The site's name, set as its logo — the kintsugi mark, chosen 2026-08-26.
+ *
+ * Three moves, one identity: "AI" surfaces inside "wabi" (the casing IS the
+ * mark, and .wordmark defeats any inherited text-transform that would erase
+ * it); a single ochre fracture runs through the name and the two pieces sit
+ * visibly out of true — broken and mended in gold, the corrections-in-public
+ * ethic drawn; and the final "i" is a caret, still typing — the models are
+ * never finished, neither is the name. The caret blinks; under
+ * prefers-reduced-motion it holds steady.
+ *
+ * Contexts that cannot carry the drawn pieces (the vertical rail) add the
+ * `wordmark--plain` class, which shows a real final "i" and hides the crack,
+ * caret and offsets — plain "wAIbi-sabi", the pre-kintsugi mark.
+ *
+ * role="img" + aria-label because the visible DOM text is "wAIbi-sab";
+ * assistive tech should read the whole name. Where the name appears as plain
+ * data (titles, JSON-LD, RSS) use the literal string "wAIbi-sabi".
  */
 interface Props {
   class?: string;
+  /** Render without crack/caret — for vertical or otherwise hostile contexts. */
+  plain?: boolean;
 }
-const { class: className } = Astro.props;
+const { class: className, plain = false } = Astro.props;
 ---
 
-<span class:list={['wordmark', className]}
-  >w<span class="wordmark__ai">AI</span>bi-sabi</span
->
+<span
+  class:list={['wordmark', plain && 'wordmark--plain', className]}
+  role="img"
+  aria-label="wAIbi-sabi"
+  ><span class="wordmark__pa">w<span class="wordmark__ai">AI</span></span><svg
+    class="wordmark__crack"
+    viewBox="0 0 12 44"
+    preserveAspectRatio="none"
+    aria-hidden="true"><polyline points="7,0 4,12 8,22 3,32 6,44" /></svg><span
+    class="wordmark__pb"
+    >bi-sab<span class="wordmark__iglyph">i</span><span
+      class="wordmark__caret"></span><span class="wordmark__idot"></span></span
+></span>

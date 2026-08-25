@@ -109,8 +109,12 @@ for (const file of artFiles) {
 // ---- fixed assets ----------------------------------------------------------
 if (newArtOnly) process.exit(0);
 
+// The paper ground is injected right after the favicon's <style> block — the
+// kintsugi favicon draws with <rect>/<polyline>, so anchoring on "<path" (the
+// old ensō's first element) would silently inject nothing.
 const favicon = readFileSync(join(pub, 'favicon.svg'), 'utf8');
-const touch = favicon.replace('<path', '<rect width="32" height="32" rx="7" fill="#F6F4EF"/><path');
+const ground = (rx) => `</style><rect width="32" height="32" rx="${rx}" fill="#F6F4EF"/>`;
+const touch = favicon.replace('</style>', ground(7));
 
 const jobs = [
   ['apple-touch-icon.png', () => render(touch, 180, 180)],
@@ -123,10 +127,6 @@ for (const [name, make] of jobs) {
   console.log(name.padEnd(46) + `${(buf.length / 1024).toFixed(1)} KB`);
 }
 
-const small = await render(
-  favicon.replace('<path', '<rect width="32" height="32" rx="6" fill="#F6F4EF"/><path'),
-  32,
-  32
-);
+const small = await render(favicon.replace('</style>', ground(6)), 32, 32);
 writeFileSync(join(pub, 'favicon.ico'), ico(small, 32));
 console.log('favicon.ico'.padEnd(46) + 'written');

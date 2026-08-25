@@ -167,11 +167,42 @@ img { max-width: 100%; height: auto; }
 .vertical--foot { margin-top: auto; font-size: .625rem; letter-spacing: .15em; }
 
 /* ---------- Wordmark ---------- */
-/* The name is the logo: "AI" surfacing inside "wabi". The capitals are the one
-   deliberate break in the lowercase order (docs/ARTWORK.md), so nothing may
-   re-case them — .wordmark defeats inherited text-transform. */
-.wordmark { text-transform: none; }
+/* The name is the logo: the kintsugi mark. "AI" surfaces inside "wabi" (the
+   capitals are the one deliberate break in the lowercase order, so nothing may
+   re-case them — .wordmark defeats inherited text-transform), an ochre
+   fracture runs through the name with the two pieces set out of true, and the
+   final "i" is a caret still typing. The max() floors keep the crack and caret
+   legible at pill and rail sizes, where a pure em width rounds to nothing. */
+.wordmark { text-transform: none; white-space: nowrap; }
 .wordmark__ai { color: var(--hanko); }
+.wordmark__pa, .wordmark__pb { display: inline-block; }
+.wordmark__pa { transform: translateY(-0.05em); }
+.wordmark__pb { transform: translateY(0.05em); }
+.wordmark__crack {
+  display: inline-block; width: max(0.3em, 5px); height: 1.15em;
+  vertical-align: -0.18em; margin: 0 0.02em;
+}
+.wordmark__crack polyline { fill: none; stroke: var(--ochre); stroke-width: 2.6; }
+.wordmark__iglyph { display: none; }
+.wordmark__caret {
+  display: inline-block; width: max(0.11em, 2px); height: 0.72em;
+  background: currentColor; margin-left: 0.08em;
+  animation: wordmark-blink 1.15s steps(1) infinite;
+}
+.wordmark__idot {
+  display: inline-block; width: max(0.11em, 2px); height: max(0.11em, 2px);
+  border-radius: 50%; background: currentColor;
+  position: relative; top: -0.62em; margin-left: max(-0.11em, -2px);
+}
+@keyframes wordmark-blink { 50% { opacity: 0; } }
+/* The fallback face: a real "i", no crack, no offsets. For contexts that
+   cannot carry the drawn pieces — the vertical rail rotates inline boxes. */
+.wordmark--plain .wordmark__crack,
+.wordmark--plain .wordmark__caret,
+.wordmark--plain .wordmark__idot { display: none; }
+.wordmark--plain .wordmark__iglyph { display: inline; }
+.wordmark--plain .wordmark__pa,
+.wordmark--plain .wordmark__pb { transform: none; }
 
 main { flex: 1; padding: 2rem var(--gutter) 6rem; max-width: 80rem; min-width: 0; }
 /* Pages whose content is composition rather than prose (the index) opt out of
