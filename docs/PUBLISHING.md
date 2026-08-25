@@ -92,7 +92,7 @@ recording-the-publish were two manual steps and only the first one got done.
 title:        # the Notion page name — hard-capped at 70 chars
 description:  # from "Meta description:" in the opening callout — capped at 160
 pubDate:      # Draft Completed, else today
-track:        # Track, lowercased — systems | practice | demand
+track:        # Track, kebab-cased — technical | business | basics | case-studies | talks
 question:     # Reader Question, if set — capped at 120 chars
 keywords:     # SEO Keywords, split on commas
 readingTime:  # computed at ~220 wpm
@@ -100,7 +100,7 @@ notionId:     # back-reference; this is what close-loop.mjs matches on
 ```
 
 `track` decides which section of the index the post files under. An unset or
-unrecognised Track falls back to `systems` and logs a note rather than failing —
+unrecognised Track falls back to `technical` and logs a note rather than failing —
 a taxonomy mistake should never block a publish. `question` is what prints above
 the title; it is optional, and the five posts written before the field existed
 do not have one.

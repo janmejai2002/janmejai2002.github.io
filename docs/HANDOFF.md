@@ -12,14 +12,19 @@ AI**. Not a topic, not a category — a question someone would type or ask a
 colleague. It lives in `Reader Question` on the Notion row and in `question:` in
 frontmatter, and it prints above the title and on the index card.
 
-Three **tracks**, each with its own audience, its own radar routine, and its own
-accent. A post's `track` decides which section of the index it files under.
+Five **tracks**, each with its own audience, its own feeding routine, and its
+own accent. A post's `track` decides which section of the index it files
+under, and each track has a permanent page at `/<track-id>/` as of 2026-08-26.
+The three radar tracks wait for a human rating; the two writer tracks draft
+directly at `Draft Ready`.
 
-| Track | Accent | Reader | Radar routine |
+| Track | Accent | Reader | Routine |
 |---|---|---|---|
 | `technical` | `--mizu` | Engineers and people who build with AI | `daily-ai-seo-radar` (daily 07:10) |
 | `business` | `--ochre` | Consultants, analysts, marketers, founders — **not** engineers | `business-radar` (Tue 07:20) |
 | `basics` | `--plum` | Anyone getting up to speed; also where the setups live | `basics-radar` (Thu 07:16) |
+| `case-studies` | `--moss` | People who want precedent, graded honestly | `case-studies-writer` (Mon/Thu 08:40) |
+| `talks` | `--hanko` | People who cannot watch everything | `talks-writer` (daily 08:33) |
 
 `track` defaults to `technical` in the content schema and in
 `publish-article.mjs`, so a missing Track can never fail a build — it files
@@ -29,9 +34,11 @@ quietly under Technical instead.
 Any other value is rejected outright. These themes were renamed from
 Systems/Practice/Demand on 2026-08-25 because the originals meant nothing to a
 first-time visitor; all 19 rows across both databases were migrated and the old
-options deleted. **If you rename them again, the four routine prompts in
-`~/.claude/scheduled-tasks/` each hardcode the value they write** — that was
-missed the first time and would have failed the next radar run.
+options deleted. **If you rename them again, six routine prompts in
+`~/.claude/scheduled-tasks/` hardcode the value they write** (the three
+radars, `ai-article-writer`, `talks-writer`, `case-studies-writer`) — that was
+missed the first time and would have failed the next radar run. The full
+hardcode checklist, file by file, is in `docs/research/routine-review.md` §C.
 
 `/projects/` stays its own page. The Basics panel on the index links across to
 it rather than absorbing it.
