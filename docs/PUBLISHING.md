@@ -11,17 +11,18 @@ Nothing else needs your laptop to be on.
 
 ---
 
-## One-time setup — you have to do this bit
+## One-time setup — done
 
-The workflows need a **`NOTION_TOKEN`** repository secret. It is the same
-integration token `sync-news.mjs` already uses locally, and it lives in
+The workflows need a **`NOTION_TOKEN`** repository secret. It was added on
+2026-08-25 and both halves have since been verified running in CI. It is the
+same integration token `sync-news.mjs` uses locally, from
 `C:/Users/Janmejai/Notion/.env`.
 
-Add it at
+If it is ever rotated, replace it at
 `https://github.com/janmejai2002/janmejai2002.github.io/settings/secrets/actions`
 → **New repository secret** → name `NOTION_TOKEN`.
 
-Until that exists:
+Without it:
 
 - `publish-from-notion` fails on every run.
 - The `close-loop` job in the deploy workflow skips itself with a note and does
