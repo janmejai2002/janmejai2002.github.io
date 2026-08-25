@@ -110,9 +110,12 @@ const schema = { '@context': 'https://schema.org', '@graph': graph };
 <meta name="twitter:image" content={ogImage} />
 <meta name="twitter:image:alt" content={ogImageAlt} />
 
-<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-<link rel="alternate icon" href="/favicon.ico" sizes="32x32" />
-<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+{/* ?v=2: the kintsugi mark replaced the ensō on 2026-08-26, and browsers
+    cache favicons far past normal asset rules — the query forces the refetch.
+    Bump it only when the mark itself changes. */}
+<link rel="icon" href="/favicon.svg?v=2" type="image/svg+xml" />
+<link rel="alternate icon" href="/favicon.ico?v=2" sizes="32x32" />
+<link rel="apple-touch-icon" href="/apple-touch-icon.png?v=2" />
 <link rel="sitemap" href="/sitemap-index.xml" />
 <link rel="alternate" type="application/rss+xml" title={siteName} href={new URL('rss.xml', Astro.site)} />
 

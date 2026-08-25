@@ -37,7 +37,12 @@ import Base from '../layouts/Base.astro';
       </p>
     </header>
 
-    <div class="body">
+    {/* On wide screens the prose keeps its measure in the left column and the
+        pieces stand beside it as a rail — the card uses the page's width
+        instead of leaving half of it empty. On narrow screens the grid
+        collapses and the reading order is unchanged. */}
+    <div class="body proj__cols">
+      <div class="proj__colA">
       <h3>What it does</h3>
       <p>
         Every morning an agent searches for what is moving in AI, checks it against
@@ -47,7 +52,9 @@ import Base from '../layouts/Base.astro';
         second agent, which researches it properly and writes the full article. Drafts land
         back in Notion for review. Nothing publishes itself.
       </p>
+      </div>
 
+      <div class="proj__colB">
       <h3>The pieces</h3>
       <div class="stack">
         <div class="layer">
@@ -96,7 +103,9 @@ import Base from '../layouts/Base.astro';
           </p>
         </div>
       </div>
+      </div>
 
+      <div class="proj__colC">
       <h3>What I would tell you before you copy it</h3>
       <ul>
         <li>
@@ -128,6 +137,7 @@ import Base from '../layouts/Base.astro';
         three Notion schemas — so they describe what the system does rather than what I remember
         it doing.
       </p>
+      </div>
     </div>
   </article>
 
@@ -186,7 +196,6 @@ import Base from '../layouts/Base.astro';
   @keyframes stretch { from { transform: scaleX(0); } to { transform: scaleX(1); } }
 
   .proj {
-    max-width: var(--measure);
     border: 1px solid var(--border);
     border-left: 3px solid var(--accent);
     border-radius: 18px;
@@ -222,11 +231,30 @@ import Base from '../layouts/Base.astro';
   .proj__lede { font-size: 1rem; line-height: 1.65; color: var(--ink-soft); margin: 0; }
 
   .proj .body { margin-top: 2rem; }
+  /* Prose holds its measure in the left column; the pieces rail stands beside
+     it and spans both rows. Below 60rem the grid collapses to the original
+     single-column reading order (what it does → pieces → advice). */
+  .proj__head { max-width: var(--measure); }
+  .proj__colA, .proj__colC { max-width: var(--measure); min-width: 0; }
+  .proj__colB { min-width: 0; }
+  .proj__colB h3:first-child { margin-top: 2.25rem; }
+  @media (min-width: 60rem) {
+    .proj__cols {
+      display: grid; column-gap: 3rem;
+      grid-template-columns: minmax(0, var(--measure)) minmax(16rem, 1fr);
+      grid-template-areas: 'a b' 'c b';
+      align-items: start;
+    }
+    .proj__colA { grid-area: a; }
+    .proj__colB { grid-area: b; }
+    .proj__colC { grid-area: c; }
+    .proj__colA h3:first-child, .proj__colB h3:first-child { margin-top: 0; }
+  }
   .proj .body h3 {
     font-size: .6875rem; font-weight: 800; letter-spacing: .15em; text-transform: uppercase;
     color: var(--accent); margin: 2.25rem 0 .9rem;
   }
-  .proj .body > p:first-of-type { font-size: 1rem; font-weight: 400; margin-bottom: 1.25rem; }
+  .proj__colA > p, .proj__colC > p:not(.proj__note) { font-size: 1rem; font-weight: 400; margin: 0 0 1.25rem; }
 
   .stack { display: grid; gap: .6rem; }
   .layer {

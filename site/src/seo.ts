@@ -42,7 +42,7 @@ export const BING_SITE_VERIFICATION = '8AE472167560C6B10D02A15F64EA2389';
  *
  * An empty string renders no script at all, which is the correct default.
  */
-export const UMAMI_WEBSITE_ID = '';
+export const UMAMI_WEBSITE_ID = 'df2f7d8f-549a-412b-a2d5-be4d82ab4426';
 
 // Google is verified twice over, deliberately: the meta tag above and the file
 // at public/googlea1340fe9bfe1e41a.html, which deploys to the site root. Either
