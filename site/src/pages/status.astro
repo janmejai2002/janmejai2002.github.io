@@ -1,0 +1,232 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import status from '../data/status.json';
+import news from '../data/news.json';
+
+// The pipeline's own state, shown rather than described. status.json is
+// refreshed daily in CI by scripts/sync-status.mjs; everything else here is
+// computed at build time, so the page is a snapshot of the last deploy.
+const posts = await getCollection('blog', ({ data }) => !data.draft);
+
+const TRACKS = [
+  { id: 'technical', label: 'Technical', notion: 'Technical', accent: 'mizu' },
+  { id: 'business', label: 'Business', notion: 'Business', accent: 'ochre' },
+  { id: 'basics', label: 'Basics', notion: 'Basics', accent: 'plum' },
+] as const;
+
+const newestPost = posts
+  .map((p) => p.data.pubDate)
+  .sort((a, b) => b.valueOf() - a.valueOf())[0];
+
+const newsDates = (news as { date: string }[]).map((n) => n.date).sort();
+const buildTime = new Date();
+
+const fmt = (d: Date | string | null) => {
+  if (!d) return '—';
+  const date = typeof d === 'string' ? new Date(d) : d;
+  return date.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+};
+
+// "Waiting on you" is the only number that gates the whole pipeline.
+const waiting = status.radar.unrated;
+---
+
+<Base
+  title="Status — Wabi Sabi"
+  description="The live state of the pipeline behind this blog: what the research routines have found, what is waiting to be rated, what is being drafted, and when everything last ran."
+  section="Status"
+>
+  <section class="hero fade-up d1" style="padding-bottom:1.5rem">
+    <span class="hanko">Status</span>
+    <h1>What the <span class="hl">machine</span> is doing</h1>
+    <p>
+      This blog runs on scheduled routines that find topics, draft articles and publish
+      them. Rather than describe that, here is its actual state as of the last deploy.
+      Nothing here is hand-written — it is read from the same Notion databases the
+      routines use.
+    </p>
+  </section>
+
+  <div class="rulebar fade-up d2" aria-hidden="true">
+    <span></span><span></span><span></span><span></span><span></span><span></span>
+  </div>
+
+  <section class="scroll-reveal" aria-labelledby="gate-h">
+    <div class="sec">
+      <h2 class="sec__t" id="gate-h">The one manual step</h2>
+      <span class="sec__r" aria-hidden="true"></span>
+    </div>
+    <div class={`gate ${waiting > 0 ? 'gate--waiting' : 'gate--clear'}`}>
+      <span class="gate__n">{waiting}</span>
+      <div>
+        <h3>{waiting === 1 ? 'idea waiting to be rated' : 'ideas waiting to be rated'}</h3>
+        <p>
+          A routine finds topics and pitches them, but nothing gets written until a human
+          rates one 4 or 5. That rating is the only input the pipeline requires, and it is
+          deliberately the one thing no routine is allowed to do.
+          {status.radar.maybeLater > 0 && ` ${status.radar.maybeLater} more are parked at "maybe later".`}
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="scroll-reveal" aria-labelledby="num-h">
+    <div class="sec">
+      <h2 class="sec__t" id="num-h">Where things stand</h2>
+      <span class="sec__r" aria-hidden="true"></span>
+    </div>
+    <ul class="stats">
+      <li style="--accent:var(--mizu)">
+        <span class="stats__n">{status.radar.total}</span>
+        <span class="stats__k">topics found</span>
+        <span class="stats__d">by the research routines, all time</span>
+      </li>
+      <li style="--accent:var(--ochre)">
+        <span class="stats__n">{status.production.inFlight}</span>
+        <span class="stats__k">being written</span>
+        <span class="stats__d">researching or drafting right now</span>
+      </li>
+      <li style="--accent:var(--plum)">
+        <span class="stats__n">{status.production.draftReady}</span>
+        <span class="stats__k">drafts ready</span>
+        <span class="stats__d">written, awaiting a read-through</span>
+      </li>
+      <li style="--accent:var(--moss)">
+        <span class="stats__n">{posts.length}</span>
+        <span class="stats__k">published</span>
+        <span class="stats__d">live articles on this site</span>
+      </li>
+    </ul>
+  </section>
+
+  <section class="scroll-reveal" aria-labelledby="track-h">
+    <div class="sec">
+      <h2 class="sec__t" id="track-h">By theme</h2>
+      <span class="sec__r" aria-hidden="true"></span>
+    </div>
+    <table class="grid">
+      <thead>
+        <tr><th scope="col">Theme</th><th scope="col">Topics found</th><th scope="col">In production</th><th scope="col">Published</th></tr>
+      </thead>
+      <tbody>
+        {
+          TRACKS.map((t) => (
+            <tr style={`--accent:var(--${t.accent})`}>
+              <th scope="row"><span class="dot" aria-hidden="true" />{t.label}</th>
+              <td>{status.radar.byTrack[t.notion] ?? 0}</td>
+              <td>{status.production.byTrack[t.notion] ?? 0}</td>
+              <td>{posts.filter((p) => p.data.track === t.id).length}</td>
+            </tr>
+          ))
+        }
+      </tbody>
+    </table>
+  </section>
+
+  <section class="scroll-reveal" aria-labelledby="when-h">
+    <div class="sec">
+      <h2 class="sec__t" id="when-h">Last activity</h2>
+      <span class="sec__r" aria-hidden="true"></span>
+    </div>
+    <dl class="when">
+      <div><dt>Newest topic found</dt><dd>{fmt(status.radar.newestIdea)}</dd></div>
+      <div><dt>Newest draft completed</dt><dd>{fmt(status.production.newestDraft)}</dd></div>
+      <div><dt>Newest article published</dt><dd>{fmt(newestPost)}</dd></div>
+      <div><dt>News archive</dt><dd>{news.length} entries, to {fmt(newsDates[newsDates.length - 1])}</dd></div>
+      <div><dt>Pipeline state read</dt><dd>{fmt(status.generated)}</dd></div>
+      <div><dt>Site last built</dt><dd>{fmt(buildTime)}</dd></div>
+    </dl>
+    <p class="note">
+      The pipeline state is refreshed once a day and at every deploy, so these numbers can
+      trail Notion by a few hours. That is a property of a static site, not a bug — and
+      saying so is cheaper than pretending otherwise.
+      <a href="/blog/how-this-blog-builds-itself/">How the whole thing works →</a>
+    </p>
+  </section>
+</Base>
+
+<style>
+  .rulebar { display: flex; gap: 3px; margin: 2rem 0 0; }
+  .rulebar span {
+    height: 3px; flex: 1; border-radius: 2px;
+    transform-origin: left; animation: stretch .8s var(--ease) both;
+  }
+  .rulebar span:nth-child(1) { background: var(--mizu); animation-delay: .15s; }
+  .rulebar span:nth-child(2) { background: var(--ochre); animation-delay: .22s; }
+  .rulebar span:nth-child(3) { background: var(--moss); animation-delay: .29s; }
+  .rulebar span:nth-child(4) { background: var(--plum); animation-delay: .36s; }
+  .rulebar span:nth-child(5) { background: var(--hanko); animation-delay: .43s; }
+  .rulebar span:nth-child(6) { background: var(--indigo); animation-delay: .5s; }
+  @keyframes stretch { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+
+  .sec { display: flex; align-items: center; gap: 1rem; margin: 3rem 0 1.25rem; }
+  .sec__t {
+    margin: 0; font-size: .6875rem; font-weight: 800; letter-spacing: .18em;
+    text-transform: uppercase; color: var(--ink-faint); white-space: nowrap;
+  }
+  .sec__r { flex: 1; height: 1px; background: var(--border); }
+
+  /* The gate: the number that decides whether anything moves. */
+  .gate {
+    display: flex; gap: 1.5rem; align-items: center; flex-wrap: wrap;
+    padding: 1.75rem; border-radius: 18px; border: 1px solid var(--border);
+    max-width: var(--measure);
+  }
+  .gate--waiting { background: var(--wash-hanko); border-color: color-mix(in srgb, var(--hanko) 35%, var(--border)); }
+  .gate--clear { background: var(--wash-moss); border-color: color-mix(in srgb, var(--moss) 35%, var(--border)); }
+  .gate__n { font-size: 3.5rem; font-weight: 800; line-height: 1; letter-spacing: -.04em; }
+  .gate--waiting .gate__n { color: var(--hanko); }
+  .gate--clear .gate__n { color: var(--moss); }
+  .gate h3 { margin: 0 0 .4rem; font-size: 1rem; font-weight: 800; }
+  .gate p { margin: 0; font-size: .875rem; line-height: 1.6; color: var(--ink-soft); max-width: 34rem; }
+
+  .stats {
+    list-style: none; margin: 0; padding: 0;
+    display: grid; gap: 1rem; grid-template-columns: repeat(4, 1fr);
+  }
+  .stats li {
+    padding: 1.25rem; border-radius: 16px; background: var(--card);
+    border: 1px solid var(--border); border-top: 3px solid var(--accent);
+    display: flex; flex-direction: column; gap: .15rem;
+  }
+  .stats__n { font-size: 2.25rem; font-weight: 800; line-height: 1; letter-spacing: -.03em; color: var(--accent); }
+  .stats__k { font-size: .8125rem; font-weight: 800; margin-top: .35rem; }
+  .stats__d { font-size: .75rem; line-height: 1.5; color: var(--ink-faint); }
+
+  .grid { width: 100%; border-collapse: collapse; max-width: var(--measure); font-size: .875rem; }
+  .grid th, .grid td { text-align: left; padding: .7rem .6rem; border-bottom: 1px solid var(--border); }
+  .grid thead th {
+    font-size: .625rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+  .grid tbody th { font-weight: 700; }
+  .grid td { font-variant-numeric: tabular-nums; }
+  .dot {
+    display: inline-block; width: 8px; height: 8px; border-radius: 999px;
+    background: var(--accent); margin-right: .55rem; vertical-align: middle;
+  }
+
+  .when { margin: 0; max-width: var(--measure); }
+  .when > div {
+    display: flex; justify-content: space-between; gap: 1rem;
+    padding: .6rem 0; border-bottom: 1px solid var(--border);
+  }
+  .when dt { font-size: .875rem; color: var(--ink-soft); }
+  .when dd { margin: 0; font-size: .875rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+
+  .note {
+    margin-top: 1.25rem; font-size: .8125rem; line-height: 1.65;
+    color: var(--ink-faint); max-width: var(--measure);
+  }
+
+  @media (max-width: 60rem) { .stats { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 30rem) {
+    .stats { grid-template-columns: 1fr; }
+    .gate { padding: 1.35rem; }
+    .gate__n { font-size: 2.75rem; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .rulebar span { animation: none; transform: none; }
+  }
+</style>

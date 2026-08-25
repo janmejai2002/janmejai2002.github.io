@@ -55,10 +55,18 @@ jobs:
           NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
         run: node scripts/sync-news.mjs
 
+      # The /status/ page reads this. Same token, same schedule, same commit —
+      # there is no reason to run it on its own cadence.
+      - name: Refresh status.json from Notion
+        working-directory: site
+        env:
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+        run: node scripts/sync-status.mjs
+
       - name: Check whether anything changed
         id: diff
         run: |
-          if [ -n "$(git status --porcelain site/src/data/news.json)" ]; then
+          if [ -n "$(git status --porcelain site/src/data/)" ]; then
             echo "changed=true" >> "$GITHUB_OUTPUT"
             echo "count=$(node -e "console.log(require('./site/src/data/news.json').length)")" >> "$GITHUB_OUTPUT"
           else
@@ -77,8 +85,8 @@ jobs:
         run: |
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add site/src/data/news.json
-          git commit -m "Sync news archive from Notion (${{ steps.diff.outputs.count }} entries)"
+          git add site/src/data/news.json site/src/data/status.json
+          git commit -m "Sync news archive and pipeline status from Notion (${{ steps.diff.outputs.count }} entries)"
           git push
 
       # A push made with the default GITHUB_TOKEN does NOT trigger other

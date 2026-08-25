@@ -1,0 +1,31 @@
+{
+  "generated": "2026-08-25T15:40:48.217Z",
+  "radar": {
+    "total": 13,
+    "unrated": 5,
+    "maybeLater": 2,
+    "byStatus": {
+      "Radar Idea": 7,
+      "Drafting": 2,
+      "Published": 4
+    },
+    "byTrack": {
+      "Technical": 11,
+      "Business": 2,
+      "Basics": 0
+    },
+    "newestIdea": "2026-08-25T09:23:00.000Z"
+  },
+  "production": {
+    "total": 6,
+    "inFlight": 0,
+    "draftReady": 4,
+    "approved": 2,
+    "byTrack": {
+      "Technical": 6,
+      "Business": 0,
+      "Basics": 0
+    },
+    "newestDraft": "2026-08-25"
+  }
+}

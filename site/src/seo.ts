@@ -1,0 +1,27 @@
+/**
+ * Search-engine ownership verification tokens.
+ *
+ * These are public by design — they appear in the page source of every site
+ * that uses them, and they prove ownership only to whoever already controls
+ * this repository. They are not secrets and do not belong in GitHub Secrets.
+ *
+ * ── How to fill these in ────────────────────────────────────────────────────
+ *
+ * Google (https://search.google.com/search-console):
+ *   1. Add property → **URL prefix** → https://janmejai2002.github.io
+ *      Do NOT pick "Domain" — that needs DNS records for github.io, which
+ *      belong to GitHub, not to you.
+ *   2. Choose the "HTML tag" verification method.
+ *   3. Copy only the `content="..."` value into GOOGLE_SITE_VERIFICATION below.
+ *   4. Commit and let it deploy, then press Verify.
+ *   5. Once verified: Sitemaps → submit `sitemap-index.xml`.
+ *
+ * Bing (https://www.bing.com/webmasters) is optional but nearly free: it also
+ * feeds DuckDuckGo, and Bing's index is what several answer engines read.
+ * Same flow, meta-tag method, value goes in BING_SITE_VERIFICATION.
+ *
+ * An empty string renders no tag at all, which is the correct default.
+ */
+
+export const GOOGLE_SITE_VERIFICATION = '';
+export const BING_SITE_VERIFICATION = '';

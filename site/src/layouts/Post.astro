@@ -25,11 +25,11 @@ const dateLabel = pubDate.toLocaleDateString('en-IN', {
   year: 'numeric',
 });
 
-// Mirrors the track table on the index. Accents follow docs/ARTWORK.md.
+// Mirrors the theme table on the index. Accents follow docs/ARTWORK.md.
 const TRACK = {
-  systems: { label: 'Systems', accent: 'mizu' },
-  practice: { label: 'Practice', accent: 'ochre' },
-  demand: { label: 'Demand', accent: 'plum' },
+  technical: { label: 'Technical', accent: 'mizu' },
+  business: { label: 'Business', accent: 'ochre' },
+  basics: { label: 'Basics', accent: 'plum' },
 }[track];
 
 // Social cards are a fixed 1200x630 crop. Deriving it from the hero at build

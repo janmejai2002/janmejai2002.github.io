@@ -15,13 +15,15 @@ const blog = defineCollection({
         title: z.string().max(70),
         description: z.string().max(160),
         pubDate: z.coerce.date(),
-        // Which editorial track this belongs to. The index filters on it and
-        // each track has its own research routine feeding the Notion radar.
-        // Defaults to systems so every pre-track post keeps working untouched.
-        track: z.enum(['systems', 'practice', 'demand']).default('systems'),
-        // The question the piece answers, in the reader's words. Every article
-        // here is an answer to something a working professional actually asks;
-        // this is that question, printed on the card and in the post header.
+        // Which theme this belongs to. The index filters on it and each theme
+        // has its own research routine feeding the Notion radar.
+        //   technical — how AI actually works and breaks
+        //   business  — what it means for consulting, marketing, strategy
+        //   basics    — AI explained simply, trends, and the setups I build
+        // Defaults to technical, which is what every pre-theme post is.
+        track: z.enum(['technical', 'business', 'basics']).default('technical'),
+        // The question the piece answers, in the reader's own words. Printed
+        // above the title and on the index card.
         question: z.string().max(120).optional(),
         updatedDate: z.coerce.date().optional(),
         keywords: z.array(z.string()).default([]),

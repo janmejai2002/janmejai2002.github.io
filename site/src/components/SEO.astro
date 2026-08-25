@@ -1,4 +1,6 @@
 ---
+import { GOOGLE_SITE_VERIFICATION, BING_SITE_VERIFICATION } from '../seo';
+
 export interface Props {
   title: string;
   description: string;
@@ -77,6 +79,15 @@ const schema = { '@context': 'https://schema.org', '@graph': graph };
 <meta name="author" content="Janmejai Singh Minhas" />
 <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
 {keywords.length > 0 && <meta name="keywords" content={keywords.join(', ')} />}
+
+{/* Search-engine ownership verification. Set the token in site/src/seo.ts.
+    A github.io subdomain cannot use a Search Console *domain* property — that
+    needs DNS records nobody here controls — so it is verified as a URL-prefix
+    property, and the meta-tag method is the one that survives a rebuild. */}
+{GOOGLE_SITE_VERIFICATION && (
+  <meta name="google-site-verification" content={GOOGLE_SITE_VERIFICATION} />
+)}
+{BING_SITE_VERIFICATION && <meta name="msvalidate.01" content={BING_SITE_VERIFICATION} />}
 
 <meta property="og:type" content={type} />
 <meta property="og:title" content={title} />
