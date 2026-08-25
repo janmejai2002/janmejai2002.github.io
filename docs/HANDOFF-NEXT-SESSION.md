@@ -1,7 +1,8 @@
 # Handoff — start here in a new chat
 
-Paste the block at the bottom into a fresh session. Everything above it is
-context for whoever reads this file directly.
+**The paste-in prompt now lives in `docs/BRIEF-NEXT-PHASE.md`**, which carries the
+owner's brief for the next phase of work. This file remains the record of where
+the last session stopped and what the small queued items are.
 
 Last session ended 2026-08-26 (second session that day), at commit `c25eba0` on
 `main`. Working tree clean, everything pushed, build green, `check-build`
@@ -137,44 +138,9 @@ and would have broken every radar run.
 
 ## The prompt to paste
 
-```
-Continuing work on the wAIbi-sabi blog at C:\Users\Janmejai\PluginsClaude
-(live at https://janmejai2002.github.io, repo janmejai2002/janmejai2002.github.io).
+Superseded — see **`docs/BRIEF-NEXT-PHASE.md`**. It captures the owner's brief of
+2026-08-26 (design and voice, AI citability, monetisation, and a review of the
+routines), and its prompt is written for a session running Claude Fable 5.
 
-Read docs/HANDOFF.md first — it documents the whole system, the Notion control
-plane, the publish pipeline, the design and artwork specs, and the gotchas.
-Then read docs/HANDOFF-NEXT-SESSION.md for where the last session stopped and
-what is queued. Then docs/PUBLISHING.md and docs/ARTWORK.md before touching
-publishing or images.
-
-Two environment facts up front: the Bash tool's cygwin heap error is
-intermittent — try it once, fall back to PowerShell if it dies. And the Browser
-pane cannot screenshot and never composites, so verify with javascript_tool
-reading computed styles, pass tabId explicitly, and do not trust anything that
-depends on requestAnimationFrame.
-
-State: renamed to wAIbi-sabi, five themes, seven scheduled routines, 5
-published articles, 2 more waiting on a branch. Google and Bing verification is
-live.
-
-Start with these, in order:
-
-1. Wire IndexNow into deploy.yml after a successful deploy. The key is a static
-   text file at the site root — no login and no token, which is the property
-   this system requires of anything unattended.
-2. Run the site in a real browser and actually look at it. Nothing that depends
-   on requestAnimationFrame has ever been seen running: the WebGL grain field,
-   the theme-card mark animations, every CSS transition. The new wordmark and
-   favicon have only been checked in built HTML and as rendered PNGs.
-3. Give /projects/ and /news/ the UI pass the index and the article template
-   got. Their headings are correct now; the layouts are a generation behind.
-
-Verify with `npm run build` in site/ (dev server must be stopped; it runs
-check-build). Commit in logical chunks and push — pushing deploys.
-
-Before you start, tell me anything in that queue you think is the wrong
-priority, and check whether the owner has yet enabled "Allow GitHub Actions to
-create and approve pull requests" in repo settings, because two finished
-articles are blocked on it. Check it with:
-gh api repos/janmejai2002/janmejai2002.github.io/actions/permissions/workflow
-```
+The three small items in the queue above are still real and are not in that
+brief. Fold them in where they fit.
