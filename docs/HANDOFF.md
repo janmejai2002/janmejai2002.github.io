@@ -17,14 +17,24 @@ accent. A post's `track` decides which section of the index it files under.
 
 | Track | Accent | Reader | Radar routine |
 |---|---|---|---|
-| `systems` | `--mizu` | Engineers and builders | `daily-ai-seo-radar` (daily 07:10) |
-| `practice` | `--ochre` | Consultants, analysts, advisors — **not** engineers | `practice-radar` (Tue 07:14) |
-| `demand` | `--plum` | Marketers, growth, SEO, founders | `demand-radar` (Thu 07:11) |
+| `technical` | `--mizu` | Engineers and people who build with AI | `daily-ai-seo-radar` (daily 07:10) |
+| `business` | `--ochre` | Consultants, analysts, marketers, founders — **not** engineers | `business-radar` (Tue 07:20) |
+| `basics` | `--plum` | Anyone getting up to speed; also where the setups live | `basics-radar` (Thu 07:16) |
 
-`track` defaults to `systems` in the content schema and in `publish-article.mjs`,
-so a missing Track can never fail a build — it files quietly under Systems
-instead. All 13 pre-existing radar rows were backfilled by hand (11 Systems,
-2 Practice: the "$500 Billion in AI" and India-takedown-rule ideas).
+`track` defaults to `technical` in the content schema and in
+`publish-article.mjs`, so a missing Track can never fail a build — it files
+quietly under Technical instead.
+
+**The Notion `Track` select accepts exactly `Technical`, `Business`, `Basics`.**
+Any other value is rejected outright. These themes were renamed from
+Systems/Practice/Demand on 2026-08-25 because the originals meant nothing to a
+first-time visitor; all 19 rows across both databases were migrated and the old
+options deleted. **If you rename them again, the four routine prompts in
+`~/.claude/scheduled-tasks/` each hardcode the value they write** — that was
+missed the first time and would have failed the next radar run.
+
+`/projects/` stays its own page. The Basics panel on the index links across to
+it rather than absorbing it.
 
 ---
 
@@ -80,11 +90,14 @@ The relation between the two pipeline databases is two-way (`Article` ↔
 Prompts live in `~/.claude/scheduled-tasks/<id>/SKILL.md`. **Each run starts
 cold**, so the prompt must be fully self-contained.
 
-- **`daily-ai-seo-radar`** — 07:10 daily. Systems track. Discovers topics, writes
-  a 100-word pitch, files as `Radar Idea`.
-- **`practice-radar`** — Tue 07:14. Practice track. 2 ideas max, and explicitly
-  told a quiet week is a valid result.
-- **`demand-radar`** — Thu 07:11. Demand track. Same shape.
+- **`daily-ai-seo-radar`** — 07:10 daily. Technical theme. Discovers topics,
+  writes a 100-word pitch, files as `Radar Idea`.
+- **`business-radar`** — Tue 07:20. Business theme, covering both the advisory
+  and the marketing audience. 2 ideas max, and explicitly told a quiet week is a
+  valid result.
+- **`basics-radar`** — Thu 07:16. Basics theme. Weighted toward questions people
+  are actually asking rather than the news cycle, and told that a simplification
+  leaving the reader with a false model is worse than no article.
 - **`ai-article-writer`** — every 4h. Picks up rating 4/5, promotes, researches,
   drafts, sets `Draft Ready`. Max 2 per run. **Forbidden from publishing.**
 
