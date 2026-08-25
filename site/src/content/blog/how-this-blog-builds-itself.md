@@ -1,14 +1,15 @@
 ---
 title: 'How This Blog Builds Itself'
-description: 'The pipeline behind this site: two scheduled Claude Code routines, three Notion databases, one human rating, and a deliberately small skills folder.'
+description: 'The pipeline behind this site: seven scheduled Claude Code routines, five themes, three Notion databases, and one human rating that gates all of it.'
 pubDate: 2026-08-24
+updatedDate: 2026-08-26
 keywords:
   - Claude Code scheduled tasks
   - Notion as a control plane
   - AI content pipeline architecture
   - agent token budget
   - Astro content collections
-readingTime: '12 min read'
+readingTime: '15 min read'
 heroImage: '../../assets/art/how-this-blog-builds-itself-light.webp'
 heroImageDark: '../../assets/art/how-this-blog-builds-itself-dark.webp'
 heroAlt: 'A ring of sixty evenly spaced tick marks enclosed by a single heavy arc that runs almost the whole way round. The arc breaks at the lower left, and a short, slightly crooked red stroke sits in the gap.'
@@ -18,10 +19,11 @@ heroAlt: 'A ring of sixty evenly spaced tick marks enclosed by a single heavy ar
 
 ## Executive TL;DR
 
-- Two scheduled Claude Code routines do the work. One discovers topics and pitches them. The other picks up whatever the human rated 4 or 5 and writes the draft.
+- Seven scheduled Claude Code routines do the work, across five themes. Three research topics and pitch them; three write drafts; one keeps the news archive current.
 - Notion is the control plane, not a CMS. Two related databases hold every decision; the repository holds only what was published.
-- The whole thing hinges on one field. `Interest Rating` is the approval gate and the only human input the pipeline requires.
-- Nothing auto-publishes. `Approved` is a state no routine is allowed to write.
+- The whole thing hinges on one field. `Interest Rating` is the approval gate and the only human input most of the pipeline requires.
+- Nothing auto-publishes. `Approved` is a state no routine is allowed to write — that one rule has survived every expansion of the system.
+- Every factual claim needs a **claim ledger** row carrying the source sentence quoted verbatim. That rule exists because two live articles had to be corrected, and every error traced to an SEO aggregator rather than a primary source.
 - The least obvious constraint is token budget. Skill and agent descriptions are injected into every session *and every sub-agent*, so the active folders are kept deliberately small: 64 skills at ~6.1k tokens became 7 at ~1.2k.
 
 </div>
@@ -30,11 +32,33 @@ My entire editorial job is a dropdown with five values in it.
 
 Everything upstream of that dropdown — noticing a topic is worth writing about, checking it has not been covered, researching it, drafting it — runs on a clock without me. Everything downstream of it is a review and a git push. The interesting part is not that this is possible; plenty of people have wired an LLM to a cron job. The interesting part is which decisions turned out to be worth keeping for a human, and how few of them there are.
 
-There is no bespoke infrastructure here, no server and no queue. Two markdown prompt files, three Notion databases, a static site.
+There is no bespoke infrastructure here, no server and no queue. A folder of markdown prompt files, three Notion databases, a static site.
 
-## The shape of the thing
+This piece was first written when there were two routines and no themes. There are now seven routines and five themes, which is a good argument for why a post about a live system needs a revision date on it.
 
-Two scheduled tasks run on a clock. `daily-ai-seo-radar` fires at 07:10 and files ideas. `ai-article-writer` fires every four hours and writes whatever has been approved. Between them sits exactly one human decision.
+## Five themes, seven routines
+
+Every article answers a question a working professional actually asked about AI, and each theme owns a different reader.
+
+| Theme | Reader | Fed by | When |
+|---|---|---|---|
+| Technical | People who build with AI | `daily-ai-seo-radar` | daily, 07:10 |
+| Business | Consultants, analysts, marketers, founders | `business-radar` | Tuesdays, 07:20 |
+| Basics | Anyone getting up to speed | `basics-radar` | Thursdays, 07:16 |
+| Case Studies | Anyone who wants the receipts | `case-studies-writer` | twice weekly, 08:40 |
+| Talks | People who do not have the hour | `talks-writer` | daily, 08:33 |
+
+Those five, plus `ai-article-writer` every four hours picking up whatever was rated 4 or 5, plus a daily job that syncs the news archive out of Notion and into the repository.
+
+The two halves of that table work differently, and the difference is the most useful thing in this article. **The three radars pitch and wait.** They file an idea and stop; nothing happens until a human rates it. **The two writers draft directly**, because their subject matter is already constrained enough that a pitch would add nothing — `case-studies-writer` may only write about a named company with a primary source it can link, and `talks-writer` may only write about a talk on a fixed allowlist. Where the constraint is in the prompt, the gate does not also need to be in a dropdown.
+
+Both writers still file at `Draft Ready`. No routine, on either path, may write `Approved`.
+
+Two of those constraints are worth stating plainly because they were arrived at the hard way. The case-studies brief originally asked for ten a day; that volume is precisely the shape search engines classify as scaled content abuse, and the penalty lands on the whole domain rather than the offending pages. It is two a week now. And `talks-writer` deliberately does not use NotebookLM: it has no public API, so driving it means a signed-in browser session — an auth that expires and fails a 08:33 run with nobody watching. It reads public captions anonymously instead. **An unattended routine can only use credentials that cannot expire.** That single rule has decided more of this architecture than any preference about models.
+
+## The shape of one idea
+
+The radar path is the older of the two and still the busier one. `daily-ai-seo-radar` fires at 07:10 and files ideas. `ai-article-writer` fires every four hours and writes whatever has been approved. Between them sits exactly one human decision.
 
 <figure class="diagram">
 <svg viewBox="0 0 700 596" role="img" aria-labelledby="d1t d1d">
@@ -127,7 +151,9 @@ Three details in that diagram carry more weight than they look like they do.
 
 **The lock happens before the work.** The writer sets the radar row to `Drafting` immediately after creating the production row and before it researches anything. Its own pickup query filters on `Status = 'Radar Idea'`, so that single write is what prevents a four-hourly job from starting the same article twice. Doing it after the research would leave a multi-minute window where a second run could double-pick.
 
-**`Approved` is unreachable by machine.** Both prompt files state it, and both state it as a guardrail rather than a default. The system is built to produce drafts, not posts.
+**`Approved` is unreachable by machine.** Every prompt file states it, and states it as a guardrail rather than a default. The system is built to produce drafts, not posts. That rule is the one thing that has not been renegotiated as the system grew from two routines to seven.
+
+The Case Studies and Talks routines skip the first two bands of that diagram entirely — they create the production row themselves and land in the same place, at `Draft Ready`. Everything from there down is identical.
 
 ## Notion is the control plane
 
@@ -177,9 +203,9 @@ The word "CMS" would be wrong here. Notion holds the things that are still being
     <text x="16" y="306" font-size="12.5" font-weight="700">Interview News Archive</text>
     <g font-size="11">
       <text x="16" y="338" opacity="0.72">Not part of the editorial pipeline.</text>
-      <text x="16" y="358" opacity="0.72">sync-news.mjs writes it into the repo</text>
-      <text x="16" y="378" opacity="0.72">as committed JSON, then Astro builds</text>
-      <text x="16" y="396" opacity="0.72">221 filterable cards at /news/.</text>
+      <text x="16" y="358" opacity="0.72">sync-news.mjs runs daily at 04:35 and</text>
+      <text x="16" y="378" opacity="0.72">commits straight to main — no PR, because</text>
+      <text x="16" y="396" opacity="0.72">a human already curated every card.</text>
     </g>
     <rect x="384" y="286" width="316" height="120" rx="10" fill="none" stroke="var(--border)" stroke-dasharray="4 4"/>
     <text x="400" y="308" font-size="12.5" font-weight="700">The repository</text>
@@ -205,17 +231,17 @@ There is less here than people expect. No agent framework, no vector database, n
 <figure class="diagram">
 <svg viewBox="0 0 700 400" role="img" aria-labelledby="d3t d3d">
   <title id="d3t">Claude Code layout for this system</title>
-  <desc id="d3d">Two scheduled task prompt files drive the pipeline. Seven skills sit in the active skills folder and are injected into every session and sub-agent. About twenty-seven agents sit in the active agents folder. Fifty-seven skills and about two hundred thirty-six agents sit in archived library folders that are never scanned at startup and cost nothing. MCP connections provide Notion, web search and NotebookLM.</desc>
+  <desc id="d3d">Seven scheduled task prompt files drive the pipeline. Seven skills sit in the active skills folder and are injected into every session and sub-agent. About twenty-seven agents sit in the active agents folder. Fifty-seven skills and about two hundred thirty-six agents sit in archived library folders that are never scanned at startup and cost nothing. MCP connections provide Notion, web search and NotebookLM.</desc>
   <g font-family="inherit" fill="currentColor">
     <text x="0" y="14" font-size="10" font-weight="700" letter-spacing="1.4" opacity="0.45">LOADED INTO EVERY SESSION</text>
     <rect x="0" y="24" width="700" height="150" rx="10" fill="var(--wash-mizu)" stroke="var(--border)"/>
     <rect x="16" y="42" width="200" height="114" rx="8" fill="var(--card)" stroke="var(--border)"/>
-    <text x="30" y="64" font-size="12" font-weight="700">scheduled-tasks/</text>
-    <g font-size="11" opacity="0.75">
-      <text x="30" y="88">daily-ai-seo-radar</text>
-      <text x="30" y="106" font-size="10" opacity="0.7">07:10 · SKILL.md</text>
-      <text x="30" y="128">ai-article-writer</text>
-      <text x="30" y="146" font-size="10" opacity="0.7">every 4h · SKILL.md</text>
+    <text x="30" y="64" font-size="12" font-weight="700">scheduled-tasks/ — 7</text>
+    <g font-size="10.5" opacity="0.75">
+      <text x="30" y="86">3 radars pitch and wait</text>
+      <text x="30" y="104">2 writers draft directly</text>
+      <text x="30" y="122">1 promotes rated ideas</text>
+      <text x="30" y="140">1 syncs the news archive</text>
     </g>
     <rect x="234" y="42" width="200" height="114" rx="8" fill="var(--card)" stroke="var(--border)"/>
     <text x="248" y="64" font-size="12" font-weight="700">skills/ — 7 active</text>
@@ -247,10 +273,12 @@ There is less here than people expect. No agent framework, no vector database, n
     <text x="0" y="384" font-size="11" opacity="0.6">The teal block above is paid for on every single session — and again inside every sub-agent.</text>
   </g>
 </svg>
-<figcaption>Two prompt files, seven skills, a handful of MCP connections. Everything else is deliberately cold.</figcaption>
+<figcaption>Seven prompt files, seven skills, a handful of MCP connections. Everything else is deliberately cold.</figcaption>
 </figure>
 
 The prompts are the system. Each scheduled run starts cold, with no memory of any previous run, which means the prompt file has to be completely self-contained: the data source IDs, the exact query, the state transitions, the guardrails. That constraint is annoying for about a day and then becomes the best feature, because the prompt file *is* the documentation. Reading `ai-article-writer/SKILL.md` tells you exactly what the system does, with no gap between the description and the behaviour.
+
+It has one sharp edge, though, and renaming the themes found it. The theme names are a Notion select that rejects anything unexpected, and the string is hardcoded in five places — the content schema, the publish script, the index page, the article layout, and *the prompt file of every routine that writes one*. The fifth was missed, which would have failed the next morning's radar run against a select option that no longer existed. A cold-start prompt is documentation that cannot drift from the code, but it is also code that no compiler is checking.
 
 ## The constraint nobody expects: token budget
 
@@ -305,6 +333,40 @@ The fix is not clever, it is just filing. Keep the small set you actually reach 
 
 The same discipline shows up in how sub-agents get spawned at all: a smaller model for research and extraction, one pre-digested brief instead of every agent re-reading the same large document, findings written to disk with short receipts returned instead of pasting full output back, and deliverables assembled by a script rather than retyped by a model.
 
+## The correction that changed the writing rules
+
+A fact-check of two live articles found statistics attributed to pages that did not contain them. Both had to be corrected in public.
+
+The failure is worth describing precisely, because "the model hallucinated" is not what happened and would have led to the wrong fix. The numbers were real and mostly close to right. What broke was **attribution**: a figure picked up in one place got a link to the nearest topical page, which was a page that had never printed that figure. And the pattern in the errors was unmistakable. Where the routine cited a primary source — a model card, a vendor pricing page, a paper — it was accurate. **Every single error traced to an SEO aggregator**, one of those "40 AI statistics for 2026" pages that reprints a number with no path back to whoever measured it.
+
+So the writing rule is now mechanical rather than aspirational. Before a claim may appear in a draft, it needs a row in a **claim ledger** — a scratch file, not part of the article:
+
+| the claim as it will be written | the URL | the sentence from that page, quoted verbatim |
+
+The third column is the whole point. It has to be text actually seen on the page — not a paraphrase, not a recollection, not something inferred from the page's topic. If the sentence cannot be pasted, the source does not exist and the claim gets cut.
+
+Then there is a separate pass, after the draft is finished and after the anti-AI-writing filter has rewritten the prose, that walks the finished text top to bottom — including the TL;DR bullets and the image alt text — and checks every number, date, price, quote, benchmark and named entity back against its ledger row. Not "was I careful while writing", but a fresh read of the final text. Prose gets rewritten three times between research and filing, and figures drift in the rewrite. That pass also recomputes every derived number, because a percentage difference or a gap between two dates is a claim the routine made up itself and no source will catch.
+
+Three rules came out of the same review and are worth stealing whole:
+
+- **A link must point at the page the number came from.** Never the nearest topical URL.
+- **Do not strengthen a source's claim.** Its qualifiers are load-bearing. "Researchers found X in one study" does not become "X is true."
+- **A page's publication date is not the date of the event it describes.**
+
+The routine also has to report, every run, which claims rested on an aggregator rather than a primary source — an explicit list, at the top of the report, of what a human should check first. Burying that would defeat the purpose.
+
+## Publishing is a pipeline too now
+
+Approving a draft used to mean copying markdown out of Notion by hand. It now means setting one field.
+
+Twice an hour, a GitHub Actions job reads Notion for rows at `Approved` that have no file in the repository, converts each one to markdown, and opens a pull request. A human adds the artwork and reads it through, merges, and the site deploys. After the deploy, a second job checks that the article's URL actually serves — and only then writes `Published`, the post URL and the publish date back to the Notion row. Verifying before reconciling matters: a pipeline that marks things published because it *tried* to publish them is a pipeline that lies to you.
+
+Detection is polling rather than a push, and that is a deliberate trade. Notion cannot reach a repository without a public endpoint, and standing up a server to receive a webhook would cost this system the one property that makes it pleasant — that there is no infrastructure to keep alive.
+
+The most useful thing added to that pipeline was not a feature. It was making it **report its own failures where the human actually is**. A malformed draft used to fail with a message printed into an Actions log; the run went red, and the person who works in Notion never found out why their approved article had not appeared. Rejections now get written back onto the Notion row as a blocked reason, and cleared automatically when the row later publishes cleanly. An error message nobody will ever read is not error handling.
+
+There is a matching page for this. `/status/` shows the pipeline's live state — how many topics have been found, how many drafts are in flight, and how many ideas are sitting unrated — read from the same Notion databases the routines use. It seemed more honest to show the machine running than to describe it. When the number waiting on a rating is high, it says so.
+
 ## The site itself
 
 Astro, no framework, no Tailwind. The template this design came from used the Tailwind CDN script, which is render-blocking and bad for a site whose entire point is being read, so the design system was ported to plain CSS with tokens.
@@ -323,6 +385,12 @@ Deployment is a push to `main`, a GitHub Actions run, and Pages. There is no pre
 
 **Expect the prompt to be the spec.** Cold starts force the prompt file to hold everything, which means it drifts from reality far less than a README does. That was an accident here, and it is the design decision I would keep on purpose next time.
 
+**Only use credentials that cannot expire.** Anything that runs at 07:10 with nobody watching cannot depend on a signed-in session, a token with a renewal date, or a browser that has to be logged in. That constraint has thrown out more otherwise-good designs here than any question about which model to use.
+
+**Report failures where the human is.** Not into a log, not into a red build badge — into the tool the person actually opens. Every hour spent on that beat an hour spent on the thing that failed.
+
 ---
 
-*Every number and state transition above was checked against the running configuration rather than recalled: both scheduled-task prompts, the skills, the build config, and all three live Notion schemas.*
+*Every number and state transition above was checked against the running configuration rather than recalled: all seven scheduled-task prompts, the skills, the build config, the publish scripts and workflows, and all three live Notion schemas.*
+
+*Revised 26 August 2026. The original version described two routines and no themes; the system had grown to seven and five. A post about a live system needs a revision date, and this one now has one.*
