@@ -16,6 +16,19 @@ heroImageDark: '../../assets/art/mcp-stateless-spec-2026-migration-guide-dark.we
 heroAlt: 'A thick horizontal bar runs in from the left and stops at a short red vertical mark. Beyond it the line continues only as a faint dashed rule, along which four evenly spaced teal rings sit, each holding a single dot at its centre.'
 notionId: '3c7ced67-050a-81d6-bf44-efd702510d15'
 ---
+<div class="tldr">
+
+## Executive TL;DR
+
+- The `2026-07-28` MCP spec removes protocol-level sessions and the `initialize` handshake: no `Mcp-Session-Id` header, and every request carries its own protocol version and capabilities in `_meta` (SEP-2567, SEP-2575).
+- "Stateless" is a claim about the protocol core, not your server — cross-call state moves to handles you mint yourself (a `basket_id` the model passes back), the way REST has always done it.
+- Two new required headers, `Mcp-Method` and `Mcp-Name`, expose method and tool name at the HTTP layer, so gateways can route and rate-limit without parsing JSON-RPC bodies.
+- The same release makes RFC 9207 issuer verification and RFC 8707 resource indicators mandatory, closing the confused-deputy attack where a token minted for Server A also works against Server B.
+- All Tier 1 SDKs (TypeScript, Python, Go, C#) supported the new spec at release, so for most teams this is an upgrade, not a rewrite — but sticky routing, session stores, and `initialize` gates are now dead weight to remove.
+- Roots, Sampling, and Logging are deprecated with a minimum 12-month removal window, and the old HTTP+SSE transport is formally Deprecated — the runway is months, not years.
+
+</div>
+
 On July 28, 2026, the Model Context Protocol deleted the one thing every production MCP server was built around: the session.
 
 No `initialize` handshake. No `notifications/initialized`. No `Mcp-Session-Id` header. If you run an MCP server behind sticky routing, or you built a session store because a tutorial told you to, the ground moved under you and most of the coverage since has been too busy explaining the changelog to tell you what to do about it.

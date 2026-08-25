@@ -16,7 +16,7 @@
 import { writeFileSync, existsSync, mkdirSync, readdirSync, readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { queryAll, blocks, toMarkdown, plain, inline, PRODUCTION_DS } from './lib/notion.mjs';
+import { api, queryAll, blocks, toMarkdown, plain, inline, PRODUCTION_DS } from './lib/notion.mjs';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const BLOG = join(here, '..', 'src', 'content', 'blog');
@@ -68,6 +68,26 @@ function liftArtworkBrief(markdown) {
     .trim();
   const rest = [...lines.slice(0, start), ...lines.slice(end)].join('\n').trimEnd();
   return { markdown: rest + '\n', brief: brief || null };
+}
+
+/**
+ * Drops a leading H1 from the article body.
+ *
+ * The layout renders the frontmatter title as the page's <h1>, so a body that
+ * opens with `# Title` ships two <h1> elements, one a copy of the other. Both
+ * articles from the pipeline's first run did exactly this — and because the H1
+ * sat above the TL;DR heading, it also silently defeated wrapTldr(), which
+ * requires the TL;DR to be the first content. The writer prompt now forbids the
+ * heading, but the generator must not depend on a prompt being obeyed.
+ */
+function stripLeadingH1(markdown) {
+  const lines = markdown.split('\n');
+  const first = lines.findIndex((l) => l.trim() !== '');
+  if (first === -1 || !/^#\s+/.test(lines[first])) return markdown;
+  return lines
+    .slice(first + 1)
+    .join('\n')
+    .trimStart();
 }
 
 /**
@@ -231,7 +251,7 @@ for (const page of rows) {
   }
 
   const lifted = liftArtworkBrief(toMarkdown(body));
-  const markdown = wrapTldr(lifted.markdown);
+  const markdown = wrapTldr(stripLeadingH1(lifted.markdown));
   const words = markdown.split(/\s+/).filter((w) => /\w/.test(w)).length;
   const hasTldr = markdown.startsWith('<div class="tldr">');
   const keywords = plain(p['SEO Keywords']?.rich_text)
@@ -264,15 +284,19 @@ for (const page of rows) {
     continue;
   }
 
-  // Not fatal — a missing TL;DR is a review note, not a broken article. But it
-  // used to be silent, and "the generator does not write a TL;DR" then sat in
-  // the docs as a permanent manual step.
+  // Blocking, deliberately. This started life as a note, and the note was how
+  // the first two pipeline articles shipped without the block their own writer
+  // prompt requires — a requirement that is only a remark is a requirement
+  // being quietly missed. The TL;DR is also the most citable block on the page,
+  // so its absence is a distribution defect, not a style one. The reason lands
+  // on the Notion row, where the fix takes a minute.
   if (!hasTldr) {
-    note(
+    blocked(
       id,
       title,
-      'No "Executive TL;DR" heading at the top, so this published without the summary plate the other posts open with.'
+      'The draft does not open with an "Executive TL;DR" H2 and bullets. Add the section at the top of the page body (heading text exactly "Executive TL;DR"), then set Draft Status back to Approved.'
     );
+    continue;
   }
 
   const frontmatter = [

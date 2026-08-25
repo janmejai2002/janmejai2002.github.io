@@ -62,6 +62,21 @@ function check(path, html) {
   for (const img of html.match(/<img[^>]*>/g) ?? []) {
     if (!/\balt="[^"]+"/.test(img)) fail(`img without alt text: ${img.slice(0, 90)}`);
   }
+
+  // 6. Exactly one <h1> per page. The pipeline's first run shipped two articles
+  // whose body opened with a `# Title` duplicating the frontmatter title the
+  // layout already renders — two h1 elements, one a copy of the other. The
+  // search-engine verification tokens at the dist root are HTML but not pages.
+  const isPage = /(?:^|[\\/])(?:index|404)\.html$/.test(rel);
+  const h1s = (html.match(/<h1[\s>]/g) ?? []).length;
+  if (isPage && h1s !== 1) fail(`${h1s} <h1> elements — every page renders exactly one`);
+
+  // 7. Every article opens with the Executive TL;DR plate. The writer prompt
+  // requires it, the generator now blocks without it, and this is the backstop
+  // that keeps both honest. (rel is dist-relative, e.g. blog/<slug>/index.html.)
+  if (/^blog[\\/].+[\\/]index\.html$/.test(rel) && !html.includes('class="tldr"')) {
+    fail('article has no Executive TL;DR plate (<div class="tldr">)');
+  }
 }
 
 walk(dist);

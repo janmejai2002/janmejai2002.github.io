@@ -13,6 +13,18 @@ heroImageDark: '../../assets/art/feynman-technique-prompt-engineering-mental-mod
 heroAlt: 'Twelve horizontal rules stacked like lines of text in a column. One rule in the middle is interrupted by a gap, and a thin red circle is drawn around that gap.'
 notionId: '3c7ced67-050a-81f5-9284-c435c7a9b6f8'
 ---
+<div class="tldr">
+
+## Executive TL;DR
+
+- Prompt engineering's job moved between 2023 and 2026: models with extended thinking now reason internally, so the skill is no longer scripting the reasoning ("think step by step") but deciding what the model needs to know, and in what order.
+- Feynman never wrote down a technique — the four-step method was assembled decades later, largely by writer Scott Young, from a pattern in how Feynman learned. A reverse-engineered process is exactly what you can hand to a model step by step.
+- Used as a prompting pattern, the four steps become a diagnostic loop: force a simple explanation, mark where it goes vague or leans on an undefined term, then prompt at that named gap — two or three passes surface more than one well-crafted prompt.
+- The soft spot in the model's plain-language version is the same weak point a skeptical client, a confused candidate, or an unmoved customer will find later. Finding it during drafting is the cheap version.
+- The loop tests the prompter too: you cannot identify the gap in an explanation of something you never understood yourself.
+
+</div>
+
 You already know the failure mode. You type a request into a chatbot, get back three paragraphs of confident, plausible, slightly-wrong output, and you can't tell if the model misunderstood you or if you never actually told it what you meant. That's not a syntax problem. It's a mental-model problem, and there's a fix for it that has nothing to do with AI at all.
 
 ## Why prompt engineering exists at all
