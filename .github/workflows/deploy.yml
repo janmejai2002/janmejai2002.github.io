@@ -51,6 +51,49 @@ jobs:
       - id: deploy
         uses: actions/deploy-pages@v4
 
+  # Tells IndexNow (Bing, Yandex, Seznam, Naver) which URLs this push actually
+  # changed, once the new build is live. Bing's index is what ChatGPT and
+  # Copilot retrieval read, so this is a citation move, not just an SEO one.
+  # The key is a static text file in site/public/ — no credential to expire.
+  # Only mapped routes are submitted, honouring the protocol's changed-URLs-only
+  # rule; the script itself never exits non-zero, and continue-on-error covers
+  # the rest — a search-engine ping must not be able to fail a deploy.
+  indexnow:
+    needs: deploy
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'push' }}
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Submit changed URLs
+        run: |
+          if ! git cat-file -e "${{ github.event.before }}" 2>/dev/null; then
+            echo "No usable before-SHA (new branch or force push) — skipping."
+            exit 0
+          fi
+          urls=$(git diff --name-only "${{ github.event.before }}" "${{ github.sha }}" | while read -r f; do
+            case "$f" in
+              site/src/content/blog/*.md) echo "https://janmejai2002.github.io/blog/$(basename "$f" .md)/";;
+              site/src/pages/index.astro) echo "https://janmejai2002.github.io/";;
+              site/src/pages/about.astro) echo "https://janmejai2002.github.io/about/";;
+              site/src/pages/projects.astro) echo "https://janmejai2002.github.io/projects/";;
+              site/src/pages/news/index.astro|site/src/data/news.json) echo "https://janmejai2002.github.io/news/";;
+              site/src/pages/status.astro|site/src/data/status.json) echo "https://janmejai2002.github.io/status/";;
+            esac
+          done | sort -u)
+          if [ -z "$urls" ]; then
+            echo "No route-mapped changes in this push — nothing to submit."
+            exit 0
+          fi
+          node site/scripts/indexnow.mjs $urls
+
   # Records in Notion what is actually live. Separated from deploy so a Notion
   # outage can never fail a deployment, and so it only ever runs after Pages
   # has finished serving the new build.
