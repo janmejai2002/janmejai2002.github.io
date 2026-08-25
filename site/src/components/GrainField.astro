@@ -1,0 +1,211 @@
+---
+/**
+ * A very low-contrast drifting grain field, drawn behind everything.
+ *
+ * Raw WebGL on purpose: this is ~5KB of shader against ~150KB for three.js,
+ * on a site whose whole point is that it loads fast. It reads the palette off
+ * the CSS custom properties rather than hardcoding hex, so it follows all three
+ * theme states (bare :root, prefers-color-scheme, and [data-theme]) the same way
+ * every other colour on the site does — see docs/HANDOFF.md §4.
+ *
+ * If WebGL is unavailable the canvas simply never paints and the fractal-noise
+ * overlay already on `body` carries the texture, exactly as before.
+ */
+---
+
+<canvas id="grain" aria-hidden="true"></canvas>
+
+<script>
+  const cvs = document.getElementById('grain') as HTMLCanvasElement | null;
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+  const gl =
+    cvs &&
+    (cvs.getContext('webgl', { alpha: true, antialias: false, depth: false }) as
+      | WebGLRenderingContext
+      | null);
+
+  if (cvs && gl) {
+    const VERT = `attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}`;
+
+    // fbm over value noise. Two tinted bands drift against each other at
+    // different rates so the field never visibly repeats.
+    const FRAG = `
+      precision mediump float;
+      uniform vec2  u_res;
+      uniform float u_t;
+      uniform vec3  u_a;
+      uniform vec3  u_b;
+      uniform float u_amp;
+
+      float hash(vec2 p){ return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453); }
+      float noise(vec2 p){
+        vec2 i=floor(p), f=fract(p);
+        vec2 u=f*f*(3.0-2.0*f);
+        return mix(mix(hash(i),hash(i+vec2(1,0)),u.x),
+                   mix(hash(i+vec2(0,1)),hash(i+vec2(1,1)),u.x),u.y);
+      }
+      float fbm(vec2 p){
+        float v=0.0, a=0.5;
+        for(int i=0;i<5;i++){ v+=a*noise(p); p*=2.02; a*=0.5; }
+        return v;
+      }
+
+      void main(){
+        vec2 uv = gl_FragCoord.xy / u_res.xy;
+        uv.x *= u_res.x / u_res.y;
+
+        float f1 = fbm(uv * 3.0 + vec2(u_t * 0.012, u_t * -0.008));
+        float f2 = fbm(uv * 5.0 - vec2(u_t * 0.009, u_t * 0.014) + f1);
+
+        float m = smoothstep(0.35, 0.85, mix(f1, f2, 0.55));
+        vec3 col = mix(u_a, u_b, m);
+
+        // Grain, so the field reads as paper rather than as a gradient.
+        float g = hash(gl_FragCoord.xy + fract(u_t)) * 0.06 - 0.03;
+        gl_FragColor = vec4(col + g, (m * 0.55 + 0.12) * u_amp);
+      }
+    `;
+
+    const compile = (type: number, src: string) => {
+      const s = gl.createShader(type)!;
+      gl.shaderSource(s, src);
+      gl.compileShader(s);
+      return s;
+    };
+
+    const prog = gl.createProgram()!;
+    gl.attachShader(prog, compile(gl.VERTEX_SHADER, VERT));
+    gl.attachShader(prog, compile(gl.FRAGMENT_SHADER, FRAG));
+    gl.linkProgram(prog);
+    gl.useProgram(prog);
+
+    const buf = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW);
+    const loc = gl.getAttribLocation(prog, 'p');
+    gl.enableVertexAttribArray(loc);
+    gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+
+    const uRes = gl.getUniformLocation(prog, 'u_res');
+    const uT = gl.getUniformLocation(prog, 'u_t');
+    const uA = gl.getUniformLocation(prog, 'u_a');
+    const uB = gl.getUniformLocation(prog, 'u_b');
+    const uAmp = gl.getUniformLocation(prog, 'u_amp');
+
+    gl.enable(gl.BLEND);
+    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+
+    // --- palette, read from CSS so the theme stays the single source of truth
+    const parse = (v: string): [number, number, number] => {
+      const s = v.trim();
+      const hex = s.match(/^#([0-9a-f]{6})$/i);
+      if (hex) {
+        const n = parseInt(hex[1], 16);
+        return [((n >> 16) & 255) / 255, ((n >> 8) & 255) / 255, (n & 255) / 255];
+      }
+      const rgb = s.match(/(\d+(?:\.\d+)?)/g);
+      if (rgb && rgb.length >= 3) {
+        return [+rgb[0] / 255, +rgb[1] / 255, +rgb[2] / 255];
+      }
+      return [0.5, 0.5, 0.5];
+    };
+
+    let amp = 1;
+    const readPalette = () => {
+      const cs = getComputedStyle(document.documentElement);
+      gl.uniform3fv(uA, parse(cs.getPropertyValue('--mizu')));
+      gl.uniform3fv(uB, parse(cs.getPropertyValue('--plum')));
+      // Dark mode needs a lighter hand — the same alpha that reads as texture on
+      // paper reads as haze on ink.
+      const dark =
+        document.documentElement.dataset.theme === 'dark' ||
+        (!document.documentElement.dataset.theme &&
+          window.matchMedia('(prefers-color-scheme: dark)').matches);
+      amp = dark ? 0.5 : 1;
+      gl.uniform1f(uAmp, amp);
+    };
+
+    const resize = () => {
+      const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+      const w = Math.floor(window.innerWidth * dpr);
+      const h = Math.floor(window.innerHeight * dpr);
+      if (cvs.width !== w || cvs.height !== h) {
+        cvs.width = w;
+        cvs.height = h;
+        gl.viewport(0, 0, w, h);
+        gl.uniform2f(uRes, w, h);
+      }
+    };
+
+    let raf = 0;
+    let last = 0;
+    const draw = (t: number) => {
+      // ~30fps is plenty for something moving this slowly, and halves the cost.
+      if (t - last > 33) {
+        last = t;
+        gl.uniform1f(uT, t / 1000);
+        gl.drawArrays(gl.TRIANGLES, 0, 3);
+      }
+      raf = requestAnimationFrame(draw);
+    };
+
+    const stop = () => {
+      if (raf) cancelAnimationFrame(raf);
+      raf = 0;
+    };
+    const start = () => {
+      if (!raf && !reduced.matches && !document.hidden) raf = requestAnimationFrame(draw);
+    };
+
+    const paintOnce = () => {
+      gl.uniform1f(uT, 0);
+      gl.drawArrays(gl.TRIANGLES, 0, 3);
+    };
+
+    resize();
+    readPalette();
+    paintOnce();
+    if (!reduced.matches) start();
+
+    window.addEventListener('resize', () => {
+      resize();
+      if (reduced.matches) paintOnce();
+    });
+    document.addEventListener('visibilitychange', () => (document.hidden ? stop() : start()));
+    reduced.addEventListener('change', () => {
+      if (reduced.matches) {
+        stop();
+        paintOnce();
+      } else start();
+    });
+
+    // Follow the theme toggle and the OS setting alike.
+    new MutationObserver(() => {
+      readPalette();
+      paintOnce();
+    }).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+      readPalette();
+      paintOnce();
+    });
+  }
+</script>
+
+<style>
+  #grain {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    pointer-events: none;
+    /* Texture, not decoration. It should be felt before it is noticed. */
+    opacity: 0.32;
+    mix-blend-mode: multiply;
+  }
+  :root[data-theme='dark'] #grain { mix-blend-mode: screen; opacity: 0.22; }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme='light']) #grain { mix-blend-mode: screen; opacity: 0.22; }
+  }
+</style>

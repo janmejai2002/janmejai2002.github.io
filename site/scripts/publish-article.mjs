@@ -26,6 +26,9 @@ const dryRun = process.argv.includes('--dry-run');
 // instead of a Zod error thrown halfway through an Astro build.
 const MAX_TITLE = 70;
 const MAX_DESC = 160;
+// Matches the `question` cap in src/content.config.ts. Enforced here so the
+// message is readable instead of a Zod error mid-build, same as the other two.
+const MAX_QUESTION = 120;
 
 const slugify = (s) =>
   s.toLowerCase().replace(/['']/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
@@ -126,11 +129,33 @@ for (const page of rows) {
     .filter(Boolean);
   const pubDate = p['Draft Completed']?.date?.start ?? new Date().toISOString().slice(0, 10);
 
+  // Editorial track. Notion holds it title-cased ("Systems"); the content
+  // schema wants the lowercase id. Anything unset or unrecognised falls back to
+  // systems, which is also the schema default — a missing Track must never be
+  // able to fail a build.
+  const TRACKS = ['systems', 'practice', 'demand'];
+  const rawTrack = (p['Track']?.select?.name ?? '').trim().toLowerCase();
+  const track = TRACKS.includes(rawTrack) ? rawTrack : 'systems';
+  if (rawTrack && !TRACKS.includes(rawTrack)) {
+    problems.push(`"${title}" — unknown Track "${rawTrack}"; filed under systems.`);
+  }
+
+  // The reader question the piece answers. Optional, capped to match the schema.
+  const question = plain(p['Reader Question']?.rich_text).trim();
+  if (question.length > MAX_QUESTION) {
+    problems.push(
+      `"${title}" — Reader Question is ${question.length} chars, max ${MAX_QUESTION}. Shorten it in Notion.`
+    );
+    continue;
+  }
+
   const frontmatter = [
     '---',
     `title: ${yaml(title)}`,
     `description: ${yaml(description)}`,
     `pubDate: ${pubDate}`,
+    `track: ${track}`,
+    ...(question ? [`question: ${yaml(question)}`] : []),
     ...(keywords.length ? ['keywords:', ...keywords.map((k) => `  - ${k}`)] : []),
     `readingTime: ${yaml(readingTime(words))}`,
     // The back-reference that lets close-loop.mjs find this row again.

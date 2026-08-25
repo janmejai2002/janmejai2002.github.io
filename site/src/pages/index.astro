@@ -6,14 +6,55 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
   (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
 );
 
-// Rotate the earth palette across cards so the index reads as a set, not a list.
-const accents = ['mizu', 'ochre', 'moss', 'plum', 'hanko', 'indigo'] as const;
+// The three editorial tracks. Each has its own research routine feeding the
+// Notion radar, and each answers questions for a different working audience.
+// Accents follow docs/ARTWORK.md: mizu for systems and process, ochre for money
+// and incentives, plum for measurement.
+const TRACKS = [
+  {
+    id: 'systems',
+    label: 'Systems',
+    accent: 'mizu',
+    ask: 'How does this behave when it is carrying real work?',
+    blurb:
+      'What the benchmarks leave out, what breaks in production, and what the research says past the abstract.',
+    cta: 'Open the machine',
+  },
+  {
+    id: 'practice',
+    label: 'Practice',
+    accent: 'ochre',
+    ask: 'What does this actually change about the work?',
+    blurb:
+      'AI inside advisory and professional work — where it earns its keep, where it quietly does not, and what that means for how you bill.',
+    cta: 'Look at the work',
+  },
+  {
+    id: 'demand',
+    label: 'Demand',
+    accent: 'plum',
+    ask: 'How do people find you when a model sits in between?',
+    blurb:
+      'Search, discovery and buying behaviour once an answer engine is the first thing your customer talks to.',
+    cta: 'Follow the demand',
+  },
+] as const;
+
+const counts = Object.fromEntries(
+  TRACKS.map((t) => [t.id, posts.filter((p) => p.data.track === t.id).length])
+);
+const accentOf = Object.fromEntries(TRACKS.map((t) => [t.id, t.accent]));
+
+const latest = posts.slice(0, 3);
+const dateOf = (d: Date) =>
+  d.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
 ---
 
 <Base
   title="Wabi Sabi — Applied AI, in practice"
   description="Wabi Sabi: an applied-AI journal on the systems that are never finished. What benchmarks leave out, what breaks in production, and what the research says past the abstract."
   section="Applied AI"
+  wide
 >
   <section class="hero fade-up d1">
     <span class="hanko">Wabi Sabi</span>
@@ -25,16 +66,9 @@ const accents = ['mizu', 'ochre', 'moss', 'plum', 'hanko', 'indigo'] as const;
     </p>
 
     <p>
-      That is this site. It is a blog and an evolving system rather than a finished thing —
-      I keep rebuilding it, and it documents itself as it goes. Three kinds of writing live
-      here: the <strong>AI projects</strong> I build and what it actually took to build them,
-      my own <strong>thoughts and ideas</strong> about where this is going, and
-      <strong>industry analysis</strong> of what is happening across the field.
-    </p>
-
-    <p>
-      I also red-team frontier models, which mostly means looking for the places they break.
-      That habit shapes most of what gets written here.
+      That is this site. Everything here starts as a question a working professional
+      actually asked about AI, and tries to answer it properly — with the sources shown,
+      and the parts that do not hold up left visible.
     </p>
   </section>
 
@@ -42,45 +76,162 @@ const accents = ['mizu', 'ochre', 'moss', 'plum', 'hanko', 'indigo'] as const;
     <span></span><span></span><span></span><span></span><span></span><span></span>
   </div>
 
-  <ul class="postlist fade-up d3">
-    {
-      posts.length === 0 ? (
-        <li class="empty">No posts published yet.</li>
-      ) : (
-        posts.map((post, n) => {
-          const a = accents[n % accents.length];
-          return (
-            <li class="scroll-reveal" style={`transition-delay:${Math.min(n, 6) * 60}ms`}>
-              <a
-                href={`/blog/${post.id.replace(/\.md$/, '')}/`}
-                style={`--accent:var(--${a});--tint:var(--wash-${a})`}
+  {
+    latest.length > 0 && (
+      <section class="latest fade-up d3" aria-labelledby="latest-h">
+        <div class="sec">
+          <h2 class="sec__t" id="latest-h">Latest</h2>
+          <span class="sec__r" aria-hidden="true" />
+        </div>
+        <ol class="latest__grid">
+          {latest.map((post, n) => {
+            const a = accentOf[post.data.track];
+            return (
+              <li
+                class="scroll-reveal"
+                style={`transition-delay:${n * 70}ms;--accent:var(--${a});--tint:var(--wash-${a})`}
               >
-                <div class="postlist__head">
-                  <time class="meta" datetime={post.data.pubDate.toISOString()}>
-                    {post.data.pubDate.toLocaleDateString('en-IN', {
-                      day: 'numeric',
-                      month: 'short',
-                      year: 'numeric',
-                    })}
-                  </time>
-                  {post.data.readingTime && <span class="meta">{post.data.readingTime}</span>}
-                </div>
-                <h2 class="postlist__title">{post.data.title}</h2>
-                <p class="postlist__desc">{post.data.description}</p>
-                <span class="postlist__go">
-                  Read
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-                    stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                    <path d="M5 12h14M13 6l6 6-6 6" />
-                  </svg>
-                </span>
-              </a>
-            </li>
-          );
-        })
-      )
-    }
-  </ul>
+                <a href={`/blog/${post.id.replace(/\.md$/, '')}/`}>
+                  <span class="latest__n" aria-hidden="true">
+                    {String(n + 1).padStart(2, '0')}
+                  </span>
+                  <span class="latest__track">{post.data.track}</span>
+                  <h3>{post.data.title}</h3>
+                  <p>{post.data.description}</p>
+                  <span class="latest__meta">
+                    <time datetime={post.data.pubDate.toISOString()}>
+                      {dateOf(post.data.pubDate)}
+                    </time>
+                    {post.data.readingTime && <span>{post.data.readingTime}</span>}
+                  </span>
+                </a>
+              </li>
+            );
+          })}
+        </ol>
+      </section>
+    )
+  }
+
+  <section class="tracks" aria-labelledby="tracks-h">
+    <div class="sec">
+      <h2 class="sec__t" id="tracks-h">Three questions</h2>
+      <span class="sec__r" aria-hidden="true"></span>
+    </div>
+
+    <div class="tracks__grid">
+      {
+        TRACKS.map((t, n) => (
+          <article
+            class="track scroll-reveal"
+            data-track-card={t.id}
+            style={`transition-delay:${n * 90}ms;--accent:var(--${t.accent});--tint:var(--wash-${t.accent})`}
+          >
+            {/* Each mark is a complete order with exactly one break in it. The
+                break closes on hover — the drawing finishes when you reach for
+                it. See docs/ARTWORK.md. */}
+            <div class="track__art" aria-hidden="true">
+              {t.id === 'systems' && (
+                <svg viewBox="0 0 120 120" fill="none">
+                  <circle class="ring" cx="60" cy="60" r="34" stroke="currentColor" stroke-width="1.5" pathLength="100" />
+                  <circle cx="60" cy="60" r="2.5" fill="currentColor" />
+                  <path class="tick" d="M60 12v10M108 60H98M60 108V98M12 60h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                </svg>
+              )}
+              {t.id === 'practice' && (
+                <svg viewBox="0 0 120 120" fill="none">
+                  <g class="grid" fill="currentColor">
+                    {[26, 47, 68, 89].map((y) =>
+                      [26, 47, 68, 89].map((x) => <circle cx={x} cy={y} r="2.5" />)
+                    )}
+                  </g>
+                  <circle class="stray" cx="89" cy="26" r="2.5" fill="currentColor" />
+                </svg>
+              )}
+              {t.id === 'demand' && (
+                <svg viewBox="0 0 120 120" fill="none">
+                  <g stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+                    <path class="arc a1" d="M34 96a34 34 0 0 1 52 0" pathLength="100" />
+                    <path class="arc a2" d="M22 78a52 52 0 0 1 76 0" pathLength="100" />
+                    <path class="arc a3" d="M10 60a68 68 0 0 1 100 0" pathLength="100" />
+                  </g>
+                  <circle cx="60" cy="103" r="3" fill="currentColor" />
+                </svg>
+              )}
+            </div>
+
+            <p class="track__ask">{t.ask}</p>
+            <h3 class="track__label">{t.label}</h3>
+            <p class="track__blurb">{t.blurb}</p>
+
+            <button type="button" class="track__cta" data-filter={t.id} aria-pressed="false">
+              <span>{counts[t.id] > 0 ? t.cta : 'Nothing here yet'}</span>
+              <span class="track__count">
+                {counts[t.id]} {counts[t.id] === 1 ? 'piece' : 'pieces'}
+              </span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M5 12h14M13 6l6 6-6 6" />
+              </svg>
+            </button>
+          </article>
+        ))
+      }
+    </div>
+  </section>
+
+  <section class="archive" id="writing" aria-labelledby="archive-h">
+    <div class="sec">
+      <h2 class="sec__t" id="archive-h">
+        <span data-archive-label>Everything</span>
+      </h2>
+      <span class="sec__r" aria-hidden="true"></span>
+      <button type="button" class="reset" data-filter="all" hidden>Show everything</button>
+    </div>
+
+    <ul class="postlist">
+      {
+        posts.length === 0 ? (
+          <li class="empty">No posts published yet.</li>
+        ) : (
+          posts.map((post, n) => {
+            const a = accentOf[post.data.track];
+            return (
+              <li
+                class="scroll-reveal"
+                data-track={post.data.track}
+                style={`transition-delay:${Math.min(n, 6) * 60}ms`}
+              >
+                <a
+                  href={`/blog/${post.id.replace(/\.md$/, '')}/`}
+                  style={`--accent:var(--${a});--tint:var(--wash-${a})`}
+                >
+                  <div class="postlist__head">
+                    <time class="meta" datetime={post.data.pubDate.toISOString()}>
+                      {dateOf(post.data.pubDate)}
+                    </time>
+                    {post.data.readingTime && <span class="meta">{post.data.readingTime}</span>}
+                  </div>
+                  {post.data.question && <p class="postlist__q">{post.data.question}</p>}
+                  <h3 class="postlist__title">{post.data.title}</h3>
+                  <p class="postlist__desc">{post.data.description}</p>
+                  <span class="postlist__go">
+                    Read
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                      stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <path d="M5 12h14M13 6l6 6-6 6" />
+                    </svg>
+                  </span>
+                </a>
+              </li>
+            );
+          })
+        )
+      }
+    </ul>
+
+    <p class="postlist__none" hidden>Nothing published in this track yet.</p>
+  </section>
 
   <section class="plug scroll-reveal">
     <div>
@@ -101,7 +252,66 @@ const accents = ['mizu', 'ochre', 'moss', 'plum', 'hanko', 'indigo'] as const;
   </section>
 </Base>
 
+<script>
+  // Track filter. Attribute toggling only — every card stays in the DOM so the
+  // page is complete for crawlers and for anyone without JS.
+  const cards = [...document.querySelectorAll<HTMLElement>('.postlist > li[data-track]')];
+  const ctas = [...document.querySelectorAll<HTMLButtonElement>('[data-filter]')];
+  const panels = [...document.querySelectorAll<HTMLElement>('[data-track-card]')];
+  const none = document.querySelector<HTMLElement>('.postlist__none');
+  const label = document.querySelector<HTMLElement>('[data-archive-label]');
+  const reset = document.querySelector<HTMLElement>('.reset');
+  const LABELS: Record<string, string> = {
+    systems: 'Systems',
+    practice: 'Practice',
+    demand: 'Demand',
+  };
+
+  const apply = (want: string, scroll = false) => {
+    let shown = 0;
+    for (const card of cards) {
+      const on = want === 'all' || card.dataset.track === want;
+      card.hidden = !on;
+      if (on) shown++;
+    }
+    for (const c of ctas) {
+      if (c.dataset.filter === 'all') continue;
+      c.setAttribute('aria-pressed', String(c.dataset.filter === want));
+    }
+    for (const p of panels) p.classList.toggle('is-on', p.dataset.trackCard === want);
+    if (label) label.textContent = LABELS[want] ?? 'Everything';
+    if (reset) reset.hidden = want === 'all';
+    if (none) none.hidden = shown > 0;
+
+    history.replaceState(null, '', want === 'all' ? location.pathname : `#${want}`);
+
+    if (scroll) {
+      document
+        .getElementById('writing')
+        ?.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
+    }
+  };
+
+  for (const c of ctas) {
+    c.addEventListener('click', () => {
+      const want = c.dataset.filter!;
+      // Clicking the open track again returns you to everything.
+      const already = c.getAttribute('aria-pressed') === 'true';
+      apply(already ? 'all' : want, !already && want !== 'all');
+    });
+  }
+
+  const initial = location.hash.replace('#', '');
+  if (initial && initial in LABELS) apply(initial);
+</script>
+
 <style>
+  /* `[hidden]` is 0,1,0 and loses to the author `display` rules below, so
+     anything hidden by the attribute has to opt out — see docs/HANDOFF.md §6. */
+  .postlist > li[hidden],
+  .postlist__none[hidden],
+  .reset[hidden] { display: none !important; }
+
   /* six-stripe rule: the palette, stated once, as a divider */
   .rulebar { display: flex; gap: 3px; margin: 2.5rem 0 0; }
   .rulebar span {
@@ -116,6 +326,126 @@ const accents = ['mizu', 'ochre', 'moss', 'plum', 'hanko', 'indigo'] as const;
   .rulebar span:nth-child(6) { background: var(--indigo); animation-delay: .5s; }
   @keyframes stretch { from { transform: scaleX(0); } to { transform: scaleX(1); } }
 
+  /* ---------- section headers ---------- */
+  .sec { display: flex; align-items: center; gap: 1rem; margin: 3.5rem 0 1.5rem; }
+  .sec__t {
+    margin: 0; font-size: .6875rem; font-weight: 800; letter-spacing: .18em;
+    text-transform: uppercase; color: var(--ink-faint); white-space: nowrap;
+  }
+  .sec__r { flex: 1; height: 1px; background: var(--border); }
+  .reset {
+    font: inherit; cursor: pointer; background: transparent; border: 1px solid var(--border);
+    color: var(--ink-soft); border-radius: 999px; padding: .4rem .85rem;
+    font-size: .625rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase;
+    transition: color .2s, border-color .2s;
+  }
+  .reset:hover { color: var(--ink); border-color: var(--ink); }
+
+  /* ---------- latest three ---------- */
+  .latest__grid {
+    list-style: none; margin: 0; padding: 0;
+    display: grid; gap: 1rem; grid-template-columns: repeat(3, 1fr);
+  }
+  .latest__grid a {
+    display: flex; flex-direction: column; height: 100%; gap: .5rem;
+    text-decoration: none; padding: 1.5rem; border-radius: 18px;
+    border: 1px solid var(--border); background: var(--card);
+    position: relative; overflow: hidden;
+    transition: transform .3s cubic-bezier(.2,.8,.2,1), border-color .3s, background .3s;
+  }
+  .latest__grid a::before {
+    content: ''; position: absolute; inset: 0; background: var(--tint);
+    opacity: 0; transition: opacity .3s;
+  }
+  .latest__grid a > * { position: relative; }
+  .latest__grid a:hover, .latest__grid a:focus-visible {
+    transform: translateY(-4px); border-color: var(--accent);
+  }
+  .latest__grid a:hover::before, .latest__grid a:focus-visible::before { opacity: 1; }
+  .latest__n {
+    font-size: 2.5rem; font-weight: 800; line-height: 1; letter-spacing: -.04em;
+    color: var(--accent); opacity: .28;
+  }
+  .latest__track {
+    font-size: .5625rem; font-weight: 800; letter-spacing: .18em; text-transform: uppercase;
+    color: var(--accent);
+  }
+  .latest__grid h3 {
+    margin: 0; font-size: 1.0625rem; font-weight: 800; line-height: 1.3; letter-spacing: -.015em;
+  }
+  .latest__grid p { margin: 0; font-size: .875rem; line-height: 1.6; color: var(--ink-soft); }
+  .latest__meta {
+    margin-top: auto; padding-top: .75rem; display: flex; gap: .75rem;
+    font-size: .625rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+
+  /* ---------- track panels ---------- */
+  .tracks__grid { display: grid; gap: 1rem; grid-template-columns: repeat(3, 1fr); }
+  .track {
+    display: flex; flex-direction: column; gap: .5rem;
+    padding: 1.75rem; border-radius: 20px;
+    border: 1px solid var(--border); background: var(--card);
+    position: relative; overflow: hidden;
+    transition: border-color .35s, transform .35s cubic-bezier(.2,.8,.2,1);
+  }
+  .track::before {
+    content: ''; position: absolute; inset: 0; background: var(--tint);
+    opacity: 0; transition: opacity .35s;
+  }
+  .track > * { position: relative; }
+  .track:hover, .track:focus-within { border-color: var(--accent); transform: translateY(-4px); }
+  .track:hover::before, .track:focus-within::before, .track.is-on::before { opacity: 1; }
+  .track.is-on { border-color: var(--accent); }
+
+  .track__art { color: var(--accent); width: 88px; height: 88px; margin-bottom: .5rem; }
+  .track__art svg { width: 100%; height: 100%; overflow: visible; }
+
+  /* The one deliberate break in each mark, closing on hover. */
+  .track .ring {
+    stroke-dasharray: 100; stroke-dashoffset: 22;
+    transition: stroke-dashoffset .7s cubic-bezier(.2,.8,.2,1);
+  }
+  .track:hover .ring, .track.is-on .ring { stroke-dashoffset: 0; }
+
+  .track .stray { transform: translate(-9px, 11px); transition: transform .6s cubic-bezier(.2,.8,.2,1); }
+  .track:hover .stray, .track.is-on .stray { transform: none; }
+  .track .grid circle:last-child { opacity: 0; }
+
+  .track .arc { stroke-dasharray: 100; stroke-dashoffset: 26; transition: stroke-dashoffset .7s cubic-bezier(.2,.8,.2,1); }
+  .track .a2 { transition-delay: .07s; }
+  .track .a3 { transition-delay: .14s; }
+  .track:hover .arc, .track.is-on .arc { stroke-dashoffset: 0; }
+
+  .track__ask {
+    margin: 0; font-size: .9375rem; font-weight: 700; line-height: 1.45; color: var(--accent);
+  }
+  .track__label {
+    margin: 0; font-size: 1.75rem; font-weight: 800; letter-spacing: -.03em; line-height: 1;
+  }
+  .track__blurb { margin: .25rem 0 0; font-size: .875rem; line-height: 1.65; color: var(--ink-soft); }
+
+  .track__cta {
+    font: inherit; cursor: pointer; margin-top: 1.25rem;
+    display: flex; align-items: center; gap: .5rem;
+    background: transparent; border: 0; padding: 0; text-align: left;
+    font-size: .6875rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase;
+    color: var(--accent);
+  }
+  .track__cta svg { width: 13px; height: 13px; transition: transform .3s; }
+  .track:hover .track__cta svg, .track__cta:focus-visible svg { transform: translateX(5px); }
+  .track__count {
+    margin-left: auto; color: var(--ink-faint); letter-spacing: .1em;
+    font-size: .5625rem;
+  }
+  .track__cta::after {
+    content: ''; position: absolute; inset: 0; border-radius: 20px;
+  }
+
+  .postlist__q {
+    margin: 0 0 .35rem; font-size: .8125rem; font-weight: 700; line-height: 1.45;
+    color: var(--accent, var(--mizu));
+  }
   .postlist__go {
     display: inline-flex; align-items: center; gap: .35rem; margin-top: 1rem;
     font-size: .625rem; font-weight: 800; letter-spacing: .15em; text-transform: uppercase;
@@ -125,6 +455,7 @@ const accents = ['mizu', 'ochre', 'moss', 'plum', 'hanko', 'indigo'] as const;
   .postlist__go svg { width: 12px; height: 12px; }
   .postlist a:hover .postlist__go,
   .postlist a:focus-visible .postlist__go { opacity: 1; transform: none; }
+  .postlist__none { margin: 1.5rem 0 0; font-size: .9375rem; color: var(--ink-soft); }
 
   .plug {
     margin-top: 3.5rem; padding: 1.75rem; border-radius: 18px;
@@ -144,15 +475,22 @@ const accents = ['mizu', 'ochre', 'moss', 'plum', 'hanko', 'indigo'] as const;
   .plug__cta:hover { transform: translateY(-2px); }
   .plug__cta:hover svg { transform: translateX(3px); }
 
+  @media (max-width: 60rem) {
+    .latest__grid, .tracks__grid { grid-template-columns: 1fr; }
+  }
   @media (max-width: 640px) {
     .postlist a { padding: 1.35rem 1.25rem; }
     .postlist__title { font-size: 1.2rem; }
     .plug { padding: 1.35rem; }
     .plug__cta { width: 100%; justify-content: center; }
+    .track { padding: 1.35rem; }
   }
 
   @media (prefers-reduced-motion: reduce) {
     .rulebar span { animation: none; transform: none; }
     .postlist__go { opacity: 1; transform: none; }
+    .latest__grid a, .track { transition: border-color .2s; }
+    .latest__grid a:hover, .track:hover { transform: none; }
+    .track .ring, .track .arc, .track .stray { transition: none; }
   }
 </style>

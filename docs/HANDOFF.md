@@ -5,6 +5,29 @@ Last updated 2026-08-25.
 
 ---
 
+## 0. Editorial spine — read this before writing or prompting anything
+
+Every article answers **a question a working professional actually asked about
+AI**. Not a topic, not a category — a question someone would type or ask a
+colleague. It lives in `Reader Question` on the Notion row and in `question:` in
+frontmatter, and it prints above the title and on the index card.
+
+Three **tracks**, each with its own audience, its own radar routine, and its own
+accent. A post's `track` decides which section of the index it files under.
+
+| Track | Accent | Reader | Radar routine |
+|---|---|---|---|
+| `systems` | `--mizu` | Engineers and builders | `daily-ai-seo-radar` (daily 07:10) |
+| `practice` | `--ochre` | Consultants, analysts, advisors — **not** engineers | `practice-radar` (Tue 07:14) |
+| `demand` | `--plum` | Marketers, growth, SEO, founders | `demand-radar` (Thu 07:11) |
+
+`track` defaults to `systems` in the content schema and in `publish-article.mjs`,
+so a missing Track can never fail a build — it files quietly under Systems
+instead. All 13 pre-existing radar rows were backfilled by hand (11 Systems,
+2 Practice: the "$500 Billion in AI" and India-takedown-rule ideas).
+
+---
+
 ## 1. What this is
 
 **Wabi Sabi** — an applied-AI blog and self-documenting system belonging to
@@ -57,10 +80,24 @@ The relation between the two pipeline databases is two-way (`Article` ↔
 Prompts live in `~/.claude/scheduled-tasks/<id>/SKILL.md`. **Each run starts
 cold**, so the prompt must be fully self-contained.
 
-- **`daily-ai-seo-radar`** — 07:10 daily. Discovers topics, writes a 100-word
-  pitch, files as `Radar Idea`.
+- **`daily-ai-seo-radar`** — 07:10 daily. Systems track. Discovers topics, writes
+  a 100-word pitch, files as `Radar Idea`.
+- **`practice-radar`** — Tue 07:14. Practice track. 2 ideas max, and explicitly
+  told a quiet week is a valid result.
+- **`demand-radar`** — Thu 07:11. Demand track. Same shape.
 - **`ai-article-writer`** — every 4h. Picks up rating 4/5, promotes, researches,
   drafts, sets `Draft Ready`. Max 2 per run. **Forbidden from publishing.**
+
+All three radars write `Track` and `Reader Question`. The writer carries both
+through to Article Production, and `publish-article.mjs` reads them into
+frontmatter.
+
+**The writer routine was hardened on 2026-08-25** after a fact-check found
+statistics attributed to pages that did not contain them. It now requires a
+**claim ledger** (claim, URL, and the source sentence quoted verbatim — no row,
+no draft) and a **Step 4.5 verification pass** over the finished text. The
+lesson that drove it: where the routine cited a primary source it was accurate;
+every error traced to an SEO aggregator.
 
 Skills used: `seo-topic-research` (forbids inventing search volume, difficulty,
 CPC or rank), `viral-hooks`, `storytelling`, and `anti-ai-writing` as a
@@ -100,6 +137,20 @@ and that row will never be marked Published.
 `site/src/styles/global.css`. Ported from `wabi-sabi-template.html` at repo root.
 Deliberately **not** Tailwind — the template used the CDN script, which is
 render-blocking and bad for SEO.
+
+**Width.** `.shell` caps at 96rem and `main` at 80rem; composition pages pass
+`wide` to `Base.astro` to drop the column entirely (`main--wide`). Article prose
+stays at `--measure: 44rem` — **do not widen it**, that limit is readability, not
+habit. The old 80/64rem pair left a third of a laptop screen empty.
+
+**`GrainField.astro`** paints a drifting fbm grain field behind everything: ~5KB
+of raw WebGL, no three.js, reading the palette off the CSS custom properties so
+it tracks all three theme states. 30fps cap, pauses on tab hide, one static frame
+under reduced-motion, and silently absent if WebGL is missing.
+
+**Motion tokens.** `--ease` and `--dur` / `--dur-fast` in `global.css`. Use them
+rather than inventing a curve — the point is that nothing moves at a speed
+nothing else moves at.
 
 **Six earths** (dusty, never neon): `--mizu` teal, `--hanko` seal red, `--moss`,
 `--ochre`, `--plum`, `--indigo`, each with a `--wash-*` tint. Ground `--paper`,
@@ -211,11 +262,15 @@ reporting a defect. And if something is unverified, say so.
 
 **Needs attention first**
 
-- **The two most recent articles were never fact-checked by a human.** *The
-  Agentic Shift* and *Gemini 3.7 Flash / DeepSeek V4* went from Approved to live
-  in about fifteen minutes on 2026-08-25. Every claim has a linked source from
-  the writer routine, but nobody has read them against those sources. That is the
-  gap the new automation opens up.
+- **Motion is unverified.** The Browser pane never fires `requestAnimationFrame`
+  (no compositing — see §6), so the grain shader's drift, the track-card mark
+  animations and every CSS transition are correct by construction but have not
+  been seen running. Open `npm run dev` in a real browser and look.
+- **`/projects/` and `/news/` have not had the UI pass** that the index, the
+  article template and the About timeline got on 2026-08-25.
+- **Practice and Demand have no published posts yet.** The index only renders a
+  track's filter chip once that track has content, so the homepage currently
+  shows all three panels but the archive filter is effectively single-track.
 - **Page headings still say the old nav words.** `/news/` is titled "Interview
   News Archive" and `/projects/` says "Projects", while the tabs now read
   BSchool and Setups. Renaming the headings is a content decision, so it was left.

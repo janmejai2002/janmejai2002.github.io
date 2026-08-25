@@ -136,7 +136,10 @@ body {
 a { color: inherit; }
 img { max-width: 100%; height: auto; }
 
-.shell { width: 100%; max-width: 80rem; display: flex; position: relative; }
+/* 96rem, not 80: on a 1900px laptop the old cap left roughly a third of the
+   screen empty. Prose is still held to --measure further down — that limit is
+   readability and stays put. This one was only ever habit. */
+.shell { width: 100%; max-width: 96rem; display: flex; position: relative; }
 
 /* ---------- Left rail ---------- */
 .rail {
@@ -163,7 +166,10 @@ img { max-width: 100%; height: auto; }
 }
 .vertical--foot { margin-top: auto; font-size: .625rem; letter-spacing: .15em; }
 
-main { flex: 1; padding: 2rem var(--gutter) 6rem; max-width: 64rem; min-width: 0; }
+main { flex: 1; padding: 2rem var(--gutter) 6rem; max-width: 80rem; min-width: 0; }
+/* Pages whose content is composition rather than prose (the index) opt out of
+   the column entirely and use the whole shell. */
+main.main--wide { max-width: none; }
 @media (min-width: 768px) { :root { --gutter: 4rem; } }
 
 /* ---------- Nav ---------- */
@@ -236,18 +242,43 @@ main { flex: 1; padding: 2rem var(--gutter) 6rem; max-width: 64rem; min-width: 0
 }
 
 /* ---------- Motion ---------- */
-@keyframes fadeUp { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
-.fade-up { animation: fadeUp .7s cubic-bezier(.2,.8,.2,1) both; }
-.d1 { animation-delay: .06s; } .d2 { animation-delay: .13s; } .d3 { animation-delay: .2s; }
-.d4 { animation-delay: .27s; } .d5 { animation-delay: .34s; }
+/* One easing curve and two durations for the whole site, so nothing moves at a
+   speed nothing else moves at. Longer and gentler than the first pass — motion
+   here should feel like paper settling, not like a UI reacting. */
+:root { --ease: cubic-bezier(.22,.75,.24,1); --dur: .9s; --dur-fast: .35s; }
+
+@keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+.fade-up { animation: fadeUp var(--dur) var(--ease) both; }
+.d1 { animation-delay: .08s; } .d2 { animation-delay: .17s; } .d3 { animation-delay: .26s; }
+.d4 { animation-delay: .35s; } .d5 { animation-delay: .44s; }
 
 .scroll-reveal {
-  opacity: 0; transform: translateY(14px); filter: blur(3px);
-  transition: opacity .7s cubic-bezier(.2,.8,.2,1),
-              transform .7s cubic-bezier(.2,.8,.2,1),
-              filter .7s ease;
+  opacity: 0; transform: translateY(12px); filter: blur(2px);
+  transition: opacity var(--dur) var(--ease),
+              transform var(--dur) var(--ease),
+              filter var(--dur) ease;
 }
 .scroll-reveal.revealed { opacity: 1; transform: none; filter: none; }
+
+/* ---------- Article question ---------- */
+/* The reader's question, printed above the title. It is the entry point, so it
+   gets the track accent and sits tight against the heading. */
+.article__q {
+  margin: 0 0 .5rem; font-size: 1rem; font-weight: 700; line-height: 1.45;
+  color: var(--accent, var(--mizu)); max-width: 34rem;
+}
+@media (min-width: 768px) { .article__q { font-size: 1.0625rem; } }
+
+/* The track badge doubles as a link back to that track on the index, and wears
+   that track's accent rather than the seal red — the colour is carrying
+   information here, so it has to match the index and the artwork. */
+.hanko--link {
+  text-decoration: none; background: none;
+  color: var(--accent, var(--hanko));
+  border-color: color-mix(in srgb, var(--accent, var(--hanko)) 45%, transparent);
+  transition: opacity var(--dur-fast) var(--ease);
+}
+.hanko--link:hover { opacity: .7; }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {

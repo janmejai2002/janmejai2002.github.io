@@ -15,6 +15,8 @@ const {
   heroAlt,
   heroCaption,
   ogImage,
+  track,
+  question,
 } = post.data;
 
 const dateLabel = pubDate.toLocaleDateString('en-IN', {
@@ -22,6 +24,13 @@ const dateLabel = pubDate.toLocaleDateString('en-IN', {
   month: 'long',
   year: 'numeric',
 });
+
+// Mirrors the track table on the index. Accents follow docs/ARTWORK.md.
+const TRACK = {
+  systems: { label: 'Systems', accent: 'mizu' },
+  practice: { label: 'Practice', accent: 'ochre' },
+  demand: { label: 'Demand', accent: 'plum' },
+}[track];
 
 // Social cards are a fixed 1200x630 crop. Deriving it from the hero at build
 // time means an author never has to hand-make a second image, and the card is
@@ -41,15 +50,22 @@ const social = card
   keywords={keywords}
   image={social?.src}
   imageAlt={heroAlt}
+  section={TRACK.label}
   progress={true}
 >
-  <article class="article fade-up d2">
+  <article class="article fade-up d2" style={`--accent:var(--${TRACK.accent});--tint:var(--wash-${TRACK.accent})`}>
     <header>
       <div class="postlist__head" style="margin-bottom:1.5rem">
-        <span class="hanko">Applied AI</span>
+        <a class="hanko hanko--link" href={`/#${track}`}>{TRACK.label}</a>
         {readingTime && <span class="meta">{readingTime}</span>}
         <time class="meta" datetime={pubDate.toISOString()}>{dateLabel}</time>
       </div>
+
+      {
+        /* The question the piece exists to answer. Printed above the title
+           because it is the reader's entry point, not a subtitle. */
+        question && <p class="article__q">{question}</p>
+      }
 
       <h1 set:html={title} />
 

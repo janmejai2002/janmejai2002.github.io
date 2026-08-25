@@ -390,6 +390,10 @@ const papers = [
   .tl::before {
     content: ''; position: absolute; left: 5px; top: .5rem; bottom: .5rem; width: 1px;
     background: var(--border);
+    /* Fade the rail out at both ends so it reads as a thread rather than a
+       hard-stopped rule. */
+    -webkit-mask-image: linear-gradient(180deg, transparent, #000 4rem, #000 calc(100% - 4rem), transparent);
+    mask-image: linear-gradient(180deg, transparent, #000 4rem, #000 calc(100% - 4rem), transparent);
   }
   @media (min-width: 620px) { .tl::before { left: 7.5rem; } }
   .tl > li { position: relative; padding: 0 0 1.75rem 1.75rem; }
@@ -400,13 +404,27 @@ const papers = [
     content: ''; position: absolute; left: 0; top: .42rem;
     width: 11px; height: 11px; border-radius: 999px;
     background: var(--paper); border: 2.5px solid var(--accent); z-index: 1;
+    transition: transform .45s cubic-bezier(.2,.8,.2,1), box-shadow .45s;
+  }
+  /* The marker sits on the rail, so the entry it belongs to lights it up. */
+  .tl > li:hover::before {
+    transform: scale(1.25);
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 16%, transparent);
   }
   @media (min-width: 620px) { .tl > li::before { left: calc(7.5rem - 5px); } }
   .tl__when {
     font-size: .625rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase;
     color: var(--accent); display: block; margin-bottom: .35rem;
   }
-  @media (min-width: 620px) { .tl__when { text-align: right; margin-bottom: 0; padding-top: .12rem; } }
+  @media (min-width: 620px) {
+    .tl__when {
+      text-align: right; margin-bottom: 0; padding-top: .12rem;
+      /* The marker is centred on the rail at 7.5rem and is 11px wide, so the
+         date has to stop short of it — without this the dot clips the last
+         character and "2026" reads as "202". */
+      padding-right: .95rem;
+    }
+  }
   .tl__body h3 { font-size: .95rem; font-weight: 700; margin: 0 0 .2rem; color: var(--ink); }
   .tl__where { font-size: .75rem; color: var(--ink-faint); font-weight: 600; }
   .tl__body p { margin: .55rem 0 0; font-size: .875rem; line-height: 1.62; color: var(--ink-soft); }
