@@ -11,10 +11,11 @@ keywords:
   - stateless MCP migration
   - MCP production deployment
 readingTime: '8 min read'
+heroImage: '../../assets/art/mcp-stateless-spec-2026-migration-guide-light.webp'
+heroImageDark: '../../assets/art/mcp-stateless-spec-2026-migration-guide-dark.webp'
+heroAlt: 'A thick horizontal bar runs in from the left and stops at a short red vertical mark. Beyond it the line continues only as a faint dashed rule, along which four evenly spaced teal rings sit, each holding a single dot at its centre.'
 notionId: '3c7ced67-050a-81d6-bf44-efd702510d15'
 ---
-# MCP Just Deleted Its Own Session Model. Here's What Changes.
-
 On July 28, 2026, the Model Context Protocol deleted the one thing every production MCP server was built around: the session.
 
 No `initialize` handshake. No `notifications/initialized`. No `Mcp-Session-Id` header. If you run an MCP server behind sticky routing, or you built a session store because a tutorial told you to, the ground moved under you and most of the coverage since has been too busy explaining the changelog to tell you what to do about it.

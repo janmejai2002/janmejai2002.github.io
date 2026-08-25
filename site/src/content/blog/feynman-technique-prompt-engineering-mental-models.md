@@ -8,10 +8,11 @@ keywords:
   - Mental Models
   - AI Education
 readingTime: '7 min read'
+heroImage: '../../assets/art/feynman-technique-prompt-engineering-mental-models-light.webp'
+heroImageDark: '../../assets/art/feynman-technique-prompt-engineering-mental-models-dark.webp'
+heroAlt: 'Twelve horizontal rules stacked like lines of text in a column. One rule in the middle is interrupted by a gap, and a thin red circle is drawn around that gap.'
 notionId: '3c7ced67-050a-81f5-9284-c435c7a9b6f8'
 ---
-# Applying the Feynman Technique to Prompt Engineering
-
 You already know the failure mode. You type a request into a chatbot, get back three paragraphs of confident, plausible, slightly-wrong output, and you can't tell if the model misunderstood you or if you never actually told it what you meant. That's not a syntax problem. It's a mental-model problem, and there's a fix for it that has nothing to do with AI at all.
 
 ## Why prompt engineering exists at all
