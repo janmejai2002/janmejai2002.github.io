@@ -12,7 +12,6 @@ readingTime: '8 min read'
 heroImage: '../../assets/art/the-95-percent-number-light.webp'
 heroImageDark: '../../assets/art/the-95-percent-number-dark.webp'
 heroAlt: 'A heavy circular arc covers almost all of a circle but stops just short of closing. At the centre, where an origin point would be, there is only a faint dashed cross and an empty dashed square. A measuring scale down the left side has its lowest mark faded almost to nothing.'
-heroCaption: 'The arc is measured precisely. The centre it was measured from was never marked.'
 ---
 
 <div class="tldr">

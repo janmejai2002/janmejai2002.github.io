@@ -16,11 +16,12 @@ export interface Props {
 }
 const { progress = false, section, ...seo } = Astro.props;
 const path = Astro.url.pathname;
+// Labels only — the routes stay put so nothing already published breaks.
 const nav = [
-  { href: '/', label: 'Index' },
-  { href: '/projects/', label: 'Projects' },
-  { href: '/news/', label: 'Archive' },
-  { href: '/about/', label: 'About' },
+  { href: '/', label: 'Blog' },
+  { href: '/projects/', label: 'Setups' },
+  { href: '/news/', label: 'BSchool' },
+  { href: '/about/', label: 'Me' },
 ];
 const year = new Date().getFullYear();
 ---

@@ -276,7 +276,6 @@ main { flex: 1; padding: 2rem var(--gutter) 6rem; max-width: 64rem; min-width: 0
   font-weight: 800; font-size: .8rem; color: var(--mizu); flex-shrink: 0;
 }
 .byline__name { font-weight: 700; font-size: .875rem; }
-.byline__role { font-size: .625rem; text-transform: uppercase; letter-spacing: .15em; color: var(--ink-faint); font-weight: 700; }
 
 .body { font-size: 1.0625rem; line-height: 1.78; color: var(--ink-soft); }
 @media (min-width: 768px) { .body { font-size: 1.125rem; } }
@@ -368,17 +367,96 @@ main { flex: 1; padding: 2rem var(--gutter) 6rem; max-width: 64rem; min-width: 0
 .diagram svg { display: block; width: 100%; height: auto; min-width: 42rem; }
 .diagram figcaption { padding-top: .25rem; }
 
+/* ---------- Executive TL;DR ----------
+   A plate, not a callout. In light it is a deep navy card; in dark it sinks
+   below the page rather than flipping to a washed-out light block, which is
+   what a naive var(--ink)/var(--paper) inversion produced. Its own tokens, so
+   both themes are a deliberate choice rather than a by-product. */
+:root {
+  --tldr-bg: #141E2E;
+  --tldr-ink: #F6F4EF;
+  --tldr-dim: rgba(246, 244, 239, 0.60);
+  --tldr-hair: rgba(246, 244, 239, 0.16);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --tldr-bg: #0D1015;
+    --tldr-ink: #E9E5DC;
+    --tldr-dim: rgba(233, 229, 220, 0.56);
+    --tldr-hair: rgba(233, 229, 220, 0.13);
+  }
+}
+:root[data-theme='dark'] {
+  --tldr-bg: #0D1015;
+  --tldr-ink: #E9E5DC;
+  --tldr-dim: rgba(233, 229, 220, 0.56);
+  --tldr-hair: rgba(233, 229, 220, 0.13);
+}
+
 .tldr {
-  background: var(--ink); color: var(--paper); padding: 1.5rem;
-  border-radius: 16px; margin: 0 0 2.5rem; border-left: 4px solid var(--mizu);
+  position: relative;
+  overflow: hidden;
+  background: var(--tldr-bg);
+  color: var(--tldr-ink);
+  padding: 1.6rem 1.75rem 1.75rem;
+  margin: 0 0 2.75rem;
+  /* One corner left square. The whole site argues nothing is finished. */
+  border-radius: 18px 18px 18px 4px;
+  border-left: 3px solid var(--mizu);
+  box-shadow: 0 1px 2px var(--shadow), 0 12px 28px -18px var(--shadow);
 }
+
+/* Ensō watermark, clipped by the card edge. Tokenised, so it re-skins. */
+.tldr::after {
+  content: '';
+  position: absolute;
+  right: -78px; bottom: -92px;
+  width: 232px; height: 232px;
+  border: 14px solid var(--mizu);
+  border-radius: 50%;
+  border-right-color: transparent;
+  opacity: 0.09;
+  pointer-events: none;
+}
+
 .tldr h2 {
-  font-size: .6875rem !important; font-weight: 700; text-transform: uppercase;
-  letter-spacing: .15em; opacity: .6; margin: 0 0 .75rem !important; color: var(--paper) !important;
+  display: flex; align-items: center; gap: .9rem;
+  font-size: .6875rem !important; font-weight: 800;
+  text-transform: uppercase; letter-spacing: .18em;
+  margin: 0 0 1.15rem !important;
+  color: var(--mizu) !important;
 }
-.tldr ul { margin: 0; padding-left: 1.1rem; font-size: .875rem; line-height: 1.7; }
-.tldr li { margin-bottom: .5rem; }
-.tldr strong { color: var(--paper); }
+.tldr h2::after {
+  content: ''; flex: 1; height: 1px; background: var(--tldr-hair);
+}
+
+.tldr ul {
+  margin: 0; padding-left: 0; list-style: none;
+  font-size: .9rem; line-height: 1.72; color: var(--tldr-dim);
+  position: relative; z-index: 1;
+}
+.tldr li { margin-bottom: .85rem; padding-left: 1.35rem; position: relative; }
+.tldr li:last-child { margin-bottom: 0; }
+/* A small tilted square instead of a disc — the same mark the rail uses. */
+.tldr li::before {
+  content: ''; position: absolute; left: 0; top: .58em;
+  width: 6px; height: 6px; background: var(--mizu);
+  transform: rotate(45deg); opacity: .85;
+}
+.tldr strong { color: var(--tldr-ink); font-weight: 700; }
+.tldr em { color: var(--tldr-ink); }
+/* The body's code chip assumes a paper ground and disappears on this one. */
+.tldr code {
+  background: var(--tldr-hair); border-color: transparent;
+  color: var(--tldr-ink); font-size: .84em;
+}
+.tldr a { color: var(--mizu); background-image: none; text-decoration: underline; }
+.tldr a:hover { color: var(--tldr-ink); background: none; }
+
+@media (max-width: 34rem) {
+  .tldr { padding: 1.35rem 1.25rem 1.4rem; }
+  .tldr::after { right: -96px; bottom: -110px; }
+}
 
 /* ---------- Hero ---------- */
 .hero { padding: 3.5rem 0 2.5rem; max-width: var(--measure); }

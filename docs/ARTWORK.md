@@ -91,6 +91,10 @@ human and for anything contested, `--plum` for measurement and statistics,
   with a required `heroAlt`.
 - Alt text describes **what is drawn**, not what it means. The meaning is the
   article's job.
+- **No caption on artwork.** `heroCaption` exists for a real caption — a source
+  line, a photographer credit — never to explain the drawing. A caption that
+  says what the shape stands for is explaining the joke; if the piece needs
+  that, the piece is wrong.
 
 ---
 

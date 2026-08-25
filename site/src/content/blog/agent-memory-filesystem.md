@@ -12,7 +12,6 @@ readingTime: '9 min read'
 heroImage: '../../assets/art/agent-memory-filesystem-light.webp'
 heroImageDark: '../../assets/art/agent-memory-filesystem-dark.webp'
 heroAlt: 'A hairline rule splits the frame. To its left, dozens of small circles drift with no structure. To its right, a regular four-by-three grid of cards, each ruled with two short lines, except one position which is drawn only as a dashed outline.'
-heroCaption: 'A cloud you search, and a shelf you read. The dashed card is the thing retrieval could not find.'
 ---
 
 <div class="tldr">

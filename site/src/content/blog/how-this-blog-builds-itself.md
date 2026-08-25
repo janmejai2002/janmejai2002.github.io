@@ -12,7 +12,6 @@ readingTime: '12 min read'
 heroImage: '../../assets/art/how-this-blog-builds-itself-light.webp'
 heroImageDark: '../../assets/art/how-this-blog-builds-itself-dark.webp'
 heroAlt: 'A ring of sixty evenly spaced tick marks enclosed by a single heavy arc that runs almost the whole way round. The arc breaks at the lower left, and a short, slightly crooked red stroke sits in the gap.'
-heroCaption: 'The loop runs on its own. The red mark is the one place a person touches it.'
 ---
 
 <div class="tldr">
