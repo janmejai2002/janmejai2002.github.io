@@ -199,10 +199,18 @@ const slug = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-');
     font: inherit; font-size: .625rem; font-weight: 800; letter-spacing: .09em;
     text-transform: uppercase; padding: .38rem .75rem; border-radius: 999px;
     border: 1.5px solid var(--border); background: transparent; color: var(--ink-soft);
-    cursor: pointer; transition: all .22s cubic-bezier(.2,.8,.2,1);
+    cursor: pointer;
+    /* Was `all`, which animated layout properties too and made a 221-chip
+       filter feel mushy. Name the three that actually change. */
+    transition: color var(--dur-fast) var(--ease),
+                border-color var(--dur-fast) var(--ease),
+                background var(--dur-fast) var(--ease);
     display: inline-flex; align-items: center; gap: .4rem;
   }
-  .chip:hover { border-color: var(--accent, var(--ink)); color: var(--ink); transform: translateY(-1px); }
+  .chip:hover {
+    border-color: var(--accent, var(--ink)); color: var(--ink);
+    background: color-mix(in srgb, var(--accent, var(--ink)) 8%, transparent);
+  }
   .chip__n { font-variant-numeric: tabular-nums; opacity: .5; }
   .chip.is-on {
     background: var(--accent, var(--ink)); border-color: var(--accent, var(--ink));
@@ -221,10 +229,16 @@ const slug = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-');
   .field input, .field select {
     font: inherit; font-size: .875rem; width: 100%;
     padding: .55rem .8rem; border: 1px solid var(--border); border-radius: 10px;
-    background: var(--card); color: var(--ink); transition: border-color .25s;
+    background: var(--card); color: var(--ink);
+    transition: border-color var(--dur-fast) var(--ease),
+                box-shadow var(--dur-fast) var(--ease);
   }
   .field input { padding-left: 2rem; }
   .field input:hover, .field select:hover { border-color: var(--ink-faint); }
+  .field input:focus-visible, .field select:focus-visible {
+    outline: none; border-color: var(--mizu);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--mizu) 18%, transparent);
+  }
 
   .tally {
     margin: .65rem 0 0; font-size: .625rem; font-weight: 700;
@@ -278,20 +292,23 @@ const slug = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-');
     position: relative; display: flex; flex-direction: column; overflow: hidden;
     background: var(--card); border: 1px solid var(--border);
     border-radius: 16px; padding: 1.2rem 1.3rem 1.1rem;
-    transition: transform .3s cubic-bezier(.2,.8,.2,1), box-shadow .3s, border-color .3s;
+    transition: transform var(--dur-fast) var(--ease),
+                box-shadow var(--dur-fast) var(--ease),
+                border-color var(--dur-fast) var(--ease);
   }
   /* the tint bleeds in from the top-left corner, like ink on paper */
   .card::before {
     content: ''; position: absolute; inset: 0;
     background: radial-gradient(120% 90% at 0% 0%, var(--tint), transparent 62%);
-    opacity: .85; pointer-events: none; transition: opacity .3s;
+    opacity: .85; pointer-events: none;
+    transition: opacity var(--dur-fast) var(--ease);
   }
   /* accent spine, grows on hover */
   .card::after {
     content: ''; position: absolute; left: 0; top: 1.2rem; bottom: 1.2rem;
     width: 3px; border-radius: 0 3px 3px 0; background: var(--accent);
     transform: scaleY(.32); transform-origin: top;
-    transition: transform .4s cubic-bezier(.2,.8,.2,1);
+    transition: transform .55s var(--ease);
   }
   .card:hover {
     transform: translateY(-4px);
@@ -375,6 +392,18 @@ const slug = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-');
       -webkit-overflow-scrolling: touch;
       scrollbar-width: none;
       margin-inline: calc(var(--gutter) * -1); padding-inline: var(--gutter);
+      /* The scrollbar is hidden, so nothing signalled that six categories
+         continue past the edge. Fade the trailing edge instead — and let the
+         mask fall away once you reach the end, so it reads as an affordance
+         rather than as decoration. */
+      -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - 2.5rem), transparent);
+      mask-image: linear-gradient(90deg, #000 calc(100% - 2.5rem), transparent);
+      transition: -webkit-mask-image var(--dur-fast) var(--ease),
+                  mask-image var(--dur-fast) var(--ease);
+    }
+    .chips[data-scroll-end] {
+      -webkit-mask-image: none;
+      mask-image: none;
     }
     .chips::-webkit-scrollbar { display: none; }
     .chip {
@@ -398,6 +427,20 @@ const slug = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-');
   const chips = [...document.querySelectorAll<HTMLButtonElement>('.chip')];
   const days = [...archive.querySelectorAll<HTMLElement>('.day')];
   const cards = [...archive.querySelectorAll<HTMLElement>('.card')];
+
+  // Drop the trailing fade on the chip strip once it is scrolled to the end,
+  // so the hint disappears when there is nothing left to hint at. Mobile only —
+  // above 640px the strip wraps and never scrolls.
+  const chipStrip = document.querySelector<HTMLElement>('.chips');
+  if (chipStrip) {
+    const syncFade = () => {
+      const atEnd = chipStrip.scrollLeft + chipStrip.clientWidth >= chipStrip.scrollWidth - 2;
+      chipStrip.toggleAttribute('data-scroll-end', atEnd);
+    };
+    chipStrip.addEventListener('scroll', syncFade, { passive: true });
+    window.addEventListener('resize', syncFade);
+    syncFade();
+  }
 
   let cat = 'all';
 
