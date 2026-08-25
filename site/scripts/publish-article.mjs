@@ -17,6 +17,7 @@ import { writeFileSync, existsSync, mkdirSync, readdirSync, readFileSync } from 
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { api, queryAll, blocks, toMarkdown, plain, inline, PRODUCTION_DS } from './lib/notion.mjs';
+import { fallbackArt } from './lib/fallback-art.mjs';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const BLOG = join(here, '..', 'src', 'content', 'blog');
@@ -68,6 +69,55 @@ function liftArtworkBrief(markdown) {
     .trim();
   const rest = [...lines.slice(0, start), ...lines.slice(end)].join('\n').trimEnd();
   return { markdown: rest + '\n', brief: brief || null };
+}
+
+/**
+ * Lifts a trailing "## Artwork SVG" section out of the article body.
+ *
+ * This is how routine-authored artwork travels: the artwork routine reads the
+ * draft in Notion, draws the plate per docs/ARTWORK.md, and files the SVG into
+ * the page itself as an `Alt:` line plus a code block under an H2 reading
+ * exactly `Artwork SVG`. Carrying it through Notion means it needs no new
+ * credential and — unlike anything committed to the PR branch — it survives
+ * the publish poll, which regenerates the branch from Notion every half hour.
+ *
+ * Returns { markdown, svg, alt }. svg/alt are null when the section is absent
+ * or unusable; the caller falls back to deterministic art and says so.
+ */
+function liftArtworkSvg(markdown, warn) {
+  const lines = markdown.split('\n');
+  const start = lines.findIndex((l) => /^##\s+Artwork SVG\s*$/i.test(l));
+  if (start === -1) return { markdown, svg: null, alt: null };
+
+  let end = lines.length;
+  for (let i = start + 1; i < lines.length; i++) {
+    if (/^##\s+/.test(lines[i])) {
+      end = i;
+      break;
+    }
+  }
+
+  const section = lines.slice(start + 1, end).join('\n');
+  const rest = [...lines.slice(0, start), ...lines.slice(end)].join('\n').trimEnd() + '\n';
+
+  const alt = section.match(/^Alt:\s*(.+)$/m)?.[1]?.trim() || null;
+  const svg = section.match(/^```[^\n]*\n([\s\S]*?)\n```/m)?.[1]?.trim() || null;
+
+  // Validate here, with a reason, rather than letting make-images throw later
+  // inside a CI run nobody is watching.
+  const reasons = [];
+  if (!svg || !svg.startsWith('<svg')) reasons.push('no <svg> code block');
+  else {
+    if (!svg.includes('{{paper}}')) reasons.push('no {{paper}} ground token');
+    if (/(?:fill|stroke)="#/i.test(svg)) reasons.push('hardcodes a hex colour');
+  }
+  if (!alt) reasons.push('no "Alt:" line');
+
+  if (reasons.length) {
+    warn(`Artwork SVG section present but unusable (${reasons.join('; ')}) — using fallback art.`);
+    return { markdown: rest, svg: null, alt: null };
+  }
+  return { markdown: rest, svg, alt };
 }
 
 /**
@@ -251,7 +301,8 @@ for (const page of rows) {
   }
 
   const lifted = liftArtworkBrief(toMarkdown(body));
-  const markdown = wrapTldr(stripLeadingH1(lifted.markdown));
+  const liftedArt = liftArtworkSvg(lifted.markdown, (reason) => note(id, title, reason));
+  const markdown = wrapTldr(stripLeadingH1(liftedArt.markdown));
   const words = markdown.split(/\s+/).filter((w) => /\w/.test(w)).length;
   const hasTldr = markdown.startsWith('<div class="tldr">');
   const keywords = plain(p['SEO Keywords']?.rich_text)
@@ -299,6 +350,32 @@ for (const page of rows) {
     continue;
   }
 
+  // Every draft leaves here with artwork, so the PR never needs a human commit
+  // — which matters because the publish poll resets the PR branch from main
+  // twice an hour and destroys anything a human added to it. Routine-authored
+  // SVG from the Notion page wins; otherwise deterministic fallback art. The
+  // one exception: a source SVG already sitting on disk for this slug (artwork
+  // landed on main ahead of the publish) is someone's real drawing — never
+  // overwrite it with a placeholder, and leave the hero fields to its author.
+  const ART_SRC = join(here, '..', 'assets-src', 'art');
+  const svgFile = join(ART_SRC, `${slug}.svg`);
+  let art = null;
+  if (liftedArt.svg) {
+    art = { svg: liftedArt.svg, alt: liftedArt.alt, label: 'routine artwork from Notion' };
+  } else if (existsSync(svgFile)) {
+    note(id, title, `assets-src/art/${slug}.svg already exists — kept it; add heroImage/heroImageDark/heroAlt by hand.`);
+  } else {
+    art = { ...fallbackArt(slug, track), label: 'deterministic fallback art' };
+  }
+
+  const heroFields = art
+    ? [
+        `heroImage: ${yaml(`../../assets/art/${slug}-light.webp`)}`,
+        `heroImageDark: ${yaml(`../../assets/art/${slug}-dark.webp`)}`,
+        `heroAlt: ${yaml(art.alt)}`,
+      ]
+    : [];
+
   const frontmatter = [
     '---',
     `title: ${yaml(title)}`,
@@ -307,6 +384,7 @@ for (const page of rows) {
     `track: ${track}`,
     ...(question ? [`question: ${yaml(question)}`] : []),
     ...(keywords.length ? ['keywords:', ...keywords.map((k) => `  - ${k}`)] : []),
+    ...heroFields,
     `readingTime: ${yaml(readingTime(words))}`,
     // The back-reference that lets close-loop.mjs find this row again.
     `notionId: ${yaml(id)}`,
@@ -327,6 +405,11 @@ for (const page of rows) {
 
   mkdirSync(BLOG, { recursive: true });
   writeFileSync(file, frontmatter + markdown + trailer, 'utf8');
+  if (art) {
+    mkdirSync(ART_SRC, { recursive: true });
+    writeFileSync(svgFile, art.svg.endsWith('\n') ? art.svg : art.svg + '\n', 'utf8');
+    console.log(`  · ${slug}.svg — ${art.label}; render with npm run images`);
+  }
   written.push(`${slug}.md (${words} words)`);
   clearBlocked.push({ id, title });
 }
@@ -387,9 +470,8 @@ if (!dryRun) {
 
 if (written.length) {
   console.log(
-    `\n${written.length} article(s) staged. Still needed before these are worth shipping:\n` +
-      `  · artwork — the brief is in an HTML comment at the foot of the file; see docs/ARTWORK.md, then npm run images\n` +
-      `  · a read-through — these were drafted by a routine\n`
+    `\n${written.length} article(s) staged. Run npm run images to render any new artwork.\n` +
+      `Still needed before these are worth shipping: a read-through — they were drafted by a routine.\n`
   );
 }
 if (!written.length && !problems.length) console.log('Nothing approved and unpublished.');

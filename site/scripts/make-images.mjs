@@ -78,9 +78,23 @@ function ico(png, size) {
 }
 
 // ---- article artwork -------------------------------------------------------
+// --new-art-only: render only sources with no rendered output yet, and skip
+// the fixed assets entirely. This is what the publish workflow runs in CI —
+// re-encoding existing art there would churn every webp in the PR diff,
+// because sharp output is not byte-stable across environments.
+import { existsSync } from 'node:fs';
+const newArtOnly = process.argv.includes('--new-art-only');
+
 const artFiles = readdirSync(artSrc).filter((f) => f.endsWith('.svg'));
 for (const file of artFiles) {
   const slug = basename(file, '.svg');
+  if (
+    newArtOnly &&
+    existsSync(join(artOut, `${slug}-light.webp`)) &&
+    existsSync(join(artOut, `${slug}-dark.webp`))
+  ) {
+    continue;
+  }
   const svg = readFileSync(join(artSrc, file), 'utf8');
   if (/(?:fill|stroke)="#/i.test(svg)) {
     throw new Error(`${file} hardcodes a hex colour — use a {{token}} (docs/ARTWORK.md)`);
@@ -93,6 +107,8 @@ for (const file of artFiles) {
 }
 
 // ---- fixed assets ----------------------------------------------------------
+if (newArtOnly) process.exit(0);
+
 const favicon = readFileSync(join(pub, 'favicon.svg'), 'utf8');
 const touch = favicon.replace('<path', '<rect width="32" height="32" rx="7" fill="#F6F4EF"/><path');
 
