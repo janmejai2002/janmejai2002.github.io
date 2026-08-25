@@ -1,6 +1,8 @@
 ---
 import { Image, getImage } from 'astro:assets';
+import { getCollection } from 'astro:content';
 import Base from './Base.astro';
+import { trackById } from '../data/tracks';
 
 const { post } = Astro.props;
 const {
@@ -25,14 +27,22 @@ const dateLabel = pubDate.toLocaleDateString('en-IN', {
   year: 'numeric',
 });
 
-// Mirrors the theme table on the index. Accents follow docs/ARTWORK.md.
-const TRACK = {
-  technical: { label: 'Technical', accent: 'mizu' },
-  business: { label: 'Business', accent: 'ochre' },
-  basics: { label: 'Basics', accent: 'plum' },
-  'case-studies': { label: 'Case Studies', accent: 'moss' },
-  talks: { label: 'Talks', accent: 'hanko' },
-}[track];
+// One source of truth for theme labels and accents (src/data/tracks.ts).
+const TRACK = trackById[track];
+
+// Where to send the reader next: the next older post in the same theme, then
+// the next older post anywhere, then the newest other post. Chosen at build
+// time so the card is real content, not a JS afterthought.
+const all = (await getCollection('blog', ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+);
+const meIdx = all.findIndex((p) => p.id === post.id);
+const older = meIdx === -1 ? [] : all.slice(meIdx + 1);
+const next =
+  older.find((p) => p.data.track === track) ??
+  older[0] ??
+  all.find((p) => p.id !== post.id);
+const nextTrack = next ? trackById[next.data.track] : undefined;
 
 // Social cards are a fixed 1200x630 crop. Deriving it from the hero at build
 // time means an author never has to hand-make a second image, and the card is
@@ -58,7 +68,9 @@ const social = card
   <article class="article fade-up d2" style={`--accent:var(--${TRACK.accent});--tint:var(--wash-${TRACK.accent})`}>
     <header>
       <div class="postlist__head" style="margin-bottom:1.5rem">
-        <a class="hanko hanko--link" href={`/#${track}`}>{TRACK.label}</a>
+        {/* The theme badge now leads to the theme's own page, not the index
+            filter — a permanent, linkable home beats an in-page state. */}
+        <a class="hanko hanko--link" href={`/${track}/`}>{TRACK.label}</a>
         {readingTime && <span class="meta">{readingTime}</span>}
         <time class="meta" datetime={pubDate.toISOString()}>{dateLabel}</time>
       </div>
@@ -75,6 +87,7 @@ const social = card
         <div class="byline__avatar" aria-hidden="true">JM</div>
         <div>
           <div class="byline__name">Janmejai Singh Minhas</div>
+          <div class="byline__line">Builds and breaks AI systems for a living; writes down what holds.</div>
         </div>
       </div>
 
@@ -115,5 +128,29 @@ const social = card
     <div class="body">
       <slot />
     </div>
+
+    <footer class="endnote">
+      <svg class="endnote__crack" viewBox="0 0 12 44" preserveAspectRatio="none" aria-hidden="true">
+        <polyline points="7,0 4,12 8,22 3,32 6,44" />
+      </svg>
+      <p class="endnote__line">
+        That's the piece — thank you for reading it properly. If a claim in it
+        turns out to be wrong, it gets corrected here, where you can see it.
+        That's the deal on this blog.
+      </p>
+      {
+        next && nextTrack && (
+          <a
+            class="endnote__next"
+            href={`/blog/${next.id.replace(/\.md$/, '')}/`}
+            style={`--accent:var(--${nextTrack.accent})`}
+          >
+            <span class="endnote__k">Next question · {nextTrack.label}</span>
+            <span class="endnote__t">{next.data.title}</span>
+            {next.data.question && <span class="endnote__q">{next.data.question}</span>}
+          </a>
+        )
+      }
+    </footer>
   </article>
 </Base>

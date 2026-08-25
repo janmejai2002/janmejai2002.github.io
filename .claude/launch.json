@@ -2,9 +2,10 @@
   "version": "0.0.1",
   "configurations": [
     {
-      "name": "wabi-sabi",
+      "name": "site-dev",
       "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "dev", "--prefix", "site"],
+      "runtimeArgs": ["run", "dev"],
+      "cwd": "site",
       "port": 4321
     }
   ]

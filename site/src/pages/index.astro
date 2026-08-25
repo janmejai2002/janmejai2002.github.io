@@ -2,62 +2,13 @@
 import { getCollection } from 'astro:content';
 import Wordmark from '../components/Wordmark.astro';
 import Base from '../layouts/Base.astro';
+// The five themes live in src/data/tracks.ts — the door copy, the accents,
+// and the ids, shared with the theme pages and the article layout.
+import { TRACKS } from '../data/tracks';
 
 const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
   (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
 );
-
-// The three themes. Each has its own research routine feeding the Notion radar.
-// Say what each one is in words a first-time visitor understands without
-// decoding anything — the clever framing belongs inside the articles, not on
-// the door. Accents follow docs/ARTWORK.md.
-const TRACKS = [
-  {
-    id: 'technical',
-    label: 'Technical',
-    accent: 'mizu',
-    ask: 'For people who build with AI',
-    blurb:
-      'How models and AI systems actually work, and how they break once they are doing real work.',
-    cta: 'Read the technical posts',
-  },
-  {
-    id: 'business',
-    label: 'Business',
-    accent: 'ochre',
-    ask: 'For people who decide about AI',
-    blurb:
-      'What AI changes about consulting, marketing and strategy — and how to judge a claim without being an engineer.',
-    cta: 'Read the business posts',
-  },
-  {
-    id: 'basics',
-    label: 'Basics',
-    accent: 'plum',
-    ask: 'For people getting up to speed',
-    blurb:
-      'AI explained in plain language, what is genuinely new this month, and the setups I have built.',
-    cta: 'Start here',
-  },
-  {
-    id: 'case-studies',
-    label: 'Case Studies',
-    accent: 'moss',
-    ask: 'For people who want precedent',
-    blurb:
-      'What a named company actually did with AI in marketing and distribution — the mechanism, the numbers they published, and how much weight the evidence really carries.',
-    cta: 'Read the case studies',
-  },
-  {
-    id: 'talks',
-    label: 'Talks',
-    accent: 'hanko',
-    ask: 'For people who cannot watch everything',
-    blurb:
-      'One talk, keynote or podcast at a time, from a fixed list of sources worth listening to — what was actually claimed, and what holds up.',
-    cta: 'Read the talk notes',
-  },
-] as const;
 
 const counts = Object.fromEntries(
   TRACKS.map((t) => [t.id, posts.filter((p) => p.data.track === t.id).length])
@@ -169,10 +120,16 @@ const dateOf = (d: Date) =>
             <h3 class="track__label">{t.label}</h3>
             <p class="track__blurb">{t.blurb}</p>
 
+            {/* An empty theme is growth in progress, not a dead end — the
+                routines are already feeding it. Own the incompleteness; the
+                site's whole thesis is that unfinished is a state, not a
+                failure. */}
             <button type="button" class="track__cta" data-filter={t.id} aria-pressed="false">
-              <span>{counts[t.id] > 0 ? t.cta : 'Nothing here yet'}</span>
+              <span>{counts[t.id] > 0 ? t.cta : 'Still taking root'}</span>
               <span class="track__count">
-                {counts[t.id]} {counts[t.id] === 1 ? 'post' : 'posts'}
+                {counts[t.id] > 0
+                  ? `${counts[t.id]} ${counts[t.id] === 1 ? 'post' : 'posts'}`
+                  : 'first post soon'}
               </span>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
                 stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -197,8 +154,11 @@ const dateOf = (d: Date) =>
   {
     featured.length > 0 && (
       <section class="featured" aria-labelledby="featured-h">
+        {/* "Latest", because that is what these are — the three newest. Calling
+            an automatic slice "Featured" would claim a curation that is not
+            happening. */}
         <div class="sec">
-          <h2 class="sec__t" id="featured-h">Featured</h2>
+          <h2 class="sec__t" id="featured-h">Latest</h2>
           <span class="sec__r" aria-hidden="true" />
         </div>
         <ol class="featured__grid">
@@ -241,6 +201,7 @@ const dateOf = (d: Date) =>
         <button type="button" class="pill" data-sort="title" aria-pressed="false">Title</button>
       </div>
       <button type="button" class="reset" data-filter="all" hidden>Show everything</button>
+      <a class="themelink" data-theme-link href="/" hidden>This theme's own page →</a>
     </div>
 
     {
@@ -283,13 +244,16 @@ const dateOf = (d: Date) =>
       )
     }
 
-    <p class="postlist__none" hidden>Nothing published in this theme yet.</p>
+    <p class="postlist__none" hidden>
+      Nothing published here yet — this theme is still taking root. The writing
+      routines are already researching it.
+    </p>
   </section>
 
   <section class="plug scroll-reveal">
     <div>
       <span class="meta" style="color:var(--ochre)">Also here</span>
-      <h2>Interview News Archive</h2>
+      <h2>BSchool News Archive</h2>
       <p>
         A daily business-news digest for Indian B-school placement prep — each story paired
         with the angle an interviewer is likely to push on.
@@ -317,6 +281,7 @@ const dateOf = (d: Date) =>
   const none = document.querySelector<HTMLElement>('.postlist__none[hidden]');
   const label = document.querySelector<HTMLElement>('[data-archive-label]');
   const reset = document.querySelector<HTMLElement>('.reset');
+  const themeLink = document.querySelector<HTMLAnchorElement>('[data-theme-link]');
   const LABELS: Record<string, string> = {
     technical: 'Technical',
     business: 'Business',
@@ -339,6 +304,10 @@ const dateOf = (d: Date) =>
     for (const p of panels) p.classList.toggle('is-on', p.dataset.trackCard === want);
     if (label) label.textContent = LABELS[want] ?? 'Everything';
     if (reset) reset.hidden = want === 'all';
+    if (themeLink) {
+      themeLink.hidden = want === 'all';
+      if (want !== 'all') themeLink.href = `/${want}/`;
+    }
     if (none) none.hidden = shown > 0;
 
     history.replaceState(null, '', want === 'all' ? location.pathname : `#${want}`);
@@ -384,7 +353,16 @@ const dateOf = (d: Date) =>
      by the attribute has to opt out — see docs/HANDOFF.md §6. */
   .ptable tbody tr[hidden],
   .postlist__none[hidden],
+  .themelink[hidden],
   .reset[hidden] { display: none !important; }
+
+  .themelink {
+    font-size: .75rem; font-weight: 600; color: var(--ink-soft);
+    text-decoration: none; border-bottom: 1px solid var(--border);
+    padding-bottom: 1px;
+    transition: color var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease);
+  }
+  .themelink:hover { color: var(--ink); border-color: var(--ink-faint); }
 
   /* ---------- masthead ---------- */
   .mast { text-align: center; padding: 3.5rem 0 2.5rem; }
@@ -461,7 +439,10 @@ const dateOf = (d: Date) =>
   .track__art { color: var(--accent); width: 80px; height: 80px; margin-bottom: .25rem; }
   .track__art svg { width: 100%; height: 100%; overflow: visible; }
 
-  /* The one deliberate break in each mark, closing on hover. */
+  /* The one deliberate break in each mark, closing on hover — and the marks
+     draw themselves in when the card first scrolls into view: before the
+     IntersectionObserver adds .revealed, every stroke sits at full offset
+     (invisible), then transitions down to its resting broken state. */
   .track .ring {
     stroke-dasharray: 100; stroke-dashoffset: 22;
     transition: stroke-dashoffset .7s var(--ease);
@@ -474,6 +455,8 @@ const dateOf = (d: Date) =>
   .track .a2 { transition-delay: .07s; }
   .track .a3 { transition-delay: .14s; }
   .track:hover .arc, .track.is-on .arc { stroke-dashoffset: 0; }
+  .track.scroll-reveal:not(.revealed) .ring,
+  .track.scroll-reveal:not(.revealed) .arc { stroke-dashoffset: 100; }
 
   .track__ask { margin: 0; font-size: .8125rem; font-weight: 800; letter-spacing: .02em; color: var(--accent); }
   .track__label { margin: 0; font-size: 1.75rem; font-weight: 800; letter-spacing: -.03em; line-height: 1; }

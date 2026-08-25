@@ -4,6 +4,14 @@
    Every colour is a token so both themes resolve as a set.
    ============================================================ */
 
+/* Cross-document crossfade on every navigation. Pure progressive
+   enhancement: browsers without the at-rule hard-cut exactly as before,
+   and reduced-motion turns it back off below. */
+@view-transition { navigation: auto; }
+@media (prefers-reduced-motion: reduce) {
+  @view-transition { navigation: none; }
+}
+
 :root {
   /* Tells the UA which canvas + form controls to paint. Without this the
      browser keeps a dark canvas under an explicitly-light document. */
@@ -345,11 +353,24 @@ main.main--wide { max-width: none; }
   font-weight: 800; font-size: .8rem; color: var(--mizu); flex-shrink: 0;
 }
 .byline__name { font-weight: 700; font-size: .875rem; }
+.byline__line { font-size: .8125rem; color: var(--ink-faint); margin-top: .15rem; line-height: 1.5; }
 
 .body { font-size: 1.0625rem; line-height: 1.78; color: var(--ink-soft); }
 @media (min-width: 768px) { .body { font-size: 1.125rem; } }
 .body > p { margin: 0 0 1.5rem; }
 .body > p:first-of-type { font-size: 1.2em; font-weight: 450; line-height: 1.6; margin-bottom: 2.5rem; color: var(--ink); }
+/* A serif drop cap on the opening paragraph — the one job the long-declared
+   Newsreader face finally has, coloured in the article's track accent. The
+   TL;DR plate is a div, so first-of-type still finds the first real
+   paragraph. Skipped on narrow screens, where a floated cap eats the line. */
+@media (min-width: 40rem) {
+  .body > p:first-of-type::first-letter {
+    font-family: var(--serif);
+    font-size: 3.1em; line-height: .8; font-weight: 500;
+    float: left; padding: .06em .12em 0 0;
+    color: var(--accent, var(--ink));
+  }
+}
 .body h2 {
   font-size: 1.45rem; font-weight: 800; margin: 3.5rem 0 1.25rem;
   letter-spacing: -.012em; color: var(--ink); text-wrap: balance;
@@ -568,6 +589,37 @@ main.main--wide { max-width: none; }
 .fact__v { font-weight: 700; font-size: .9375rem; line-height: 1.4; color: var(--ink); }
 .fact__v span { display: block; font-weight: 400; color: var(--ink-faint); font-size: .8125rem; margin-top: .2rem; }
 
+/* ---------- End of article ---------- */
+/* The reader just gave the piece eight or fifteen minutes; the page should
+   notice. The kintsugi crack from the wordmark stands in for a rule, the
+   sign-off restates the deal, and the next-question card keeps the thread
+   going in that post's own accent. */
+.endnote { margin-top: 4.5rem; }
+.endnote__crack { display: block; width: 13px; height: 40px; margin-bottom: 1.25rem; }
+.endnote__crack polyline { fill: none; stroke: var(--ochre); stroke-width: 2; }
+.endnote__line {
+  font-family: var(--serif); font-size: 1.05rem; line-height: 1.7;
+  color: var(--ink-soft); margin: 0 0 1.75rem; max-width: 34rem;
+}
+.endnote__next {
+  display: flex; flex-direction: column; gap: .35rem; text-decoration: none;
+  background: var(--card); border: 1px solid var(--border); border-radius: 14px;
+  padding: 1.1rem 1.3rem;
+  transition: border-color var(--dur-fast) var(--ease), transform var(--dur-fast) var(--ease);
+}
+.endnote__next:hover, .endnote__next:focus-visible {
+  border-color: var(--accent, var(--ink)); transform: translateY(-2px);
+}
+.endnote__k {
+  font-size: .5625rem; font-weight: 800; letter-spacing: .16em;
+  text-transform: uppercase; color: var(--accent, var(--ink-faint));
+}
+.endnote__t { font-weight: 700; font-size: 1rem; line-height: 1.4; color: var(--ink); }
+.endnote__q { font-size: .8125rem; line-height: 1.55; color: var(--ink-faint); }
+@media (prefers-reduced-motion: reduce) {
+  .endnote__next:hover { transform: none; }
+}
+
 /* ---------- Footer ---------- */
 footer {
   margin-top: 5rem; padding-top: 2rem; border-top: 1px solid var(--border);
@@ -577,6 +629,13 @@ footer {
 }
 footer a { text-decoration: none; transition: color .25s; }
 footer a:hover { color: var(--mizu); }
+/* The colophon: one plain sentence about the object itself, in the print
+   tradition — lowercase voice against the uppercase utility row above it. */
+.colophon {
+  flex-basis: 100%; margin-top: .25rem;
+  font-family: var(--serif); font-weight: 400; font-size: .875rem;
+  letter-spacing: normal; text-transform: none; color: var(--ink-faint);
+}
 
 /* Touch targets — 44px minimum on coarse pointers */
 @media (pointer: coarse) {
