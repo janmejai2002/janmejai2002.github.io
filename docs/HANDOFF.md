@@ -1,220 +1,248 @@
 # Handoff — Wabi Sabi blog system
 
 You are picking up a working, deployed system. Read this whole file before touching anything.
-
-**Both goals from the previous handoff are done (2026-08-24).** Sections 3 and 4 below
-are kept as the record of what was asked; see `docs/SESSION-2026-08-24.md` for what was
-actually built, what changed since, and the two decisions still waiting on the owner.
-
-In short: the site now has full image support (schema, `<Image>` hero, derived OG cards,
-markdown figures, favicons), one article was published end to end through the real
-pipeline, and the `/projects/` walkthrough with four diagrams now exists.
+Last updated 2026-08-25.
 
 ---
 
-## 1. What this system is
+## 1. What this is
 
-**Wabi Sabi** — an applied-AI blog and evolving system belonging to **Janmejai Singh Minhas**
-(GitHub `janmejai2002`, `janmejai2002@gmail.com`). It is a blog *and* a self-documenting
-system: AI projects and how they were built, his thoughts on AI, and industry analysis.
-
-The name is the Japanese aesthetic of imperfection, impermanence and incompleteness —
-the site's whole thesis is that ML systems are never finished.
+**Wabi Sabi** — an applied-AI blog and self-documenting system belonging to
+**Janmejai Singh Minhas** (GitHub `janmejai2002`, `janmejai2002@gmail.com`).
+The name is the Japanese aesthetic of imperfection and incompleteness; the
+site's thesis is that ML systems are never finished.
 
 - **Live:** https://janmejai2002.github.io
 - **Repo:** https://github.com/janmejai2002/janmejai2002.github.io (public)
 - **Local:** `C:\Users\Janmejai\PluginsClaude`
-- **Deploy:** push to `main` → GitHub Actions (`.github/workflows/deploy.yml`) → Pages.
-  Pages is set to `build_type: workflow`; do not re-enable legacy branch builds.
+- **Deploy:** push to `main` → GitHub Actions → Pages. `build_type: workflow`;
+  do not re-enable legacy branch builds.
 
 ### Pages
-| Route | Source |
-|---|---|
-| `/` | `site/src/pages/index.astro` — hero + post list |
-| `/projects/` | `site/src/pages/projects.astro` — documents this system |
-| `/news/` | `site/src/pages/news/index.astro` — 221 filterable cards |
-| `/about/` | `site/src/pages/about.astro` — stats, red teaming, papers, timeline |
-| `/blog/[slug]/` | from `site/src/content/blog/*.md` |
-| `/rss.xml`, `/404`, `/sitemap-index.xml` | generated |
+
+| Route | Nav label | Source |
+|---|---|---|
+| `/` | Blog | `site/src/pages/index.astro` |
+| `/projects/` | Setups | `site/src/pages/projects.astro` |
+| `/news/` | BSchool | `site/src/pages/news/index.astro` — 221 filterable cards |
+| `/about/` | Me | `site/src/pages/about.astro` |
+| `/blog/[slug]/` | — | `site/src/content/blog/*.md` (5 posts) |
+
+Nav labels were renamed 2026-08-25; **routes were deliberately left alone** so
+nothing published or indexed breaks. The page headings still say the old words
+("Interview News Archive", "Projects") — see §8.
 
 ---
 
 ## 2. Notion is the control plane
 
-Three databases. **Never** hardcode content into the repo that belongs in Notion.
+Three databases. Never hardcode into the repo anything that belongs in Notion.
 
 | Database | Data source ID |
 |---|---|
-| 📝 AI Blog OS Pipeline (radar ideas) | `511e41a3-c1cd-47e0-8fa2-d319feef0ced` |
+| 📝 AI Blog OS Pipeline (radar) | `511e41a3-c1cd-47e0-8fa2-d319feef0ced` |
 | ✍️ Article Production (drafts) | `d39ea073-cc87-4c25-8a3c-d9f276a59b68` |
 | Wabi Sabi – Interview News Archive | `288c805b-3d3f-46ae-98e4-893ab3e6d562` |
 
-**Pipeline** fields: `Name`, `Pitch` (100-word decision surface), `SEO Keywords`, `Status`
-(Radar Idea / Drafting / Ready for Polish / Published), **`Interest Rating`** and
-**`Remarks`** — those last two are the human's alone, never write them.
-Rating `4 - Strong interest` or `5 - Write this now` is the approval gate.
+**Human-only fields, never written by a routine:** `Interest Rating` and
+`Remarks` on the radar; `Draft Status = Approved` on production. Rating 4 or 5
+is the approval gate. Ratings 1 and 2 also steer future radar runs away from
+neighbouring topics.
 
-**Article Production** fields: `Name`, `Draft Status` (Queued / Researching / Writing /
-Draft Ready / Needs Revision / Approved), `SEO Keywords`, `Interest Rating`, `My Remarks`,
-`Word Count`, `Skills Used`, `Promoted On`, `Draft Completed`, `Source Idea` (relation).
-**Never set `Approved`** — that is the human's decision.
+The relation between the two pipeline databases is two-way (`Article` ↔
+`Source Idea`), which is what answers "has this been written" in one query.
 
-The registry at `C:\Users\Janmejai\Notion\notion-registry.json` tracks these; register any
-new tracked page with `node lib/register.js` (it auto-syncs `~/.claude/CLAUDE.md`).
+### Scheduled routines
 
-### Scheduled agents
-- **`daily-ai-seo-radar`** — 07:10 daily. Discovers trending AI topics, skips anything
-  already covered or near a 1–2 rated topic, researches, writes a 100-word pitch, files as
-  `Radar Idea`.
-- **`ai-article-writer`** — every 4h. Picks up rating 4/5, promotes to Article Production,
-  researches deeper, writes the full article, sets `Draft Ready`. Max 2 per run.
+Prompts live in `~/.claude/scheduled-tasks/<id>/SKILL.md`. **Each run starts
+cold**, so the prompt must be fully self-contained.
 
-Prompts live in `~/.claude/scheduled-tasks/<id>/SKILL.md`. Each run starts cold — the
-prompt must be fully self-contained.
+- **`daily-ai-seo-radar`** — 07:10 daily. Discovers topics, writes a 100-word
+  pitch, files as `Radar Idea`.
+- **`ai-article-writer`** — every 4h. Picks up rating 4/5, promotes, researches,
+  drafts, sets `Draft Ready`. Max 2 per run. **Forbidden from publishing.**
 
-Skills used: `seo-topic-research` (research protocol; forbids inventing search volume,
-keyword difficulty, CPC or Google rank), `viral-hooks`, `storytelling`, and
-`anti-ai-writing` as a **mandatory** final filter.
+Skills used: `seo-topic-research` (forbids inventing search volume, difficulty,
+CPC or rank), `viral-hooks`, `storytelling`, and `anti-ai-writing` as a
+**mandatory** final filter.
 
 ---
 
-## 3. GOAL 1 — end-to-end pipeline test, with images
+## 3. Publishing — automated as of 2026-08-25
 
-### The blocker you must solve first
-**The site has no image support at all.** Verified:
-- `site/src/content.config.ts` — no image field in the schema
-- `site/src/components/SEO.astro` — **no `og:image`**, yet it declares
-  `twitter:card = summary_large_image`. That is currently inconsistent and worth fixing.
-- `site/public/` contains only `robots.txt` — no favicon, no default OG image
-- `sharp@^0.33.5` **is** installed, so `astro:assets` / `<Image>` will work
+Full detail in **`docs/PUBLISHING.md`**. Summary:
 
-So before the article, you need to:
-1. Add an image field to the blog schema using the content-collections `image()` helper
-   (hero image + alt text; make alt **required** — the site is otherwise accessible and
-   should stay that way).
-2. Render it in `site/src/layouts/Post.astro` with `<Image>` from `astro:assets`, with
-   width/height set so nothing shifts on load.
-3. Add `og:image` to `SEO.astro`, absolute URL, plus a sensible site-wide fallback.
-4. Support inline images in article bodies.
-5. Add a favicon while you are there.
+You set `Draft Status = Approved` → within 30 minutes `publish-from-notion.yml`
+opens a PR with the article as markdown → you add artwork and a TL;DR → merge →
+deploys → the `close-loop` job writes `Published`, `Post URL` and `Publish Date`
+back to Notion, but only after verifying the URL actually serves.
 
-Keep images **local** in the repo (`site/src/assets/…`) so Astro can optimise and hash them.
-Do not hotlink remote images.
+| Piece | What it does |
+|---|---|
+| `site/scripts/lib/notion.mjs` | REST helpers + blocks→markdown. Throws on unknown block types rather than dropping content. |
+| `site/scripts/publish-article.mjs` | Approved rows → `src/content/blog/<slug>.md`. Enforces the 70/160 caps itself. |
+| `site/scripts/close-loop.mjs` | Verifies the URL is live, then reconciles Notion. |
+| `.github/workflows/publish-from-notion.yml` | Polls every 30 min, builds, opens a PR. |
+| `close-loop` job in `deploy.yml` | Runs after every Pages deploy. `continue-on-error`. |
 
-### Then run the pipeline
-Do it the way the real system would, not by hand-writing a file:
-1. Query the Pipeline DB for what already exists so you do not duplicate a topic.
-2. Run `daily-ai-seo-radar`'s logic (or invoke the task) to discover and pitch a topic.
-   Then act as the human gate: set a rating and remarks yourself, and **say clearly in your
-   final report that you self-approved**, since no human rated it.
-3. Run `ai-article-writer`'s logic to research and draft.
-4. Publish: write the markdown into `site/src/content/blog/`, add the images, build, verify,
-   commit, push, and confirm the live URL returns 200.
-5. Update both Notion rows to reflect reality.
+`NOTION_TOKEN` is set as a repository secret and **both halves have been
+verified running in CI**. Detection is polling, not push — Notion cannot reach
+this repo without a public endpoint, and adding a server would cost the system
+its "no infrastructure" property.
 
-**Rules that are not negotiable:** every statistic, date and quote needs a real linked
-source; no invented metrics; `anti-ai-writing` runs on the final draft; nothing gets marked
-`Approved`.
+`notionId` in a post's frontmatter is the link back to its Notion row. Delete it
+and that row will never be marked Published.
 
 ---
 
-## 4. GOAL 2 — NotebookLM diagrams
+## 4. Design system — read before writing any CSS
 
-The `/projects/` page currently promises: *"A full walkthrough with architecture diagrams
-is in progress — I am generating those from a NotebookLM notebook built on the actual
-configuration files."* Make that true.
+`site/src/styles/global.css`. Ported from `wabi-sabi-template.html` at repo root.
+Deliberately **not** Tailwind — the template used the CDN script, which is
+render-blocking and bad for SEO.
 
-Full plan is in `docs/TODO-system-documentation.md`. Summary:
+**Six earths** (dusty, never neon): `--mizu` teal, `--hanko` seal red, `--moss`,
+`--ochre`, `--plum`, `--indigo`, each with a `--wash-*` tint. Ground `--paper`,
+ink `--ink`. `--gutter` is the single page-padding token. Inter via Google Fonts
+(the only external host allowed).
 
-1. Use the **`notebooklm-mcp`** skill. **Check the NotebookLM Library Notion page first for
-   a duplicate notebook** before creating one.
-2. Build the notebook from the **actual files**, not from memory:
-   - `~/.claude/scheduled-tasks/daily-ai-seo-radar/SKILL.md`
-   - `~/.claude/scheduled-tasks/ai-article-writer/SKILL.md`
-   - `~/.claude/skills/seo-topic-research/SKILL.md`
-   - `~/.claude/CLAUDE.md` (the skills/agents split and token-discipline rationale)
-   - `site/src/content.config.ts`, `site/astro.config.mjs`, `site/scripts/sync-news.mjs`
-   - the three Notion schemas
-3. Generate four diagrams via the infographic tool:
-   - end-to-end flow: discovery → pitch → human rating → promotion → draft → review
-   - the Notion control plane and the relation between the two databases
-   - Claude Code layout: scheduled tasks, skills, agents, MCP connections
-   - the token-cost model (why `~/.claude/skills/` is deliberately trimmed)
-4. Bring them into the site. **They must be theme-aware** — no baked-in white backgrounds,
-   the site has a real dark mode. Prefer inline SVG or the native mermaid support.
-5. Write the long-form walkthrough under `/blog/` and link it from `/projects/`.
+**Dark mode has three states** and all three are handled: bare `:root`,
+`@media (prefers-color-scheme: dark)` guarded with `:root:not([data-theme='light'])`,
+and `:root[data-theme='dark']`. **Never declare a colour only inside a media or
+`[data-theme]` block.** Dark is a full re-skin, not an inversion — a plain
+`var(--ink)`/`var(--paper)` swap produced a washed-out slab and had to be redone
+with dedicated `--tldr-*` tokens.
 
 ---
 
-## 5. Design system — read before writing any CSS
+## 5. Images and artwork
 
-`site/src/styles/global.css`. Ported from `wabi-sabi-template.html` (the owner's own
-design, kept at repo root as reference). Deliberately **not** Tailwind — the template used
-the Tailwind CDN script, which is render-blocking and bad for SEO.
+Read **`docs/ARTWORK.md`** before making any image. It is both the spec and a
+reusable generation prompt.
 
-**Six earths** (dusty, never neon): `--mizu` teal, `--hanko` seal red, `--moss`, `--ochre`,
-`--plum`, `--indigo`, each with a `--wash-*` tint. Ground `--paper`, ink `--ink`.
-`--gutter` is the single page-padding token. Font is Inter via Google Fonts (the only
-external host allowed).
+- Every article gets one piece of artwork: geometry, one accent, and exactly one
+  deliberate break in the order that carries the argument. No stock photos, no
+  illustration, no captions explaining the drawing.
+- Sources live in `site/assets-src/art/*.svg` and use **palette placeholders**
+  (`{{paper}}`, `{{mizu}}` …), never hex. `npm run images` renders a light and a
+  dark variant; the script **throws** if a source hardcodes a colour.
+- Both variants ship and CSS picks one — `<picture>` only answers
+  `prefers-color-scheme`, and this theme has three states.
+- Artwork renders to **WebP**: the noise overlay defeats PNG entirely (1.3 MB vs
+  ~25 KB).
+- `heroAlt` is a **build error** when `heroImage` is set. Keep it that way.
+- Fixed assets (favicon set, `og-default.png`) go to `public/`; article artwork
+  goes to `src/assets/art/` so Astro can hash it.
 
-**Dark mode has three states** and all three are handled: bare `:root` (light),
-`@media (prefers-color-scheme: dark)` guarded with `:root:not([data-theme='light'])`, and
-`:root[data-theme='dark']`. Every colour is a token. `color-scheme` is set per state.
-**Never declare a colour only inside a media or `[data-theme]` block.**
+**Unsplash** is wired in `.mcp.json` but has **no API key** — see ARTWORK.md §5
+for setup, and the attribution and download-endpoint obligations that come with
+it. It is not the default for hero art; drawn artwork is.
 
 ---
 
 ## 6. Hard-won gotchas — do not rediscover these
 
-- **`[hidden]` loses to author `display` rules.** `[hidden]{display:none}` is specificity
-  (0,1,0), same as `.card{display:flex}`, and author styles win. Anything hidden via the
-  attribute must opt out explicitly. This silently broke every archive filter.
-- **Descendant selectors leak into nested lists.** `.tl li` also matched bullets inside a
-  role's nested `<ul>`, turning each into a 2-column grid that crushed text to 117px.
-  Timeline rules are scoped `.tl > li` for this reason.
-- **`contain-intrinsic-size` must scale with content.** A flat estimate made a 21-card day
-  claim the same height as a 2-card day and the scroll position lurched. It is now
+**Environment**
+- **The Bash tool is broken on this machine** (`cygheap read copy failed`). Use
+  the PowerShell tool. For POSIX scripts: `& "C:\Program Files\Git\bin\bash.exe" -lc "..."`.
+- **PowerShell here-strings break on apostrophes** in commit messages. Write the
+  message to a file and use `git commit -F <file>`.
+- **`notebooklm-mcp` reports healthy but exposes no tools.** Use the `nlm` CLI.
+  Note the subcommand: `nlm query notebook <id> "..."`. Auth expires often;
+  `nlm-relogin.sh` fixes it but **force-kills Brave** — check for open tabs first.
+- **The Browser pane cannot screenshot** (no frame compositing). Verify with
+  `javascript_tool` reading computed styles. Tabs also drift — **pass `tabId`
+  explicitly** or you will run against a stale tab pointing at the live site.
+
+**Markdown and build**
+- **A blank line inside a raw HTML block terminates it.** This shipped four
+  broken diagrams: everything after the first `<g>` was re-parsed as markdown
+  and, being indented, rendered as a visible code block. Never put a blank line
+  inside inline `<svg>` in markdown.
+- **Assert on content, not containers.** That bug survived verification because
+  the checks confirmed `.diagram svg` existed with the right viewBox — all true
+  of a gutted element. `site/scripts/check-build.mjs` now runs as part of
+  `npm run build` and asserts on escaped markup, `<text>` counts, hardcoded
+  colour, missing alt and `og:image`. It has been regression-tested both ways.
+- **Notion splits multi-line callouts** across the block's `rich_text` *and its
+  children*. Reading only the block silently loses the slug.
+- The schema caps `title` at 70 and `description` at 160. **Deliberate** — they
+  have already caught a 193-char description and a 71-char title. Do not relax
+  them; fix the text in Notion, which is the source of truth until a file exists.
+
+**CSS**
+- **`[hidden]` loses to author `display` rules** (both are 0,1,0). Anything
+  hidden by the attribute must opt out explicitly. This broke every archive filter.
+- **Descendant selectors leak into nested lists.** Timeline rules are scoped
+  `.tl > li` for this reason.
+- **`contain-intrinsic-size` must scale with content** — it is
   `calc(var(--n) * var(--card-h))` per breakpoint.
-- **Mobile overflow silently zooms the whole page.** Nav overflowed 68px at 320px and the
-  browser scaled everything down. Always check `scrollWidth - clientWidth` at 320 and 360.
-- **The Browser-pane preview does not composite frames.** Screenshots time out, CSS
-  transitions never advance, and `scroll-behavior: smooth` never moves. Verify with
-  `mcp__Claude_Browser__javascript_tool` reading computed styles, and **temporarily disable
-  transitions** before measuring an animated property or you will read a frozen frame and
-  diagnose a bug that is not there.
-- **Do not run `npm run build` while the dev server is up** — they compete for memory and
-  the build dies with a heap OOM.
+- **Mobile overflow silently zooms the whole page.** Check
+  `scrollWidth - clientWidth` at 320 and 360.
+- **A dense SVG must not scale down to a phone.** `.diagram svg` has
+  `min-width: 42rem` so it scrolls inside its box; unconstrained, a 700-unit
+  viewBox renders 11px labels at 7px.
+- **Do not run `npm run build` while the dev server is up** — heap OOM.
 - **Bash heredocs choke on the noise SVG data-URI.** Use the Write tool for CSS.
-- The content schema caps `description` at 160 chars and `title` at 70. That is deliberate —
-  it already caught a 193-char description that search would have truncated. Do not relax it.
 
 ---
 
 ## 7. Verify before you claim done
 
 ```bash
-cd site && npm run build          # dev server must be stopped
+cd site && npm run build     # dev server must be stopped; includes check-build
 ```
-Then confirm live routes return 200 and the new content is actually present:
+
+Then confirm live routes return 200 **and the content is actually present**:
+
 ```bash
-curl -s -o /dev/null -w "%{http_code}\n" https://janmejai2002.github.io/blog/<new-slug>/
+curl -s -o /dev/null -w "%{http_code}\n" https://janmejai2002.github.io/blog/<slug>/
 ```
-Astro extracts CSS into hashed `/_astro/*.css` — grepping the HTML for a CSS rule will
-always fail. Fetch the asset instead.
+
+Astro extracts CSS into hashed `/_astro/*.css` — grepping the HTML for a rule
+always fails. Fetch the asset instead.
+
+Two "bugs" in one session turned out to be faulty tests. Check your check before
+reporting a defect. And if something is unverified, say so.
 
 ---
 
-## 8. Open decisions belonging to the owner — ask, do not assume
+## 8. Open — the owner's call
 
-- **The blog has no final name.** Candidates discussed: `wAIbi-sabi` (his own, and the
+**Needs attention first**
+
+- **The two most recent articles were never fact-checked by a human.** *The
+  Agentic Shift* and *Gemini 3.7 Flash / DeepSeek V4* went from Approved to live
+  in about fifteen minutes on 2026-08-25. Every claim has a linked source from
+  the writer routine, but nobody has read them against those sources. That is the
+  gap the new automation opens up.
+- **Page headings still say the old nav words.** `/news/` is titled "Interview
+  News Archive" and `/projects/` says "Projects", while the tabs now read
+  BSchool and Setups. Renaming the headings is a content decision, so it was left.
+- **`about.astro` has an inline link labelled "Projects"** pointing at `/projects/`.
+
+**Longer-standing**
+
+- **The blog has no final name.** Candidates: `wAIbi-sabi` (the owner's own, and
   strongest — hides "AI" inside "wabi"), `wabisabi.ai`, `jaibisabi`, `Wabi-SOTA`.
-  Avoid bare "Wabi" (reads as W&B / Weights & Biases) and "Wasabi" (existing company).
-  No domain is bought; `astro.config.mjs` points at `janmejai2002.github.io`.
-- **The About stat band** leads with three Gray Swan numbers against one research number.
-  He has said red teaming is a **hobby, not work** — it was removed from the work timeline
-  for that reason. He may want the band rebalanced toward work and research.
-- **The Amex custom-GPT work** is a natural fourth entry on `/projects/` — same problem
-  space as this pipeline. Offered, not yet approved.
+  Avoid bare "Wabi" (reads as W&B) and "Wasabi" (existing company). No domain
+  bought; `astro.config.mjs` points at `janmejai2002.github.io`.
+- **The About stat band** leads with three Gray Swan numbers against one research
+  number. Red teaming is a **hobby, not work** — it was removed from the work
+  timeline for that reason. The band may want rebalancing.
+- **The Amex custom-GPT work** is a natural fourth `/projects/` entry. Offered,
+  not approved.
+- **Publishing the two task prompts verbatim** in `/blog/how-this-blog-builds-itself/`.
+  They are the most copyable part and nothing in them is sensitive.
+- **The radar has 5 unrated ideas** waiting on `Interest Rating`, plus 2 rated
+  `3 - Maybe later`. Nothing moves until one is rated 4 or 5.
 
-Report honestly: if something is unverified, say so. Two "bugs" in the last session turned
-out to be faulty tests, not faulty code — check your check before reporting a defect.
+---
+
+## 9. Recent history
+
+`docs/SESSION-2026-08-24.md` records the image-support build and the first
+end-to-end pipeline run. `docs/TODO-system-documentation.md` records how the
+NotebookLM notebook and the four architecture diagrams were made (notebook ID
+included). `docs/PUBLISHING.md` is the operating manual for the publish
+pipeline. `docs/ARTWORK.md` is the artwork spec.
