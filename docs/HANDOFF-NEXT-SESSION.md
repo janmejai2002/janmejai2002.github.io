@@ -3,8 +3,19 @@
 Paste the block at the bottom into a fresh session. Everything above it is
 context for whoever reads this file directly.
 
-Last session ended 2026-08-26, at commit `ef7a5a7` on `main`. Working tree clean,
-everything pushed, build green, `check-build` passing, 11 pages.
+Last session ended 2026-08-26 (second session that day), at commit `c25eba0` on
+`main`. Working tree clean, everything pushed, build green, `check-build`
+passing, 11 pages.
+
+**That session did queue items 1–4:** the rename to `wAIbi-sabi` with a wordmark
+component and a new favicon/mark, the BSchool and Setups heading fixes, the
+rewrite of `/blog/how-this-blog-builds-itself/`, and — found along the way —
+`/status/` was only counting three of the five themes. Items 5, 6 and 7 below
+are untouched.
+
+The blocked-on-owner list is unchanged and was re-checked: Actions still cannot
+open PRs (`can_approve_pull_request_reviews: false` via the API), so the two
+finished articles are still sitting on the branch.
 
 ---
 
@@ -65,42 +76,45 @@ and would have broken every radar run.
 
 ## Queued work, roughly in priority order
 
-1. **Rename the blog to `wAIbi-sabi`.** Approved last session, not started. It is
-   in `site/src/layouts/Base.astro` (nav + footer), `SEO.astro` (`siteName`,
-   JSON-LD), every page's `<Base title>`, `index.astro`'s masthead, `README`, and
-   the docs. Decide whether the wordmark styles the `AI` differently — that is
-   the whole point of the name and the reason it is worth doing carefully.
-2. **A logo.** Requested, "keep it thoughtful". Must obey `docs/ARTWORK.md`:
-   geometry, flat fills, palette tokens not hex, one deliberate imperfection.
-   The obvious idea — the `AI` hiding inside `wabi` — is a typographic move, so
-   consider a wordmark rather than a mark. Needs to work at favicon size.
-3. **Page headings still say the old nav words.** `/news/` is titled "Interview
-   News Archive" while the tab says BSchool; `/projects/` says "Projects" while
-   the tab says Setups; `about.astro` has an inline link labelled "Projects".
-4. **`/blog/how-this-blog-builds-itself/` is badly out of date.** It describes two
-   routines and no themes. There are now seven routines, five themes, a status
-   page, an automated news sync, a claim ledger, and a failure-reporting loop.
-   On a blog whose premise is that it documents itself, this is the most
-   conspicuous debt on the list.
-5. **IndexNow.** The owner found it and it fits their stated preference for auth
+1. **IndexNow.** The owner found it and it fits their stated preference for auth
    that cannot expire — the key is a static text file at the site root, no login,
    no token. Wire a ping into `deploy.yml` after a successful deploy.
-6. **Verify motion in a real browser.** The Browser pane never fires
+2. **Verify motion in a real browser.** The Browser pane never fires
    `requestAnimationFrame`, so the WebGL grain field, the theme-card mark
    animations and every CSS transition are correct by construction but have
-   never been seen running. `npm run dev --prefix site` and look.
-7. **Ideas 1–3 from the earlier list, untouched:** persist the claim ledger and
-   publish a corrections log; a link-rot and claim-drift watchdog over published
-   posts; reader analytics feeding back into the radars.
+   never been seen running. `npm run dev --prefix site` and look. The new
+   wordmark and favicon have also only been checked in the built HTML and as
+   rendered PNGs, never on a live tab.
+3. **`/projects/` and `/news/` still have not had the UI pass** the index and
+   the article template got. Their headings are now right; their layouts are
+   still the older generation.
+4. **Ideas, untouched:** persist the claim ledger and publish a corrections log;
+   a link-rot and claim-drift watchdog over published posts; reader analytics
+   feeding back into the radars.
 
----
+### Done 2026-08-26 (second session)
+
+- **Renamed to `wAIbi-sabi`.** `src/components/Wordmark.astro` renders the name
+  with the `AI` in hanko and `text-transform: none` so nothing re-cases it; the
+  literal string is used where the name is data (titles, JSON-LD, RSS, the OG
+  card). JSON-LD keeps `alternateName: 'Wabi Sabi'`. The favicon seats a
+  geometric `AI` — strokes, not a font, so it renders anywhere — inside the open
+  ensō, which stays the deliberate imperfection.
+- **Headings match the nav:** BSchool News Archive, Setups, and the About link.
+  Routes still unchanged, deliberately.
+- **`/status/` now shows all five themes.** `sync-status.mjs` only tallied three,
+  so Case Studies and Talks were invisible. The two writer themes print `—` for
+  topics-found rather than a misleading `0`, since they skip the radar.
+- **`/blog/how-this-blog-builds-itself/` rewritten** and given an `updatedDate`.
 
 ## Traps that cost real time last session
 
-- **The Bash tool is broken on this machine** (cygwin heap error). Use
-  PowerShell. It also mangles UTF-8 in `Select-String` output — read files with
-  the Read tool when characters matter, and set `$env:PYTHONIOENCODING="utf-8"`
-  before Python that prints anything non-ASCII.
+- **The Bash tool's cygwin heap error is intermittent, not permanent.** It
+  failed all of 2026-08-25 and worked for the whole of the second 2026-08-26
+  session. Try it once; fall back to PowerShell if it dies. Two things that do
+  still bite in Bash: `git` occasionally fails with "the paging file is too
+  small" (re-run it), and PowerShell mangles UTF-8 in `Select-String` output —
+  read files with the Read tool when characters matter.
 - **PowerShell writes a UTF-8 BOM** when you pipe or redirect to a file, which
   breaks `JSON.parse` and `json.load`. Read back with `utf-8-sig`, or write with
   `[System.IO.File]::WriteAllText`.
