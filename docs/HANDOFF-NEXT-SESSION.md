@@ -138,7 +138,7 @@ and would have broken every radar run.
 ## The prompt to paste
 
 ```
-Continuing work on the Wabi Sabi blog at C:\Users\Janmejai\PluginsClaude
+Continuing work on the wAIbi-sabi blog at C:\Users\Janmejai\PluginsClaude
 (live at https://janmejai2002.github.io, repo janmejai2002/janmejai2002.github.io).
 
 Read docs/HANDOFF.md first — it documents the whole system, the Notion control
@@ -147,28 +147,27 @@ Then read docs/HANDOFF-NEXT-SESSION.md for where the last session stopped and
 what is queued. Then docs/PUBLISHING.md and docs/ARTWORK.md before touching
 publishing or images.
 
-Two environment facts up front: the Bash tool is broken here (cygwin heap
-error) — use PowerShell. And the Browser pane cannot screenshot and never
-composites, so verify with javascript_tool reading computed styles, pass tabId
-explicitly, and do not trust anything that depends on requestAnimationFrame.
+Two environment facts up front: the Bash tool's cygwin heap error is
+intermittent — try it once, fall back to PowerShell if it dies. And the Browser
+pane cannot screenshot and never composites, so verify with javascript_tool
+reading computed styles, pass tabId explicitly, and do not trust anything that
+depends on requestAnimationFrame.
 
-State: five themes, seven scheduled routines, 5 published articles, 2 more
-waiting on a branch. Google and Bing verification is live.
+State: renamed to wAIbi-sabi, five themes, seven scheduled routines, 5
+published articles, 2 more waiting on a branch. Google and Bing verification is
+live.
 
 Start with these, in order:
 
-1. Rename the blog to wAIbi-sabi everywhere — nav, footer, SEO siteName,
-   JSON-LD, page titles, masthead, README, docs. The name hides "AI" inside
-   "wabi", so decide how the wordmark treats those two letters; that is the
-   point of it.
-2. Design a logo per docs/ARTWORK.md — geometry, flat fills, palette
-   placeholder tokens never hex, one deliberate imperfection, and it has to
-   still read at favicon size.
-3. Fix the page headings that still say the old nav words: /news/ is titled
-   "Interview News Archive" (tab says BSchool), /projects/ says "Projects" (tab
-   says Setups), and about.astro has an inline link labelled "Projects".
-4. Rewrite /blog/how-this-blog-builds-itself/ — it describes two routines and no
-   themes, and is now years out of date relative to the system it documents.
+1. Wire IndexNow into deploy.yml after a successful deploy. The key is a static
+   text file at the site root — no login and no token, which is the property
+   this system requires of anything unattended.
+2. Run the site in a real browser and actually look at it. Nothing that depends
+   on requestAnimationFrame has ever been seen running: the WebGL grain field,
+   the theme-card mark animations, every CSS transition. The new wordmark and
+   favicon have only been checked in built HTML and as rendered PNGs.
+3. Give /projects/ and /news/ the UI pass the index and the article template
+   got. Their headings are correct now; the layouts are a generation behind.
 
 Verify with `npm run build` in site/ (dev server must be stopped; it runs
 check-build). Commit in logical chunks and push — pushing deploys.
@@ -176,5 +175,6 @@ check-build). Commit in logical chunks and push — pushing deploys.
 Before you start, tell me anything in that queue you think is the wrong
 priority, and check whether the owner has yet enabled "Allow GitHub Actions to
 create and approve pull requests" in repo settings, because two finished
-articles are blocked on it.
+articles are blocked on it. Check it with:
+gh api repos/janmejai2002/janmejai2002.github.io/actions/permissions/workflow
 ```
