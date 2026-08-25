@@ -11,8 +11,8 @@
   </g>
 
   <g font-family="Segoe UI, Helvetica Neue, Arial, sans-serif" fill="#1A2639">
-    <text x="90" y="196" font-size="26" font-weight="700" letter-spacing="5"
-          fill="#00A9B8">WABI SABI</text>
+    <text x="90" y="196" font-size="30" font-weight="700" letter-spacing="3"
+          fill="#00A9B8">w<tspan fill="#D2543F">AI</tspan>bi-sabi</text>
     <text x="90" y="300" font-size="76" font-weight="800" letter-spacing="-2">Applied AI, written</text>
     <text x="90" y="384" font-size="76" font-weight="800" letter-spacing="-2">while it is still wrong.</text>
     <text x="90" y="470" font-size="27" font-weight="400" fill="#5A6474">Notes on building AI systems that are never finished.</text>

@@ -1,4 +1,4 @@
-# Handoff — Wabi Sabi blog system
+# Handoff — wAIbi-sabi blog system
 
 You are picking up a working, deployed system. Read this whole file before touching anything.
 Last updated 2026-08-25.
@@ -40,7 +40,9 @@ it rather than absorbing it.
 
 ## 1. What this is
 
-**Wabi Sabi** — an applied-AI blog and self-documenting system belonging to
+**wAIbi-sabi** (renamed from Wabi Sabi on 2026-08-26; the capitals are the
+point — "AI" surfacing inside "wabi") — an applied-AI blog and
+self-documenting system belonging to
 **Janmejai Singh Minhas** (GitHub `janmejai2002`, `janmejai2002@gmail.com`).
 The name is the Japanese aesthetic of imperfection and incompleteness; the
 site's thesis is that ML systems are never finished.
@@ -305,10 +307,12 @@ reporting a defect. And if something is unverified, say so.
 
 **Longer-standing**
 
-- **The blog has no final name.** Candidates: `wAIbi-sabi` (the owner's own, and
-  strongest — hides "AI" inside "wabi"), `wabisabi.ai`, `jaibisabi`, `Wabi-SOTA`.
-  Avoid bare "Wabi" (reads as W&B) and "Wasabi" (existing company). No domain
-  bought; `astro.config.mjs` points at `janmejai2002.github.io`.
+- ~~The blog has no final name.~~ **Resolved 2026-08-26: `wAIbi-sabi`.** The
+  literal string is used in titles, JSON-LD and RSS; the rendered wordmark
+  (`src/components/Wordmark.astro`) colours the `AI` in hanko and defeats any
+  inherited text-transform so the casing survives. The favicon/mark is the open
+  ensō with a geometric `AI` drawn as strokes inside it. No domain bought;
+  `astro.config.mjs` points at `janmejai2002.github.io`.
 - **The About stat band** leads with three Gray Swan numbers against one research
   number. Red teaming is a **hobby, not work** — it was removed from the work
   timeline for that reason. The band may want rebalancing.

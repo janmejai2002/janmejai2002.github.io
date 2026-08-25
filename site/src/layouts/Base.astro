@@ -1,5 +1,6 @@
 ---
 import SEO from '../components/SEO.astro';
+import Wordmark from '../components/Wordmark.astro';
 import GrainField from '../components/GrainField.astro';
 import '../styles/global.css';
 
@@ -59,7 +60,7 @@ const year = new Date().getFullYear();
             <path d="M19 12H5M12 19l-7-7 7-7" />
           </svg>
         </a>
-        <span class="vertical">Wabi Sabi</span>
+        <span class="vertical"><Wordmark /></span>
         <span class="vertical vertical--foot">{section ?? 'Applied AI'}</span>
       </aside>
 

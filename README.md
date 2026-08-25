@@ -1,4 +1,4 @@
-# Wabi Sabi
+# wAIbi-sabi
 
 Applied-AI journal by Janmejai Singh Minhas, plus an interview-prep news archive.
 Built with Astro 5. Content is controlled from Notion.

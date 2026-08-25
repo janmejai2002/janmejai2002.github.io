@@ -1,5 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
+import Wordmark from '../components/Wordmark.astro';
 import Base from '../layouts/Base.astro';
 
 const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
@@ -71,14 +72,14 @@ const dateOf = (d: Date) =>
 ---
 
 <Base
-  title="Wabi Sabi — Applied AI, in practice"
-  description="Wabi Sabi: an applied-AI journal on the systems that are never finished. What benchmarks leave out, what breaks in production, and what the research says past the abstract."
+  title="wAIbi-sabi — Applied AI, in practice"
+  description="wAIbi-sabi: an applied-AI journal on the systems that are never finished. What benchmarks leave out, what breaks in production, and what the research says past the abstract."
   section="Applied AI"
   wide
 >
   {/* Centred masthead. A stranger should know what this is from one screen. */}
   <section class="mast fade-up d1">
-    <span class="hanko">Wabi Sabi</span>
+    <span class="hanko"><Wordmark /></span>
     <h1>The models are<br /><span class="hl">never finished</span></h1>
     <p class="mast__lede">
       Writing about AI that shows its working — what the benchmarks leave out, what breaks

@@ -1,0 +1,17 @@
+---
+/**
+ * The site's name, set as its logo. "AI" surfaces inside "wabi" — the two
+ * capitals are the one deliberate break in the lowercase order, per
+ * docs/ARTWORK.md, so the casing IS the mark. `.wordmark` exists to defeat
+ * any inherited text-transform that would erase it. Where the name appears
+ * as plain data (titles, JSON-LD, RSS) use the literal string "wAIbi-sabi".
+ */
+interface Props {
+  class?: string;
+}
+const { class: className } = Astro.props;
+---
+
+<span class:list={['wordmark', className]}
+  >w<span class="wordmark__ai">AI</span>bi-sabi</span
+>

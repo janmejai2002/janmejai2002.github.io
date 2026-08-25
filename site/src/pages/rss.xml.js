@@ -6,7 +6,7 @@ export async function GET(context) {
     (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
   );
   return rss({
-    title: "Janmejai Singh Minhas",
+    title: "wAIbi-sabi",
     description: "Essays on applied machine learning and shipping AI systems that survive production.",
     site: context.site,
     items: posts.map((post) => ({

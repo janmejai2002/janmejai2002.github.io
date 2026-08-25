@@ -166,6 +166,13 @@ img { max-width: 100%; height: auto; }
 }
 .vertical--foot { margin-top: auto; font-size: .625rem; letter-spacing: .15em; }
 
+/* ---------- Wordmark ---------- */
+/* The name is the logo: "AI" surfacing inside "wabi". The capitals are the one
+   deliberate break in the lowercase order (docs/ARTWORK.md), so nothing may
+   re-case them — .wordmark defeats inherited text-transform. */
+.wordmark { text-transform: none; }
+.wordmark__ai { color: var(--hanko); }
+
 main { flex: 1; padding: 2rem var(--gutter) 6rem; max-width: 80rem; min-width: 0; }
 /* Pages whose content is composition rather than prose (the index) opt out of
    the column entirely and use the whole shell. */

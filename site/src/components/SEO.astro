@@ -28,8 +28,8 @@ const canonical = new URL(Astro.url.pathname, Astro.site).href;
 // against `site`. The default card exists so `summary_large_image` is never a
 // promise the page cannot keep.
 const ogImage = new URL(image ?? '/og-default.png', Astro.site).href;
-const ogImageAlt = imageAlt ?? 'Wabi Sabi — applied AI notes by Janmejai Singh Minhas';
-const siteName = 'Wabi Sabi';
+const ogImageAlt = imageAlt ?? 'wAIbi-sabi — applied AI notes by Janmejai Singh Minhas';
+const siteName = 'wAIbi-sabi';
 const personId = new URL('/#person', Astro.site).href;
 
 const person = {
@@ -63,6 +63,7 @@ const graph =
         {
           '@type': 'WebSite',
           name: siteName,
+          alternateName: 'Wabi Sabi',
           url: Astro.site?.href,
           author: { '@id': personId },
         },
