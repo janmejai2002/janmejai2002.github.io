@@ -11,6 +11,7 @@ const {
   keywords,
   readingTime,
   heroImage,
+  heroImageDark,
   heroAlt,
   heroCaption,
   ogImage,
@@ -64,6 +65,7 @@ const social = card
         heroImage && (
           <figure class="hero-figure">
             <Image
+              class={heroImageDark ? 'art art--light' : 'art'}
               src={heroImage}
               alt={heroAlt!}
               widths={[640, 960, 1280]}
@@ -71,6 +73,22 @@ const social = card
               loading="eager"
               fetchpriority="high"
             />
+            {
+              /* Both variants ship, and CSS picks one. <picture> would only
+                 answer prefers-color-scheme, and this site's theme has three
+                 states — the manual toggle has to win too. */
+              heroImageDark && (
+                <Image
+                  class="art art--dark"
+                  src={heroImageDark}
+                  alt={heroAlt!}
+                  widths={[640, 960, 1280]}
+                  sizes="(max-width: 46rem) 100vw, 44rem"
+                  loading="eager"
+                  fetchpriority="high"
+                />
+              )
+            }
             {heroCaption && <figcaption>{heroCaption}</figcaption>}
           </figure>
         )

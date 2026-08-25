@@ -20,7 +20,10 @@ const blog = defineCollection({
         draft: z.boolean().default(false),
         readingTime: z.string().optional(),
 
+        // Artwork ships as a light/dark pair so nothing carries a baked-in
+        // background into the wrong theme. See docs/ARTWORK.md.
         heroImage: image().optional(),
+        heroImageDark: image().optional(),
         heroAlt: z.string().optional(),
         // Optional caption printed under the hero. Not a substitute for alt.
         heroCaption: z.string().optional(),
@@ -36,6 +39,13 @@ const blog = defineCollection({
             code: z.ZodIssueCode.custom,
             path: ['heroAlt'],
             message: 'heroAlt is required whenever heroImage is set.',
+          });
+        }
+        if (data.heroImageDark && !data.heroImage) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            path: ['heroImageDark'],
+            message: 'heroImageDark needs a heroImage to pair with.',
           });
         }
       }),

@@ -9,9 +9,10 @@ keywords:
   - vector store vs filesystem memory
   - agent memory architecture
 readingTime: '9 min read'
-heroImage: '../../assets/agent-memory-hero.png'
-heroAlt: 'Two columns. On the left, a scattered cloud of dots labelled RETRIEVAL, marked 48.5% and 0.2 seconds a query. On the right, a tidy grid of nine file cards labelled THE FILES, marked 69.3% and about three minutes a query.'
-heroCaption: 'Averages across the two tiers of LongMemEval-V2. The gap is real, and so is the three minutes.'
+heroImage: '../../assets/art/agent-memory-filesystem-light.webp'
+heroImageDark: '../../assets/art/agent-memory-filesystem-dark.webp'
+heroAlt: 'A hairline rule splits the frame. To its left, dozens of small circles drift with no structure. To its right, a regular four-by-three grid of cards, each ruled with two short lines, except one position which is drawn only as a dashed outline.'
+heroCaption: 'A cloud you search, and a shelf you read. The dashed card is the thing retrieval could not find.'
 ---
 
 <div class="tldr">

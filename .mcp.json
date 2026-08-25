@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "unsplash": {
+      "command": "npx",
+      "args": ["-y", "@jeff_kit/unsplash-mcp-server"],
+      "env": {
+        "UNSPLASH_ACCESS_KEY": "${UNSPLASH_ACCESS_KEY}"
+      }
+    }
+  }
+}

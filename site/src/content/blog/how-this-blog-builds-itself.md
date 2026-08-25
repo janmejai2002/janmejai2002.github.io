@@ -9,6 +9,10 @@ keywords:
   - agent token budget
   - Astro content collections
 readingTime: '12 min read'
+heroImage: '../../assets/art/how-this-blog-builds-itself-light.webp'
+heroImageDark: '../../assets/art/how-this-blog-builds-itself-dark.webp'
+heroAlt: 'A ring of sixty evenly spaced tick marks enclosed by a single heavy arc that runs almost the whole way round. The arc breaks at the lower left, and a short, slightly crooked red stroke sits in the gap.'
+heroCaption: 'The loop runs on its own. The red mark is the one place a person touches it.'
 ---
 
 <div class="tldr">
@@ -23,9 +27,11 @@ readingTime: '12 min read'
 
 </div>
 
-The `/projects/` page has been promising this walkthrough for a while. Here it is, generated the way it should have been: from a NotebookLM notebook built on the actual configuration files rather than from memory. The four diagrams below were derived from that notebook's grounded answers and then hand-drawn as SVG, because this site has a real dark mode and a baked-in white PNG would have looked broken in half of it.
+My entire editorial job is a dropdown with five values in it.
 
-Everything here is replicable. There is no bespoke infrastructure, no server, and no queue. It is two markdown prompt files, three Notion databases, and a static site.
+Everything upstream of that dropdown — noticing a topic is worth writing about, checking it has not been covered, researching it, drafting it — runs on a clock without me. Everything downstream of it is a review and a git push. The interesting part is not that this is possible; plenty of people have wired an LLM to a cron job. The interesting part is which decisions turned out to be worth keeping for a human, and how few of them there are.
+
+There is no bespoke infrastructure here, no server and no queue. Two markdown prompt files, three Notion databases, a static site.
 
 ## The shape of the thing
 
@@ -42,7 +48,6 @@ Two scheduled tasks run on a clock. `daily-ai-seo-radar` fires at 07:10 and file
       <text x="486" y="14">STATE AFTER</text>
     </g>
     <line x1="124" y1="30" x2="124" y2="576" stroke="currentColor" stroke-opacity="0.18" stroke-width="1"/>
-
     <g>
       <circle cx="124" cy="66" r="4.5" fill="var(--mizu)"/>
       <text x="0" y="58" font-size="10.5" font-weight="700" fill="var(--mizu)">RADAR</text>
@@ -54,7 +59,6 @@ Two scheduled tasks run on a clock. `daily-ai-seo-radar` fires at 07:10 and file
       <text x="486" y="58" font-size="11" font-weight="600">Pipeline row created</text>
       <text x="486" y="76" font-size="11" opacity="0.65">Status = Radar Idea</text>
     </g>
-
     <g>
       <circle cx="124" cy="156" r="4.5" fill="var(--hanko)"/>
       <text x="0" y="148" font-size="10.5" font-weight="700" fill="var(--hanko)">HUMAN</text>
@@ -67,7 +71,6 @@ Two scheduled tasks run on a clock. `daily-ai-seo-radar` fires at 07:10 and file
       <text x="486" y="166" font-size="11" opacity="0.65">4 or 5 approves. 1 and 2</text>
       <text x="486" y="182" font-size="11" opacity="0.65">steer future radar runs.</text>
     </g>
-
     <g>
       <circle cx="124" cy="246" r="4.5" fill="var(--mizu)"/>
       <text x="0" y="238" font-size="10.5" font-weight="700" fill="var(--mizu)">WRITER</text>
@@ -80,7 +83,6 @@ Two scheduled tasks run on a clock. `daily-ai-seo-radar` fires at 07:10 and file
       <text x="486" y="256" font-size="11" opacity="0.65">Pipeline = Drafting</text>
       <text x="486" y="272" font-size="11" opacity="0.65">Production = Researching</text>
     </g>
-
     <g>
       <circle cx="124" cy="336" r="4.5" fill="var(--mizu)"/>
       <text x="0" y="340" font-size="10.5" font-weight="700" fill="var(--mizu)">WRITER</text>
@@ -91,7 +93,6 @@ Two scheduled tasks run on a clock. `daily-ai-seo-radar` fires at 07:10 and file
       <text x="486" y="336" font-size="11" font-weight="600">Production = Writing</text>
       <text x="486" y="354" font-size="11" opacity="0.65">once research is done</text>
     </g>
-
     <g>
       <circle cx="124" cy="426" r="4.5" fill="var(--mizu)"/>
       <text x="0" y="430" font-size="10.5" font-weight="700" fill="var(--mizu)">WRITER</text>
@@ -102,7 +103,6 @@ Two scheduled tasks run on a clock. `daily-ai-seo-radar` fires at 07:10 and file
       <text x="486" y="426" font-size="11" font-weight="600">Production = Draft Ready</text>
       <text x="486" y="444" font-size="11" opacity="0.65">word count, skills, date</text>
     </g>
-
     <g>
       <circle cx="124" cy="516" r="4.5" fill="var(--hanko)"/>
       <text x="0" y="508" font-size="10.5" font-weight="700" fill="var(--hanko)">HUMAN</text>
@@ -116,7 +116,6 @@ Two scheduled tasks run on a clock. `daily-ai-seo-radar` fires at 07:10 and file
       <text x="486" y="526" font-size="11" opacity="0.65">Pipeline = Published,</text>
       <text x="486" y="542" font-size="11" opacity="0.65">Post URL, Publish Date</text>
     </g>
-
     <text x="0" y="586" font-size="10.5" opacity="0.5">Every step above is enforced by prompt text in two markdown files. There is no orchestration engine.</text>
   </g>
 </svg>
@@ -140,7 +139,6 @@ The word "CMS" would be wrong here. Notion holds the things that are still being
   <title id="d2t">The Notion control plane</title>
   <desc id="d2d">The AI Blog OS Pipeline database and the Article Production database are joined by a two-way relation between the Article and Source Idea fields. The radar routine creates pipeline rows; the writer routine creates production rows and advances both. Interest Rating, Remarks and the Approved status are human-only. A third database, the Interview News Archive, is separate and syncs into the repository as committed JSON.</desc>
   <g font-family="inherit" fill="currentColor">
-
     <rect x="0" y="24" width="316" height="222" rx="10" fill="var(--card)" stroke="var(--border)"/>
     <rect x="0" y="24" width="316" height="30" rx="10" fill="var(--wash-mizu)"/>
     <text x="16" y="44" font-size="12.5" font-weight="700">AI Blog OS Pipeline</text>
@@ -155,7 +153,6 @@ The word "CMS" would be wrong here. Notion holds the things that are still being
       <text x="16" y="212" font-weight="600" fill="var(--indigo)">Article</text><text x="140" y="212" opacity="0.6">relation →</text>
       <text x="16" y="232" opacity="0.6">Post URL · Publish Date</text>
     </g>
-
     <rect x="384" y="24" width="316" height="222" rx="10" fill="var(--card)" stroke="var(--border)"/>
     <rect x="384" y="24" width="316" height="30" rx="10" fill="var(--wash-ochre)"/>
     <text x="400" y="44" font-size="12.5" font-weight="700">Article Production</text>
@@ -170,14 +167,12 @@ The word "CMS" would be wrong here. Notion holds the things that are still being
       <text x="400" y="212" font-weight="600" fill="var(--indigo)">Source Idea</text><text x="520" y="212" opacity="0.6">← relation</text>
       <text x="400" y="232" opacity="0.6">Promoted On · Draft Completed</text>
     </g>
-
     <g stroke="var(--indigo)" stroke-width="1.6" fill="none">
       <path d="M316 206 L384 206"/>
       <path d="M330 202 L322 206 L330 210"/>
       <path d="M370 202 L378 206 L370 210"/>
     </g>
     <text x="350" y="194" font-size="10" text-anchor="middle" fill="var(--indigo)" font-weight="700">two-way</text>
-
     <rect x="0" y="286" width="316" height="120" rx="10" fill="var(--card)" stroke="var(--border)"/>
     <rect x="0" y="286" width="316" height="30" rx="10" fill="var(--wash-moss)"/>
     <text x="16" y="306" font-size="12.5" font-weight="700">Interview News Archive</text>
@@ -187,7 +182,6 @@ The word "CMS" would be wrong here. Notion holds the things that are still being
       <text x="16" y="378" opacity="0.72">as committed JSON, then Astro builds</text>
       <text x="16" y="396" opacity="0.72">221 filterable cards at /news/.</text>
     </g>
-
     <rect x="384" y="286" width="316" height="120" rx="10" fill="none" stroke="var(--border)" stroke-dasharray="4 4"/>
     <text x="400" y="308" font-size="12.5" font-weight="700">The repository</text>
     <g font-size="11">
@@ -196,7 +190,6 @@ The word "CMS" would be wrong here. Notion holds the things that are still being
       <text x="400" y="378" opacity="0.72">Rating an idea must never require</text>
       <text x="400" y="396" opacity="0.72">a git commit. That is the whole rule.</text>
     </g>
-
     <text x="0" y="440" font-size="10.5" opacity="0.5">The relation is what answers "has this already been written" in a single query — setting either side populates the other.</text>
     <text x="0" y="458" font-size="10.5" opacity="0.5">Red fields are the human's. The routines read them and never write them.</text>
   </g>
@@ -215,10 +208,8 @@ There is less here than people expect. No agent framework, no vector database, n
   <title id="d3t">Claude Code layout for this system</title>
   <desc id="d3d">Two scheduled task prompt files drive the pipeline. Seven skills sit in the active skills folder and are injected into every session and sub-agent. About twenty-seven agents sit in the active agents folder. Fifty-seven skills and about two hundred thirty-six agents sit in archived library folders that are never scanned at startup and cost nothing. MCP connections provide Notion, web search and NotebookLM.</desc>
   <g font-family="inherit" fill="currentColor">
-
     <text x="0" y="14" font-size="10" font-weight="700" letter-spacing="1.4" opacity="0.45">LOADED INTO EVERY SESSION</text>
     <rect x="0" y="24" width="700" height="150" rx="10" fill="var(--wash-mizu)" stroke="var(--border)"/>
-
     <rect x="16" y="42" width="200" height="114" rx="8" fill="var(--card)" stroke="var(--border)"/>
     <text x="30" y="64" font-size="12" font-weight="700">scheduled-tasks/</text>
     <g font-size="11" opacity="0.75">
@@ -227,7 +218,6 @@ There is less here than people expect. No agent framework, no vector database, n
       <text x="30" y="128">ai-article-writer</text>
       <text x="30" y="146" font-size="10" opacity="0.7">every 4h · SKILL.md</text>
     </g>
-
     <rect x="234" y="42" width="200" height="114" rx="8" fill="var(--card)" stroke="var(--border)"/>
     <text x="248" y="64" font-size="12" font-weight="700">skills/ — 7 active</text>
     <g font-size="10.5" opacity="0.75">
@@ -236,7 +226,6 @@ There is less here than people expect. No agent framework, no vector database, n
       <text x="248" y="118">is the mandatory last filter.</text>
       <text x="248" y="142" font-size="10" fill="var(--hanko)" font-weight="700">~1.2k tokens, every time</text>
     </g>
-
     <rect x="452" y="42" width="232" height="114" rx="8" fill="var(--card)" stroke="var(--border)"/>
     <text x="466" y="64" font-size="12" font-weight="700">MCP connections</text>
     <g font-size="10.5" opacity="0.75">
@@ -245,20 +234,16 @@ There is less here than people expect. No agent framework, no vector database, n
       <text x="466" y="122">NotebookLM — this article</text>
       <text x="466" y="146">agents/ — ~27 curated</text>
     </g>
-
     <text x="0" y="218" font-size="10" font-weight="700" letter-spacing="1.4" opacity="0.45">ON DISK, NEVER SCANNED AT STARTUP</text>
     <rect x="0" y="228" width="700" height="104" rx="10" fill="none" stroke="var(--border)" stroke-dasharray="5 5"/>
-
     <rect x="16" y="246" width="322" height="68" rx="8" fill="none" stroke="var(--border)"/>
     <text x="30" y="268" font-size="12" font-weight="700" opacity="0.7">skills-library/ — 57 archived</text>
     <text x="30" y="290" font-size="10.5" opacity="0.6">Not invocable. Restored by moving the folder</text>
     <text x="30" y="306" font-size="10.5" opacity="0.6">back and restarting.</text>
-
     <rect x="362" y="246" width="322" height="68" rx="8" fill="none" stroke="var(--border)"/>
     <text x="376" y="268" font-size="12" font-weight="700" opacity="0.7">agents-library/ — ~236 archived</text>
     <text x="376" y="290" font-size="10.5" opacity="0.6">Found by grepping an INDEX.md, then pasted</text>
     <text x="376" y="306" font-size="10.5" opacity="0.6">into a prompt as a general-purpose agent.</text>
-
     <text x="0" y="362" font-size="11" opacity="0.6">Both archives cost zero tokens at baseline. That is the entire reason they exist.</text>
     <text x="0" y="384" font-size="11" opacity="0.6">The teal block above is paid for on every single session — and again inside every sub-agent.</text>
   </g>
@@ -287,7 +272,6 @@ Skill descriptions and agent descriptions are injected into context automaticall
     <text x="12" y="75" font-size="11" font-weight="700" fill="var(--paper)">7</text>
     <text x="104" y="75" font-size="11.5" font-weight="700">~1.2k tokens</text>
     <text x="200" y="75" font-size="11" opacity="0.6">57 moved to skills-library/</text>
-
     <text x="0" y="122" font-size="12.5" font-weight="700">agents/ — listing must stay under the Agent tool's budget</text>
     <rect x="0" y="136" width="470" height="22" rx="4" fill="var(--plum)" opacity="0.85"/>
     <text x="12" y="151" font-size="11" font-weight="700" fill="var(--paper)">263 personas</text>
@@ -295,9 +279,7 @@ Skill descriptions and agent descriptions are injected into context automaticall
     <rect x="0" y="166" width="48" height="22" rx="4" fill="var(--mizu)"/>
     <text x="60" y="181" font-size="11.5" font-weight="700">~27 curated</text>
     <text x="200" y="181" font-size="11" opacity="0.6">236 moved to agents-library/</text>
-
     <line x1="0" y1="216" x2="700" y2="216" stroke="currentColor" stroke-opacity="0.15"/>
-
     <text x="0" y="242" font-size="12.5" font-weight="700">Why it compounds</text>
     <g font-size="11" opacity="0.75">
       <text x="0" y="266">One session pays the block once. Every sub-agent you spawn pays it again, in full.</text>
@@ -344,4 +326,4 @@ Deployment is a push to `main`, a GitHub Actions run, and Pages. There is no pre
 
 ---
 
-*This walkthrough was assembled from a NotebookLM notebook built on nine real configuration files: both scheduled-task prompts, the `seo-topic-research` skill, the global Claude Code config, the site's content and build configs, and a transcription of all three live Notion schemas. The diagrams were drawn by hand from that notebook's grounded answers so they read the site's own colour tokens in both light and dark mode.*
+*Every number and state transition above was checked against the running configuration rather than recalled: both scheduled-task prompts, the skills, the build config, and all three live Notion schemas.*

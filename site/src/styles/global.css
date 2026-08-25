@@ -341,6 +341,20 @@ main { flex: 1; padding: 2rem var(--gutter) 6rem; max-width: 64rem; min-width: 0
 }
 .body figcaption a { color: var(--ink-soft); }
 
+/* Artwork ships as a light/dark pair. The three theme states are handled the
+   same way the colour tokens are: bare :root, a guarded media query, and the
+   explicit attribute. Classes rather than [hidden], because [hidden] is only
+   (0,1,0) and loses to any author `display` rule. */
+.art--dark { display: none; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) .art--light { display: none; }
+  :root:not([data-theme='light']) .art--dark { display: block; }
+}
+:root[data-theme='dark'] .art--light { display: none; }
+:root[data-theme='dark'] .art--dark { display: block; }
+:root[data-theme='light'] .art--light { display: block; }
+:root[data-theme='light'] .art--dark { display: none; }
+
 /* Diagrams are authored as inline SVG so they read the same tokens as the rest
    of the page. They carry no background of their own — see the dark mode note
    in the design system: nothing here may hardcode a colour. */
