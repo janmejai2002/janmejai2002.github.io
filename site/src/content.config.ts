@@ -17,11 +17,15 @@ const blog = defineCollection({
         pubDate: z.coerce.date(),
         // Which theme this belongs to. The index filters on it and each theme
         // has its own research routine feeding the Notion radar.
-        //   technical — how AI actually works and breaks
-        //   business  — what it means for consulting, marketing, strategy
-        //   basics    — AI explained simply, trends, and the setups I build
+        //   technical    — how AI actually works and breaks
+        //   business     — what it means for consulting, marketing, strategy
+        //   basics       — AI explained simply, trends, and the setups I build
+        //   case-studies — what a named company actually did, and what it cost
+        //   talks        — what was said in a specific talk, podcast or keynote
         // Defaults to technical, which is what every pre-theme post is.
-        track: z.enum(['technical', 'business', 'basics']).default('technical'),
+        track: z
+          .enum(['technical', 'business', 'basics', 'case-studies', 'talks'])
+          .default('technical'),
         // The question the piece answers, in the reader's own words. Printed
         // above the title and on the index card.
         question: z.string().max(120).optional(),

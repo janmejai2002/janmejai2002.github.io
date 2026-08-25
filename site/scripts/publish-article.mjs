@@ -245,8 +245,9 @@ for (const page of rows) {
   // technical, which is also the schema default — a missing Track must never be
   // able to fail a build. These three strings must match the enum in
   // src/content.config.ts and the Notion select exactly.
-  const TRACKS = ['technical', 'business', 'basics'];
-  const rawTrack = (p['Track']?.select?.name ?? '').trim().toLowerCase();
+  const TRACKS = ['technical', 'business', 'basics', 'case-studies', 'talks'];
+  // "Case Studies" in Notion becomes "case-studies" as a track id.
+  const rawTrack = (p['Track']?.select?.name ?? '').trim().toLowerCase().replace(/\s+/g, '-');
   const track = TRACKS.includes(rawTrack) ? rawTrack : 'technical';
   if (rawTrack && !TRACKS.includes(rawTrack)) {
     note(id, title, `Unknown Track "${rawTrack}" — filed under technical.`);

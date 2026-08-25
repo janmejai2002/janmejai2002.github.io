@@ -38,6 +38,24 @@ const TRACKS = [
       'AI explained in plain language, what is genuinely new this month, and the setups I have built.',
     cta: 'Start here',
   },
+  {
+    id: 'case-studies',
+    label: 'Case Studies',
+    accent: 'moss',
+    ask: 'For people who want precedent',
+    blurb:
+      'What a named company actually did with AI in marketing and distribution — the mechanism, the numbers they published, and how much weight the evidence really carries.',
+    cta: 'Read the case studies',
+  },
+  {
+    id: 'talks',
+    label: 'Talks',
+    accent: 'hanko',
+    ask: 'For people who cannot watch everything',
+    blurb:
+      'One talk, keynote or podcast at a time, from a fixed list of sources worth listening to — what was actually claimed, and what holds up.',
+    cta: 'Read the talk notes',
+  },
 ] as const;
 
 const counts = Object.fromEntries(
@@ -105,6 +123,31 @@ const dateOf = (d: Date) =>
                     )}
                   </g>
                   <circle class="stray" cx="89" cy="26" r="2.5" fill="currentColor" />
+                </svg>
+              )}
+              {/* Case Studies: measured bars. One overshoots the baseline —
+                  the outlier result everybody quotes and nobody replicates. */}
+              {t.id === 'case-studies' && (
+                <svg viewBox="0 0 120 120" fill="none">
+                  <g stroke="currentColor" stroke-width="7" stroke-linecap="butt">
+                    <path d="M22 96V74" />
+                    <path d="M44 96V60" />
+                    <path d="M66 96V80" />
+                    <path class="stray" d="M88 96V38" />
+                  </g>
+                  <path d="M10 96h100" stroke="currentColor" stroke-width="1.5" />
+                </svg>
+              )}
+              {/* Talks: arcs radiating from a point. The outermost stops
+                  short — not everything said travels. */}
+              {t.id === 'talks' && (
+                <svg viewBox="0 0 120 120" fill="none">
+                  <g stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+                    <path class="arc a1" d="M34 96a34 34 0 0 1 52 0" pathLength="100" />
+                    <path class="arc a2" d="M22 78a52 52 0 0 1 76 0" pathLength="100" />
+                    <path class="arc a3" d="M10 60a68 68 0 0 1 100 0" pathLength="100" />
+                  </g>
+                  <circle cx="60" cy="103" r="3" fill="currentColor" />
                 </svg>
               )}
               {/* Basics: steps up out of a single point. The top step is
@@ -277,6 +320,8 @@ const dateOf = (d: Date) =>
     technical: 'Technical',
     business: 'Business',
     basics: 'Basics',
+    'case-studies': 'Case Studies',
+    talks: 'Talks',
   };
 
   const apply = (want: string, scroll = false) => {
@@ -390,7 +435,12 @@ const dateOf = (d: Date) =>
   .pill.is-on { color: var(--ink); border-color: var(--ink); background: var(--card); }
 
   /* ---------- theme panels ---------- */
-  .tracks__grid { display: grid; gap: 1rem; grid-template-columns: repeat(3, 1fr); }
+  /* auto-fit, not a fixed 3, so adding a theme reflows instead of leaving a
+     ragged last row. */
+  .tracks__grid {
+    display: grid; gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
+  }
   .track {
     display: flex; flex-direction: column; gap: .5rem;
     padding: 1.75rem; border-radius: 20px;
