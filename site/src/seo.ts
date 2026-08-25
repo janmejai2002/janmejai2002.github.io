@@ -26,6 +26,24 @@
 export const GOOGLE_SITE_VERIFICATION = 'p0b2exN0HT0XuhCK0iFkliuB2OZiIy2VhNDTYWKQS1M';
 export const BING_SITE_VERIFICATION = '8AE472167560C6B10D02A15F64EA2389';
 
+/**
+ * Umami Cloud analytics (cookieless, ~1.5 KB script, has a read API a routine
+ * can query later for the topic feedback loop). Like the tokens above, the
+ * website ID is public by design — it appears in the page source of every
+ * Umami-instrumented site.
+ *
+ * ── How to fill this in (cloud.umami.is, account already created) ──────────
+ *   1. Log in → Settings (gear icon) → Websites → **Add website**.
+ *   2. Name: wAIbi-sabi. Domain: janmejai2002.github.io. Save.
+ *   3. The website row now shows **Edit → Tracking code**; copy the
+ *      `data-website-id` value (a UUID) into UMAMI_WEBSITE_ID below.
+ *   4. Commit, deploy, open the live site once, and the dashboard starts
+ *      counting.
+ *
+ * An empty string renders no script at all, which is the correct default.
+ */
+export const UMAMI_WEBSITE_ID = '';
+
 // Google is verified twice over, deliberately: the meta tag above and the file
 // at public/googlea1340fe9bfe1e41a.html, which deploys to the site root. Either
 // alone is sufficient. Google's instruction is not to remove the file even

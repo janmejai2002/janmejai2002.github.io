@@ -1,5 +1,5 @@
 ---
-import { GOOGLE_SITE_VERIFICATION, BING_SITE_VERIFICATION } from '../seo';
+import { GOOGLE_SITE_VERIFICATION, BING_SITE_VERIFICATION, UMAMI_WEBSITE_ID } from '../seo';
 
 export interface Props {
   title: string;
@@ -118,9 +118,18 @@ const schema = { '@context': 'https://schema.org', '@graph': graph };
 
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+{/* Newsreader carries exactly one glyph per article — the drop cap — plus
+    nothing else yet, so only the 500 weight ships. */}
 <link
-  href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+  href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Newsreader:opsz,wght@6..72,500&display=swap"
   rel="stylesheet"
 />
+
+{/* Umami Cloud: cookieless page counts and referrers, nothing personal, and a
+    read API the topic feedback loop can query. Production only, and only once
+    a website ID exists — see src/seo.ts for the fill-in steps. */}
+{import.meta.env.PROD && UMAMI_WEBSITE_ID && (
+  <script defer src="https://cloud.umami.is/script.js" data-website-id={UMAMI_WEBSITE_ID} />
+)}
 
 <script type="application/ld+json" set:html={JSON.stringify(schema)} />
