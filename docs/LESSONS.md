@@ -87,3 +87,44 @@ the `Executive TL;DR` its own writer prompt requires. The build passed and
 `check-build` passed, because neither asserts on those. A green pipeline says the
 plumbing works, not that the output is right.
 
+## A routine's cadence lives in two places that drift apart silently
+
+The cron expression lives in the `scheduled-tasks` registry; the sentence
+claiming what the cadence *is* lives in the prompt's own text. Nothing checks
+them against each other. On 26 Aug 2026 all three "weekly" routines had already
+been switched to daily crons by the owner, while `business-radar` still described
+itself as weekly and `case-studies-writer` still said in bold *"Cadence is two a
+week — do not increase it"* on a routine that had been running daily for a day.
+A cold routine believes its own prompt. When you change a schedule, grep the
+prompt for the cadence claim in the same change, and fix the registry
+`description` too — it is the only thing the owner sees in the sidebar.
+
+## An archive dated by source, not by run, always looks empty at the top
+
+`/news/` showed two cards for 26 Aug and looked broken. It was not: the feeder
+routine dates each story by the story's own publication date, runs at 06:27 IST,
+and almost nothing has been published under that day's date yet. Its 22 rows that
+morning were dated 25 Aug. Before treating a thin recent day as a sync failure,
+check the run log for how many rows were actually created — the count and the
+date distribution answer different questions. The correct fix for the *appearance*
+is presentational, never a pipeline repair.
+
+## There are two scheduling systems here and they are both called "routines"
+
+Local `scheduled-tasks` (prompts in `~/.claude/scheduled-tasks/`, run on this PC,
+can read local files, need the machine awake) and cloud routines (`RemoteTrigger`
+/ `/schedule`, sandboxed, no local disk, 1-hour minimum interval). On 26 Aug 2026
+eight were local and exactly one — the news feeder — was cloud. Asking "did the
+routine run?" means nothing until you know which system it lives in; they have
+separate lists, separate logs, and separate failure modes. `docs/research/token-and-cloud-audit.md`
+has the split and the migration order.
+
+## The fixed per-session baseline dominates routine cost, not the work
+
+A routine that finds nothing still costs most of what a routine that finds
+something costs, because MCP tool schemas, skill descriptions and agent listings
+are all paid at session start. This is why cutting cadence is a bad lever for
+cost — it loses throughput and saves little — and why constraining each routine's
+tool surface is a good one: it saves the same tokens on every run forever and
+costs nothing. A CLI called through Bash has zero schema cost; an MCP server has
+a schema cost on every cold start.
