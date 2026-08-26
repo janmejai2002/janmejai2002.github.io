@@ -102,7 +102,7 @@ cold**, so the prompt must be fully self-contained.
 - **`daily-ai-seo-radar`** — 07:10 daily. Technical theme. Discovers topics,
   writes a 100-word pitch, files as `Radar Idea`.
 - **`business-radar`** — daily 07:20. Business theme, covering both the advisory
-  and the marketing audience. 2 ideas max, and explicitly told a quiet week is a
+  and the marketing audience. 2 ideas max, and explicitly told a quiet day is a
   valid result.
 - **`basics-radar`** — daily 07:16. Basics theme. Weighted toward questions people
   are actually asking rather than the news cycle, and told that a simplification
