@@ -1,11 +1,99 @@
 [
   {
+    "headline": "UPI turns 10, now handles nearly half the world's real-time payments",
+    "date": "2026-08-26",
+    "category": "Product Management",
+    "summary": "India's Unified Payments Interface completed a decade of operation on August 25, 2026, and now accounts for close to 49% of global real-time payment transaction volume, processing an average of 66 crore transactions a day; NPCI is pushing UPI into 11-plus countries.",
+    "angle": "Is UPI's zero-MDR, government-backed Digital Public Infrastructure model a replicable global template, or does it work only because of India's unique scale and regulatory push — and what does that mean for private apps building on top of it?",
+    "source": "https://www.businesstoday.in/personal-finance/story/upi-accounts-for-nearly-half-of-global-real-time-payments-how-india-became-the-world-leader-551281-2026-08-26"
+  },
+  {
+    "headline": "US sanctions four India-based firms over Iranian petrochemical imports",
+    "date": "2026-08-26",
+    "category": "Operations",
+    "summary": "Under 'Operation Economic Outcast,' the US Treasury sanctioned four India-based companies and several individuals, including a customs broker, for allegedly facilitating tens of millions of dollars in Iranian-origin petroleum and petrochemical imports into India.",
+    "angle": "How should Indian trading and manufacturing firms redesign vendor due-diligence and compliance screening when global sanctions regimes create hidden supply-chain risk?",
+    "source": "https://www.business-standard.com/economy/news/four-india-based-companies-bear-the-brunt-of-us-iran-sanctions-126082600005_1.html"
+  },
+  {
+    "headline": "Air India asks Tata, Singapore Airlines for $1.5 billion as losses balloon",
+    "date": "2026-08-25",
+    "category": "Consulting",
+    "summary": "Air India has sought roughly $1.5 billion in fresh equity from owners Tata Sons and Singapore Airlines after the carrier and its budget arm Air India Express posted a combined loss of $2.33 billion in FY26, more than double the prior year, amid a multi-year transformation and fallout from airspace disruptions and last year's fatal crash.",
+    "angle": "Is continued capital infusion into a loss-making legacy carrier disciplined 'fix-it' strategy or throwing good money after bad, and what do repeated equity calls signal about JV governance between a controlling Indian promoter and a minority foreign partner?",
+    "source": "https://www.business-standard.com/industry/aviation/air-india-seeks-1-5-bn-from-owners-tata-singapore-air-as-losses-mount-126082501097_1.html"
+  },
+  {
+    "headline": "Bank credit growth outruns deposit growth",
+    "date": "2026-08-25",
+    "category": "Finance",
+    "summary": "RBI data show bank credit grew 19.3% YoY as of July 31, 2026 (fastest since May 2024), while deposit growth of 15.4% — though the highest since December 2016 — still trails credit growth, prompting the EAC-PM to flag deposit mobilisation as a key challenge.",
+    "angle": "What should banks do about a widening credit-deposit gap — raise deposit rates, lean on wholesale borrowing, or slow credit growth — and what does it mean for margins?",
+    "source": "https://www.business-standard.com/industry/banking/deposit-mobilisation-key-as-bank-credit-growth-outpaces-deposits-eac-pm-126082501100_1.html"
+  },
+  {
+    "headline": "Govt to ease BIS certification rules for high-tech manufacturers",
+    "date": "2026-08-25",
+    "category": "Operations",
+    "summary": "Commerce Minister Piyush Goyal, addressing Japanese semiconductor and AI company CEOs in Tokyo, said India will build a framework to exempt high-tech manufacturers from BIS certification on imported equipment, after firms including Tokyo Electron flagged delays.",
+    "angle": "Is easing quality-certification norms a smart ease-of-doing-business move to win semiconductor/AI-hardware FDI, or a risky dilution of India's manufacturing-quality standards?",
+    "source": "https://www.business-standard.com/economy/news/govt-eyes-bis-exemption-for-foreign-high-tech-firms-manufacturing-in-india-126082501238_1.html"
+  },
+  {
+    "headline": "Maharashtra FDA notice on celebrity food endorsements",
+    "date": "2026-08-25",
+    "category": "Marketing",
+    "summary": "Maharashtra FDA issued a show-cause notice alleging a Vimal Elaichi ad featuring Shah Rukh Khan, Ajay Devgn and Tiger Shroff amounts to surrogate promotion of banned Vimal Pan Masala; the actors had not responded as of the latest reports.",
+    "angle": "Should celebrities be legally accountable for products they endorse without due diligence, and are India's surrogate-advertising rules for tobacco/pan masala being effectively enforced?",
+    "source": "https://www.business-standard.com/industry/news/celebrity-food-endorsements-under-fssai-scrutiny-what-do-the-rules-say-126082500643_1.html"
+  },
+  {
+    "headline": "Nearly 1 in 4 CTV ad impressions in India found to be fake",
+    "date": "2026-08-25",
+    "category": "Marketing",
+    "summary": "A VDO.AI omnichannel study found roughly 24.5% of connected-TV/OTT ad traffic analysed was invalid, showing that ad fraud is scaling alongside brands' growing spend on India's booming CTV inventory.",
+    "angle": "Does India's CTV/OTT ad ecosystem need mandatory independent third-party verification before it can credibly command premium ad rates?",
+    "source": "https://bestmediainfo.com/insights/one-out-of-every-four-ctv-viewers-is-a-ghost-and-advertisers-need-to-brace-themselves-12432788"
+  },
+  {
+    "headline": "OpenAI bans Russian ChatGPT accounts running a covert influence campaign",
+    "date": "2026-08-25",
+    "category": "Product Management",
+    "summary": "OpenAI disclosed it shut down ChatGPT accounts linked to Russia after finding they were using the chatbot to draft and launder pro-Moscow propaganda through a fake think tank, spreading it across Substack, Telegram, X, Facebook and LinkedIn.",
+    "angle": "How much content-generation capability should an AI platform allow versus how aggressively should it police misuse — and can any AI company realistically police disinformation at global scale?",
+    "source": "https://www.cnbc.com/2026/08/25/openai-russia-chatgpt-influence-campaign.html"
+  },
+  {
+    "headline": "RBI's draft curbs on NBFC revolving credit spark MSME funding worries",
+    "date": "2026-08-25",
+    "category": "Finance",
+    "summary": "RBI's draft norms propose that most NBFCs (barring the two authorised to issue credit cards) offer only fixed-schedule term loans and stop revolving/flexi-credit products; industry warns this could choke working-capital finance many MSMEs rely on.",
+    "angle": "Does RBI's financial-stability rationale for curbing NBFC credit outweigh the risk of squeezing legitimate MSME credit access?",
+    "source": "https://www.business-standard.com/industry/news/rbi-proposal-to-curb-nbfcs-revolving-credit-may-choke-msme-funding-126082500929_1.html"
+  },
+  {
     "headline": "FSSAI shuts down Marche Retail for a month",
     "date": "2026-08-24",
     "category": "Marketing",
     "summary": "FSSAI suspended the food licence of Marche Retail (Le Marche) for 30 days after inspections found serious hygiene and labelling non-compliances, part of a wider crackdown on food brands.",
     "angle": "A reminder that marketing claims and packaging must survive regulatory scrutiny, not just consumer appeal.",
     "source": "https://www.businesstoday.in/india/story/after-scrutiny-of-top-food-chains-like-burger-king-pizza-hut-fssai-suspends-marche-retail-licence-for-30-days-550866-2026-08-24"
+  },
+  {
+    "headline": "Goyal defends steel safeguard duty, pitches Japan on Indian steel",
+    "date": "2026-08-24",
+    "category": "Operations",
+    "summary": "Commerce Minister Piyush Goyal said India's 12% safeguard duty on certain steel imports is far lower than tariffs imposed by the US, UK and EU, and urged Japanese firms to source steel from India, as domestic steelmakers seek continued protection from a China-led supply glut.",
+    "angle": "Does the safeguard duty protect Indian steel capacity and jobs, or does it raise input costs for downstream sectors like auto and construction and hurt their export competitiveness?",
+    "source": "https://www.business-standard.com/india-news/goyal-urges-japanese-firms-to-buy-steel-from-india-backs-safeguard-duty-126082401099_1.html"
+  },
+  {
+    "headline": "India's equity capital market set for a record month",
+    "date": "2026-08-24",
+    "category": "Finance",
+    "summary": "India's primary and block-deal market has priced nearly $10 billion of equity deals in August 2026, on track to be the biggest month on record, led by the government's ~$3.3 billion LIC stake sale and Manipal Health's ~$958 million IPO.",
+    "angle": "Why is domestic liquidity (mutual funds, insurers, SIPs) powering record fundraising even as FIIs stay net sellers and the secondary market lags — genuine depth, or a valuation risk building up?",
+    "source": "https://www.bloomberg.com/news/articles/2026-08-24/india-s-10-billion-equity-rush-puts-august-on-track-for-record"
   },
   {
     "headline": "India's factories are growing faster than the world's",
@@ -24,12 +112,60 @@
     "source": "https://www.goingconcern.com/monday-morning-accounting-news-brief-the-newspaper-says-its-probably-for-the-best-if-you-got-laid-off-from-kpmg-irs-employee-union-has-beef-with-ceo-role-8-24-26/"
   },
   {
+    "headline": "OpenAI starts showing ads inside ChatGPT's free tier in Europe",
+    "date": "2026-08-24",
+    "category": "Marketing",
+    "summary": "From August 24, OpenAI began serving ads on ChatGPT's Free and Go tiers across 31 European markets, keeping paid subscribers ad-free and saying advertisers won't get access to users' chat histories.",
+    "angle": "What are the monetisation trade-offs of ad-supported conversational AI, and what happens to search/performance marketing once AI chat interfaces start carrying ads?",
+    "source": "https://openai.com/index/chatgpt-ads-expands-across-europe/"
+  },
+  {
+    "headline": "Paramount's $110 billion Warner Bros deal stalls under state antitrust fire",
+    "date": "2026-08-24",
+    "category": "Consulting",
+    "summary": "Even after clearing regulatory approval in nearly 70 countries, Paramount Skydance's ~$110 billion acquisition of Warner Bros Discovery remains on hold until at least mid-2027 because of ongoing antitrust lawsuits from a dozen US states, and watchers warn the standoff could chill other big media M&A.",
+    "angle": "Should global regulatory clearance be sufficient to close a mega-merger, and how should state-level antitrust exposure be priced into deal valuation and integration timelines?",
+    "source": "https://www.cnbc.com/2026/08/24/paramount-wbd-antitrust-media-deals.html"
+  },
+  {
+    "headline": "SEBI bars JPMorgan unit over Sensex closing-auction manipulation",
+    "date": "2026-08-24",
+    "category": "Finance",
+    "summary": "SEBI passed an interim order barring Copthall Mauritius Investment (a JPMorgan Chase unit) and a Mumbai broker from the securities market, alleging coordinated orders during the new Closing Auction Session distorted the Sensex close on expiry day to benefit linked options positions.",
+    "angle": "Is India's market infrastructure and enforcement mature enough to keep attracting foreign capital while policing new mechanisms strictly, or should regulators give new mechanisms room to bed in first?",
+    "source": "https://www.business-standard.com/markets/news/jpmorgan-india-unit-to-argue-that-any-regulatory-breach-was-technical-126082401446_1.html"
+  },
+  {
+    "headline": "Streaming giants slow subscription price hikes as ad-tiers grow",
+    "date": "2026-08-24",
+    "category": "Marketing",
+    "summary": "New Ampere Analysis data shows Netflix, Disney+ and Amazon have shrunk the size of subscription price increases over the past three years while keeping ad-supported tiers markedly cheaper, suggesting they're nearing the ceiling of what consumers will pay.",
+    "angle": "How does this freemium/ad-tier pricing playbook map onto India's own OTT pricing battles (JioHotstar, Netflix India, Prime Video) as subscriber bases mature?",
+    "source": "https://www.advanced-television.com/2026/08/24/analysis-netflix-disney-amazon-pull-brake-on-price-rises/"
+  },
+  {
+    "headline": "Urban Company sues Kent RO over disparaging ads",
+    "date": "2026-08-24",
+    "category": "Marketing",
+    "summary": "Urban Company filed a disparagement suit in Delhi High Court against Kent RO for ads and influencer posts calling its Native water purifier's filter claim a 'gimmick' and 'unsafe'; Kent has agreed to withdraw the contested ads.",
+    "angle": "Where is the legal line between competitive/comparative advertising and disparagement, and what does this signal about incumbent-vs-D2C brand battles as Urban Company expands into appliances?",
+    "source": "https://www.afaqs.com/news/advertising/urban-company-takes-kent-ro-to-court-over-native-purifier-ads-12426775"
+  },
+  {
     "headline": "YouTube redefines what counts as a \"view\"",
     "date": "2026-08-24",
     "category": "Marketing",
     "summary": "From August 24, YouTube counts a public view from the moment a video starts playing at the first frame, changing how creators and advertisers benchmark reach.",
     "angle": "Shows how a single metric-definition change can ripple through campaign pricing and ROI measurement — a good prompt on marketing analytics rigor.",
     "source": "https://bestmediainfo.com/mediainfo/advertising/top-advertising-marketing-and-media-news-headlines-of-today-august-24-2026-12425257"
+  },
+  {
+    "headline": "IRDAI bars four insurers from new offices over expense breaches",
+    "date": "2026-08-23",
+    "category": "Finance",
+    "summary": "IRDAI barred Edelweiss Life, Pramerica Life, ACKO General and Niva Bupa Health Insurance from opening new places of business for six months after they exceeded the regulator's mandated expense-of-management limits for FY25.",
+    "angle": "Does this signal a broader tightening cycle in Indian insurance regulation, and how should insurers balance distribution growth against cost discipline meant to protect policyholders?",
+    "source": "https://www.business-standard.com/finance/insurance/irdai-s-latest-eom-action-signals-tougher-stance-on-regulatory-breaches-126082300656_1.html"
   },
   {
     "headline": "Lahori Zeera reclaims \"thanda\" from Coca-Cola with newspaper takeover",
@@ -40,12 +176,36 @@
     "source": "https://www.afaqs.com/news/advertising/lahori-zeeras-latest-ad-puts-desi-thanda-against-the-mncs-12421756"
   },
   {
+    "headline": "Markets await Fed Chair Warsh's first Jackson Hole speech",
+    "date": "2026-08-23",
+    "category": "Finance",
+    "summary": "Investors are looking to Kevin Warsh's August 28 Jackson Hole keynote, his first as Fed Chair, for clarity on the Fed's response to above-target inflation, after he gave little forward guidance following the July FOMC meeting.",
+    "angle": "How exposed is India today to a hawkish Fed surprise — via the rupee, FII flows and RBI's own rate stance — versus in past cycles, given strong domestic liquidity?",
+    "source": "https://www.business-standard.com/world-news/investors-seek-clearer-fed-guidance-from-warsh-at-jackson-hole-address-126082300413_1.html"
+  },
+  {
     "headline": "Nvidia's CEO rushes to Taiwan to secure AI chip capacity from TSMC",
     "date": "2026-08-23",
     "category": "Operations",
     "summary": "Jensen Huang traveled to Taiwan for closed-door talks with TSMC to lock down next-generation AI chip capacity, amid reports of AI server price hikes of over 15% driven by rising memory costs.",
     "angle": "A sharp example of supply-constrained capacity allocation and single-source vendor dependency risk.",
     "source": "https://finance.biggo.com/news/0cbc7540-c6ca-49a0-b1c6-522d99889d5e"
+  },
+  {
+    "headline": "Vodafone Idea nears SBI loan, but only with promoter guarantees",
+    "date": "2026-08-23",
+    "category": "Consulting",
+    "summary": "State Bank of India has agreed in principle to sanction its share of funding for Vodafone Idea's capex plan, but only after promoters — the Aditya Birla group and the government — agreed to provide guarantees, the latest step in Vi's long effort to stay competitive against Reliance Jio and Airtel.",
+    "angle": "Do promoter guarantees adequately de-risk lending to a company carrying a massive AGR/spectrum debt overhang, or does Vi need a more fundamental fix such as consolidation or further debt-to-equity conversion?",
+    "source": "https://www.business-standard.com/companies/news/vodafone-idea-close-to-securing-loan-from-sbi-but-on-a-condition-126082300819_1.html"
+  },
+  {
+    "headline": "Flipkart's quick-commerce arm closes in on India's leaders",
+    "date": "2026-08-22",
+    "category": "Product Management",
+    "summary": "Two years after launch, Flipkart Minutes is now delivering roughly 1.1-1.2 million orders a day (up from ~390,000-400,000 in November) across 1,000+ micro-fulfilment centres, putting it within striking distance of Swiggy Instamart and making it a credible fourth player behind Blinkit and Zepto.",
+    "angle": "Can an e-commerce incumbent out-execute quick-commerce specialists by leveraging its existing user base and logistics, and what does an offensive vs. defensive product bet look like in a cash-burning category?",
+    "source": "https://techcrunch.com/2026/08/22/two-years-after-launch-walmarts-flipkart-is-closing-in-on-indias-quick-commerce-leaders/"
   },
   {
     "headline": "Flipkart's quick-commerce arm nearly catches Swiggy Instamart",
@@ -112,6 +272,14 @@
     "source": "https://www.storyboard18.com/brand-makers/colgate-palmolive-india-names-manish-anandani-new-md-and-ceo-ws-l-108329.htm"
   },
   {
+    "headline": "Flipkart sees senior exits as IPO timeline stays unclear",
+    "date": "2026-08-21",
+    "category": "Consulting",
+    "summary": "Flipkart is experiencing a wave of senior-level departures amid persistent uncertainty over the timing of its India IPO, even as the company — targeting a $40-70 billion valuation — has opened early talks with investment banks and let employees cash out some stock options.",
+    "angle": "How should a large private company manage key-executive retention and morale when a highly anticipated listing keeps slipping, and what do repeated delays signal about market-timing discipline?",
+    "source": "https://www.business-standard.com/amp/companies/news/flipkart-sees-senior-level-churn-as-uncertainty-over-ipo-timing-persists-126082100840_1.html"
+  },
+  {
     "headline": "Goldman Sachs breaks into India's government share-sale advisory market",
     "date": "2026-08-21",
     "category": "Finance",
@@ -150,6 +318,14 @@
     "summary": "HSBC Flash PMI showed India's manufacturing PMI slipped to 52.9 in August, the weakest improvement in factory output in five years, with manufacturing employment falling for the first time in 2.5 years.",
     "angle": "A classic WAT/GD prompt on whether India's manufacturing-led growth story is losing steam versus services.",
     "source": "https://www.business-standard.com/economy/news/india-private-sector-pmi-august-services-manufacturing-hsbc-126082100396_1.html"
+  },
+  {
+    "headline": "India's factory growth slows to a five-year low in August",
+    "date": "2026-08-21",
+    "category": "Operations",
+    "summary": "The HSBC Flash India Manufacturing PMI eased to 52.9 in August from 53.5 in July — the weakest improvement since 2021 — with new-order growth slowing and manufacturing employment falling for the first time in two-and-a-half years, even as services activity picked up.",
+    "angle": "Is the manufacturing slowdown just softer global demand, or a sign the 'Make in India' factory push is losing momentum relative to services?",
+    "source": "https://www.business-standard.com/amp/economy/news/india-private-sector-pmi-august-services-manufacturing-hsbc-126082100396_1.html"
   },
   {
     "headline": "Manufacturing momentum cools slightly in August",
