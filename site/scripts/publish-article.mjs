@@ -476,6 +476,17 @@ if (written.length) {
 }
 if (!written.length && !problems.length) console.log('Nothing approved and unpublished.');
 
-// A malformed draft is a real failure and should turn the run red — but only a
-// blocking one. A note is a review remark, not a broken pipeline.
-process.exit(fatal.length ? 1 : 0);
+// A malformed draft is a real failure — but it is *that draft's* failure, and it
+// has already been bounced to Needs Revision in Notion, which is where the owner
+// actually looks. Failing the whole step on it strands every healthy article in
+// the same run: on 2026-08-26 one over-long title held two finished, valid
+// articles out of the PR entirely. So turn the run red only when a blocking
+// problem left us with nothing at all to ship.
+if (fatal.length) {
+  console.error(
+    `\n${fatal.length} draft(s) rejected and marked Needs Revision in Notion:\n` +
+      fatal.map((f) => `  ✗ ${f.title} — ${f.reason}`).join('\n') +
+      '\n'
+  );
+}
+process.exit(fatal.length && !written.length ? 1 : 0);
