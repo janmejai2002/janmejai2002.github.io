@@ -591,16 +591,14 @@ main.main--wide { max-width: none; }
 
 /* ---------- End of article ---------- */
 /* The reader just gave the piece eight or fifteen minutes; the page should
-   notice. The kintsugi crack from the wordmark stands in for a rule, the
-   sign-off restates the deal, and the next-question card keeps the thread
-   going in that post's own accent. */
+   notice. The kintsugi crack from the wordmark stands in for a rule, and the
+   next-question card keeps the thread going in that post's own accent. A
+   written sign-off used to sit between them; it read as self-congratulation
+   on every single page, which is the one thing an end-of-article note cannot
+   afford to do. The mark does the job without saying anything. */
 .endnote { margin-top: 4.5rem; }
 .endnote__crack { display: block; width: 13px; height: 40px; margin-bottom: 1.25rem; }
 .endnote__crack polyline { fill: none; stroke: var(--ochre); stroke-width: 2; }
-.endnote__line {
-  font-family: var(--serif); font-size: 1.05rem; line-height: 1.7;
-  color: var(--ink-soft); margin: 0 0 1.75rem; max-width: 34rem;
-}
 .endnote__next {
   display: flex; flex-direction: column; gap: .35rem; text-decoration: none;
   background: var(--card); border: 1px solid var(--border); border-radius: 14px;
