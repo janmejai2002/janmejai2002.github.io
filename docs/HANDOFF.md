@@ -21,9 +21,9 @@ directly at `Draft Ready`.
 | Track | Accent | Reader | Routine |
 |---|---|---|---|
 | `technical` | `--mizu` | Engineers and people who build with AI | `daily-ai-seo-radar` (daily 07:10) |
-| `business` | `--ochre` | Consultants, analysts, marketers, founders — **not** engineers | `business-radar` (Tue 07:20) |
-| `basics` | `--plum` | Anyone getting up to speed; also where the setups live | `basics-radar` (Thu 07:16) |
-| `case-studies` | `--moss` | People who want precedent, graded honestly | `case-studies-writer` (Mon/Thu 08:40) |
+| `business` | `--ochre` | Consultants, analysts, marketers, founders — **not** engineers | `business-radar` (daily 07:20) |
+| `basics` | `--plum` | Anyone getting up to speed; also where the setups live | `basics-radar` (daily 07:16) |
+| `case-studies` | `--moss` | People who want precedent, graded honestly | `case-studies-writer` (daily 08:52) |
 | `talks` | `--hanko` | People who cannot watch everything | `talks-writer` (daily 08:33) |
 
 `track` defaults to `technical` in the content schema and in
@@ -101,10 +101,10 @@ cold**, so the prompt must be fully self-contained.
 
 - **`daily-ai-seo-radar`** — 07:10 daily. Technical theme. Discovers topics,
   writes a 100-word pitch, files as `Radar Idea`.
-- **`business-radar`** — Tue 07:20. Business theme, covering both the advisory
+- **`business-radar`** — daily 07:20. Business theme, covering both the advisory
   and the marketing audience. 2 ideas max, and explicitly told a quiet week is a
   valid result.
-- **`basics-radar`** — Thu 07:16. Basics theme. Weighted toward questions people
+- **`basics-radar`** — daily 07:16. Basics theme. Weighted toward questions people
   are actually asking rather than the news cycle, and told that a simplification
   leaving the reader with a false model is worse than no article.
 - **`ai-article-writer`** — every 4h. Picks up rating 4/5, promotes, researches,
