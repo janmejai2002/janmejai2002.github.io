@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" role="img">
+  <title>A timeline where two marked points are joined by a hand-wobbled correction line that swaps their order</title>
+  <desc>A horizontal ink rule carries a filled circle and an outlined circle marking two events. A red line arcs above the rule between them in an unsteady hand-drawn path, and a small rotated red stamp with a faint double impression sits apart in the upper right.</desc>
+  <filter id="grain" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch"/></filter>
+  <rect width="1600" height="900" fill="{{paper}}"/>
+  <line x1="260" y1="460" x2="1340" y2="460" stroke="{{ink}}" stroke-width="3"/>
+  <line x1="260" y1="440" x2="260" y2="480" stroke="{{ink}}" stroke-width="3"/>
+  <line x1="1340" y1="440" x2="1340" y2="480" stroke="{{ink}}" stroke-width="3"/>
+  <circle cx="560" cy="460" r="17" fill="{{ink}}"/>
+  <circle cx="1040" cy="460" r="17" fill="{{paper}}" stroke="{{ink}}" stroke-width="3.5"/>
+  <path d="M 560 448 C 610 300 500 240 660 220 C 820 200 760 340 900 300 C 1000 272 980 380 1040 448" fill="none" stroke="{{hanko}}" stroke-width="5" stroke-linecap="round" opacity="0.85"/>
+  <path d="M 552 452 L 568 444 M 1032 444 L 1048 452" stroke="{{hanko}}" stroke-width="5" stroke-linecap="round" opacity="0.85"/>
+  <g transform="translate(1180,180) rotate(-7)">
+    <rect x="-46" y="-46" width="92" height="92" fill="none" stroke="{{hanko}}" stroke-width="4" opacity="0.55"/>
+    <rect x="-40" y="-38" width="92" height="92" fill="none" stroke="{{hanko}}" stroke-width="3" opacity="0.3"/>
+  </g>
+  <rect width="1600" height="900" filter="url(#grain)" opacity="0.055"/>
+</svg>
