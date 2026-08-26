@@ -1,143 +1,189 @@
 # Handoff — start here in a new chat
 
-**The paste-in prompt now lives in `docs/BRIEF-NEXT-PHASE.md`**, which carries the
-owner's brief for the next phase of work. This file remains the record of where
-the last session stopped and what the small queued items are.
-
-Last session ended 2026-08-26 (second session that day), at commit `c25eba0` on
+Last session ended 2026-08-26 (third session that day), at commit `f7f249f` on
 `main`. Working tree clean, everything pushed, build green, `check-build`
-passing, 11 pages.
+passing, 18 pages, 7 published articles.
 
-**That session did queue items 1–4:** the rename to `wAIbi-sabi` with a wordmark
-component and a new favicon/mark, the BSchool and Setups heading fixes, the
-rewrite of `/blog/how-this-blog-builds-itself/`, and — found along the way —
-`/status/` was only counting three of the five themes. Items 5, 6 and 7 below
-are untouched.
-
-The blocked-on-owner list is unchanged and was re-checked: Actions still cannot
-open PRs (`can_approve_pull_request_reviews: false` via the API), so the two
-finished articles are still sitting on the branch.
+**The owner's standing brief is still `docs/BRIEF-NEXT-PHASE.md`.** Most of it
+is now done — see below for what landed and what is left.
 
 ---
 
-## What changed last session, in one paragraph
+## THE ONE THING NOT DONE — do this first
 
-The blog went from one undifferentiated stream to **five themes** (Technical,
-Business, Basics, Case Studies, Talks), the home page was rebuilt around a
-centred masthead and a sortable table, `/status/` was added, the news archive
-sync was automated, two live articles were fact-checked and corrected, the
-writer routine was hardened with a verbatim-quote claim ledger, and the publish
-pipeline learned to report its own failures back into Notion. Google and Bing
-verification went live at the very end.
+The owner's last instruction was:
 
-## The five themes
+> "whatever needs a fix do it and wrap this up from tomorrow we run this blog.
+> Also change routines to be daily instead of the weekly (i think some are weekly)."
 
-| Track id | Notion `Track` | Accent | Routine |
-|---|---|---|---|
-| `technical` | Technical | mizu | `daily-ai-seo-radar` — daily 07:10 |
-| `business` | Business | ochre | `business-radar` — Tue 07:20 |
-| `basics` | Basics | plum | `basics-radar` — Thu 07:16 |
-| `case-studies` | Case Studies | moss | `case-studies-writer` — Mon/Thu 08:40 |
-| `talks` | Talks | hanko | `talks-writer` — daily 08:33 |
+**The cadence change was never made.** The session ended before it. Two
+routines are still weekly and the owner wants them daily:
 
-Plus `ai-article-writer` every 4h, which picks up radar ideas rated 4 or 5.
+| Routine | Current schedule | Owner wants |
+|---|---|---|
+| `business-radar` | `10 7 * * 2` (Tue only) | daily |
+| `basics-radar` | `10 7 * * 4` (Thu only) | daily |
+| `case-studies-writer` | `40 8 * * 1,4` (Mon + Thu) | owner said "daily" — **see the conflict below** |
 
-**The radars file Radar Ideas and wait for a rating. The two writers file drafts
-directly at `Draft Ready`.** No routine may ever set `Approved`.
+Everything else already runs daily or more often: `daily-ai-seo-radar` (07:10),
+`talks-writer` (08:33), `ai-article-writer` (every 4h), `artwork-routine`
+(every 4h at :35).
 
-**If you rename a theme again**, five places hardcode the strings: the Zod enum
-in `site/src/content.config.ts`, `TRACKS` in `site/scripts/publish-article.mjs`,
-`TRACKS`/`LABELS` in `site/src/pages/index.astro`, the `TRACK` map in
-`site/src/layouts/Post.astro`, and the `Track` value written by each routine
-prompt in `~/.claude/scheduled-tasks/`. The last one was missed the first time
-and would have broken every radar run.
+Use the `scheduled-tasks` MCP tool `update_scheduled_task` to change
+`cronExpression`. Stagger the times so five routines do not all fire at once —
+keeping business at :20 and basics at :16 past the hour works.
 
----
+**The conflict to raise with the owner before changing `case-studies-writer`:**
+its own prompt says, in bold, *"Cadence is two a week, deliberately — do not
+increase it."* That rule exists because higher volume is the shape search
+engines penalise as scaled content abuse (domain-wide, regardless of who wrote
+it), and because nothing above that rate can be fact-checked properly. Daily is
+3.5x that rate. The two radars are different — they only file *ideas* for the
+owner to rate and publish nothing, so making them daily is harmless.
 
-## Blocked on the owner — nothing else moves until these happen
+Recommended: **make both radars daily without asking (safe, reversible), and put
+the case-studies question to the owner** — offer Mon/Wed/Fri as the middle
+option. If they reaffirm daily, do it, and edit the prompt's cadence paragraph
+in the same change. Do not leave a prompt that argues with its own cron.
 
-1. ~~Allow Actions to open PRs.~~ **Done 2026-08-26.** The setting is on, the
-   workflow opened PR #1, and both stranded articles are live with artwork. The
-   publish pipeline has now completed end to end once.
-2. **Click Verify** in Google Search Console (URL-prefix property) and Bing
-   Webmaster Tools. Both tokens are live and confirmed serving. Then submit
-   `sitemap-index.xml`.
-3. **Rate the 5 unrated radar ideas.** Nothing downstream moves without a 4 or 5.
-4. **Optional but high value — make it reactive.** Fine-grained PAT (this repo
-   only, Contents + Actions read/write) → Notion automation on *Draft Status is
-   Approved* → webhook to
-   `https://api.github.com/repos/janmejai2002/janmejai2002.github.io/dispatches`
-   with body `{"event_type":"notion-changed"}`. Full steps in `docs/PUBLISHING.md`.
-   Both workflows already accept it; polling stays as the fallback.
+Also tell them: **cadence is not the real bottleneck.** There are already 5
+unrated radar ideas in Notion, and `ai-article-writer` only picks up ideas rated
+4 or 5. More radar runs without more ratings just grows the queue.
 
 ---
 
-## Queued work, roughly in priority order
+## What landed this session (all deployed and verified live)
 
-1. **IndexNow.** The owner found it and it fits their stated preference for auth
-   that cannot expire — the key is a static text file at the site root, no login,
-   no token. Wire a ping into `deploy.yml` after a successful deploy.
-2. **Verify motion in a real browser.** The Browser pane never fires
-   `requestAnimationFrame`, so the WebGL grain field, the theme-card mark
-   animations and every CSS transition are correct by construction but have
-   never been seen running. `npm run dev --prefix site` and look. The new
-   wordmark and favicon have also only been checked in the built HTML and as
-   rendered PNGs, never on a live tab.
-3. **`/projects/` and `/news/` still have not had the UI pass** the index and
-   the article template got. Their headings are now right; their layouts are
-   still the older generation.
-4. **Ideas, untouched:** persist the claim ledger and publish a corrections log;
-   a link-rot and claim-drift watchdog over published posts; reader analytics
-   feeding back into the radars.
+**The publish pipeline's three known defects — fixed at the generator, plus a
+fourth nobody knew about.**
 
-### Done 2026-08-26 (second session)
+1. `publish-article.mjs` used the Notion `api()` helper **without ever importing
+   it**, so the entire write-back-to-Notion path (Needs Revision, Blocked
+   Reason) had thrown `ReferenceError` since birth, swallowed by its own catch
+   block. Fixed; recorded in `docs/LESSONS.md`.
+2. A leading body `# Title` is now stripped (it also silently defeated the TL;DR
+   wrap, which is why both defects always appeared together).
+3. A missing `Executive TL;DR` now **blocks** the publish and bounces the row to
+   `Needs Revision` with the reason, instead of being a log-only note.
+4. `check-build.mjs` asserts exactly one `<h1>` per page and a `.tldr` plate on
+   every article. Both TL;DR-less live articles were backfilled by hand.
 
-- **Renamed to `wAIbi-sabi`.** `src/components/Wordmark.astro` renders the name
-  with the `AI` in hanko and `text-transform: none` so nothing re-cases it; the
-  literal string is used where the name is data (titles, JSON-LD, RSS, the OG
-  card). JSON-LD keeps `alternateName: 'Wabi Sabi'`. The favicon seats a
-  geometric `AI` — strokes, not a font, so it renders anywhere — inside the open
-  ensō, which stays the deliberate imperfection.
-- **Headings match the nav:** BSchool News Archive, Setups, and the About link.
-  Routes still unchanged, deliberately.
-- **`/status/` now shows all five themes.** `sync-status.mjs` only tallied three,
-  so Case Studies and Talks were invisible. The two writer themes print `—` for
-  topics-found rather than a misleading `0`, since they skip the radar.
-- **`/blog/how-this-blog-builds-itself/` rewritten** and given an `updatedDate`.
+**Artwork is automated.** New `artwork-routine` task (every 4h at :35) reads
+Draft Ready/Approved rows, draws the plate per `docs/ARTWORK.md`, and files the
+SVG **into the Notion page** as an `## Artwork SVG` section (`Alt:` line + code
+block). `publish-article.mjs` extracts and validates it; if absent,
+`scripts/lib/fallback-art.mjs` generates a deterministic on-spec plate seeded
+from the slug. **Artwork travels through Notion, never a git commit** — that is
+the real fix for the poll destroying the PR branch. A PR now arrives complete;
+the only human step left is a read-through.
 
-## Traps that cost real time last session
+**IndexNow** submits changed URLs after every deploy (static key file at the
+site root, no credential to expire). **robots.txt** allows every
+retrieval/search crawler explicitly and blocks pure training crawlers.
+**`/llms.txt`** is generated from the content collection.
 
-- **The Bash tool's cygwin heap error is intermittent, not permanent.** It
-  failed all of 2026-08-25 and worked for the whole of the second 2026-08-26
-  session. Try it once; fall back to PowerShell if it dies. Two things that do
-  still bite in Bash: `git` occasionally fails with "the paging file is too
-  small" (re-run it), and PowerShell mangles UTF-8 in `Select-String` output —
-  read files with the Read tool when characters matter.
-- **PowerShell writes a UTF-8 BOM** when you pipe or redirect to a file, which
-  breaks `JSON.parse` and `json.load`. Read back with `utf-8-sig`, or write with
-  `[System.IO.File]::WriteAllText`.
-- **The Browser pane cannot screenshot and never composites**, so rAF and CSS
-  transitions do not advance. Computed styles read mid-transition return the
-  *start* value — kill transitions before reading, or you will diagnose a bug
-  that is not there.
-- **`git push` sometimes exceeds a 3-minute tool timeout** after the commit has
-  already succeeded. Re-run the push alone rather than re-committing.
-- **A blank line inside inline `<svg>` in markdown terminates the HTML block.**
-  But the blank lines inside the `.tldr` div are load-bearing and must stay.
-  Opposite rules, same file type.
-- **Notion cannot recolour an existing select option** — it errors. Add new
-  options, migrate rows, then drop the old ones.
-- **A push made with the default `GITHUB_TOKEN` does not trigger other
-  workflows.** Any bot that commits to main must dispatch `deploy.yml`
-  explicitly and needs `actions: write`.
+**Umami analytics is LIVE** — website ID `df2f7d8f-549a-412b-a2d5-be4d82ab4426`
+in `site/src/seo.ts`, production-only. Google Search Console and Bing Webmaster
+are verified and the sitemap is submitted to both.
+
+**The logo was chosen by the owner: kintsugi + the caret.** An ochre fracture
+runs through the wordmark with the pieces set out of true, and the final `i` is
+a blinking caret (steady under reduced-motion). The rail uses
+`<Wordmark plain />`. Favicon, touch icon and OG card are the kintsugi plate;
+the ensō is retired. Favicon URLs carry `?v=2` to defeat browser favicon caching.
+
+**The UI warmth pass** (from `docs/research/reading-experience.md`): theme hub
+pages at `/technical/` `/business/` `/basics/` `/case-studies/` `/talks/`
+(`src/pages/[track].astro`), an end-of-article block with a "Next question"
+card, a serif drop cap in the track accent (first use of the long-dead
+`--serif` token), a byline line, a footer colophon, honest empty-state copy
+("Still taking root"), "Featured" renamed "Latest", cross-document View
+Transitions, and the track marks finally drawing themselves in (the
+`pathLength="100"` scaffolding was always there, unwired). `/projects/` got the
+width pass it never had — its card was capped at the 44rem reading measure on
+an 80rem page, leaving the right half of the page empty.
+
+**The five themes now live once** in `site/src/data/tracks.ts`, shared by the
+index, the hub pages and the article layout.
+
+**Docs written:** `docs/MONETISATION-PLAN.md` (the plan the brief asked for) and
+`docs/research/{ai-citability,monetisation,reading-experience,routine-review}.md`.
+
+**Routine review applied** (`docs/research/routine-review.md`): all three writer
+prompts were telling themselves a missing TL;DR was cosmetic; `business-radar`
+cited a phantom sibling task from an unrelated project; `ai-article-writer`
+checked for the retired `notebooklm-mcp`; `daily-ai-seo-radar` lacked the
+never-set-Approved guardrail. All fixed. `case-studies-writer` was then
+rewritten at the owner's request — broadened from marketing-only to nine
+functional themes, with a "What you could apply" payoff section aimed at
+working professionals.
+
+---
+
+## Waiting on the owner — nothing is blocked on code
+
+1. **Sign off the sponsorship policy** drafted in `docs/MONETISATION-PLAN.md` §5,
+   then publish it as a page. The clause needing explicit attention: a sponsor's
+   products become *ineligible* for Case Studies.
+2. **Rate the 5 unrated radar ideas.** Nothing writes until something is 4 or 5.
+   This is the actual throughput gate.
+3. **Buttondown newsletter** — owner deferred it. Account is theirs to create;
+   form and digest wiring is about a day once it exists.
+4. **A consulting line on `/about/`** — the monetisation plan's finding is that
+   consulting is the only model with no audience threshold and the nearest
+   realistic revenue. Owner decides which services to invite inquiries for.
+5. **The owner's message that ended mid-sentence.** They wrote "...continue with
+   the routine review and monetisation plan and also" — the third item was never
+   said. Ask.
+
+## Watch for
+
+- **Google Search Console showed "Sitemap could not be read"** right after
+  submission on 2026-08-26. The sitemap is valid and serving (verified by
+  fetch); this is normal for a freshly submitted sitemap on a new property. If
+  it still says that from 2026-08-28 onward, investigate properly.
+- **The first `artwork-routine` run** had not happened when the session ended.
+  Check it filed a well-formed `## Artwork SVG` section and that
+  `publish-article.mjs` accepted it rather than falling back to deterministic art.
+- **The first pipeline article since the fixes** — confirm it arrives with
+  artwork and a TL;DR and needs no human commit to the branch.
+
+## Traps that still bite
+
+- **Never commit to the `notion/approved-articles` branch.** The poll
+  regenerates it from main twice an hour and destroys additions. Improvements go
+  to `main` after merge.
+- `npm run build` must run from `site/`, with the dev server stopped.
+- The Bash tool's cygwin failure is intermittent, not permanent — try it, fall
+  back to PowerShell. Bash heredocs also choke on backticks and quotes in long
+  documents; use the Write tool for those.
+- PowerShell here-strings break on apostrophes in commit messages; write the
+  message to a file and use `git commit -F`.
+- PowerShell writes a UTF-8 BOM on redirect; use `[System.IO.File]::WriteAllText`.
+- The Browser pane cannot screenshot and drifts between tabs — pass `tabId`
+  explicitly.
+- `docs/HANDOFF.md` is the system reference. `docs/LESSONS.md` is the running
+  notes file: read it at session start, add to it as you learn.
 
 ---
 
 ## The prompt to paste
 
-Superseded — see **`docs/BRIEF-NEXT-PHASE.md`**. It captures the owner's brief of
-2026-08-26 (design and voice, AI citability, monetisation, and a review of the
-routines), and its prompt is written for a session running Claude Fable 5.
+```
+Picking up the wAIbi-sabi blog (C:\Users\Janmejai\PluginsClaude, live at
+https://janmejai2002.github.io). Read docs/HANDOFF-NEXT-SESSION.md first — it
+says where the last session stopped — then docs/HANDOFF.md for the system,
+docs/LESSONS.md for running notes, and PUBLISHING.md / ARTWORK.md before you
+touch publishing or images.
 
-The three small items in the queue above are still real and are not in that
-brief. Fold them in where they fit.
+First job, from my last instruction that didn't get done: make the weekly
+routines daily. business-radar and basics-radar are weekly and should be daily.
+case-studies-writer is twice weekly — the handoff says its own prompt argues
+against increasing that rate, so tell me what you think before changing it.
+
+Then: whatever else needs a fix, do it. From today we run this blog properly.
+
+Verify with `npm run build` in site/ (dev server stopped). Check live routes for
+actual content, not just a 200. Commit in logical chunks and push — pushing
+deploys. Never set Draft Status = Approved on anything.
+```
