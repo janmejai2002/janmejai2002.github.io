@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" role="img">
+  <title>A regular grid of closed square tiles bounded by an ochre frame, with one tile near the centre left open on one side</title>
+  <desc>Evenly spaced thin-stroke squares fill a bounded rectangular field. Nearly all squares are fully closed on four sides. One square near the centre is missing its right side, left open, drawn slightly heavier in a warm ochre stroke.</desc>
+  <filter id="grain" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch"/></filter>
+  <defs><pattern id="tiles2" width="70" height="70" patternUnits="userSpaceOnUse"><rect x="8" y="8" width="46" height="46" fill="none" stroke="{{ink}}" stroke-width="1.5" opacity="0.42"/></pattern></defs>
+  <rect width="1600" height="900" fill="{{paper}}"/>
+  <rect x="140" y="140" width="1320" height="630" fill="url(#tiles2)"/>
+  <rect x="140" y="140" width="1320" height="630" fill="none" stroke="{{ochre}}" stroke-width="2.5" opacity="0.6"/>
+  <path d="M 824 428 L 778 428 L 778 474 L 824 474" fill="none" stroke="{{ochre}}" stroke-width="3" stroke-linecap="square"/>
+  <rect width="1600" height="900" filter="url(#grain)" opacity="0.055"/>
+</svg>
