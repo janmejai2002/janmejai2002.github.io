@@ -128,3 +128,15 @@ cost — it loses throughput and saves little — and why constraining each rout
 tool surface is a good one: it saves the same tokens on every run forever and
 costs nothing. A CLI called through Bash has zero schema cost; an MCP server has
 a schema cost on every cold start.
+
+## Cache-bust when checking a live route straight after a deploy
+
+Right after PR #2 merged, /business/ and /talks/ fetched clean over HTTPS and
+still showed the empty state, which looked exactly like a broken track filter.
+The build was correct all along — the CDN was serving pre-merge HTML. Two
+minutes were nearly spent debugging a page that was already right. Verify
+against `dist/` first (it is definitive about the code), and add a cache
+buster plus `Cache-Control: no-cache` to the live fetch. Related: grep the
+rendered filename shape, not the source path — hashed asset names like
+`name-light.Bh9PS0_I_DPdEw.webp` do not match a naive `_astro/[a-z0-9-]*.webp`
+pattern, and a bad pattern reports missing artwork that is present.
