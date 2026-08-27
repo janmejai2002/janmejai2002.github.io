@@ -20,9 +20,23 @@ name: Sync news archive
 
 on:
   schedule:
-    # Once a day, after the morning entries are typically in. Offset off the
-    # hour to avoid the :00 cron crowd.
-    - cron: '35 4 * * *'
+    # Every three hours rather than once a day. Two reasons, both learned the
+    # hard way on 2026-08-27, when the site was found 26 entries behind Notion:
+    #
+    #   1. Entries are added to the archive throughout the day, not in a morning
+    #      batch. A daily sync means a card written at 09:00 is invisible until
+    #      the following morning, which is not what an "archive" should feel
+    #      like when the Notion side is already current.
+    #   2. GitHub deprioritises scheduled workflows on low-activity repos, and a
+    #      once-daily cron has no slack in it at all — the 04:35 run simply did
+    #      not happen that day, and nothing else was going to cover for it.
+    #
+    # A run with nothing to do exits in well under a minute, so the extra
+    # frequency costs effectively nothing.
+    - cron: '35 */3 * * *'
+    # A second schedule on a different offset. GitHub throttles the two
+    # independently, so a skipped slot on one is often covered by the other.
+    - cron: '5 1-23/3 * * *'
   workflow_dispatch:
   # Same reactive trigger as the publish workflow: a Notion automation on the
   # news archive can fire `news-changed` and have the site rebuilt within a

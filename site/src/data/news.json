@@ -1,5 +1,61 @@
 [
   {
+    "headline": "Air India Asks Tata Sons and Singapore Airlines for $1.5 Billion",
+    "date": "2026-08-26",
+    "category": "Consulting",
+    "summary": "Air India is seeking about $1.5 billion in fresh equity from owners Tata Sons and Singapore Airlines after it and budget arm Air India Express posted a combined loss of roughly $2.33 billion for FY26, more than double the prior year's loss.",
+    "angle": "A classic turnaround-under-new-ownership case testing candidates on why integration, fleet modernization and legacy-culture fixes take years and how much capital a turnaround realistically needs.",
+    "source": "https://aviationa2z.com/index.php/2026/08/26/air-india-seeks-billion-from-tata-sons-and-singapore-airlines/"
+  },
+  {
+    "headline": "Avaada Electro Files ₹7,600-crore IPO Papers, Doubling Down on India's Solar Manufacturing Push",
+    "date": "2026-08-26",
+    "category": "Finance",
+    "summary": "Brookfield-backed solar PV manufacturer Avaada Electro filed an updated DRHP with SEBI for a ₹7,600-crore IPO comprising a ₹1,600-crore fresh issue and a ₹6,000-crore offer for sale, with part of the fresh proceeds earmarked to repay borrowings.",
+    "angle": "Tests whether candidates can connect India's renewable-manufacturing IPO wave to PLI incentives and capital structure logic, especially why an OFS-heavy issue still gets marketed as a growth story.",
+    "source": "https://www.business-standard.com/companies/news/solar-panel-maker-avaada-electro-files-updated-drhp-for-7-600-crore-ipo-126082600936_1.html"
+  },
+  {
+    "headline": "Cashfree Launches 'Relay', AI Agents That Autonomously Run Payment Operations for SMBs",
+    "date": "2026-08-26",
+    "category": "Product Management",
+    "summary": "Cashfree Payments made its AI-powered 'Relay' Super Agents generally available to all merchants, with the agents directly executing tasks like failed-payment retries, abandoned-cart recovery, COD confirmation and dispute filing rather than just flagging them for humans.",
+    "angle": "Tests whether candidates can distinguish agentic AI product design (autonomous action) from traditional dashboards/automation, and discuss trust, control and failure-handling tradeoffs when a fintech product acts on a merchant's behalf.",
+    "source": "https://bfsi.eletsonline.com/cashfree-payments-launches-relay-ai-super-agents-to-automate-end-to-end-payment-operations-for-smbs/"
+  },
+  {
+    "headline": "Flipkart Minutes Overtakes Swiggy Instamart in Dark-Store Count",
+    "date": "2026-08-26",
+    "category": "Product Management",
+    "summary": "A CLSA report shows Flipkart Minutes now runs 627 dark stores versus Swiggy Instamart's 615 across India's top 10 cities, though Blinkit (969) and Zepto (828) still lead, as Flipkart scales toward 1,500 micro-fulfilment centres by year-end.",
+    "angle": "A ready-made case on quick-commerce unit economics and how a later entrant prioritizes infrastructure build-out to close a competitive gap against incumbents with a head start.",
+    "source": "https://entrackr.com/news/flipkart-minutes-overtakes-swiggy-instamart-in-dark-stores-across-top-10-cities-clsa-12435433"
+  },
+  {
+    "headline": "India Takes Its Growth Pitch Abroad as Foreign Investors Pull Back",
+    "date": "2026-08-26",
+    "category": "Consulting",
+    "summary": "With foreign portfolio money exiting Indian markets, Finance Minister Nirmala Sitharaman is on a nine-day tour of Canada and the US while Commerce Minister Piyush Goyal is in Japan, both pitching India as a stable, trusted investment destination.",
+    "angle": "Useful for discussing country-level 'market attractiveness' and FDI strategy, and why capital flight forces even governments to run active investor-relations campaigns.",
+    "source": "https://www.bloomberg.com/news/articles/2026-08-26/india-takes-growth-pitch-abroad-as-foreign-money-pulls-back"
+  },
+  {
+    "headline": "M&A Becomes India Inc's Core Growth Strategy, Deal Volumes Double: CRISIL",
+    "date": "2026-08-26",
+    "category": "Consulting",
+    "summary": "A CRISIL Ratings analysis shows Indian companies' annual M&A deal volumes have more than doubled since FY17, with firms across AI, enterprise tech, pharma and consumer sectors acquiring for capability, talent and market access rather than scale consolidation.",
+    "angle": "Directly testable with M&A frameworks (build-vs-buy, synergy realization, post-merger integration) and a good example of Indian firms shifting from organic to inorganic growth strategy.",
+    "source": "https://www.business-standard.com/industry/news/mergers-and-acquisitions-m-a-emerges-as-core-growth-strategy-for-india-inc-as-deals-double-crisil-126082600935_1.html"
+  },
+  {
+    "headline": "Meta Agrees to Pay Up to $16.7 Billion in Settlement Over Teen Harm Claims",
+    "date": "2026-08-26",
+    "category": "Product Management",
+    "summary": "Meta settled with dozens of US states alleging Facebook and Instagram were designed to be addictive to children, agreeing to pay up to $16.68 billion and to add daily usage limits, nighttime restrictions and stronger age verification for teen users.",
+    "angle": "A strong ethics-of-product-design prompt — how engagement metrics can conflict with user wellbeing, and what responsible-design guardrails a PM should build into growth-oriented features.",
+    "source": "https://techstartups.com/2026/08/26/meta-agrees-to-16-7-billion-settlement-over-facebook-and-instagram-harms-to-children/"
+  },
+  {
     "headline": "UPI turns 10, now handles nearly half the world's real-time payments",
     "date": "2026-08-26",
     "category": "Product Management",
@@ -24,6 +80,30 @@
     "source": "https://www.business-standard.com/industry/aviation/air-india-seeks-1-5-bn-from-owners-tata-singapore-air-as-losses-mount-126082501097_1.html"
   },
   {
+    "headline": "All Eyes on New Fed Chair Kevin Warsh's First Jackson Hole Speech",
+    "date": "2026-08-25",
+    "category": "Finance",
+    "summary": "The Fed's Jackson Hole symposium builds toward Chair Kevin Warsh's debut keynote on August 28, his first major address since succeeding Jerome Powell in May 2026, with markets parsing it for rate-path signals.",
+    "angle": "Tests global macro awareness: candidates should link Fed rate-path signals to FII flows, the rupee's trajectory, and Indian bond yields.",
+    "source": "https://www.techtimes.com/articles/325518/20260825/warsh-keynote-jackson-hole-ai-capex-breaking-his-rate-hold-case.htm"
+  },
+  {
+    "headline": "Amazon and Flipkart Tighten Seller Penalties Ahead of Festive Season",
+    "date": "2026-08-25",
+    "category": "Operations",
+    "summary": "Just weeks before Amazon's Great Indian Festival and Flipkart's own festive sale, both platforms introduced stricter, tiered penalties for late order dispatch and cancellations, alongside revised closing/cancellation fee structures for sellers.",
+    "angle": "Tests whether a candidate can connect e-commerce platform policy to core operations concepts like SLA management, fulfillment reliability, and capacity planning ahead of a demand surge.",
+    "source": "https://www.theweek.in/news/biz-tech/2026/08/25/why-amazon-flipkart-will-penalise-sellers-more-this-festive-season.html"
+  },
+  {
+    "headline": "Amazon Shuts Down Mechanical Turk After 21 Years",
+    "date": "2026-08-25",
+    "category": "Product Management",
+    "summary": "Amazon confirmed it will shut down Mechanical Turk, the crowdsourced task marketplace Jeff Bezos once called 'artificial artificial intelligence,' on September 30, 2026, as AI-native data-labeling rivals like Scale AI, Mercor and Prolific drew away demand.",
+    "angle": "A clean prompt on product lifecycle and sunset decisions — how a platform shift can make a once-core product obsolete, and when a PM should retire versus reinvest in a legacy platform.",
+    "source": "https://www.cnbc.com/2026/08/25/amazon-service-that-jeff-bezos-called-artificial-ai-is-shutting-down.html"
+  },
+  {
     "headline": "Bank credit growth outruns deposit growth",
     "date": "2026-08-25",
     "category": "Finance",
@@ -32,12 +112,36 @@
     "source": "https://www.business-standard.com/industry/banking/deposit-mobilisation-key-as-bank-credit-growth-outpaces-deposits-eac-pm-126082501100_1.html"
   },
   {
+    "headline": "Beco Stands Firm on 'WarOnWhatsHidden' Campaign Despite HUL Lawsuit",
+    "date": "2026-08-25",
+    "category": "Marketing",
+    "summary": "D2C cleaning-products brand Beco's co-founder said HUL's Delhi High Court challenge to its campaign -- which claims Surf Excel and Vim contain skin-irritating chemicals -- hasn't shaken the brand's belief in the campaign, even as the court still weighs jurisdiction.",
+    "angle": "A textbook challenger-vs-incumbent marketing case combining comparative advertising, ingredient-transparency positioning, and the legal risk a D2C brand takes to build salience against an FMCG giant.",
+    "source": "https://bestmediainfo.com/mediainfo/mediainfo-marketing/we-didnt-start-this-to-pick-a-fight-beco-co-founder-aditya-ruia-stands-firm-amid-hul-lawsuit-12431347"
+  },
+  {
+    "headline": "Government Opens All Conventional Missile Technology to Private Industry",
+    "date": "2026-08-25",
+    "category": "Consulting",
+    "summary": "Defence Minister Rajnath Singh approved transfer of technology for all DRDO-developed conventional missile systems to Indian private industry, ending the decades-old arrangement where series production sat almost entirely with public-sector units.",
+    "angle": "A strong example of a government policy reshaping market structure and competitive dynamics, useful for discussing India's defence manufacturing and Atmanirbhar Bharat strategy.",
+    "source": "https://www.business-standard.com/external-affairs-defence-security/news/drdo-conventional-missiles-private-sector-production-rajnath-singh-126082500666_1.html"
+  },
+  {
     "headline": "Govt to ease BIS certification rules for high-tech manufacturers",
     "date": "2026-08-25",
     "category": "Operations",
     "summary": "Commerce Minister Piyush Goyal, addressing Japanese semiconductor and AI company CEOs in Tokyo, said India will build a framework to exempt high-tech manufacturers from BIS certification on imported equipment, after firms including Tokyo Electron flagged delays.",
     "angle": "Is easing quality-certification norms a smart ease-of-doing-business move to win semiconductor/AI-hardware FDI, or a risky dilution of India's manufacturing-quality standards?",
     "source": "https://www.business-standard.com/economy/news/govt-eyes-bis-exemption-for-foreign-high-tech-firms-manufacturing-in-india-126082501238_1.html"
+  },
+  {
+    "headline": "Hansa Research: 95% of Indians Plan to Spend More This Festive Season",
+    "date": "2026-08-25",
+    "category": "Marketing",
+    "summary": "Hansa Research's Festive Insights 2026 study found 95% of respondents plan to spend more than usual this festive season, with 67% raising budgets by 25% or more, alongside wider online shopping adoption and growing preference for eco-friendly festive choices.",
+    "angle": "A ready-made data point for any FMCG, e-commerce or D2C marketing case on festive-season strategy, channel mix and sustainability-linked positioning ahead of Diwali.",
+    "source": "https://bestmediainfo.com/insights/95-set-to-spend-more-this-festive-season-67-to-raise-budgets-by-25-or-more-12431318"
   },
   {
     "headline": "Maharashtra FDA notice on celebrity food endorsements",
@@ -64,12 +168,44 @@
     "source": "https://www.cnbc.com/2026/08/25/openai-russia-chatgpt-influence-campaign.html"
   },
   {
+    "headline": "OpenAI Rolls Out ChatGPT Ads Across 31 European Markets",
+    "date": "2026-08-25",
+    "category": "Marketing",
+    "summary": "OpenAI began serving ads inside ChatGPT to Free and Go-tier users across 31 European countries (including Germany, France, Spain and Italy) from August 24, 2026, six months after first testing ads in the US; Plus, Pro, Business, Enterprise and Edu users remain ad-free.",
+    "angle": "Tests whether a candidate can discuss conversational AI emerging as a new paid-media channel and what it means for search/SEO-driven ad budgets and consumer trust in AI-generated recommendations.",
+    "source": "https://www.mediapost.com/publications/article/417446/openai-expands-advertising-pilot-in-31-european-ma.html"
+  },
+  {
+    "headline": "RBI Data Shows India's Home Price Growth Cooling to 3.6%",
+    "date": "2026-08-25",
+    "category": "Finance",
+    "summary": "The RBI's All-India House Price Index rose 1.1% quarter-on-quarter to 117.5 in Q1 FY27, but annual growth eased to 3.6% from 4.5% the previous quarter, with gains concentrated in cities like Chandigarh and Lucknow.",
+    "angle": "Opens a discussion on real-estate financing cycles and what cooling price growth signals for housing-finance NBFCs and affordability versus demand-slowdown narratives.",
+    "source": "https://www.business-standard.com/markets/capital-market-news/india-house-price-index-rises-1-1-in-q1-on-sequential-basis-rbi-126082500165_1.html"
+  },
+  {
     "headline": "RBI's draft curbs on NBFC revolving credit spark MSME funding worries",
     "date": "2026-08-25",
     "category": "Finance",
     "summary": "RBI's draft norms propose that most NBFCs (barring the two authorised to issue credit cards) offer only fixed-schedule term loans and stop revolving/flexi-credit products; industry warns this could choke working-capital finance many MSMEs rely on.",
     "angle": "Does RBI's financial-stability rationale for curbing NBFC credit outweigh the risk of squeezing legitimate MSME credit access?",
     "source": "https://www.business-standard.com/industry/news/rbi-proposal-to-curb-nbfcs-revolving-credit-may-choke-msme-funding-126082500929_1.html"
+  },
+  {
+    "headline": "Rupee Claws Back Ground, Closes at 95.44/Dollar as Crude Eases",
+    "date": "2026-08-25",
+    "category": "Finance",
+    "summary": "The rupee gained 26 paise to close at 95.44 against the US dollar, helped by a weaker dollar and softer crude prices, though it remains near record lows under pressure from the 50% US tariff on Indian exports.",
+    "angle": "A ready WAT/GD topic on how tariff-driven currency weakness feeds import inflation, RBI intervention choices, and corporate FX-hedging strategy.",
+    "source": "https://theprint.in/economy/rupee-rises-26-paise-to-close-at-95-44-against-us-dollar/3024742/"
+  },
+  {
+    "headline": "Delhi High Court Forces Kent RO to Pull Ads Attacking Urban Company's Water Purifiers",
+    "date": "2026-08-24",
+    "category": "Marketing",
+    "summary": "Urban Company sued Kent RO over ads and influencer posts that called its Native purifiers' '2-year no-servicing' claim a 'marketing gimmick' and labelled the product 'unsafe'; Kent RO told the Delhi High Court it would withdraw the ads and similar content within 15 days.",
+    "angle": "A live case study on comparative/disparaging advertising, testing knowledge of the ASCI code and trademark-disparagement law versus the temptation to attack a rival directly in a campaign.",
+    "source": "https://www.storyboard18.com/brand-marketing/urban-company-sues-kent-ro-over-ads-targeting-two-year-purifier-claim-delhi-hc-orders-removal-108537.htm"
   },
   {
     "headline": "FSSAI shuts down Marche Retail for a month",
@@ -86,6 +222,14 @@
     "summary": "Commerce Minister Piyush Goyal said India's 12% safeguard duty on certain steel imports is far lower than tariffs imposed by the US, UK and EU, and urged Japanese firms to source steel from India, as domestic steelmakers seek continued protection from a China-led supply glut.",
     "angle": "Does the safeguard duty protect Indian steel capacity and jobs, or does it raise input costs for downstream sectors like auto and construction and hurt their export competitiveness?",
     "source": "https://www.business-standard.com/india-news/goyal-urges-japanese-firms-to-buy-steel-from-india-backs-safeguard-duty-126082401099_1.html"
+  },
+  {
+    "headline": "India's Bank Credit Growth Hits 4-Year High of ~20% Even as Deposits Lag",
+    "date": "2026-08-24",
+    "category": "Finance",
+    "summary": "Scheduled commercial banks' credit growth accelerated to around 20% year-on-year in Q1 FY27, the fastest pace in over four years, while deposit mobilisation trailed, pushing loan-to-deposit ratios close to decade highs.",
+    "angle": "A classic asset-liability mismatch prompt: how will banks fund continued loan growth without deposits keeping pace, and what does it mean for net interest margins and deposit-rate competition.",
+    "source": "https://aninews.in/news/business/bank-credit-growth-hits-20-in-q1fy27-highest-in-4-years-deposit-growth-lags-ldr-near-decade-highs20260824112310/"
   },
   {
     "headline": "India's equity capital market set for a record month",
@@ -110,6 +254,14 @@
     "summary": "Reporting this week described KPMG Australia's recent staff cuts as likely the beginning of a multi-year squeeze on consulting earnings, salaries and job tenure at the firm.",
     "angle": "Useful for \"what's happening to the consulting business model\" — signals margin pressure spreading beyond the US market.",
     "source": "https://www.goingconcern.com/monday-morning-accounting-news-brief-the-newspaper-says-its-probably-for-the-best-if-you-got-laid-off-from-kpmg-irs-employee-union-has-beef-with-ceo-role-8-24-26/"
+  },
+  {
+    "headline": "NBFCs Pivot Hard to Secured Lending and Gold Loans Amid a Credit Reshuffle",
+    "date": "2026-08-24",
+    "category": "Finance",
+    "summary": "NBFC credit grew 14.4% year-on-year to ₹57.8 trillion by June 2026, with gold loans surging 69.3% and consumer-durable loans 46.8%, as lenders shift toward secured, retail-heavy books and tighter underwriting.",
+    "angle": "Useful for probing why gold loans are booming (rallying gold prices, easy collateral recovery) and whether regulators should worry about concentration risk in secured retail lending.",
+    "source": "https://www.theweek.in/news/biz-tech/2026/08/24/nbfcs-india-secured-lending-trends.html"
   },
   {
     "headline": "OpenAI starts showing ads inside ChatGPT's free tier in Europe",
@@ -160,6 +312,14 @@
     "source": "https://bestmediainfo.com/mediainfo/advertising/top-advertising-marketing-and-media-news-headlines-of-today-august-24-2026-12425257"
   },
   {
+    "headline": "Indian Railways Runs First Long-Haul Double-Stack Container Train on Western DFC",
+    "date": "2026-08-23",
+    "category": "Operations",
+    "summary": "A 1.3-km, 360-TEU double-stack container train ran from JNPT near Mumbai to Vadodara on the Western Dedicated Freight Corridor, marking a capacity milestone intended to cut trucking dependence and ease port-side congestion.",
+    "angle": "A concrete, current example of rail-based modal shift and infrastructure-led logistics cost reduction — useful for questions on India's high logistics cost and multimodal freight strategy.",
+    "source": "https://www.theweek.in/news/maritime/2026/08/23/how-a-new-indian-railways-milestone-promises-cargo-handling-boost-for-jawaharlal-nehru-port.html"
+  },
+  {
     "headline": "IRDAI bars four insurers from new offices over expense breaches",
     "date": "2026-08-23",
     "category": "Finance",
@@ -192,12 +352,28 @@
     "source": "https://finance.biggo.com/news/0cbc7540-c6ca-49a0-b1c6-522d99889d5e"
   },
   {
+    "headline": "Vodafone Idea Inches Closer to Rs 45,000-crore SBI-Led Loan, But With a Catch",
+    "date": "2026-08-23",
+    "category": "Consulting",
+    "summary": "State Bank of India has agreed to sanction its share of a loan to debt-laden Vodafone Idea after the telco offered promoter-group guarantees, though disbursal is conditional on Vi first securing the remaining funding from private banks.",
+    "angle": "A rich case on corporate turnaround financing and lender risk mitigation in a structurally weak telecom player fighting for survival against Jio and Airtel.",
+    "source": "https://www.business-standard.com/companies/news/vodafone-idea-close-to-securing-loan-from-sbi-but-on-a-condition-126082300819_1.html"
+  },
+  {
     "headline": "Vodafone Idea nears SBI loan, but only with promoter guarantees",
     "date": "2026-08-23",
     "category": "Consulting",
     "summary": "State Bank of India has agreed in principle to sanction its share of funding for Vodafone Idea's capex plan, but only after promoters — the Aditya Birla group and the government — agreed to provide guarantees, the latest step in Vi's long effort to stay competitive against Reliance Jio and Airtel.",
     "angle": "Do promoter guarantees adequately de-risk lending to a company carrying a massive AGR/spectrum debt overhang, or does Vi need a more fundamental fix such as consolidation or further debt-to-equity conversion?",
     "source": "https://www.business-standard.com/companies/news/vodafone-idea-close-to-securing-loan-from-sbi-but-on-a-condition-126082300819_1.html"
+  },
+  {
+    "headline": "YouTube Redefines a 'View', Counting From the First Frame",
+    "date": "2026-08-23",
+    "category": "Marketing",
+    "summary": "From August 24, 2026, YouTube counts a public 'view' the instant a video starts playing with no watch-time threshold, inflating headline view counts globally, while a stricter 'engaged views' metric tied to creator payouts stays in YouTube Studio.",
+    "angle": "Opens a discussion on vanity metrics versus true engagement in digital marketing measurement, and how a platform's metric redefinition can distort brand campaign reporting and media-buying decisions.",
+    "source": "https://www.spokesman.com/stories/2026/aug/23/youtubers-worry-that-a-new-policy-will-lead-to-mor/"
   },
   {
     "headline": "Flipkart's quick-commerce arm closes in on India's leaders",
@@ -309,6 +485,14 @@
     "category": "Operations",
     "summary": "India's HSBC Flash Composite PMI rose to 54.6 in August from July's 54.3, as services growth offset a manufacturing slowdown; the index has stayed above 50 for 61 straight months but posted its second-weakest reading since March 2022.",
     "angle": "A go-to 'state of the economy' data point — can the candidate explain what a PMI reading signals and why the services-manufacturing divergence matters for India's growth mix.",
+    "source": "https://www.business-standard.com/economy/news/india-private-sector-pmi-august-services-manufacturing-hsbc-126082100396_1.html"
+  },
+  {
+    "headline": "India's Factory Growth Cools to a Five-Year Low Even as Services Rebound",
+    "date": "2026-08-21",
+    "category": "Operations",
+    "summary": "The HSBC Flash India Manufacturing PMI slipped to 52.9 in August (from 53.5 in July) — the weakest output growth in five years — with manufacturing employment falling for the first time in two-and-a-half years, even as the Composite PMI rose to 54.6 on strong services.",
+    "angle": "Classic WAT/GD fodder on India's manufacturing-vs-services growth imbalance and what a factory hiring slowdown means for 'Make in India' ambitions.",
     "source": "https://www.business-standard.com/economy/news/india-private-sector-pmi-august-services-manufacturing-hsbc-126082100396_1.html"
   },
   {
@@ -768,6 +952,14 @@
     "source": "https://techcrunch.com/2026/08/18/perplexitys-free-ai-offer-left-it-with-millions-more-users-in-india/"
   },
   {
+    "headline": "Perplexity's Free-Access Deal with Airtel Drives a 20x Surge in India Downloads",
+    "date": "2026-08-18",
+    "category": "Product Management",
+    "summary": "Perplexity's bundled free-access offer with Airtel took its India downloads from about 11,200/day to nearly 223,000/day in the offer's first week, with monthly net mobile revenue in India growing from $34,000 in January 2025 to $156,000 in July 2026.",
+    "angle": "Illustrates telco bundling as a distribution-led go-to-market lever for AI products in a price-sensitive market, prompting discussion on converting free users into a sustainable paid base.",
+    "source": "https://techcrunch.com/2026/08/18/perplexitys-free-ai-offer-left-it-with-millions-more-users-in-india/"
+  },
+  {
     "headline": "Perplexity's India revenue climbs after its free Airtel bundle ends",
     "date": "2026-08-18",
     "category": "Product Management",
@@ -917,6 +1109,14 @@
     "category": "Operations",
     "summary": "A staffing industry report says temporary hiring across e-commerce, quick commerce, logistics and retail will rise 15-20% this festive season, generating 2.5-2.7 lakh jobs, even as ~80% of employers report frontline talent shortages.",
     "angle": "Classic ops-meets-HR question on how quick-commerce and logistics firms scale a contingent workforce for demand spikes without sacrificing service quality or blowing up attrition costs.",
+    "source": "https://www.business-standard.com/industry/news/festive-season-hiring-expected-to-generate-up-to-270-000-gig-jobs-report-126081700743_1.html"
+  },
+  {
+    "headline": "Festive Season Set to Generate Up to 2.7 Lakh Temporary Logistics and Retail Jobs",
+    "date": "2026-08-17",
+    "category": "Operations",
+    "summary": "Staffing reports project a 15-20% jump in festive-season hiring this year, with up to 2.7 lakh gig and temporary jobs across e-commerce, quick commerce, logistics and retail, even as employers flag a 10-15% demand-supply gap in frontline operational roles.",
+    "angle": "Opens discussion on capacity planning for seasonal demand spikes, gig-workforce management, and the operational challenge of scaling headcount for a short peak window.",
     "source": "https://www.business-standard.com/industry/news/festive-season-hiring-expected-to-generate-up-to-270-000-gig-jobs-report-126081700743_1.html"
   },
   {
@@ -1214,6 +1414,14 @@
     "summary": "PhysicsWallah's Q1 FY27 results showed revenue up 24% YoY and net loss narrowing to about Rs 88 crore, with its K-12/early-learning segment revenue jumping 88% to Rs 105 crore as the edtech firm expands beyond JEE/NEET into 16+ exam categories.",
     "angle": "A textbook TAM-expansion case — moving from a single high-intent exam-prep product to a broad K-12 platform, useful for discussing product-market widening and unit-economics trade-offs.",
     "source": "https://www.business-standard.com/companies/quarterly-results/physicswallah-q1fy27-net-loss-narrows-to-rs-88-crore-revenue-rises-24-126081401822_1.html"
+  },
+  {
+    "headline": "20 Firms Bid to Build India's Rare-Earth Magnet Factories",
+    "date": "2026-08-13",
+    "category": "Operations",
+    "summary": "Twenty domestic and global companies submitted technical bids under the government's Rs 7,280-crore scheme to set up integrated rare-earth permanent magnet manufacturing in India, a push to cut reliance on Chinese supply after export curbs disrupted local auto production.",
+    "angle": "A concrete case of supply-chain risk mitigation and backward integration in response to a single-country dependency shock — strong material for China+1 strategy and critical-mineral security.",
+    "source": "https://www.business-standard.com/industry/auto/mhi-receives-20-bids-for-rare-earth-magnet-manufacturing-scheme-126081301750_1.html"
   },
   {
     "headline": "Brands swap tricolour clichés for personal-freedom themes this Independence Day",
