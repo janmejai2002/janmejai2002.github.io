@@ -212,6 +212,22 @@ img { max-width: 100%; height: auto; }
 .wordmark--plain .wordmark__pa,
 .wordmark--plain .wordmark__pb { transform: none; }
 
+/* The masthead lockup on the index. It used to inherit the .hanko pill (0.65rem
+   in a red box), which is why the name was unreadable up top. Here it runs at
+   display size with the fracture kept but calmed — thinner, lighter, and the
+   blinking caret/dot swapped back to a real "i" so it does not read as a stray
+   cursor. The two pieces still sit out of true; that is the whole mark. */
+.mast__mark {
+  display: inline-block; margin-bottom: .75rem;
+  font-size: clamp(1.6rem, 5vw, 2.5rem); font-weight: 800;
+  letter-spacing: -.02em; color: var(--ink); line-height: 1;
+}
+.mast__mark .wordmark__crack { width: max(.2em, 6px); height: 1em; }
+.mast__mark .wordmark__crack polyline { stroke-width: 1.4; opacity: .5; }
+.mast__mark .wordmark__caret,
+.mast__mark .wordmark__idot { display: none; }
+.mast__mark .wordmark__iglyph { display: inline; }
+
 main { flex: 1; padding: 2rem var(--gutter) 6rem; max-width: 80rem; min-width: 0; }
 /* Pages whose content is composition rather than prose (the index) opt out of
    the column entirely and use the whole shell. */
@@ -305,6 +321,9 @@ main.main--wide { max-width: none; }
               filter var(--dur) ease;
 }
 .scroll-reveal.revealed { opacity: 1; transform: none; filter: none; }
+/* No JS means no IntersectionObserver to add .revealed — show everything rather
+   than leave blank bands in a full-page screenshot, print, or a failed load. */
+html:not(.js) .scroll-reveal { opacity: 1; transform: none; filter: none; }
 
 /* ---------- Article question ---------- */
 /* The reader's question, printed above the title. It is the entry point, so it

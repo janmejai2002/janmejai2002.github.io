@@ -24,9 +24,9 @@ const path = Astro.url.pathname;
 // Labels only — the routes stay put so nothing already published breaks.
 const nav = [
   { href: '/', label: 'Blog' },
-  { href: '/projects/', label: 'Setups' },
+  { href: '/projects/', label: 'Projects' },
   { href: '/news/', label: 'BSchool' },
-  { href: '/about/', label: 'Me' },
+  { href: '/about/', label: 'About' },
 ];
 const year = new Date().getFullYear();
 ---
@@ -36,6 +36,9 @@ const year = new Date().getFullYear();
   <head>
     <SEO {...seo} />
     <script is:inline>
+      // Mark that JS is running, so CSS can hold back scroll-reveal transforms
+      // for no-JS readers (and screenshots/print) instead of leaving blank bands.
+      document.documentElement.classList.add('js');
       // Set the theme before first paint so there is no flash.
       (() => {
         try {
@@ -54,12 +57,16 @@ const year = new Date().getFullYear();
 
     <div class="shell">
       <aside class="rail fade-up">
-        <a class="rail__home" href="/" aria-label="Back to index">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-            stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M19 12H5M12 19l-7-7 7-7" />
-          </svg>
-        </a>
+        {/* Only a way *back* — on the index itself it would point at the current
+            page, so it is left out there. */}
+        {path !== '/' && (
+          <a class="rail__home" href="/" aria-label="Back to index">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M19 12H5M12 19l-7-7 7-7" />
+            </svg>
+          </a>
+        )}
         {/* plain: vertical writing-mode rotates inline boxes, so the drawn
             crack and caret would land sideways — the rail gets the type-only
             face. */}

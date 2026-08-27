@@ -17,6 +17,11 @@ const accentOf = Object.fromEntries(TRACKS.map((t) => [t.id, t.accent]));
 const labelOf = Object.fromEntries(TRACKS.map((t) => [t.id, t.label]));
 
 const featured = posts.slice(0, 3);
+// The three "Latest" cards repeat as the top rows of the full table right below
+// them. Mark those rows so the "Everything" view can drop them — they stay in
+// the DOM and reappear the moment a single theme is filtered, so per-theme
+// counts still line up.
+const featuredIds = new Set(featured.map((p) => p.id));
 const slugOf = (p: (typeof posts)[number]) => p.id.replace(/\.md$/, '');
 const dateOf = (d: Date) =>
   d.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
@@ -30,8 +35,8 @@ const dateOf = (d: Date) =>
 >
   {/* Centred masthead. A stranger should know what this is from one screen. */}
   <section class="mast fade-up d1">
-    <span class="hanko"><Wordmark /></span>
-    <h1>The models are<br /><span class="hl">never finished</span></h1>
+    <span class="mast__mark"><Wordmark /></span>
+    <h1 aria-label="The models are never finished">The models are<br /><span class="hl">never finished</span></h1>
     <p class="mast__lede">
       Writing about AI that shows its working — what the benchmarks leave out, what breaks
       in production, and which parts do not hold up.
@@ -223,6 +228,7 @@ const dateOf = (d: Date) =>
                 data-track={post.data.track}
                 data-title={post.data.title.toLowerCase()}
                 data-date={post.data.pubDate.toISOString()}
+                data-featured={featuredIds.has(post.id) ? '' : undefined}
                 style={`--accent:var(--${accentOf[post.data.track]})`}
               >
                 <td class="ptable__track">
@@ -293,7 +299,10 @@ const dateOf = (d: Date) =>
   const apply = (want: string, scroll = false) => {
     let shown = 0;
     for (const row of rows) {
-      const on = want === 'all' || row.dataset.track === want;
+      // "Everything" drops the rows already shown as Latest cards; a single
+      // theme shows all of its rows, featured ones included.
+      const on =
+        want === 'all' ? !('featured' in row.dataset) : row.dataset.track === want;
       row.hidden = !on;
       if (on) shown++;
     }
@@ -345,7 +354,9 @@ const dateOf = (d: Date) =>
   for (const s of sorts) s.addEventListener('click', () => sortBy(s.dataset.sort!));
 
   const initial = location.hash.replace('#', '');
-  if (initial && initial in LABELS) apply(initial);
+  // Always run once: even with no hash, the "all" pass is what removes the three
+  // Latest rows from the table.
+  apply(initial && initial in LABELS ? initial : 'all');
 </script>
 
 <style>
@@ -356,6 +367,11 @@ const dateOf = (d: Date) =>
   .themelink[hidden],
   .reset[hidden] { display: none !important; }
 
+  /* The three Latest posts are shown as cards above; keep them out of the full
+     table. With JS the filter script does this (and re-adds them under a single
+     theme); without JS the filter is unreachable anyway, so just hide them. */
+  html:not(.js) .ptable tbody tr[data-featured] { display: none; }
+
   .themelink {
     font-size: .75rem; font-weight: 600; color: var(--ink-soft);
     text-decoration: none; border-bottom: 1px solid var(--border);
@@ -365,7 +381,7 @@ const dateOf = (d: Date) =>
   .themelink:hover { color: var(--ink); border-color: var(--ink-faint); }
 
   /* ---------- masthead ---------- */
-  .mast { text-align: center; padding: 3.5rem 0 2.5rem; }
+  .mast { text-align: center; padding: 2.5rem 0 2rem; }
   .mast h1 {
     font-size: clamp(2.4rem, 7vw, 4.5rem); font-weight: 800; line-height: 1.02;
     letter-spacing: -.04em; margin: 1rem 0 0; text-wrap: balance;
@@ -390,7 +406,7 @@ const dateOf = (d: Date) =>
   @keyframes stretch { from { transform: scaleX(0); } to { transform: scaleX(1); } }
 
   /* ---------- section headers ---------- */
-  .sec { display: flex; align-items: center; gap: 1rem; margin: 3.5rem 0 1.5rem; flex-wrap: wrap; }
+  .sec { display: flex; align-items: center; gap: 1rem; margin: 2.5rem 0 1.25rem; flex-wrap: wrap; }
   .sec__t {
     margin: 0; font-size: .6875rem; font-weight: 800; letter-spacing: .18em;
     text-transform: uppercase; color: var(--ink-faint); white-space: nowrap;
@@ -416,9 +432,11 @@ const dateOf = (d: Date) =>
   /* ---------- theme panels ---------- */
   /* auto-fit, not a fixed 3, so adding a theme reflows instead of leaving a
      ragged last row. */
+  /* A fixed 3 so the five cards break 3 + 2 rather than orphaning the fifth on
+     a line of its own (auto-fit did 4 + 1 at desktop widths). */
   .tracks__grid {
     display: grid; gap: 1rem;
-    grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
+    grid-template-columns: repeat(3, 1fr);
   }
   .track {
     display: flex; flex-direction: column; gap: .5rem;
@@ -457,13 +475,19 @@ const dateOf = (d: Date) =>
   .track:hover .arc, .track.is-on .arc { stroke-dashoffset: 0; }
   .track.scroll-reveal:not(.revealed) .ring,
   .track.scroll-reveal:not(.revealed) .arc { stroke-dashoffset: 100; }
+  /* No JS: no observer fires, so settle the marks at their resting broken state
+     instead of leaving them drawn to nothing. */
+  html:not(.js) .track .ring { stroke-dashoffset: 22; }
+  html:not(.js) .track .arc { stroke-dashoffset: 26; }
 
   .track__ask { margin: 0; font-size: .8125rem; font-weight: 800; letter-spacing: .02em; color: var(--accent); }
   .track__label { margin: 0; font-size: 1.75rem; font-weight: 800; letter-spacing: -.03em; line-height: 1; }
   .track__blurb { margin: .25rem 0 0; font-size: .875rem; line-height: 1.65; color: var(--ink-soft); }
 
+  /* Pinned to the card foot so the CTA sits at one height across cards whose
+     blurbs run different lengths. */
   .track__cta {
-    font: inherit; cursor: pointer; margin-top: 1.25rem;
+    font: inherit; cursor: pointer; margin-top: auto; padding-top: 1.25rem;
     display: flex; align-items: center; gap: .5rem;
     background: transparent; border: 0; padding: 0; text-align: left;
     font-size: .6875rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase;
@@ -560,7 +584,7 @@ const dateOf = (d: Date) =>
 
   /* ---------- news plug ---------- */
   .plug {
-    margin-top: 3.5rem; padding: 1.75rem; border-radius: 18px;
+    margin-top: 2.5rem; padding: 1.75rem; border-radius: 18px;
     background: var(--wash-ochre); border: 1px solid var(--border);
     display: flex; align-items: center; justify-content: space-between;
     gap: 1.5rem; flex-wrap: wrap;
@@ -578,9 +602,11 @@ const dateOf = (d: Date) =>
   .plug__cta:hover svg { transform: translateX(3px); }
 
   @media (max-width: 60rem) {
-    .featured__grid, .tracks__grid { grid-template-columns: 1fr; }
+    .featured__grid { grid-template-columns: 1fr; }
+    .tracks__grid { grid-template-columns: repeat(2, 1fr); }
   }
   @media (max-width: 40rem) {
+    .tracks__grid { grid-template-columns: 1fr; }
     /* A four-column table does not fit a phone. Drop to title + date and let
        the theme show as the accent dot beside the title. */
     .ptable thead { display: none; }
