@@ -12,6 +12,11 @@
  *
  * It verifies with a real request before writing anything, so a row can never
  * claim Published for a URL that 404s.
+ *
+ * There are up to two rows behind an article: the Article Production row, which
+ * always exists, and the radar idea it was promoted from, which does not.
+ * Talks and Case Studies are researched straight into production and have no
+ * radar row at all. They are reconciled on the production row alone.
  */
 import { readdirSync, readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
@@ -53,21 +58,29 @@ for (const post of posts) {
     continue;
   }
 
+  // Not every article comes from the radar, and a missing Source Idea is
+  // therefore normal rather than broken. Talks and Case Studies are researched
+  // straight into Article Production by their own routines — there is no radar
+  // idea upstream to relate to, and there never was.
+  //
+  // This used to be a hard failure, which had a nastier consequence than a red
+  // log line: the `continue` meant the PRODUCTION row was never marked
+  // Published either, even though the article was live and serving. Every Talks
+  // and Case Studies article silently stayed at Draft Ready or Approved for
+  // ever, and /status/ reported live articles as still awaiting review.
+  //
+  // A radar row that cannot be reached is simply skipped now. The production
+  // row is reconciled on its own, which is the half that always exists.
   const pipelineId = production.properties?.['Source Idea']?.relation?.[0]?.id;
-  if (!pipelineId) {
-    console.error(`✗ ${post.slug}: production row has no Source Idea relation, cannot reach the radar row`);
-    failures++;
-    continue;
-  }
-
-  const pipeline = await api(`/pages/${pipelineId}`);
+  const pipeline = pipelineId ? await api(`/pages/${pipelineId}`) : null;
 
   // Both rows are checked independently. They used to be coupled: the script
   // read only the radar row, and if that already said Published it skipped the
   // article entirely — so a production row left at "Draft Ready" could never
   // catch up. That is exactly what happened to the first four articles, and it
   // made the /status/ page report drafts awaiting review that were already live.
-  const radarDone = pipeline.properties?.Status?.select?.name === 'Published';
+  // No radar row is "done" for this purpose: there is nothing left to update.
+  const radarDone = !pipelineId || pipeline.properties?.Status?.select?.name === 'Published';
   const productionDone = production.properties?.['Draft Status']?.select?.name === 'Published';
 
   if (radarDone && productionDone) {
