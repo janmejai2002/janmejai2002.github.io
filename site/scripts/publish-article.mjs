@@ -4,11 +4,23 @@
  *   node scripts/publish-article.mjs           # write any that are missing
  *   node scripts/publish-article.mjs --dry-run # report only
  *
- * `Draft Status = Approved` is the trigger, and it is a value only a human
- * writes — no routine is permitted to set it. This script therefore never
- * decides *whether* to publish; it only does the mechanical part once that
- * decision has been made, and it stops at a file on disk. Nothing here pushes,
- * deploys, or writes back to Notion.
+ * There are two triggers, because there are two kinds of track.
+ *
+ * `Draft Status = Approved` is the reviewed path. It is a value only a human
+ * writes — no routine is permitted to set it — and it covers the tracks where
+ * the owner wants a read-through before anything ships.
+ *
+ * `Draft Status = Draft Ready` also publishes, but only for the tracks in
+ * AUTO_TRACKS. Those routines are meant to run end to end with nobody in the
+ * loop, so waiting on an approval that never comes is the failure, not the
+ * safeguard: a finished Talks piece sat at Draft Ready for days for exactly
+ * that reason. The automated gates below still apply in full — title length,
+ * meta description, the Executive TL;DR — and a draft that fails one is still
+ * bounced to Needs Revision rather than published.
+ *
+ * This script stops at a file on disk. Nothing here pushes or deploys; the
+ * workflow decides whether that file goes to main directly or through a PR,
+ * and close-loop.mjs writes back to Notion after the deploy.
  *
  * It exits 0 having written nothing when there is no work, so it is safe to run
  * on a schedule.
@@ -233,13 +245,30 @@ const existingIds = new Set(
     : []
 );
 
+// Tracks that publish themselves. These are the unattended routines: they pick
+// their own subject from a curated allowlist, check their own claims, and file
+// a finished draft. Adding a track here removes the human gate for it and
+// nothing else — every automated check still runs.
+//
+// Names must match the Notion `Track` select exactly, before slugification.
+const AUTO_TRACKS = ['Talks', 'Case Studies', 'Basics'];
+
 const rows = await queryAll(PRODUCTION_DS, {
-  property: 'Draft Status',
-  select: { equals: 'Approved' },
+  or: [
+    { property: 'Draft Status', select: { equals: 'Approved' } },
+    ...AUTO_TRACKS.map((t) => ({
+      and: [
+        { property: 'Draft Status', select: { equals: 'Draft Ready' } },
+        { property: 'Track', select: { equals: t } },
+      ],
+    })),
+  ],
 });
 
 const written = [];
 const skipped = [];
+// Split by which gate each article came through — see AUTO_TRACKS above.
+const manifest = { auto: [], reviewed: [] };
 
 // Rejections used to be strings printed to a log nobody reads. The run went red
 // in Actions and the human, who works in Notion, never found out why their
@@ -392,6 +421,22 @@ for (const page of rows) {
     '',
   ].join('\n');
 
+  // Record how this article should reach the site. The workflow needs it to
+  // decide between a direct push to main and a pull request, and that has to
+  // be per article: a run can mix an unattended Talks piece with a Technical
+  // draft the owner is still reviewing.
+  //
+  // The TRACK decides this, not the status. An unattended track goes straight
+  // to main whether it arrived as Draft Ready or as Approved — the owner
+  // ticking Approved on a Case Study is them agreeing with a decision that was
+  // already automatic, and it must not demote the article into a queue that
+  // waits on them again.
+  //
+  // Recorded before the dry-run exit so a dry run reports the real split.
+  const trackName = (p['Track']?.select?.name ?? '').trim();
+  const auto = AUTO_TRACKS.includes(trackName);
+  manifest[auto ? 'auto' : 'reviewed'].push({ slug, title, track: trackName });
+
   if (dryRun) {
     written.push(`${slug}.md (${words} words) [dry run]`);
     continue;
@@ -412,6 +457,15 @@ for (const page of rows) {
   }
   written.push(`${slug}.md (${words} words)`);
   clearBlocked.push({ id, title });
+}
+
+// A manifest rather than parsed stdout. `git status` cannot tell an unattended
+// article from a reviewed one, and guessing from the diff is how a draft that
+// was still being reviewed would end up pushed to main.
+//
+// A dry run reports and writes nothing at all, this file included.
+if (!dryRun) {
+  writeFileSync(join(here, '..', 'publish-manifest.json'), JSON.stringify(manifest, null, 2) + '\n', 'utf8');
 }
 
 for (const s of skipped) console.log(`· ${s}`);
@@ -469,12 +523,16 @@ if (!dryRun) {
 }
 
 if (written.length) {
-  console.log(
-    `\n${written.length} article(s) staged. Run npm run images to render any new artwork.\n` +
-      `Still needed before these are worth shipping: a read-through — they were drafted by a routine.\n`
-  );
+  console.log(`\n${written.length} article(s) staged. Run npm run images to render any new artwork.`);
+  if (manifest.auto.length) {
+    console.log(`  ${manifest.auto.length} from an unattended track — these go straight to main.`);
+  }
+  if (manifest.reviewed.length) {
+    console.log(`  ${manifest.reviewed.length} awaiting a read-through — these go out as a pull request.`);
+  }
+  console.log('');
 }
-if (!written.length && !problems.length) console.log('Nothing approved and unpublished.');
+if (!written.length && !problems.length) console.log('Nothing to publish.');
 
 // A malformed draft is a real failure — but it is *that draft's* failure, and it
 // has already been bounced to Needs Revision in Notion, which is where the owner

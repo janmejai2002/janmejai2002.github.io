@@ -9,3 +9,4 @@ dist/
 Thumbs.db
 .vercel
 .netlify
+publish-manifest.json

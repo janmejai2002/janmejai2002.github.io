@@ -1,17 +1,30 @@
-# Publishing — from Approved in Notion to live
+# Publishing — from Notion to live
 
 ## The short version
 
-You flip `Draft Status` to **Approved** in Article Production. Within half an
-hour a pull request appears with the article as markdown, **complete**: the
-Executive TL;DR is enforced at generation, and artwork arrives with it —
-routine-drawn from the Notion page when the artwork routine has been there,
-deterministic fallback art otherwise. You read it through, merge, and it
-deploys. Notion gets updated automatically once the URL is actually serving.
+There are two paths, and the article's **Track** decides which one it takes.
+
+**Unattended tracks — Talks, Case Studies, Basics.** Nothing is asked of you.
+The routine picks its subject, checks its claims, files a finished draft, and
+the article commits straight to `main` and deploys. You find out it exists by
+seeing it on the site. These routines were always meant to run end to end;
+the approval gate they used to sit behind was the thing stopping them.
+
+**Reviewed tracks — Technical, Business.** You flip `Draft Status` to
+**Approved** in Article Production, and a pull request appears with the article
+as markdown. You read it through, merge, and it deploys.
+
+Either way the article arrives **complete**: the Executive TL;DR is enforced at
+generation, and artwork arrives with it — routine-drawn from the Notion page
+when the artwork routine has been there, deterministic fallback art otherwise.
+Notion gets updated automatically once the URL is actually serving.
+
+The track list lives in `AUTO_TRACKS` in `site/scripts/publish-article.mjs`.
+Moving a track between the two paths means editing that one array.
 
 **Do not commit to the PR branch** — the poll regenerates
-`notion/approved-articles` from main twice an hour and destroys anything added
-there. Post-merge improvements (better artwork, edits) go to `main`.
+`notion/approved-articles` from main and destroys anything added there.
+Post-merge improvements (better artwork, edits) go to `main`.
 
 Nothing else needs your laptop to be on.
 
@@ -43,7 +56,7 @@ Both Notion databases must also be shared with that integration
 
 | Piece | Trigger | What it does |
 |---|---|---|
-| `.github/workflows/publish-from-notion.yml` | every 30 min, or manually | Queries for `Draft Status = Approved`, writes markdown, builds, opens a PR |
+| `.github/workflows/publish-from-notion.yml` | `repository_dispatch`, two polling schedules, or manually | Queries for `Approved` rows plus `Draft Ready` rows on an unattended track; writes markdown, builds, then pushes unattended articles to `main` and opens a PR for the rest |
 | `site/scripts/publish-article.mjs` | called by the above, or by hand | Notion page → `src/content/blog/<slug>.md` |
 | `close-loop` job in `deploy.yml` | after every Pages deploy from `main` | Verifies each URL is live, then writes `Published` + `Post URL` + `Publish Date` back to the radar row |
 | `site/scripts/close-loop.mjs` | called by the above, or by hand | The reconciliation itself |
@@ -74,9 +87,17 @@ so a broken article never reaches your review queue.
 
 ## The two guardrails that matter
 
-**`Approved` is yours alone.** No routine writes it. `publish-article.mjs` never
-decides *whether* to publish; it only does the mechanical part after you have
-decided. That is why the trigger is a human-only field.
+**`Approved` is yours alone.** No routine writes it, on any track. On the
+reviewed tracks it is the publish trigger. On the unattended tracks publishing
+does not wait for it — but the field still means what it always meant, and no
+routine may set it.
+
+**The automated gates apply to every track equally, and they are the real
+safety net.** Title length, meta description, a mandatory Executive TL;DR,
+artwork rendering, and a full `npm run build` including `check-build`. A draft
+failing any of them is never published — it is moved to `Needs Revision` with
+the reason written onto the Notion row. Removing the human gate from a track
+removed a *scheduling* dependency, not a quality one.
 
 **Nothing is recorded as Published until it is.** `close-loop.mjs` issues a real
 request and refuses to touch Notion on anything but a 200. This exists because

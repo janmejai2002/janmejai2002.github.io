@@ -1,30 +1,58 @@
 name: Publish from Notion
 
-# Polls Notion for articles you have marked Approved and opens a PR with the
-# generated markdown. Runs in the cloud, so it does not care whether the
-# laptop is on, and it costs nothing when there is no work.
+# Polls Notion for articles that are ready and gets them onto the site. Runs in
+# the cloud, so it does not care whether the laptop is on, and it costs nothing
+# when there is no work.
 #
-# It deliberately opens a PR rather than pushing to main: the drafts still need
-# artwork and a TL;DR, and a diff is the right place to notice that.
+# There are two destinations, and publish-article.mjs decides per article which
+# one applies (see AUTO_TRACKS in that file):
 #
-# Requires a repository secret NOTION_TOKEN (Settings → Secrets and variables →
-# Actions). The same integration token sync-news.mjs uses locally.
+#   * Unattended tracks — Talks, Case Studies, Basics. These routines pick their
+#     own subject from a curated allowlist, check their own claims, and file a
+#     finished draft. They are meant to run end to end with nobody in the loop,
+#     so their articles are committed straight to main and deploy immediately.
+#     Waiting on an approval that never comes is the failure here, not the
+#     safeguard: a finished Talks piece sat at Draft Ready for days for exactly
+#     that reason, and two Case Studies sat at Approved behind a throttled cron.
+#
+#   * Everything else — Technical, Business. These still open a pull request,
+#     because the owner wants a read-through before they ship.
+#
+# The automated gates apply to BOTH paths and are the real safety net: title
+# length, meta description, a mandatory Executive TL;DR, artwork rendering, and
+# a full `npm run build` including check-build (raw HTML, missing alt text,
+# hardcoded colour). A draft failing any of these is never published — it is
+# moved to Needs Revision in Notion with the reason written onto the row.
+#
+# Requires a repository secret NOTION_TOKEN (Settings -> Secrets and variables
+# -> Actions). The same integration token sync-news.mjs uses locally.
 
 on:
   schedule:
     # Every 30 minutes, offset off the hour so it is not competing with the
-    # thundering herd of :00 cron jobs. This is the safety net, not the primary
-    # path — see repository_dispatch below.
+    # thundering herd of :00 cron jobs.
+    #
+    # Treat this as best-effort, NOT as a 30-minute guarantee. GitHub
+    # deprioritises scheduled workflows on low-activity repositories: the
+    # observed cadence on this repo is roughly hourly at best, with real gaps of
+    # five hours and more. That is tolerable now that publishing is idempotent
+    # and unattended, but it is why the reactive trigger below matters.
     - cron: '17,47 * * * *'
+    # A second entry on a different offset. Two independent schedules are
+    # throttled independently, so a skipped slot on one is often covered by the
+    # other. Cheap insurance: a run with no work exits in about fifteen seconds.
+    - cron: '3,33 * * * *'
   workflow_dispatch:
-  # Reactive trigger. A Notion database automation on "Draft Status is Approved"
-  # can POST to
+  # Reactive trigger, and the one that should normally do the work. Anything
+  # that finishes a draft can POST to
   #   https://api.github.com/repos/janmejai2002/janmejai2002.github.io/dispatches
   #   { "event_type": "notion-changed" }
-  # with an Authorization header, and this runs within seconds instead of within
-  # half an hour. The polling schedule stays as the fallback: if the webhook is
-  # ever removed, misconfigured, or its token expires, nothing silently stops
-  # working — it just gets slower again. See docs/PUBLISHING.md.
+  # and this runs within seconds instead of within an unpredictable hour or
+  # more. The writer routines on the laptop do exactly this as their last step;
+  # a Notion database automation on Draft Status can do it too. The polling
+  # schedules stay as the fallback, so if the dispatch is ever removed or its
+  # token expires nothing silently stops working -- it just gets slower.
+  # See docs/PUBLISHING.md.
   repository_dispatch:
     types: [notion-changed]
 
@@ -50,52 +78,96 @@ jobs:
         working-directory: site
         run: npm ci
 
-      - name: Generate markdown for approved articles
-        id: gen
+      - name: Generate markdown for ready articles
         working-directory: site
         env:
           NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
         run: node scripts/publish-article.mjs
 
-      - name: Check whether anything was written
-        id: diff
+      # publish-article.mjs writes site/publish-manifest.json splitting what it
+      # produced into `auto` and `reviewed`. Read it here rather than parsing
+      # `git status`: the diff cannot tell an unattended article from one the
+      # owner is still reviewing, and guessing is how a draft under review would
+      # end up pushed to main.
+      - name: Read the publish manifest
+        id: manifest
         run: |
-          if [ -n "$(git status --porcelain site/src/content/blog)" ]; then
-            echo "changed=true" >> "$GITHUB_OUTPUT"
-            echo "slugs=$(git status --porcelain site/src/content/blog | awk '{print $2}' | xargs -n1 basename | sed 's/\.md$//' | paste -sd', ')" >> "$GITHUB_OUTPUT"
-          else
-            echo "changed=false" >> "$GITHUB_OUTPUT"
+          set -euo pipefail
+          if [ ! -f site/publish-manifest.json ]; then
+            echo "auto_count=0" >> "$GITHUB_OUTPUT"
+            echo "reviewed_count=0" >> "$GITHUB_OUTPUT"
+            echo "No manifest — nothing to publish."
+            exit 0
           fi
+          AUTO=$(jq -r '.auto | length' site/publish-manifest.json)
+          REVIEWED=$(jq -r '.reviewed | length' site/publish-manifest.json)
+          echo "auto_count=$AUTO" >> "$GITHUB_OUTPUT"
+          echo "reviewed_count=$REVIEWED" >> "$GITHUB_OUTPUT"
+          echo "auto_slugs=$(jq -r '[.auto[].slug] | join(", ")' site/publish-manifest.json)" >> "$GITHUB_OUTPUT"
+          echo "reviewed_slugs=$(jq -r '[.reviewed[].slug] | join(", ")' site/publish-manifest.json)" >> "$GITHUB_OUTPUT"
+          jq . site/publish-manifest.json
 
-      # Render artwork for the new article(s) before building. The generator
-      # has already written an SVG source per post (routine-authored from the
-      # Notion page, or deterministic fallback), and the frontmatter references
-      # the rendered webp — so the build fails if this step is skipped.
-      # --new-art-only leaves existing art and the fixed assets untouched:
-      # sharp output is not byte-stable across environments, and re-encoding
-      # everything would churn the whole art directory into the PR diff.
+      # Render artwork before building. The generator has already written an SVG
+      # per post (routine-authored from the Notion page, or deterministic
+      # fallback), and the frontmatter references the rendered webp — so the
+      # build fails if this is skipped. --new-art-only leaves existing art and
+      # the fixed assets alone: sharp output is not byte-stable across
+      # environments, and re-encoding everything would churn the whole art
+      # directory into the diff.
       - name: Render new artwork
-        if: steps.diff.outputs.changed == 'true'
+        if: steps.manifest.outputs.auto_count != '0' || steps.manifest.outputs.reviewed_count != '0'
         working-directory: site
         run: node scripts/make-images.mjs --new-art-only
 
-      # The build has to pass before a human is asked to look at it. check-build
-      # catches broken raw HTML, missing alt text and hardcoded colour.
+      # The gate for both paths. Nothing reaches main or a PR without this
+      # passing — which matters far more now that three tracks publish with no
+      # human in the loop.
       - name: Build
-        if: steps.diff.outputs.changed == 'true'
+        if: steps.manifest.outputs.auto_count != '0' || steps.manifest.outputs.reviewed_count != '0'
         working-directory: site
         run: npm run build
 
-      - name: Open a pull request
-        if: steps.diff.outputs.changed == 'true'
+      # Unattended tracks go straight to main. Only the files belonging to those
+      # specific slugs are staged, by name, so a reviewed article sitting in the
+      # same working tree cannot ride along by accident.
+      - name: Commit unattended articles to main
+        if: steps.manifest.outputs.auto_count != '0'
+        run: |
+          set -euo pipefail
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          for slug in $(jq -r '.auto[].slug' site/publish-manifest.json); do
+            git add --force -- \
+              "site/src/content/blog/$slug.md" \
+              "site/assets-src/art/$slug.svg" \
+              "site/src/assets/art/$slug-light.webp" \
+              "site/src/assets/art/$slug-dark.webp" 2>/dev/null || true
+          done
+          if git diff --cached --quiet; then
+            echo "Nothing staged — already committed."
+            exit 0
+          fi
+          git commit -m "Publish from Notion: ${{ steps.manifest.outputs.auto_slugs }}"
+          # Rebase rather than force: a reviewed-article PR branch or a human
+          # commit may have landed on main while this run was building.
+          git pull --rebase origin main
+          git push origin HEAD:main
+
+      # Everything else waits for a read-through, exactly as before.
+      - name: Open a pull request for reviewed articles
+        if: steps.manifest.outputs.reviewed_count != '0'
         uses: peter-evans/create-pull-request@v7
         with:
           branch: notion/approved-articles
-          commit-message: "Add approved article(s) from Notion: ${{ steps.diff.outputs.slugs }}"
-          title: "Publish from Notion: ${{ steps.diff.outputs.slugs }}"
+          commit-message: "Add approved article(s) from Notion: ${{ steps.manifest.outputs.reviewed_slugs }}"
+          title: "Publish from Notion: ${{ steps.manifest.outputs.reviewed_slugs }}"
           body: |
             Generated by `scripts/publish-article.mjs` from Article Production
-            rows marked **Approved**. The build passed, including `check-build`.
+            rows on a reviewed track. The build passed, including `check-build`.
+
+            Articles on the unattended tracks — Talks, Case Studies, Basics —
+            are not here; they commit straight to main. This PR is only for the
+            tracks you asked to read before they ship.
 
             Each post arrives complete: the Executive TL;DR is enforced at
             generation (a draft without one is bounced back to Notion as
@@ -109,7 +181,7 @@ jobs:
             - [ ] A read-through — these were drafted by a routine
 
             **Do not commit to this branch.** The poll regenerates it from
-            Notion twice an hour and will destroy anything added here.
+            Notion and will destroy anything added here.
 
             Merging deploys to Pages. The deploy workflow then runs
             `close-loop.mjs`, which verifies each URL is live before writing
