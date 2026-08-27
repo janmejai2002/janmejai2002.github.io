@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" role="img">
+  <title>A dim field of small square repo tiles with a scattered diagonal cluster of brighter tiles climbing from lower left to upper right, one tilted off the grid</title>
+  <desc>A wide grid of thin outlined squares fills the frame, mostly uniform and faint. Roughly ten squares along a rough diagonal path are filled solidly and grow brighter toward the upper right. One of the brighter squares near the top of the diagonal sits rotated and shifted off the grid.</desc>
+  <filter id="grain" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch"/></filter>
+  <defs><pattern id="tiles" width="70" height="70" patternUnits="userSpaceOnUse"><rect x="8" y="8" width="46" height="46" fill="none" stroke="{{ink}}" stroke-width="1.5" opacity="0.28"/></pattern></defs>
+  <rect width="1600" height="900" fill="{{paper}}"/>
+  <rect x="140" y="140" width="1320" height="630" fill="url(#tiles)"/>
+  <rect x="218" y="638" width="46" height="46" fill="{{moss}}" opacity="0.35"/>
+  <rect x="288" y="638" width="46" height="46" fill="{{moss}}" opacity="0.40"/>
+  <rect x="358" y="568" width="46" height="46" fill="{{moss}}" opacity="0.48"/>
+  <rect x="498" y="568" width="46" height="46" fill="{{moss}}" opacity="0.55"/>
+  <rect x="568" y="498" width="46" height="46" fill="{{moss}}" opacity="0.62"/>
+  <rect x="708" y="428" width="46" height="46" fill="{{moss}}" opacity="0.68"/>
+  <rect x="778" y="428" width="46" height="46" fill="{{moss}}" opacity="0.75"/>
+  <rect x="918" y="358" width="46" height="46" fill="{{moss}}" opacity="0.82"/>
+  <rect x="1058" y="288" width="46" height="46" fill="{{moss}}" opacity="0.9" transform="translate(9,-11) rotate(6 1081 311)"/>
+  <rect x="1198" y="218" width="46" height="46" fill="{{moss}}" opacity="0.97"/>
+  <rect width="1600" height="900" filter="url(#grain)" opacity="0.055"/>
+</svg>
