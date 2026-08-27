@@ -37,6 +37,15 @@ on:
     # A second schedule on a different offset. GitHub throttles the two
     # independently, so a skipped slot on one is often covered by the other.
     - cron: '5 1-23/3 * * *'
+    # Aimed squarely at the one event that actually fills this archive. The
+    # AutoSipNews cloud routine (trig_01PxcphR1vb8yd6QjVCUqS8G) runs at 00:57
+    # UTC and has been finishing its Notion writes by about 01:05, so this
+    # picks the new stories up within roughly fifteen minutes instead of
+    # leaving them for whichever three-hourly slot GitHub decides to honour.
+    #
+    # If that routine's schedule moves, move this with it — `RemoteTrigger`
+    # with action `get` reports its cron and next_run_at.
+    - cron: '20 1 * * *'
   workflow_dispatch:
   # Same reactive trigger as the publish workflow: a Notion automation on the
   # news archive can fire `news-changed` and have the site rebuilt within a
