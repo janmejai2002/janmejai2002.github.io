@@ -6,7 +6,9 @@
     "dev": "astro dev",
     "build": "astro build && node scripts/check-build.mjs",
     "images": "node scripts/make-images.mjs",
-    "preview": "astro preview"
+    "preview": "astro preview",
+    "doctor": "node scripts/doctor.mjs",
+    "dashboard": "node scripts/dashboard.mjs"
   },
   "dependencies": {
     "@astrojs/rss": "^4.0.11",
