@@ -107,9 +107,9 @@ of 2026-08-28 — **all daily** except the two every-4h workers:
 
 - **`daily-ai-seo-radar`** — `0 7 * * *`. Technical theme. 100-word pitch, files
   as `Radar Idea`.
-- **`business-radar`** — `10 7 * * *`. Business theme (advisory + marketing).
+- **`business-radar`** — `12 7 * * *`. Business theme (advisory + marketing).
   ≤2 ideas; a quiet day is valid.
-- **`basics-radar`** — `10 7 * * *`. Basics theme. Weighted toward questions
+- **`basics-radar`** — `16 7 * * *`. Basics theme. Weighted toward questions
   people actually ask; a false mental model is worse than no article.
 - **`talks-writer`** — `30 8 * * *`. One talk/keynote/podcast from a curated
   allowlist, transcript pulled credential-free, drafts straight to `Draft Ready`.
@@ -122,8 +122,8 @@ of 2026-08-28 — **all daily** except the two every-4h workers:
   `Draft Ready`/`Approved` rows, files the SVG into the Notion page, backfills a
   missing TL;DR.
 
-`business-radar` and `basics-radar` currently share the exact cron `10 7 * * *`
-and overlap `daily-ai-seo-radar` — stagger them.
+The three radars are staggered — `0 7` / `12 7` / `16 7` — after
+`business-radar` and `basics-radar` spent a while sharing `10 7 * * *`.
 
 All three radars write `Track` and `Reader Question`. The writer carries both
 through to Article Production, and `publish-article.mjs` reads them into

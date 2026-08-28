@@ -22,8 +22,8 @@ Prompt review history: `docs/research/routine-review.md`.
 | Routine | Cadence | What it does |
 |---|---|---|
 | `daily-ai-seo-radar` | daily ~07:10 | Technical theme. Discovers topics, writes a 100-word pitch, files as `Radar Idea`. Waits for a human rating. |
-| `business-radar` | daily ~07:10 (`10 7 * * *`) | Business theme (advisory + marketing). ≤2 ideas; a quiet day is a valid result. |
-| `basics-radar` | daily ~07:10 (`10 7 * * *`) | Basics theme. Weighted to questions people actually ask; a false mental model is worse than no article. |
+| `business-radar` | daily `12 7 * * *` | Business theme (advisory + marketing). ≤2 ideas; a quiet day is a valid result. |
+| `basics-radar` | daily `16 7 * * *` | Basics theme. Weighted to questions people actually ask; a false mental model is worse than no article. |
 | `ai-article-writer` | every 4h | Picks up radar ideas rated 4/5, promotes to Article Production, researches, drafts, sets `Draft Ready`. ≤2 per run. **Forbidden from publishing.** |
 | `artwork-routine` | every 4h at :35 | Reads `Draft Ready` / `Approved` rows, draws the plate per `docs/ARTWORK.md`, files the SVG into the Notion page. ≤3 per run. Also backfills a missing TL;DR. |
 | `talks-writer` | daily ~08:33 | Picks one talk/keynote/podcast from a curated allowlist, pulls the transcript credential-free, drafts a Talks article straight to `Draft Ready`. |

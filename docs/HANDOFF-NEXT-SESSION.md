@@ -1,48 +1,78 @@
 # Handoff — start here in a new chat
 
-Last session ended 2026-08-26 (third session that day), at commit `f7f249f` on
-`main`. Working tree clean, everything pushed, build green, `check-build`
-passing, 18 pages, 7 published articles.
-
-**The owner's standing brief is still `docs/BRIEF-NEXT-PHASE.md`.** Most of it
-is now done — see below for what landed and what is left.
+Session `pluginsclaude` ended 2026-08-28. **10 commits on local `main`, ahead of
+`origin/main`, NOT pushed.** Build green, `check-build` passing, `npm run doctor`
+= 8 ok / 3 warn / 0 fail. The push is deliberately left to the owner — it
+deploys, and the workflow changes want an eyeball first.
 
 ---
 
-## Cadence change — DONE (2026-08-28), with two follow-ups
+## First thing: push, then watch the deploy
 
-The owner's instruction ("change routines to be daily instead of the weekly")
-was carried out. All three radars, `case-studies-writer` and `talks-writer` now
-run daily; each routine's prompt text was updated to match (`case-studies-writer`
-§ now reads *"Cadence is daily, and the quality bar — not the calendar — decides
-whether you file"*).
+```
+cd C:\Users\Janmejai\PluginsClaude
+git log --oneline origin/main..HEAD      # the 10 commits below
+git push origin main
+gh run watch --repo janmejai2002/janmejai2002.github.io
+```
 
-Live crons (`list_scheduled_tasks`, 2026-08-28):
+The 10 commits, oldest first:
 
-| Routine | Cron | Fires |
+| # | Commit | What |
 |---|---|---|
-| `daily-ai-seo-radar` | `0 7 * * *` | 07:10 |
-| `business-radar` | `10 7 * * *` | 07:10 |
-| `basics-radar` | `10 7 * * *` | 07:10 |
-| `talks-writer` | `30 8 * * *` | 08:33 |
-| `case-studies-writer` | `45 8 * * *` | 08:52 |
-| `ai-article-writer` | `0 */4 * * *` | every 4h |
-| `artwork-routine` | `35 1,5,9,13,17,21 * * *` | every 4h at :35 |
+| 1 | Surface unattended pipeline failures on the Notion row | `flagBlocked`/`clearBlockedReason` in `lib/notion.mjs`; `close-loop` writes a Blocked Reason; `flag-pipeline-failure.mjs` + `sweep-stuck-rows.mjs` + `sweep-stuck.yml` |
+| 2 | `publish-article --check` preflight; isolate a bad draft | `--check <id>` runs one row through every gate; per-draft `try/catch` around `toMarkdown`; `blocksDeep` + table support |
+| 3 | headless pipeline doctor + ops dashboard | `doctor.mjs`, `dashboard.mjs`, `npm run doctor` / `dashboard` |
+| 4 | Docs: cadence daily, token audit, failure-surfacing | HANDOFF / token-audit §5 / blog-routines skill |
+| 5 | Vendor the `waibi-sabi-os` plugin into the repo | `plugin/` — it was enabled from this path but untracked |
+| 6 | site dev-server launch config | `site/.claude/launch.json` |
+| 7 | Push a failure notification to the owner's phone | `notify.mjs` + threaded into the 3 failure scripts + a catch-all `if: failure()` step; `NOTIFY_TOPIC` env wired through 3 workflows |
+| 8 | `scripts/notion.mjs` — Notion as a CLI, not an MCP | 5 verbs over `lib/notion.mjs`; read verbs verified; writes need `--commit`; refuses `Approved` |
+| 9 | Scaffold `routines/` — headless `claude -p` runner | `run.ps1`, empty `mcp.json`, scoped `config/`, `schtasks.md`, `README.md`; `log-run.mjs` telemetry. **Not activated.** |
+| 10 | Docs: notify + notion CLI + routines migration path | token-audit §5.4, HANDOFF §3, PUBLISHING, LESSONS |
 
-**Follow-up 1 — the radars collide.** `business-radar` and `basics-radar` have
-the *same* cron (`10 7 * * *`) and both overlap `daily-ai-seo-radar`. Three cold
-sessions start inside ten minutes. Stagger them (e.g. business `12 7`, basics
-`16 7`) and fix `plugin/skills/blog-routines/SKILL.md` + `docs/HANDOFF.md`,
-which still claim `:20` / `:16`.
+## Also done live (not in git)
 
-**Follow-up 2 — token cost.** See `docs/research/token-and-cloud-audit.md` §5
-(added 2026-08-28). 26 claude.ai MCP connectors are now connected (the 26 Aug
-audit said zero); no routine restricts its tool surface; `vibevoice` fails on
-every cold start. Cadence is still not the lever — the tool surface is.
+- **Radar crons staggered.** `business-radar` → `12 7 * * *`, `basics-radar` →
+  `16 7 * * *` (`daily-ai-seo-radar` stays `0 7`). They shared `10 7` before.
+- **`vibevoice` removed** from the MCP config (`claude mcp remove vibevoice`) —
+  it failed to connect on every cold start.
 
-Also: there are unrated radar ideas in Notion, and `ai-article-writer` only
-picks up ideas rated 4 or 5. More radar runs without more ratings just grows the
-queue — ratings are the throughput gate, not cadence.
+## What is the owner's to do — the token-cost migration
+
+Full detail + order in `routines/README.md` and `docs/research/token-and-cloud-audit.md` §5.4. In short:
+
+1. **Prune the ~22 unused claude.ai connectors** at
+   `claude.ai/customize/connectors` (keep Notion; Gmail/Drive only if a routine
+   needs them). Biggest single saving, zero code.
+2. **Set up the phone push.** Pick a private topic string; add it as repo secret
+   `NOTIFY_TOPIC` (Settings → Secrets → Actions); install the ntfy app and
+   subscribe. Add `NOTIFY_TOPIC=` to `C:/Users/Janmejai/Notion/.env` for local
+   runs. Until then `notify.mjs` is a no-op.
+3. **Rewrite the 7 routine prompts** to call `node site/scripts/notion.mjs`
+   instead of `notion-query-data-sources` / `notion-create-pages` / `notion-fetch`,
+   and `WebSearch`/`WebFetch` instead of "Brave Search MCP". One at a time, diff
+   carefully — same files the in-app runner uses. This is also a partial saving
+   *before* the `run.ps1` cutover: a prompt that never names a Notion MCP tool
+   stops expanding the ~40-tool schema.
+4. **Verify `notion.mjs file-idea` and `promote`** against the live DB schema
+   (property names, the `Article ↔ Source Idea` relation) before the writer
+   prompts depend on them.
+5. **Cut over to `run.ps1`**, one routine at a time, radars first: run by hand,
+   compare the Notion result to a normal run, then add to Task Scheduler
+   (`routines/schtasks.md`) and `update_scheduled_task { enabled: false }` on the
+   in-app twin. Keep twins disabled-not-deleted for a week.
+6. **Decide on `playwright`** — still in the global MCP config, duplicates the
+   built-in browser pane, no routine uses it.
+
+Also: `ai-article-writer` only picks up radar ideas rated 4 or 5 — ratings are
+the throughput gate, not cadence.
+
+## Untracked, left for the owner's call
+
+`ai-writing-signals/` at the repo root is a separate Claude Code plugin, not
+part of this blog. It is untracked; decide whether it belongs in this repo or
+its own.
 
 ---
 
