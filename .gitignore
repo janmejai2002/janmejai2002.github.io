@@ -22,3 +22,7 @@ publish-manifest.json
 /routines/runs/*
 !/routines/runs/.gitkeep
 /routines/runs.jsonl
+
+# manager watchdog state + log
+/routines/.manager-state.json
+/routines/manager.log

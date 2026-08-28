@@ -70,11 +70,23 @@ Confirm it with `runs.jsonl` once a few runs have gone through.
 models for two weeks; compare the owner's `Interest Rating`s on what each filed.
 Keep the writers on `sonnet` regardless.
 
+## The watchdog (separate from the runner)
+
+`site/scripts/manager.mjs` + `routines/manager.ps1` — runs every ~10 min while
+the laptop is on. Each tick: `doctor.mjs`, then retrigger a failed
+deploy/publish **once** (rate-limited, logged), push one alert for anything a
+human must see, and once a day a plain-language digest via a `claude -p`
+one-shot. It never writes Notion, never runs git, never sets Draft Status; it
+only ever dispatches `deploy.yml` / `publish-from-notion.yml`, capped at 4
+re-triggers per rolling day. Test: `pwsh routines/manager.ps1 -DryRun`. Wire it
+up from `schtasks.md`.
+
 ## Files
 
 ```
 mcp.json            {} — the whole point
-run.ps1             the wrapper
+run.ps1             the routine wrapper
+manager.ps1         the watchdog wrapper (-> site/scripts/manager.mjs)
 schtasks.md         Task Scheduler commands + rollback
 config/settings.json  model, tight permissions
 config/CLAUDE.md    routine-scoped instructions (use the notion CLI, the rules)

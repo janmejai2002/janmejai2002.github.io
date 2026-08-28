@@ -41,6 +41,17 @@ schtasks /create /tn "waibi\artwork-routine" /sc hourly /mo 4 /st 01:35 ^
   /tr "pwsh -NoProfile -File C:\Users\Janmejai\PluginsClaude\routines\run.ps1 -Routine artwork-routine" /rl LIMITED /f
 ```
 
+## The watchdog
+
+Independent of the routine cutover — safe to add now.
+
+```bat
+schtasks /create /tn "waibi\manager" /sc minute /mo 10 ^
+  /tr "pwsh -NoProfile -File C:\Users\Janmejai\PluginsClaude\routines\manager.ps1" /rl LIMITED /f
+```
+
+Test it first: `pwsh routines\manager.ps1 -DryRun`.
+
 ## Disable the in-app twin as each one is proven
 
 In a Claude Code session, per routine:
