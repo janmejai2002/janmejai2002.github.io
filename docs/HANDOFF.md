@@ -165,6 +165,10 @@ improvements on `main` after merge. The `indexnow` job then pings changed URLs.
 | `.github/workflows/sync-news.yml` | Runs the above daily at 04:35 and **commits straight to main**. |
 | `site/scripts/flag-pipeline-failure.mjs` | `if: failure()` step in `publish-from-notion.yml` — writes a "generated fine, then failed at &lt;step&gt;" note onto every Notion row in the run's manifest, so a post-generation stall is visible in Notion, not just as a red run. |
 | `site/scripts/sweep-stuck-rows.mjs` + `.github/workflows/sweep-stuck.yml` | Daily backstop — flags any unattended-track row that has been `Draft Ready`/`Approved` for over 12h and is still not live. |
+| `site/scripts/notify.mjs` | One ntfy push to the owner's phone with the reason in the body — so a failure is not a GitHub-app scavenger hunt. Threaded into the three failure scripts + a catch-all `if: failure()` step. No-op unless `NOTIFY_TOPIC` is set. |
+| `site/scripts/notion.mjs` | Notion access as a CLI (`radar`, `covered`, `get`, `set-status`, `file-idea`, `promote`) over `lib/notion.mjs` — the token-cheap replacement for the Notion MCP in routine runs. Read verbs are safe; writes need `--commit`. Refuses `Approved`. |
+| `site/scripts/log-run.mjs` | Appends one telemetry line per routine run to `routines/runs.jsonl`. |
+| `routines/` | Scaffolding to run the routines as headless `claude -p` with a tiny tool surface instead of the in-app runner. **Not active** — see `routines/README.md` and `docs/research/token-and-cloud-audit.md` §5.4. |
 
 **Why the news sync commits directly while articles get a PR:** an article is a
 generated draft that still needs artwork, a TL;DR and a read-through, so a diff

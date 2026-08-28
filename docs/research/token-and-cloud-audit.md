@@ -292,3 +292,26 @@ Cadence is still **not** the lever. Cutting daily radars back to weekly saves
 ~5 cold starts a day and loses five-sevenths of the idea flow; pulling lever 1
 saves more than that on every remaining run and on every session the owner opens
 by hand.
+
+---
+
+## 5.4 What was implemented 2026-08-28
+
+Session `pluginsclaude` built the tooling for the layered fix. What landed on
+`main`:
+
+| Piece | State |
+|---|---|
+| `site/scripts/notion.mjs` — Notion access as a 5-verb CLI over `lib/notion.mjs` (`radar`, `covered`, `get`, `set-status`, `file-idea`, `promote`). Read verbs verified; writes default to a dry-run payload and need `--commit`. `set-status` refuses `Approved`. | **shipped** |
+| `site/scripts/notify.mjs` — one ntfy push with the reason in the body; threaded into `flag-pipeline-failure.mjs`, `close-loop.mjs`, `sweep-stuck-rows.mjs` and a catch-all `if: failure()` step in `publish-from-notion.yml`. Degrades to a no-op when `NOTIFY_TOPIC` is unset. | **shipped** |
+| `site/scripts/log-run.mjs` + `routines/runs.jsonl` — the telemetry line from §0 of the plan. | **shipped** |
+| `routines/` — headless-runner scaffolding: `run.ps1` (invokes the SKILL.md prompt through `claude -p --strict-mcp-config --mcp-config routines/mcp.json` with an empty MCP set, a scoped `CLAUDE_CONFIG_DIR`, `--output-format json`), `schtasks.md`, `config/` (2 skills, empty `agents/`), `README.md`. **Not activated** — the in-app `scheduled-tasks` runner is untouched. | **scaffolded** |
+| `vibevoice` removed from the global MCP config (`claude mcp remove vibevoice`) — it failed to connect on every cold start. | **done** |
+
+Still the owner's to do (needs account access, live verification, or a
+supervised cutover): prune the ~22 unused claude.ai connectors (lever 1);
+rewrite the seven routine prompts to call `notion.mjs` instead of the Notion MCP
+tools; verify `notion.mjs file-idea` / `promote` against the live schema; run one
+routine through `run.ps1` by hand, then move it to Task Scheduler and disable its
+in-app twin; set a `NOTIFY_TOPIC` secret + subscribe on the phone; decide on
+`playwright`. The migration order and the checklist are in `routines/README.md`.

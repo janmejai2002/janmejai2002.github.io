@@ -184,3 +184,27 @@ buster plus `Cache-Control: no-cache` to the live fetch. Related: grep the
 rendered filename shape, not the source path — hashed asset names like
 `name-light.Bh9PS0_I_DPdEw.webp` do not match a naive `_astro/[a-z0-9-]*.webp`
 pattern, and a bad pattern reports missing artwork that is present.
+
+## The routine token cost is a blast-radius problem, not a prompt-size one
+
+Measured 2026-08-28: a cold routine run inherits the interactive machine's whole
+surface — 26 claude.ai MCP connectors, playwright, 27 agent personas, 60+ skills
+— because the in-app `scheduled-tasks` runner shares the interactive process and
+`update_scheduled_task` has no field to scope tools. The nine SKILL.md prompts
+total 74 KB; the tool surface is an order of magnitude more. The fix is to run
+routines as `claude -p --strict-mcp-config --mcp-config <tiny> --allowedTools
+<allowlist>` with a scoped `CLAUDE_CONFIG_DIR` (empty `agents/`, 2 skills), and
+to reach Notion through `site/scripts/notion.mjs` (a Bash call, zero schema)
+instead of the MCP connector. Cutting cadence saves almost nothing by
+comparison. Scaffolding is in `routines/`; the accounting is in
+`docs/research/token-and-cloud-audit.md` §5.
+
+## A failure has to reach the owner, not just be recordable where they could look
+
+The "surface it in Notion" rule shipped as write-backs onto the row, but the
+owner still went to the GitHub app to read a failure reason — because nothing
+*pushed*. `notify.mjs` sends one ntfy message with the reason in the body. ntfy
+fits the project's no-expiring-credential rule (a topic is just a URL) and the
+script is a no-op when unconfigured, so it can never fail the thing it reports.
+Recording a failure where someone *could* find it is not the same as telling
+them.

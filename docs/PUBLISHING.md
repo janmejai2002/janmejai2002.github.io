@@ -62,6 +62,7 @@ Both Notion databases must also be shared with that integration
 | `site/scripts/close-loop.mjs` | called by the above, or by hand | The reconciliation itself. A URL that will not serve is written back to the row as a `Blocked Reason`, not just logged |
 | `site/scripts/flag-pipeline-failure.mjs` | an `if: failure()` step in `publish-from-notion.yml` | If a step *after* generation fails — artwork, build, commit, PR — writes that onto every Notion row in the run's manifest, so the stall is visible in Notion and not only as a red run |
 | `.github/workflows/sweep-stuck.yml` + `site/scripts/sweep-stuck-rows.mjs` | daily | Backstop: flags any unattended-track row that has been `Draft Ready` / `Approved` for over 12h and is still not live — the silent case no specific check would catch |
+| `site/scripts/notify.mjs` | called by the three failure scripts, and a catch-all `if: failure()` step | One ntfy push to the owner's phone with the reason in the body. No-op (exit 0, log line) when `NOTIFY_TOPIC` is unset, so it can never fail the thing it reports on |
 
 Run any of them by hand:
 
@@ -292,3 +293,25 @@ only those URLs via `scripts/indexnow.mjs`. The key is a static text file in
 `site/public/` (no login, no token — nothing to expire). The script treats
 `429` as back-off and never exits non-zero, so a ping can never fail a deploy.
 Bing, Yandex, Seznam and Naver consume IndexNow; Google does not.
+
+## Failure notifications
+
+The guardrail is that a failure has to surface *in Notion*, where the owner
+works — a `Blocked Reason` on the row, not a red run in a tab nobody watches.
+`notify.mjs` adds a second, faster channel on top of that: one push to the
+owner's phone with the reason already in the message body, so a failure does not
+mean opening the GitHub app, finding the run, and scrolling the log.
+
+- Transport is **ntfy** (`https://ntfy.sh`). A topic is just a hard-to-guess URL
+  — no login, nothing to expire, which is the only kind of credential this
+  project lets unattended automation use.
+- **To turn it on:** pick a private topic string, add it as the repo secret
+  `NOTIFY_TOPIC` (Settings → Secrets → Actions), install the ntfy app and
+  subscribe to that topic. For local runs, add a `NOTIFY_TOPIC=` line to
+  `C:/Users/Janmejai/Notion/.env`.
+- Until then it is a no-op: `notify.mjs` logs the message it would have sent and
+  exits 0. It never throws and never fails a workflow.
+- Wired into `flag-pipeline-failure.mjs` (post-generation failure),
+  `close-loop.mjs` (a merged URL that will not serve), `sweep-stuck-rows.mjs`
+  (an unattended row stuck > 12h), and a catch-all `if: failure()` step in
+  `publish-from-notion.yml` for failures too early to have a manifest.
