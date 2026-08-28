@@ -1,7 +1,9 @@
 # Handoff — wAIbi-sabi blog system
 
 You are picking up a working, deployed system. Read this whole file before touching anything.
-Last updated 2026-08-25.
+Last updated 2026-08-28. (Publish-pipeline detail lives in `docs/PUBLISHING.md`,
+which is kept ahead of this file; token/cost detail in
+`docs/research/token-and-cloud-audit.md` §5.)
 
 ---
 
@@ -68,7 +70,8 @@ site's thesis is that ML systems are never finished.
 | `/projects/` | Setups | `site/src/pages/projects.astro` |
 | `/news/` | BSchool | `site/src/pages/news/index.astro` — 221 filterable cards |
 | `/about/` | Me | `site/src/pages/about.astro` |
-| `/blog/[slug]/` | — | `site/src/content/blog/*.md` (5 posts) |
+| `/blog/[slug]/` | — | `site/src/content/blog/*.md` (7 posts as of 2026-08-26) |
+| `/technical/` `/business/` `/basics/` `/case-studies/` `/talks/` | — | `site/src/pages/[track].astro` — per-track hub pages |
 
 Nav labels were renamed 2026-08-25; **routes were deliberately left alone** so
 nothing published or indexed breaks. The page headings still say the old words
@@ -99,16 +102,28 @@ The relation between the two pipeline databases is two-way (`Article` ↔
 Prompts live in `~/.claude/scheduled-tasks/<id>/SKILL.md`. **Each run starts
 cold**, so the prompt must be fully self-contained.
 
-- **`daily-ai-seo-radar`** — 07:10 daily. Technical theme. Discovers topics,
-  writes a 100-word pitch, files as `Radar Idea`.
-- **`business-radar`** — daily 07:20. Business theme, covering both the advisory
-  and the marketing audience. 2 ideas max, and explicitly told a quiet day is a
-  valid result.
-- **`basics-radar`** — daily 07:16. Basics theme. Weighted toward questions people
-  are actually asking rather than the news cycle, and told that a simplification
-  leaving the reader with a false model is worse than no article.
-- **`ai-article-writer`** — every 4h. Picks up rating 4/5, promotes, researches,
-  drafts, sets `Draft Ready`. Max 2 per run. **Forbidden from publishing.**
+Seven local blog routines (full detail in the `blog-routines` skill). Cadence as
+of 2026-08-28 — **all daily** except the two every-4h workers:
+
+- **`daily-ai-seo-radar`** — `0 7 * * *`. Technical theme. 100-word pitch, files
+  as `Radar Idea`.
+- **`business-radar`** — `10 7 * * *`. Business theme (advisory + marketing).
+  ≤2 ideas; a quiet day is valid.
+- **`basics-radar`** — `10 7 * * *`. Basics theme. Weighted toward questions
+  people actually ask; a false mental model is worse than no article.
+- **`talks-writer`** — `30 8 * * *`. One talk/keynote/podcast from a curated
+  allowlist, transcript pulled credential-free, drafts straight to `Draft Ready`.
+- **`case-studies-writer`** — `45 8 * * *`. One named company's real AI
+  deployment from primary sources, evidence graded honestly — or files nothing.
+- **`ai-article-writer`** — `0 */4 * * *`. Picks up rating 4/5, promotes,
+  researches, drafts, sets `Draft Ready`. Max 2 per run. **Forbidden from
+  publishing.**
+- **`artwork-routine`** — `35 1,5,9,13,17,21 * * *`. Draws the plate for
+  `Draft Ready`/`Approved` rows, files the SVG into the Notion page, backfills a
+  missing TL;DR.
+
+`business-radar` and `basics-radar` currently share the exact cron `10 7 * * *`
+and overlap `daily-ai-seo-radar` — stagger them.
 
 All three radars write `Track` and `Reader Question`. The writer carries both
 through to Article Production, and `publish-article.mjs` reads them into
@@ -148,6 +163,8 @@ improvements on `main` after merge. The `indexnow` job then pings changed URLs.
 | `close-loop` job in `deploy.yml` | Runs after every Pages deploy. `continue-on-error`. |
 | `site/scripts/sync-news.mjs` | Refreshes `src/data/news.json` from the news archive database. |
 | `.github/workflows/sync-news.yml` | Runs the above daily at 04:35 and **commits straight to main**. |
+| `site/scripts/flag-pipeline-failure.mjs` | `if: failure()` step in `publish-from-notion.yml` — writes a "generated fine, then failed at &lt;step&gt;" note onto every Notion row in the run's manifest, so a post-generation stall is visible in Notion, not just as a red run. |
+| `site/scripts/sweep-stuck-rows.mjs` + `.github/workflows/sweep-stuck.yml` | Daily backstop — flags any unattended-track row that has been `Draft Ready`/`Approved` for over 12h and is still not live. |
 
 **Why the news sync commits directly while articles get a PR:** an article is a
 generated draft that still needs artwork, a TL;DR and a read-through, so a diff
@@ -233,8 +250,10 @@ it. It is not the default for hero art; drawn artwork is.
 ## 6. Hard-won gotchas — do not rediscover these
 
 **Environment**
-- **The Bash tool is broken on this machine** (`cygheap read copy failed`). Use
-  the PowerShell tool. For POSIX scripts: `& "C:\Program Files\Git\bin\bash.exe" -lc "..."`.
+- **The Bash tool's cygwin failure is intermittent, not permanent**
+  (`cygheap read copy failed`) — see `docs/LESSONS.md`. Try it once; fall back to
+  the PowerShell tool if it dies. `git` under Bash also occasionally fails with
+  "the paging file is too small" — just re-run.
 - **PowerShell here-strings break on apostrophes** in commit messages. Write the
   message to a file and use `git commit -F <file>`.
 - **`notebooklm-mcp` reports healthy but exposes no tools.** Use the `nlm` CLI.

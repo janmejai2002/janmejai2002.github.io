@@ -129,6 +129,50 @@ tool surface is a good one: it saves the same tokens on every run forever and
 costs nothing. A CLI called through Bash has zero schema cost; an MCP server has
 a schema cost on every cold start.
 
+## A handled rejection must not also fail the build, and routines must count not eyeball
+
+Two thirds of the `publish-from-notion` red runs (78‑char title on 26 Aug, two
+172/166‑char meta descriptions on 27 Aug) were the same shape: a routine-authored
+draft breached a hard cap, was correctly bounced to `Needs Revision` in Notion,
+and *then* also turned the Actions run red — a second alarm in a place nobody
+watches, for a failure already fully handled where the owner does look.
+`publish-article.mjs` now fails the run only when the Notion write-back itself
+failed and nothing else shipped. The prevention is upstream: the three writer
+routines said "under 160 chars" but let the model estimate, which breaches roughly
+one run in fifteen. They now carry a pre-file gate that counts `Name` (≤70), the
+meta description (≤160) and `Reader Question` (≤120) against the finished text
+before filing. Caps unchanged — see the assertion-hygiene lesson above.
+
+## A restated rule is not a check; run the real validator
+
+The pre-file gate above still has the model grading its own homework. The durable
+version is `publish-article.mjs --check <page-id>`: one row through every real
+gate, writes nothing, exits 1 with the reasons. The writer routines run it against
+their own draft before handing off — the same code the cloud runs, not a prose
+description of it. Generalises: when a routine's output must satisfy a validator,
+give the routine the validator, not a summary of what it wants.
+
+## One malformed draft used to crash the whole poll
+
+`toMarkdown` throws on an unsupported Notion block, on purpose. But that throw was
+uncaught in `publish-article.mjs`'s row loop, so a single table in one Approved
+draft would abort the entire run — every other ready article with it — and write
+nothing back to Notion. Found live on 28 Aug: "Your Agent Framework Has 20‑Year‑Old
+Bugs Underneath It" carried a table and had been silently failing every poll. The
+loop now catches per draft: that row goes to Needs Revision with the block type
+named, the rest of the run proceeds. Any unattended step that fans out over rows
+should isolate a per-row failure to that row.
+
+## Failures that were only ever a red run now land in Notion
+
+The "surface it where the owner looks" rule was wired into `publish-article.mjs`'s
+own rejections and nothing else. A failed `npm run build`, a failed PR step, a
+`close-loop` URL that never served, a poll that silently stopped — each left the
+Notion row untouched at `Approved`/`Draft Ready` with no hint. Now: an `if:
+failure()` step flags every manifest row after a post-generation failure,
+`close-loop.mjs` writes a `Blocked Reason` on a URL that won't serve, and a daily
+`sweep-stuck.yml` flags any unattended row ready over 12h and still not live.
+
 ## Cache-bust when checking a live route straight after a deploy
 
 Right after PR #2 merged, /business/ and /talks/ fetched clean over HTTPS and

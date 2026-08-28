@@ -59,18 +59,27 @@ Both Notion databases must also be shared with that integration
 | `.github/workflows/publish-from-notion.yml` | `repository_dispatch`, two polling schedules, or manually | Queries for `Approved` rows plus `Draft Ready` rows on an unattended track; writes markdown, builds, then pushes unattended articles to `main` and opens a PR for the rest |
 | `site/scripts/publish-article.mjs` | called by the above, or by hand | Notion page → `src/content/blog/<slug>.md` |
 | `close-loop` job in `deploy.yml` | after every Pages deploy from `main` | Verifies each URL is live, then writes `Published` + `Post URL` + `Publish Date` back to the radar row |
-| `site/scripts/close-loop.mjs` | called by the above, or by hand | The reconciliation itself |
+| `site/scripts/close-loop.mjs` | called by the above, or by hand | The reconciliation itself. A URL that will not serve is written back to the row as a `Blocked Reason`, not just logged |
+| `site/scripts/flag-pipeline-failure.mjs` | an `if: failure()` step in `publish-from-notion.yml` | If a step *after* generation fails — artwork, build, commit, PR — writes that onto every Notion row in the run's manifest, so the stall is visible in Notion and not only as a red run |
+| `.github/workflows/sweep-stuck.yml` + `site/scripts/sweep-stuck-rows.mjs` | daily | Backstop: flags any unattended-track row that has been `Draft Ready` / `Approved` for over 12h and is still not live — the silent case no specific check would catch |
 
-Run either by hand:
+Run any of them by hand:
 
 ```bash
 cd site
-node scripts/publish-article.mjs --dry-run
+node scripts/publish-article.mjs --dry-run          # every ready row, report only
+node scripts/publish-article.mjs --check <page-id>   # one row through every gate, verdict + exit code
 node scripts/close-loop.mjs --dry-run
+node scripts/sweep-stuck-rows.mjs --dry-run
 ```
 
-Both are safe to re-run. `publish-article` skips anything whose `notionId` is
+All are safe to re-run. `publish-article` skips anything whose `notionId` is
 already in the repo; `close-loop` skips rows already marked Published.
+
+`--check` is the writer routines' preflight: it evaluates a single page by id
+regardless of its `Draft Status`, writes nothing, touches no row, and exits 1
+with the reasons if that draft would be rejected. A routine runs it against its
+own draft before handing it off, instead of eyeballing the caps.
 
 ---
 
@@ -169,6 +178,18 @@ A blocking problem now writes itself back onto the row:
 Fix the row, set it back to Approved, and the next run picks it up and clears
 `Blocked Reason`. Non-blocking remarks (a missing TL;DR, an unknown Track) are
 printed and do **not** fail the run or move the row.
+
+Three things extend that same "say it in Notion" rule beyond `publish-article.mjs`:
+
+- **An exotic Notion block** (a table, a toggle) used to throw out of `toMarkdown`
+  uncaught and crash the whole poll — every other article in the run with it.
+  It is now caught per draft: that one row goes to Needs Revision with the block
+  type named, the rest of the run proceeds.
+- **A failure after generation** — artwork rendering, `npm run build`, the commit,
+  the PR — runs `flag-pipeline-failure.mjs`, which writes a "generated fine,
+  publishing then failed at &lt;step&gt;" note onto every row that was in the run.
+- **`close-loop.mjs`** writes a `Blocked Reason` onto any row whose URL will not
+  serve, instead of only logging it.
 
 ## Making it reactive instead of polled
 

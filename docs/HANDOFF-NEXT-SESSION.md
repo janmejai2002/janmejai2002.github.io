@@ -9,46 +9,40 @@ is now done — see below for what landed and what is left.
 
 ---
 
-## THE ONE THING NOT DONE — do this first
+## Cadence change — DONE (2026-08-28), with two follow-ups
 
-The owner's last instruction was:
+The owner's instruction ("change routines to be daily instead of the weekly")
+was carried out. All three radars, `case-studies-writer` and `talks-writer` now
+run daily; each routine's prompt text was updated to match (`case-studies-writer`
+§ now reads *"Cadence is daily, and the quality bar — not the calendar — decides
+whether you file"*).
 
-> "whatever needs a fix do it and wrap this up from tomorrow we run this blog.
-> Also change routines to be daily instead of the weekly (i think some are weekly)."
+Live crons (`list_scheduled_tasks`, 2026-08-28):
 
-**The cadence change was never made.** The session ended before it. Two
-routines are still weekly and the owner wants them daily:
-
-| Routine | Current schedule | Owner wants |
+| Routine | Cron | Fires |
 |---|---|---|
-| `business-radar` | `10 7 * * 2` (Tue only) | daily |
-| `basics-radar` | `10 7 * * 4` (Thu only) | daily |
-| `case-studies-writer` | `40 8 * * 1,4` (Mon + Thu) | owner said "daily" — **see the conflict below** |
+| `daily-ai-seo-radar` | `0 7 * * *` | 07:10 |
+| `business-radar` | `10 7 * * *` | 07:10 |
+| `basics-radar` | `10 7 * * *` | 07:10 |
+| `talks-writer` | `30 8 * * *` | 08:33 |
+| `case-studies-writer` | `45 8 * * *` | 08:52 |
+| `ai-article-writer` | `0 */4 * * *` | every 4h |
+| `artwork-routine` | `35 1,5,9,13,17,21 * * *` | every 4h at :35 |
 
-Everything else already runs daily or more often: `daily-ai-seo-radar` (07:10),
-`talks-writer` (08:33), `ai-article-writer` (every 4h), `artwork-routine`
-(every 4h at :35).
+**Follow-up 1 — the radars collide.** `business-radar` and `basics-radar` have
+the *same* cron (`10 7 * * *`) and both overlap `daily-ai-seo-radar`. Three cold
+sessions start inside ten minutes. Stagger them (e.g. business `12 7`, basics
+`16 7`) and fix `plugin/skills/blog-routines/SKILL.md` + `docs/HANDOFF.md`,
+which still claim `:20` / `:16`.
 
-Use the `scheduled-tasks` MCP tool `update_scheduled_task` to change
-`cronExpression`. Stagger the times so five routines do not all fire at once —
-keeping business at :20 and basics at :16 past the hour works.
+**Follow-up 2 — token cost.** See `docs/research/token-and-cloud-audit.md` §5
+(added 2026-08-28). 26 claude.ai MCP connectors are now connected (the 26 Aug
+audit said zero); no routine restricts its tool surface; `vibevoice` fails on
+every cold start. Cadence is still not the lever — the tool surface is.
 
-**The conflict to raise with the owner before changing `case-studies-writer`:**
-its own prompt says, in bold, *"Cadence is two a week, deliberately — do not
-increase it."* That rule exists because higher volume is the shape search
-engines penalise as scaled content abuse (domain-wide, regardless of who wrote
-it), and because nothing above that rate can be fact-checked properly. Daily is
-3.5x that rate. The two radars are different — they only file *ideas* for the
-owner to rate and publish nothing, so making them daily is harmless.
-
-Recommended: **make both radars daily without asking (safe, reversible), and put
-the case-studies question to the owner** — offer Mon/Wed/Fri as the middle
-option. If they reaffirm daily, do it, and edit the prompt's cadence paragraph
-in the same change. Do not leave a prompt that argues with its own cron.
-
-Also tell them: **cadence is not the real bottleneck.** There are already 5
-unrated radar ideas in Notion, and `ai-article-writer` only picks up ideas rated
-4 or 5. More radar runs without more ratings just grows the queue.
+Also: there are unrated radar ideas in Notion, and `ai-article-writer` only
+picks up ideas rated 4 or 5. More radar runs without more ratings just grows the
+queue — ratings are the throughput gate, not cadence.
 
 ---
 

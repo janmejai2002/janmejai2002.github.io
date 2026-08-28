@@ -218,3 +218,77 @@ a different and equally ordinary reason — they were a Saturday and a Sunday.
 **No fix needed.** If the owner wants the newest day to look fuller, the change
 is presentational — group the index by *ingestion* date, or label the top group
 "Latest" rather than by date — not a pipeline repair.
+
+---
+
+## 5. Update 2026-08-28 — full token accounting, and what changed since 26 Aug
+
+Re-audited after the owner asked, again, why runs cost so much. Two of the three
+levers in §1 are still not pulled, and the tool surface has **grown**, not shrunk.
+
+### 5.1 Every token source in one cold routine run, biggest first
+
+A local scheduled task starts a fresh Claude Code session on this PC. It inherits
+the machine-wide config — MCP servers, plugins, skills, agents — because **none of
+the seven blog routines declare a restricted tool set** (`ls ~/.claude/scheduled-tasks/*/`
+shows a lone `SKILL.md` in each; no `allowed_tools`, no `--allowedTools`). The
+one cloud routine restricts itself to six tools; the locals restrict nothing.
+
+| # | Cost centre | Rough size (cold, before work) | Notes |
+|---|---|---|---|
+| 1 | **claude.ai account MCP connectors** | **largest single block** | `claude mcp list` shows **26 connected**: Notion, Gmail, Google Drive, Google Calendar, Figma, Canva, Supabase, Vercel, HubSpot, Apollo.io, Outreach, Lusha, Miro, Spotify, Context7, Ahrefs, Send, Mobbin, Mermaid Chart, TickTick, Todoist, MindMap, Higgsfield, HyperFrames, Anthropic Economic Index, Unsplash. Tool Search keeps *schemas* out until first call, but every server still spends its name + description every session, and the first Notion call in a routine loads the full ~40-tool Notion schema. **§2 of this doc said "No MCP connectors are registered on the claude.ai account." That is now false** — this is the biggest regression since 26 Aug. |
+| 2 | **Local + project MCP servers** | 25–40k if a tool is touched | `playwright` (25 tools, duplicates the built-in Browser pane), `vibevoice` (**fails to connect — burns a 30s timeout on every cold start**), `unsplash` (local, missing its key). Plus built-ins always present: Browser pane (~25), computer-use (~14), ccd session-mgmt (~13), scheduled-tasks (4), mcp-registry (3), visualize (4). |
+| 3 | **Agent persona listing** | ~10–15k | 27 personas in `~/.claude/agents/`, injected every session **and again into every sub-agent**. A radar uses none of them. |
+| 4 | **Skill descriptions** | ~6–10k | `~/.claude/CLAUDE.md` still claims "10 skills / 1,406 tokens". Reality: enabled plugins are `claude-obsidian`, `stratx`, `waibi-sabi-os` (from `PluginsClaude/plugin/`), plus an auto-installed official marketplace pulling in `anthropic-skills` (~15 skills), `pdf-viewer` (7), `cowork-plugin-management` (2). `ponytail` (6) and `claude-mem` (18) caches are on disk. The live skill listing this session is 60+ skills, not 10. |
+| 5 | **`~/.claude/CLAUDE.md`** | ~2k | The split-rationale essay itself is context on every run. |
+| 6 | **The routine's own `SKILL.md`** | 1.5–5k | `wc -c`: `ai-article-writer` 18.3k, `case-studies-writer` 11.7k, `talks-writer` 9.8k, `business-radar` 8.7k, `basics-radar` 8.6k, `daily-ai-seo-radar` 6.9k, `artwork-routine` 5.6k. Not the problem — 74k chars across all nine. |
+| 7 | Harness system prompt, `MEMORY.md`, SessionStart hook | ~3–5k | Fixed, unavoidable. |
+| 8 | **The actual work** | 10–60k+ per run | WebSearch result sets (5–15k each), WebFetch of full pages (5–50k each; a radar fetches several), and the Notion pipeline read every radar does to answer "has this been covered?" (full data-source query, uncached). |
+| 9 | **Sub-agent spawns** | **~100k each, multiplied** | Any `Task`/subagent re-pays items 1–7 in full. `ai-article-writer` doing multi-source research is the likely multiplier behind the worst runs. |
+
+**Why a run that finds nothing still costs ~100k+:** items 1–7 are all paid at
+session start, before the routine reads a single search result. Cadence barely
+moves that number; the tool surface is the number.
+
+### 5.2 What changed since the 26 Aug audit
+
+| Change | Effect on cost |
+|---|---|
+| 26 claude.ai MCP connectors now connected (were zero) | **↑ large** — the dominant new cost |
+| 3 radars + `case-studies-writer` + `talks-writer` all moved to **daily** crons (the "one thing not done" from the 26 Aug handoff — now done) | ↑ throughput of cold starts: ~20 local routine runs/day, each paying the full baseline |
+| `waibi-sabi-os` plugin added, sourced from `PluginsClaude/plugin/` — adds 4 skills, 5 commands, 4 hooks (incl. a Bash `PreToolUse` guard that runs on every Bash call in every routine) | ↑ small, but the Bash hook adds latency to the busiest tool |
+| New scripts `flag-pipeline-failure.mjs`, `sweep-stuck-rows.mjs` + `sweep-stuck.yml` | neutral — CI only, no session cost |
+| `business-radar` and `basics-radar` crons are **identical** (`10 7 * * *`) and collide with `daily-ai-seo-radar` (`0 7 * * *`) | not a token cost, but three cold sessions fire inside ten minutes — the staggering §"Cadence lives in two places" prescribes was never applied |
+
+### 5.3 The levers, ranked by saving × effort — none of the big ones are pulled
+
+1. **Disable the ~22 unused claude.ai connectors.** A blog routine needs Notion
+   and web fetch. Figma, Canva, Spotify, HubSpot, Apollo, Outreach, Lusha, Miro,
+   Vercel, Supabase, Context7, Ahrefs, Send, Mobbin, Mermaid, TickTick, Todoist,
+   MindMap, Higgsfield, HyperFrames, Econ Index, Google Drive/Calendar contribute
+   nothing to any routine. Manage at <https://claude.ai/customize/connectors>.
+   Largest single saving, applies to all seven routines and every interactive
+   session, costs nothing.
+2. **Give each routine an `allowed_tools` list** like the cloud news routine's
+   (`Bash`, `WebSearch`, `WebFetch`, three Notion tools). This is the §1(a) lever,
+   still unpulled. It caps the surface regardless of what the machine config grows
+   to next.
+3. **Register Notion with `mcporter` and call it from Bash.** `mcporter list`
+   still shows only `linkedin` registered. A CLI call through Bash costs zero
+   schema tokens; this removes ~40 tool schemas from every run that touches Notion
+   — which is all of them.
+4. **Remove `vibevoice` and `playwright` from the global MCP config.**
+   `vibevoice` is dead weight that times out on every cold start; `playwright`
+   duplicates the built-in Browser pane. Neither is used by any routine.
+5. **Cache the Notion pipeline digest.** Refresh a `status.json`-style file once
+   a day; the three radars read the file instead of each running a full
+   data-source query. §1(c), still unpulled.
+6. **Trim `~/.claude/agents/` for routine runs** — 27 personas injected into every
+   run (and every sub-agent) that no radar or writer ever spawns.
+7. **Stagger the radar crons** so three cold sessions do not start inside ten
+   minutes — and fix the docs that still say `:16` / `:20`.
+
+Cadence is still **not** the lever. Cutting daily radars back to weekly saves
+~5 cold starts a day and loses five-sevenths of the idea flow; pulling lever 1
+saves more than that on every remaining run and on every session the owner opens
+by hand.
