@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" role="img">
+  <filter id="grain" x="0" y="0" width="100%" height="100%">
+    <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch"/>
+  </filter>
+  <rect width="1600" height="900" fill="{{paper}}"/>
+  <g><line x1="360" y1="208" x2="1240" y2="208" stroke="{{ink}}" stroke-width="3" opacity="0.75"/><line x1="360" y1="252" x2="1240" y2="252" stroke="{{ink}}" stroke-width="3" opacity="0.75"/><line x1="360" y1="296" x2="1240" y2="296" stroke="{{ink}}" stroke-width="3" opacity="0.75"/><line x1="360" y1="340" x2="1240" y2="340" stroke="{{ink}}" stroke-width="3" opacity="0.75"/><line x1="360" y1="384" x2="1240" y2="384" stroke="{{ink}}" stroke-width="3" opacity="0.75"/><line x1="360" y1="428" x2="1240" y2="428" stroke="{{ink}}" stroke-width="3" opacity="0.75"/><line x1="360" y1="472" x2="691" y2="472" stroke="{{ink}}" stroke-width="3"/><line x1="781" y1="486" x2="1240" y2="486" stroke="{{hanko}}" stroke-width="3"/><line x1="360" y1="516" x2="1240" y2="516" stroke="{{ink}}" stroke-width="3" opacity="0.75"/><line x1="360" y1="560" x2="1240" y2="560" stroke="{{ink}}" stroke-width="3" opacity="0.75"/><line x1="360" y1="604" x2="1240" y2="604" stroke="{{ink}}" stroke-width="3" opacity="0.75"/><line x1="360" y1="648" x2="1240" y2="648" stroke="{{ink}}" stroke-width="3" opacity="0.75"/><line x1="360" y1="692" x2="1240" y2="692" stroke="{{ink}}" stroke-width="3" opacity="0.75"/></g>
+  <rect width="1600" height="900" filter="url(#grain)" opacity="0.055"/>
+</svg>
