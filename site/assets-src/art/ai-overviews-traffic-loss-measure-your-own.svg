@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" role="img">
+  <title>Rows of arrows meeting a heavy bar before a stack of cards</title>
+  <desc>Thin arrows travel from the left edge toward a column of six stacked rectangles on the right. A thick vertical bar stands in their way; most arrows stop at it, a few faint lines continue past it, and one bold arrow passes through a gap in the bar and reaches the rectangles.</desc>
+  <filter id="grain" x="0" y="0" width="100%" height="100%">
+    <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch"/>
+  </filter>
+  <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+    <path d="M0 0 L10 5 L0 10 z" fill="{{ink}}"/>
+  </marker>
+  <marker id="aho" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+    <path d="M0 0 L10 5 L0 10 z" fill="{{ochre}}"/>
+  </marker>
+  <rect width="1600" height="900" fill="{{paper}}"/>
+  <g fill="{{card}}" stroke="{{ink}}" stroke-width="2">
+    <rect x="1030" y="176" width="250" height="60"/>
+    <rect x="1030" y="266" width="250" height="60"/>
+    <rect x="1030" y="356" width="250" height="60"/>
+    <rect x="1030" y="446" width="250" height="60"/>
+    <rect x="1030" y="536" width="250" height="60"/>
+    <rect x="1030" y="626" width="250" height="60"/>
+  </g>
+  <g stroke="{{ink}}" stroke-width="1" opacity="0.22" marker-end="url(#ah)">
+    <line x1="150" y1="250" x2="1024" y2="250"/>
+    <line x1="150" y1="392" x2="1024" y2="392"/>
+    <line x1="150" y1="628" x2="1024" y2="628"/>
+    <line x1="150" y1="724" x2="1024" y2="724"/>
+  </g>
+  <g fill="{{ochre}}">
+    <rect x="800" y="118" width="22" height="398"/>
+    <rect x="800" y="556" width="22" height="226"/>
+  </g>
+  <g stroke="{{ink}}" stroke-width="2" opacity="0.5" marker-end="url(#ah)">
+    <line x1="150" y1="156" x2="792" y2="156"/>
+    <line x1="150" y1="204" x2="792" y2="204"/>
+    <line x1="150" y1="298" x2="792" y2="298"/>
+    <line x1="150" y1="346" x2="792" y2="346"/>
+    <line x1="150" y1="440" x2="792" y2="440"/>
+    <line x1="150" y1="486" x2="792" y2="486"/>
+    <line x1="150" y1="582" x2="792" y2="582"/>
+    <line x1="150" y1="676" x2="792" y2="676"/>
+    <line x1="150" y1="772" x2="792" y2="772"/>
+  </g>
+  <line x1="150" y1="536" x2="1024" y2="536" stroke="{{ochre}}" stroke-width="3.5" marker-end="url(#aho)"/>
+  <rect width="1600" height="900" filter="url(#grain)" opacity="0.055"/>
+</svg>
