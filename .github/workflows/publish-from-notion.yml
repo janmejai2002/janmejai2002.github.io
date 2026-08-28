@@ -63,6 +63,10 @@ concurrency:
 permissions:
   contents: write
   pull-requests: write
+  # A push made with GITHUB_TOKEN does not trigger deploy.yml (GitHub blocks
+  # workflow-from-workflow recursion), so the unattended commit below has to
+  # dispatch the deploy itself — which needs this scope.
+  actions: write
 
 jobs:
   publish:
@@ -152,6 +156,18 @@ jobs:
           # commit may have landed on main while this run was building.
           git pull --rebase origin main
           git push origin HEAD:main
+          echo "pushed=1" >> "$GITHUB_OUTPUT"
+        id: commit_unattended
+
+      # A GITHUB_TOKEN push does not fire deploy.yml's `push` trigger, so an
+      # unattended article would sit on main unpublished until the next human
+      # push. Dispatch the deploy explicitly. sync-news.yml does the same thing
+      # for the same reason.
+      - name: Deploy the unattended articles
+        if: steps.commit_unattended.outputs.pushed == '1'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run deploy.yml --repo "${{ github.repository }}" --ref main
 
       # Everything else waits for a read-through, exactly as before.
       - name: Open a pull request for reviewed articles
