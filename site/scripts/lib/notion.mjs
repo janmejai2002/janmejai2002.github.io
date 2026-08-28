@@ -44,6 +44,44 @@ export async function api(path, { method = 'GET', body } = {}) {
   return res.json();
 }
 
+/**
+ * Writes a reason onto a row's `Blocked Reason`, optionally flipping it to
+ * `Needs Revision`. The one rule for unattended failure on this project: the
+ * owner works in Notion, so a failure has to show up there and not only in a
+ * red Actions run nobody watches. Shared by publish-article.mjs (draft
+ * rejected), close-loop.mjs (a live URL never came up) and
+ * flag-pipeline-failure.mjs (the build or the PR step failed in CI).
+ *
+ * Never throws — a failed write-back must not mask the failure it reports.
+ * Returns true on success, false otherwise.
+ */
+export async function flagBlocked(pageId, reason, { needsRevision = false } = {}) {
+  const stamp = new Date().toISOString().slice(0, 16).replace('T', ' ');
+  const properties = {
+    'Blocked Reason': {
+      rich_text: [{ type: 'text', text: { content: `${reason} (checked ${stamp} UTC)`.slice(0, 2000) } }],
+    },
+  };
+  if (needsRevision) properties['Draft Status'] = { select: { name: 'Needs Revision' } };
+  try {
+    await api(`/pages/${pageId}`, { method: 'PATCH', body: { properties } });
+    return true;
+  } catch (err) {
+    console.error(`::warning::could not write Blocked Reason to ${pageId}: ${err.message}`);
+    return false;
+  }
+}
+
+/** Wipes `Blocked Reason` off a row that has since gone through cleanly. Never throws. */
+export async function clearBlockedReason(pageId) {
+  try {
+    await api(`/pages/${pageId}`, { method: 'PATCH', body: { properties: { 'Blocked Reason': { rich_text: [] } } } });
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 /** Query a data source, following pagination. */
 export async function queryAll(dataSourceId, filter) {
   const out = [];
@@ -69,6 +107,27 @@ export async function blocks(blockId) {
     cursor = json.has_more ? json.next_cursor : undefined;
   } while (cursor);
   return out;
+}
+
+/**
+ * Like blocks(), but also pulls the rows of any `table` block and stashes them
+ * on it as `table.children`, so the sync toMarkdown() can render the table
+ * without doing I/O of its own.
+ *
+ * A table is the one nested structure the writer routines legitimately emit and
+ * everything else the generator produces is flat, so the recursion is kept to
+ * tables only: one extra request per table, and no risk of dragging in
+ * unrelated nested content. Before this existed, a single table in a draft threw
+ * "Unhandled Notion block type" and took the entire publish poll down with it.
+ */
+export async function blocksDeep(blockId) {
+  const list = await blocks(blockId);
+  for (const b of list) {
+    if (b.type === 'table' && b.has_children) {
+      b.table.children = await blocks(b.id);
+    }
+  }
+  return list;
 }
 
 export const plain = (rich) => (rich ?? []).map((r) => r.plain_text).join('');
@@ -147,6 +206,31 @@ export function toMarkdown(list) {
         lines.push('---');
         break;
       }
+      case 'table': {
+        // Rows arrive on b.table.children via blocksDeep(); a plain blocks()
+        // fetch leaves them off and the table renders as nothing rather than
+        // crashing.
+        const rows = (b.table?.children ?? []).filter((r) => r.type === 'table_row');
+        if (!rows.length) break;
+        gap();
+        const cellsOf = (r) =>
+          (r.table_row.cells ?? []).map((c) => inline(c).replace(/\|/g, '\\|').replace(/\n+/g, ' ').trim());
+        const width = Math.max(...rows.map((r) => cellsOf(r).length));
+        const pad = (cs) => {
+          while (cs.length < width) cs.push('');
+          return cs;
+        };
+        // GFM needs a header row + separator. Use Notion's column header when it
+        // has one; otherwise the first row stands in, which is how most
+        // renderers degrade a headerless table anyway.
+        rows.forEach((r, i) => {
+          lines.push(`| ${pad(cellsOf(r)).join(' | ')} |`);
+          if (i === 0) lines.push(`| ${Array(width).fill('---').join(' | ')} |`);
+        });
+        break;
+      }
+      case 'table_row':
+        break; // consumed by the 'table' case above
       case 'callout': {
         // The writer's opening callout carries the slug and meta description,
         // which become frontmatter. Callers strip it before calling this.

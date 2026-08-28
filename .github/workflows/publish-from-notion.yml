@@ -187,3 +187,15 @@ jobs:
             `close-loop.mjs`, which verifies each URL is live before writing
             `Published`, the `Post URL` and the `Publish Date` back to Notion.
           labels: content
+
+      # publish-article.mjs writes its own rejections onto the row it rejected.
+      # This is for the steps it cannot see — artwork, the build, the commit,
+      # the PR: if any of them failed, put the reason on the Notion rows that
+      # were being published, so the stall shows up where the owner works and
+      # not only as a red run. `failure()` fires when any earlier step failed.
+      - name: Flag Notion if publishing failed after generation
+        if: ${{ failure() && (steps.manifest.outputs.auto_count != '0' || steps.manifest.outputs.reviewed_count != '0') }}
+        working-directory: site
+        env:
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+        run: node scripts/flag-pipeline-failure.mjs "artwork rendering, the site build, the commit to main, or the pull request"

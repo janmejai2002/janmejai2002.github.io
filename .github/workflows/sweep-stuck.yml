@@ -1,0 +1,52 @@
+name: Sweep stuck rows
+
+# The pipeline's backstop. Every other check reports a specific failure; this one
+# catches the silent case — an unattended article that should be live and is not,
+# because a poll stopped, a token expired, or a step never ran. It writes the
+# suspicion onto the Notion row (see scripts/sweep-stuck-rows.mjs) and does
+# nothing else: no commit, no deploy, no build.
+#
+# Once a day is enough — this is a "has something been broken for half a day"
+# check, not a publishing path.
+#
+# Requires the NOTION_TOKEN repository secret.
+
+on:
+  schedule:
+    - cron: '40 6 * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: sweep-stuck
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  sweep:
+    runs-on: ubuntu-latest
+    # It only writes to Notion; a failure here must never look like a pipeline
+    # failure. The signal that matters lands on the rows themselves.
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install
+        working-directory: site
+        run: npm ci
+
+      - name: Flag any unattended row that has been ready too long
+        working-directory: site
+        env:
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+        run: |
+          if [ -z "$NOTION_TOKEN" ]; then
+            echo "No NOTION_TOKEN secret set — skipping."
+            exit 0
+          fi
+          node scripts/sweep-stuck-rows.mjs

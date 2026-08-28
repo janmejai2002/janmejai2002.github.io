@@ -9,25 +9,17 @@
 //
 // Token comes from $NOTION_TOKEN, else C:/Users/Janmejai/Notion/.env.
 
-import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
+import { writeFileSync, mkdirSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { token, plain as plainRaw } from './lib/notion.mjs';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const OUT = join(here, '..', 'src', 'data', 'news.json');
 const DATA_SOURCE_ID = '288c805b-3d3f-46ae-98e4-893ab3e6d562';
-const ENV_PATH = 'C:/Users/Janmejai/Notion/.env';
 
-function token() {
-  if (process.env.NOTION_TOKEN) return process.env.NOTION_TOKEN;
-  const line = readFileSync(ENV_PATH, 'utf8')
-    .split(/\r?\n/)
-    .find((l) => l.startsWith('NOTION_TOKEN='));
-  if (!line) throw new Error(`No NOTION_TOKEN in env or ${ENV_PATH}`);
-  return line.slice('NOTION_TOKEN='.length).trim().replace(/^["']|["']$/g, '');
-}
-
-const plain = (rich) => (rich ?? []).map((r) => r.plain_text).join('').trim();
+// This file needs the trimmed form; lib's plain() deliberately does not trim.
+const plain = (rich) => plainRaw(rich).trim();
 
 const auth = token();
 const rows = [];

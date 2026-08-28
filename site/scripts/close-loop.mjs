@@ -21,7 +21,7 @@
 import { readdirSync, readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { api } from './lib/notion.mjs';
+import { api, flagBlocked } from './lib/notion.mjs';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const BLOG = join(here, '..', 'src', 'content', 'blog');
@@ -91,7 +91,15 @@ for (const post of posts) {
   // Never record a Published state for a URL that is not actually serving.
   const res = await fetch(url, { method: 'HEAD' }).catch(() => null);
   if (!res?.ok) {
-    console.error(`✗ ${post.slug}: ${url} returned ${res?.status ?? 'no response'} — leaving Notion alone`);
+    const status = res?.status ?? 'no response';
+    console.error(`✗ ${post.slug}: ${url} returned ${status} — leaving Notion alone`);
+    // The row still says Draft Ready / Approved and the article is not live —
+    // exactly the silent-stall the close-loop exists to prevent. Say so on the
+    // row. Not needsRevision: the draft is fine, the deploy is what did not land.
+    await flagBlocked(
+      post.notionId,
+      `The article was generated and merged but ${url} is still returning ${status}, so it has not been marked Published. Re-run the deploy; if it keeps failing the build or Pages step is broken, not this draft.`
+    );
     failures++;
     continue;
   }
