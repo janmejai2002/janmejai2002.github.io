@@ -11,8 +11,11 @@
  *   node scripts/notion.mjs covered "text to look for"
  *   node scripts/notion.mjs get <page-id> [--json]
  *   node scripts/notion.mjs set-status <page-id> "Draft Ready" [--commit]
- *   node scripts/notion.mjs file-idea --track Technical --question "..." --title "..." [--pitch-file p.md] [--commit]
+ *   node scripts/notion.mjs file-idea --track Technical --title "..." --question "..." [--pitch-file p.md] [--keywords "a, b, c"] [--commit]
  *   node scripts/notion.mjs promote <radar-idea-id> [--commit]
+ *
+ * Property schema verified against the live databases 2026-08-28. `promote`
+ * sets the Source Idea relation and flips the radar row to Status = Drafting.
  *
  * NEVER sets Draft Status = Approved — that is the owner's alone, on every
  * track. set-status refuses it outright.
@@ -164,13 +167,20 @@ async function cmdFileIdea() {
   const title = val('--title');
   const pitchFile = val('--pitch-file');
   if (!track || !title) die('Usage: notion.mjs file-idea --track <T> --title "..." [--question "..."] [--pitch-file p.md] [--commit]');
+  const keywords = val('--keywords');
   const pitch = pitchFile ? readFileSync(pitchFile, 'utf8').trim() : '';
+  // Schema (verified 2026-08-28): PIPELINE has Name(title), Status(select:
+  // Radar Idea|Drafting|Ready for Polish|Published), Track(select), Pitch(rich_text),
+  // Reader Question(rich_text), SEO Keywords(rich_text). Interest Rating + Remarks
+  // are the owner's — never set here.
   const props = {
     Name: { title: [{ type: 'text', text: { content: title.slice(0, 2000) } }] },
     Status: { select: { name: 'Radar Idea' } },
     Track: { select: { name: track } },
   };
   if (question) props['Reader Question'] = { rich_text: [{ type: 'text', text: { content: question.slice(0, 2000) } }] };
+  if (pitch) props['Pitch'] = { rich_text: [{ type: 'text', text: { content: pitch.slice(0, 2000) } }] };
+  if (keywords) props['SEO Keywords'] = { rich_text: [{ type: 'text', text: { content: keywords.slice(0, 2000) } }] };
   const body = pitch
     ? { children: [{ object: 'block', type: 'paragraph', paragraph: { rich_text: [{ type: 'text', text: { content: pitch.slice(0, 1900) } }] } }] }
     : {};
@@ -195,24 +205,41 @@ async function cmdPromote() {
   const title = titleOf(idea);
   const track = sel(p, 'Track');
   const question = rich(p, 'Reader Question');
+  const keywords = rich(p, 'SEO Keywords');
+  const rating = sel(p, 'Interest Rating');
+  const today = new Date().toISOString().slice(0, 10);
+
+  // Schema (verified 2026-08-28): PRODUCTION Draft Status is
+  // Queued|Researching|Writing|Draft Ready|Needs Revision|Approved|Published —
+  // a promoted-but-not-started row is "Queued". Source Idea is the relation back
+  // to the radar row; Notion keeps the radar row's Article relation in sync.
   const props = {
     Name: { title: [{ type: 'text', text: { content: title.slice(0, 2000) } }] },
-    'Draft Status': { select: { name: 'Drafting' } },
+    'Draft Status': { select: { name: 'Queued' } },
+    'Source Idea': { relation: [{ id: ideaId }] },
+    'Promoted On': { date: { start: today } },
   };
   if (track) props.Track = { select: { name: track } };
   if (question) props['Reader Question'] = { rich_text: [{ type: 'text', text: { content: question.slice(0, 2000) } }] };
+  if (keywords) props['SEO Keywords'] = { rich_text: [{ type: 'text', text: { content: keywords.slice(0, 2000) } }] };
+  if (rating) props['Interest Rating'] = { rich_text: [{ type: 'text', text: { content: rating } }] };
+
   if (!commit) {
     console.log(`[dry run] would create an Article Production row from radar idea ${ideaId}:`);
     console.log(JSON.stringify({ properties: props }, null, 2));
-    console.log('\nThis does NOT set the two-way relation (Article ↔ Source Idea) — wire that ');
-    console.log('with the relation property name once confirmed. Re-run with --commit to create the row.');
+    console.log(`\nand set the radar row's Status = "Drafting". Re-run with --commit.`);
     return;
   }
   const page = await api('/pages', {
     method: 'POST',
     body: { parent: { data_source_id: PRODUCTION_DS }, properties: props },
   });
-  console.log(`Promoted to ${page.id}. Set the Source Idea relation manually or extend this verb.`);
+  // Move the radar row out of the "Radar Idea" bucket so it is not re-picked.
+  await api(`/pages/${ideaId}`, {
+    method: 'PATCH',
+    body: { properties: { Status: { select: { name: 'Drafting' } } } },
+  });
+  console.log(`Promoted to ${page.id}; radar row ${ideaId} → Drafting.`);
 }
 
 const table = {
