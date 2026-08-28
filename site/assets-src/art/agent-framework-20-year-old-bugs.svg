@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" role="img">
+  <title>A grid of closed rings with one broken open on the centre line</title>
+  <desc>Forty-two small circles set in a regular six-column grid. A fine horizontal line runs through the middle row. One circle on that line is drawn as an open ring with a gap at its base, and a single thin line runs down from the gap, through the rows below and out past the bottom of the grid.</desc>
+  <filter id="grain" x="0" y="0" width="100%" height="100%">
+    <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch"/>
+  </filter>
+  <rect width="1600" height="900" fill="{{paper}}"/>
+  <g fill="none" stroke="{{ink}}" stroke-width="2.5">
+    <circle cx="550" cy="150" r="26"/><circle cx="650" cy="150" r="26"/><circle cx="750" cy="150" r="26"/><circle cx="850" cy="150" r="26"/><circle cx="950" cy="150" r="26"/><circle cx="1050" cy="150" r="26"/>
+    <circle cx="550" cy="250" r="26"/><circle cx="650" cy="250" r="26"/><circle cx="750" cy="250" r="26"/><circle cx="850" cy="250" r="26"/><circle cx="950" cy="250" r="26"/><circle cx="1050" cy="250" r="26"/>
+    <circle cx="550" cy="350" r="26"/><circle cx="650" cy="350" r="26"/><circle cx="750" cy="350" r="26"/><circle cx="850" cy="350" r="26"/><circle cx="950" cy="350" r="26"/><circle cx="1050" cy="350" r="26"/>
+    <circle cx="550" cy="450" r="26"/><circle cx="650" cy="450" r="26"/><circle cx="750" cy="450" r="26"/><circle cx="950" cy="450" r="26"/><circle cx="1050" cy="450" r="26"/>
+    <circle cx="550" cy="550" r="26"/><circle cx="650" cy="550" r="26"/><circle cx="750" cy="550" r="26"/><circle cx="850" cy="550" r="26"/><circle cx="950" cy="550" r="26"/><circle cx="1050" cy="550" r="26"/>
+    <circle cx="550" cy="650" r="26"/><circle cx="650" cy="650" r="26"/><circle cx="750" cy="650" r="26"/><circle cx="850" cy="650" r="26"/><circle cx="950" cy="650" r="26"/><circle cx="1050" cy="650" r="26"/>
+    <circle cx="550" cy="750" r="26"/><circle cx="650" cy="750" r="26"/><circle cx="750" cy="750" r="26"/><circle cx="850" cy="750" r="26"/><circle cx="950" cy="750" r="26"/><circle cx="1050" cy="750" r="26"/>
+  </g>
+  <line x1="470" y1="450" x2="1130" y2="450" stroke="{{mizu}}" stroke-width="1.5"/>
+  <path d="M 841.1 474.4 A 26 26 0 1 1 858.9 474.4" fill="none" stroke="{{mizu}}" stroke-width="3"/>
+  <line x1="850" y1="474" x2="850" y2="884" stroke="{{mizu}}" stroke-width="1.5"/>
+  <rect width="1600" height="900" filter="url(#grain)" opacity="0.055"/>
+</svg>
