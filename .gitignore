@@ -17,3 +17,8 @@ publish-manifest.json
 # Local working notes, not part of the site. Force-add if one should be tracked.
 /CONTEXT-INVENTORY.txt
 /EDITS-TO-APPLY.md
+
+# routines/ headless-runner output — per-run transcripts and the telemetry log.
+/routines/runs/*
+!/routines/runs/.gitkeep
+/routines/runs.jsonl

@@ -1,0 +1,23 @@
+{
+  "$comment": "Minimal config dir for headless routine runs. CLAUDE_CONFIG_DIR points here so a routine does NOT inherit the interactive machine's 26 account MCP connectors, 27 agent personas, and 60+ skills. See routines/README.md.",
+  "model": "sonnet",
+  "includeCoAuthoredBy": true,
+  "permissions": {
+    "allow": [
+      "Bash(node scripts/notion.mjs:*)",
+      "Bash(node scripts/notify.mjs:*)",
+      "Bash(node scripts/publish-article.mjs --check:*)",
+      "Bash(node scripts/log-run.mjs:*)",
+      "Bash(git status:*)",
+      "Bash(git log:*)",
+      "WebSearch",
+      "WebFetch"
+    ],
+    "deny": [
+      "Bash(git push:*)",
+      "Bash(gh:*)",
+      "Read(C:/Users/Janmejai/Notion/.env)",
+      "Read(./**/.env)"
+    ]
+  }
+}
