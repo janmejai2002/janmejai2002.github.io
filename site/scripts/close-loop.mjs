@@ -22,6 +22,7 @@ import { readdirSync, readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { api, flagBlocked } from './lib/notion.mjs';
+import { notify } from './notify.mjs';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const BLOG = join(here, '..', 'src', 'content', 'blog');
@@ -137,4 +138,14 @@ for (const post of posts) {
 }
 
 console.log(`\n${updated} row(s) reconciled, ${failures} problem(s).`);
+
+if (failures > 0 && !dryRun) {
+  await notify(
+    'A published article is not serving',
+    `${failures} merged article(s) are not returning 200, so they have not been marked Published. ` +
+      `The reason is on the Notion row(s). Re-run the deploy from the Actions tab.`,
+    { url: 'https://github.com/janmejai2002/janmejai2002.github.io/actions' }
+  );
+}
+
 process.exit(failures ? 1 : 0);

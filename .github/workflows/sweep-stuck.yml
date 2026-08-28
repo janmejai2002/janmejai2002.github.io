@@ -44,6 +44,7 @@ jobs:
         working-directory: site
         env:
           NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+          NOTIFY_TOPIC: ${{ secrets.NOTIFY_TOPIC }}
         run: |
           if [ -z "$NOTION_TOKEN" ]; then
             echo "No NOTION_TOKEN secret set — skipping."

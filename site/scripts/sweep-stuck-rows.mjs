@@ -21,6 +21,7 @@
  * reason is skipped, so this does not re-stamp the same rows every day.
  */
 import { queryAll, plain, flagBlocked, PRODUCTION_DS } from './lib/notion.mjs';
+import { notify } from './notify.mjs';
 
 const dryRun = process.argv.includes('--dry-run');
 
@@ -90,6 +91,16 @@ for (const s of stuck) {
 }
 
 console.log(`\n${stuck.length} stuck row(s), ${flagged} newly flagged.`);
+
+if (flagged > 0 && !dryRun) {
+  const names = stuck.filter((s) => !s.alreadyFlagged).map((s) => s.title).slice(0, 3).join(', ');
+  await notify(
+    'An article is stuck in the pipeline',
+    `${flagged} unattended draft(s) have been ready >${STALE_HOURS}h and are still not live: ${names}. ` +
+      `The publish workflow itself may have stopped — check the Actions tab.`,
+    { url: 'https://github.com/janmejai2002/janmejai2002.github.io/actions' }
+  );
+}
 // A real red run here would be useful — but this job also runs `continue-on-error`
 // in CI so it can never itself break anything, and the signal that matters is
 // already on the Notion rows.

@@ -198,4 +198,20 @@ jobs:
         working-directory: site
         env:
           NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+          NOTIFY_TOPIC: ${{ secrets.NOTIFY_TOPIC }}
         run: node scripts/flag-pipeline-failure.mjs "artwork rendering, the site build, the commit to main, or the pull request"
+
+      # Catch-all: a failure so early there is no manifest (bad NOTION_TOKEN,
+      # the query step itself, a checkout problem) leaves nothing on any Notion
+      # row. This always fires on failure so the owner still gets one push with
+      # a link, instead of finding out from the site not updating.
+      - name: Push a failure notification
+        if: ${{ failure() }}
+        working-directory: site
+        env:
+          NOTIFY_TOPIC: ${{ secrets.NOTIFY_TOPIC }}
+        run: |
+          node scripts/notify.mjs \
+            "Publish from Notion failed" \
+            "The publish-from-notion run failed. Open the run for the reason." \
+            --url "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"

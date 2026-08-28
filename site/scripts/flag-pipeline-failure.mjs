@@ -19,6 +19,7 @@ import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { flagBlocked } from './lib/notion.mjs';
+import { notify } from './notify.mjs';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const phase = process.argv[2]?.trim() || 'a step after generation';
@@ -56,4 +57,15 @@ for (const r of rows) {
 }
 
 console.log(`\n${flagged}/${rows.length} row(s) flagged after failure at ${phase}.`);
+
+if (flagged > 0) {
+  const names = rows.map((r) => r.title).filter(Boolean).slice(0, 3).join(', ');
+  await notify(
+    'Publish failed after generation',
+    `${flagged} article(s) generated fine but publishing failed at ${phase}: ${names}. ` +
+      `The reason is on the Notion row(s); the Actions log has the detail.`,
+    { url: 'https://github.com/janmejai2002/janmejai2002.github.io/actions/workflows/publish-from-notion.yml' }
+  );
+}
+
 process.exit(0);
