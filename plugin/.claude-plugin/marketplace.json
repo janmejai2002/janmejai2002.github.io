@@ -1,0 +1,15 @@
+{
+  "name": "waibi-sabi-os",
+  "description": "The wAIbi-sabi blog OS: pickup knowledge and session rituals for the Notion-controlled, routine-driven Astro publishing system.",
+  "owner": {
+    "name": "janmejai2002",
+    "url": "https://github.com/janmejai2002"
+  },
+  "plugins": [
+    {
+      "name": "waibi-sabi-os",
+      "source": "./",
+      "description": "Surfaces HANDOFF / PUBLISHING / ARTWORK / LESSONS on demand; commands for session start, pipeline status, a full health doctor, an HTML ops dashboard, the pre-done verify gate, chunked ship, and the next-session handoff; hooks that guard the two unbreakable rules."
+    }
+  ]
+}

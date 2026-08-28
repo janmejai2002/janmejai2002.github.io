@@ -1,0 +1,22 @@
+{
+  "name": "waibi-sabi-os",
+  "description": "Operating knowledge and session rituals for the wAIbi-sabi blog OS — the Notion-controlled, routine-driven Astro publishing system that lives in this repo. Surfaces the HANDOFF / PUBLISHING / ARTWORK / LESSONS knowledge on demand, packages the session-start, status, doctor, dashboard, verify, ship and handoff rituals as commands, and guards the two rules that must never break (never set Draft Status = Approved; never commit to the notion/approved-articles branch).",
+  "version": "0.2.0",
+  "author": {
+    "name": "janmejai2002",
+    "url": "https://github.com/janmejai2002"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/janmejai2002/janmejai2002.github.io",
+  "repository": "https://github.com/janmejai2002/janmejai2002.github.io",
+  "keywords": [
+    "astro",
+    "notion",
+    "blog",
+    "publishing-pipeline",
+    "scheduled-tasks",
+    "automation",
+    "static-site",
+    "waibi-sabi"
+  ]
+}
