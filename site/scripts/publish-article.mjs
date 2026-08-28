@@ -1,8 +1,16 @@
 /**
  * Turns every Approved article in Notion into a markdown file in the site.
  *
- *   node scripts/publish-article.mjs           # write any that are missing
- *   node scripts/publish-article.mjs --dry-run # report only
+ *   node scripts/publish-article.mjs               # write any that are missing
+ *   node scripts/publish-article.mjs --dry-run     # report only
+ *   node scripts/publish-article.mjs --check <id>  # run one page through every
+ *                                                  # gate and report; write
+ *                                                  # nothing, touch no Notion row
+ *
+ * The --check mode is the writer routines' preflight. It evaluates a single
+ * page by id regardless of its Draft Status, so a routine can confirm its own
+ * finished draft passes the real validator — the same code the cloud runs —
+ * before it hands the draft off, instead of eyeballing the caps and hoping.
  *
  * There are two triggers, because there are two kinds of track.
  *
@@ -28,12 +36,17 @@
 import { writeFileSync, existsSync, mkdirSync, readdirSync, readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { api, queryAll, blocks, toMarkdown, plain, inline, PRODUCTION_DS } from './lib/notion.mjs';
+import { api, queryAll, blocks, blocksDeep, toMarkdown, plain, inline, flagBlocked, clearBlockedReason, PRODUCTION_DS } from './lib/notion.mjs';
 import { fallbackArt } from './lib/fallback-art.mjs';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const BLOG = join(here, '..', 'src', 'content', 'blog');
-const dryRun = process.argv.includes('--dry-run');
+// The page id passed to --check, if any. It runs one row through every gate and
+// reports; like --dry-run it writes no file and touches no Notion row.
+const checkId = process.argv.includes('--check')
+  ? process.argv[process.argv.indexOf('--check') + 1]
+  : null;
+const dryRun = process.argv.includes('--dry-run') || Boolean(checkId);
 
 // These mirror src/content.config.ts. Failing here gives a readable message
 // instead of a Zod error thrown halfway through an Astro build.
@@ -253,17 +266,29 @@ const existingIds = new Set(
 // Names must match the Notion `Track` select exactly, before slugification.
 const AUTO_TRACKS = ['Talks', 'Case Studies', 'Basics'];
 
-const rows = await queryAll(PRODUCTION_DS, {
-  or: [
-    { property: 'Draft Status', select: { equals: 'Approved' } },
-    ...AUTO_TRACKS.map((t) => ({
-      and: [
-        { property: 'Draft Status', select: { equals: 'Draft Ready' } },
-        { property: 'Track', select: { equals: t } },
+async function fetchCheckPage(id) {
+  try {
+    return await api(`/pages/${id}`);
+  } catch (err) {
+    console.error(`✗ PREFLIGHT — could not read page ${id}: ${err.message.split('\n')[0]}`);
+    console.error('  Pass the Article Production page id (the 32-char id from its URL), and make sure it is shared with the integration.');
+    process.exit(1);
+  }
+}
+
+const rows = checkId
+  ? [await fetchCheckPage(checkId)]
+  : await queryAll(PRODUCTION_DS, {
+      or: [
+        { property: 'Draft Status', select: { equals: 'Approved' } },
+        ...AUTO_TRACKS.map((t) => ({
+          and: [
+            { property: 'Draft Status', select: { equals: 'Draft Ready' } },
+            { property: 'Track', select: { equals: t } },
+          ],
+        })),
       ],
-    })),
-  ],
-});
+    });
 
 const written = [];
 const skipped = [];
@@ -291,8 +316,28 @@ for (const page of rows) {
     continue;
   }
 
-  const list = await blocks(id);
+  // blocksDeep, not blocks: it also pulls table rows so toMarkdown() can render
+  // a table instead of throwing on it and crashing the whole poll.
+  const list = await blocksDeep(id);
   const { header, body } = await parseHeader(list);
+
+  // toMarkdown throws on any Notion block it does not support, on purpose —
+  // losing a paragraph silently is worse than failing. But that throw is this
+  // draft's problem, not the whole run's: caught here it becomes a Needs
+  // Revision with a clear reason on the row, and the other drafts in the run
+  // still ship. Uncaught, one exotic block (a table, a toggle) crashed the
+  // entire poll with no Notion write-back at all.
+  let renderedBody;
+  try {
+    renderedBody = toMarkdown(body);
+  } catch (err) {
+    blocked(
+      id,
+      title,
+      `The page has a block the generator cannot convert — ${err.message} Rewrite it as a paragraph, list, quote, or code block.`
+    );
+    continue;
+  }
 
   // The routine writes the slug as a path ("/mcp-stateless-spec-..."), so strip
   // the slashes — otherwise the leading one lands in the filename and the post
@@ -329,7 +374,7 @@ for (const page of rows) {
     continue;
   }
 
-  const lifted = liftArtworkBrief(toMarkdown(body));
+  const lifted = liftArtworkBrief(renderedBody);
   const liftedArt = liftArtworkSvg(lifted.markdown, (reason) => note(id, title, reason));
   const markdown = wrapTldr(stripLeadingH1(liftedArt.markdown));
   const words = markdown.split(/\s+/).filter((w) => /\w/.test(w)).length;
@@ -435,7 +480,9 @@ for (const page of rows) {
   // Recorded before the dry-run exit so a dry run reports the real split.
   const trackName = (p['Track']?.select?.name ?? '').trim();
   const auto = AUTO_TRACKS.includes(trackName);
-  manifest[auto ? 'auto' : 'reviewed'].push({ slug, title, track: trackName });
+  // `id` rides along so a later pipeline failure (build, artwork, PR) can write
+  // its reason back onto this exact row — see flag-pipeline-failure.mjs.
+  manifest[auto ? 'auto' : 'reviewed'].push({ id, slug, title, track: trackName });
 
   if (dryRun) {
     written.push(`${slug}.md (${words} words) [dry run]`);
@@ -472,6 +519,26 @@ for (const s of skipped) console.log(`· ${s}`);
 for (const w of written) console.log(`+ ${w}`);
 for (const p of problems) console.error(`${p.fatal ? '✗' : '!'} "${p.title}" — ${p.reason}`);
 
+// --check is the writer routines' preflight: one page, every gate, a plain
+// verdict and an exit code they can branch on. It writes nothing and never
+// touches Notion (checkId forces dryRun above).
+if (checkId) {
+  const mine = problems.filter((p) => p.fatal);
+  if (mine.length) {
+    console.error('\n✗ PREFLIGHT FAILED — this draft would be bounced to Needs Revision:');
+    for (const p of mine) console.error(`  • ${p.reason}`);
+    console.error('\nFix these in the Notion page, then run --check again.');
+    process.exit(1);
+  }
+  for (const p of problems) console.log(`! note: ${p.reason}`);
+  if (skipped.length && !written.length) {
+    console.log(`\n✓ PREFLIGHT — nothing to do (${skipped[0]}).`);
+  } else {
+    console.log('\n✓ PREFLIGHT PASSED — this draft clears every publish gate.');
+  }
+  process.exit(0);
+}
+
 // Tell Notion, not just the log.
 //
 // The whole point of the Approved gate is that a human flips it and walks away.
@@ -481,42 +548,27 @@ for (const p of problems) console.error(`${p.fatal ? '✗' : '!'} "${p.title}" �
 // onto the row the human is already looking at, and anything blocking is moved
 // out of Approved so the queue reflects reality.
 const fatal = problems.filter((p) => p.fatal);
+// Drafts whose rejection never made it onto the Notion row. Starts at "all of
+// them" and counts down as each write-back succeeds; whatever is left is the
+// only thing a red Actions run would still be telling anyone (see the exit
+// condition at the bottom).
+let unreported = fatal.length;
 if (!dryRun && fatal.length) {
   for (const p of fatal) {
-    try {
-      await api(`/pages/${p.id}`, {
-        method: 'PATCH',
-        body: {
-          properties: {
-            'Draft Status': { select: { name: 'Needs Revision' } },
-            'Blocked Reason': {
-              rich_text: [
-                {
-                  type: 'text',
-                  text: { content: `${p.reason} (checked ${new Date().toISOString().slice(0, 16).replace('T', ' ')} UTC)`.slice(0, 2000) },
-                },
-              ],
-            },
-          },
-        },
-      });
+    if (await flagBlocked(p.id, p.reason, { needsRevision: true })) {
+      unreported--;
       console.error(`  ↳ marked "${p.title}" Needs Revision in Notion`);
-    } catch (err) {
-      // Never let the write-back mask the original problem.
-      console.error(`  ↳ could not update Notion for "${p.title}": ${err.message}`);
     }
+    // flagBlocked already logged a ::warning:: if it could not write; that row
+    // stays counted in `unreported`, which keeps the run red — Actions is then
+    // the last signal left.
   }
 }
 
 // Clear a stale block off anything that has now published successfully.
 if (!dryRun) {
   for (const { id, title } of clearBlocked) {
-    try {
-      await api(`/pages/${id}`, {
-        method: 'PATCH',
-        body: { properties: { 'Blocked Reason': { rich_text: [] } } },
-      });
-    } catch {
+    if (!(await clearBlockedReason(id))) {
       console.error(`  ↳ could not clear Blocked Reason for "${title}"`);
     }
   }
@@ -538,13 +590,21 @@ if (!written.length && !problems.length) console.log('Nothing to publish.');
 // has already been bounced to Needs Revision in Notion, which is where the owner
 // actually looks. Failing the whole step on it strands every healthy article in
 // the same run: on 2026-08-26 one over-long title held two finished, valid
-// articles out of the PR entirely. So turn the run red only when a blocking
-// problem left us with nothing at all to ship.
+// articles out of the PR entirely.
+//
+// Once the reason is on the Notion row, the handling is complete. Turning the
+// Actions run red on top of that just cries wolf in a place nobody watches — the
+// 2026-08-27 16:33 run went red purely for two over-long meta descriptions that
+// were both correctly bounced. So the run now fails only when a rejection could
+// NOT be written back to Notion and nothing else shipped: that is the one case
+// where a red run is the last remaining signal. A clean rejection is a yellow
+// ::warning:: annotation (emitted above), not a failure.
 if (fatal.length) {
+  const verb = dryRun ? 'would be rejected' : 'rejected and marked Needs Revision in Notion';
   console.error(
-    `\n${fatal.length} draft(s) rejected and marked Needs Revision in Notion:\n` +
+    `\n${fatal.length} draft(s) ${verb}:\n` +
       fatal.map((f) => `  ✗ ${f.title} — ${f.reason}`).join('\n') +
       '\n'
   );
 }
-process.exit(fatal.length && !written.length ? 1 : 0);
+process.exit(!dryRun && unreported > 0 && !written.length ? 1 : 0);
