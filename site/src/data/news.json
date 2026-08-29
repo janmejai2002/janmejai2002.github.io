@@ -1,5 +1,29 @@
 [
   {
+    "headline": "Google Ships Gemini 3.5 Transcribe as Two Separate Speech-to-Text Endpoints",
+    "date": "2026-08-28",
+    "category": "Product Management",
+    "summary": "Google released Gemini 3.5 Transcribe, a new speech-to-text model shipped as two distinct API endpoints rather than a single unified one.",
+    "angle": "A good discussion point on API product design — when does splitting a product into two endpoints serve users better than one?",
+    "source": "https://techstartups.com/2026/08/28/top-tech-news-today-august-28-2026-alibaba-anthropic-openai-google-marvell-microsoft-waymo-more/"
+  },
+  {
+    "headline": "OpenAI Details Its First Custom Inference Chip, 'Jalapeno'",
+    "date": "2026-08-28",
+    "category": "Product Management",
+    "summary": "SemiAnalysis published a deep dive on OpenAI's first custom inference chip, built with Broadcom in just 16 months, aimed at cutting the cost of serving its models at scale.",
+    "angle": "Tests understanding of why a product company would move into custom silicon — a classic cost-versus-control trade-off.",
+    "source": "https://techstartups.com/2026/08/28/top-tech-news-today-august-28-2026-alibaba-anthropic-openai-google-marvell-microsoft-waymo-more/"
+  },
+  {
+    "headline": "OpenAI's India Chief: Ads Won't Influence ChatGPT's Answers",
+    "date": "2026-08-28",
+    "category": "Marketing",
+    "summary": "OpenAI's India MD said advertising on ChatGPT will not shape the model's responses, advertisers will not get access to user conversations, and users retain control over personalisation.",
+    "angle": "Raises the trust-versus-monetisation tension every AI platform now faces — can a candidate argue whether this promise is credible?",
+    "source": "https://bestmediainfo.com/mediainfo/advertising/top-advertising-marketing-and-media-news-headlines-of-today-august-28-2026-12446393"
+  },
+  {
     "headline": "Deepinder Goyal's Temple acquires longevity clinic Longevous",
     "date": "2026-08-27",
     "category": "Product Management",
@@ -54,6 +78,30 @@
     "summary": "OpenAI has opened ChatGPT's advertising programme to logged-in Free and Go tier users in India, with WPP and Omnicom as launch agency partners and over 50 brands going live this week; a self-serve Ads Manager follows on September 4.",
     "angle": "Tests whether a candidate can debate monetizing a trusted AI assistant with ads without eroding user trust - a classic growth-vs-brand-trust tradeoff.",
     "source": "https://www.business-standard.com/technology/tech-news/openai-chatgpt-ads-users-india-free-go-plans-chatbot-advertising-free-plans-126082700310_1.html"
+  },
+  {
+    "headline": "OpenAI Opens Self-Serve ChatGPT Ads to Indian Advertisers From September 4",
+    "date": "2026-08-27",
+    "category": "Marketing",
+    "summary": "OpenAI will let Indian advertisers self-serve ads on ChatGPT starting September 4, 2026, with a minimum daily spend of Rs 725, as more than 50 brands prepare to go live this week.",
+    "angle": "A new ad channel competing with Google and Meta for India's digital budgets — good for 'how would you allocate a marketing budget across channels' questions.",
+    "source": "https://bestmediainfo.com/mediainfo/advertising/top-advertising-marketing-and-media-news-headlines-of-today-august-27-2026-12442051"
+  },
+  {
+    "headline": "RBI Steps Up Dollar Sales to Defend the Rupee as Oil Prices Rise",
+    "date": "2026-08-27",
+    "category": "Finance",
+    "summary": "The RBI has intensified interventions in the currency market, selling dollars to cushion the rupee against pressure from rising crude oil prices and broader dollar strength.",
+    "angle": "Tests whether a candidate can connect an oil-price shock to the current account and central-bank FX policy in one coherent story.",
+    "source": "https://www.business-standard.com/finance/news/rbi-steps-up-intervention-to-support-rupee-amid-higher-oil-prices-126082700126_1.html"
+  },
+  {
+    "headline": "Reliance Brands Brings SKIMS to India",
+    "date": "2026-08-27",
+    "category": "Marketing",
+    "summary": "Reliance Brands will operate Kim Kardashian's shapewear and apparel label SKIMS across physical and digital retail channels as the US brand formally enters the Indian market.",
+    "angle": "A classic case on global brand entry via a local retail partner versus a standalone launch.",
+    "source": "https://bestmediainfo.com/mediainfo/advertising/top-advertising-marketing-and-media-news-headlines-of-today-august-27-2026-12442051"
   },
   {
     "headline": "South Korea's DN Solutions opens its first India plant",
@@ -112,6 +160,22 @@
     "source": "https://www.bloomberg.com/news/articles/2026-08-26/india-takes-growth-pitch-abroad-as-foreign-money-pulls-back"
   },
   {
+    "headline": "India's IPO Market Roars Back — July-August Alone Account for 69% of 2026 Fundraising",
+    "date": "2026-08-26",
+    "category": "Finance",
+    "summary": "India's primary market has accelerated sharply, with July and August 2026 together raising about Rs 49,592 crore across 33 deals, nearly 69% of the year's total issuance so far.",
+    "angle": "Good opener for a 'is the IPO market frothy or fundamentally justified' discussion.",
+    "source": "https://www.business-standard.com/markets/ipo/ipo-boom-returns-as-july-august-drive-69-of-2026-fundraising-126082600224_1.html"
+  },
+  {
+    "headline": "India's Warehousing Leasing Jumps 15% YoY in H1 2026; Bengaluru Leads at 78% Growth",
+    "date": "2026-08-26",
+    "category": "Operations",
+    "summary": "Industrial and warehousing leasing across India's top eight markets rose 15% YoY to 36.8 million sq ft in H1 2026, with Bengaluru's leasing surging 78% YoY to 3.1 million sq ft, per Knight Frank.",
+    "angle": "A data point for discussing which Indian cities are emerging as logistics and 3PL hubs, and why.",
+    "source": "https://www.indiasnews.net/news/279253971/india-warehousing-market-set-for-strong-h2-growth-as-manufacturing-3rd-party-logistics-drive-demand-knight-frank"
+  },
+  {
     "headline": "M&A Becomes India Inc's Core Growth Strategy, Deal Volumes Double: CRISIL",
     "date": "2026-08-26",
     "category": "Consulting",
@@ -134,6 +198,14 @@
     "summary": "Meta has agreed to pay roughly $18 billion and adopt new teen-safety guardrails - usage limits, hidden likes, restricted filters - as part of a US settlement, with related teen-safety features already rolling out in India.",
     "angle": "Raises the question of how brands should adapt influencer and youth-targeted marketing as platforms tighten teen engagement design.",
     "source": "https://aninews.in/news/business/meta-agrees-to-payments-of-up-to-usd-18-billion-under-us-teen-safety-settlement20260826234718/"
+  },
+  {
+    "headline": "Swiggy Dineout Launches 'Order-in-Cinemas', Delivering Food to Your Seat",
+    "date": "2026-08-26",
+    "category": "Product Management",
+    "summary": "Swiggy Dineout rolled out an 'Order-in-Cinemas' feature that lets moviegoers order food for delivery directly to their theatre seat.",
+    "angle": "A good prompt on expanding a core delivery product into adjacent occasions rather than building a new app.",
+    "source": "https://www.cinaradio.com/2026/08/26/swiggy-dineout-launches-order-in-cinemas-feature-lets-moviegoers-get-food-delivered-to-their-seats/"
   },
   {
     "headline": "UPI turns 10, now handles nearly half the world's real-time payments",
@@ -240,6 +312,14 @@
     "source": "https://bestmediainfo.com/insights/95-set-to-spend-more-this-festive-season-67-to-raise-budgets-by-25-or-more-12431318"
   },
   {
+    "headline": "IIM Ahmedabad's PGP 2026 Batch Achieves 100% Placement; BCG Leads Consulting Hiring",
+    "date": "2026-08-25",
+    "category": "Consulting",
+    "summary": "IIM Ahmedabad's PGP batch of 2026 was fully placed across 26 cohorts, with BCG extending 33 offers, McKinsey 21, and Bain 20 in the management-consulting cohort.",
+    "angle": "Directly relevant benchmark data for SIP/PPO aspirants comparing which firms are actually hiring this cycle.",
+    "source": "https://news.careers360.com/iim-ahmedabad-pgp-final-placements-2026-100-percent-26-cohorts-bcg-mckinsey-goldman-sachs-essar-finance-consulting"
+  },
+  {
     "headline": "India opens missile production to private industry",
     "date": "2026-08-25",
     "category": "Operations",
@@ -262,6 +342,14 @@
     "summary": "A VDO.AI omnichannel study found roughly 24.5% of connected-TV/OTT ad traffic analysed was invalid, showing that ad fraud is scaling alongside brands' growing spend on India's booming CTV inventory.",
     "angle": "Does India's CTV/OTT ad ecosystem need mandatory independent third-party verification before it can credibly command premium ad rates?",
     "source": "https://bestmediainfo.com/insights/one-out-of-every-four-ctv-viewers-is-a-ghost-and-advertisers-need-to-brace-themselves-12432788"
+  },
+  {
+    "headline": "NRI Deposit Scheme Pulls In $73 Billion in 11 Weeks to Shore Up the Rupee",
+    "date": "2026-08-25",
+    "category": "Finance",
+    "summary": "A special FCNR(B) deposit scheme aimed at non-resident Indians has drawn $73 billion in inflows in eleven weeks, becoming one of India's largest currency-defence exercises ahead of its August 31 close.",
+    "angle": "A classic case-style question: how do you defend a weakening currency without raising interest rates?",
+    "source": "https://www.cnbc.com/2026/08/25/india-billion-foreign-inflows-rupee-weakness.html"
   },
   {
     "headline": "OpenAI bans Russian ChatGPT accounts running a covert influence campaign",
@@ -302,6 +390,22 @@
     "summary": "The rupee gained 26 paise to close at 95.44 against the US dollar, helped by a weaker dollar and softer crude prices, though it remains near record lows under pressure from the 50% US tariff on Indian exports.",
     "angle": "A ready WAT/GD topic on how tariff-driven currency weakness feeds import inflation, RBI intervention choices, and corporate FX-hedging strategy.",
     "source": "https://theprint.in/economy/rupee-rises-26-paise-to-close-at-95-44-against-us-dollar/3024742/"
+  },
+  {
+    "headline": "Zepto Adds In-App UPI, Following Swiggy and Zomato in Insourcing Payments",
+    "date": "2026-08-25",
+    "category": "Product Management",
+    "summary": "Quick-commerce firm Zepto has launched an in-app UPI payment feature, mirroring moves by rivals Swiggy and Zomato to bring payment processing in-house rather than relying solely on third-party apps.",
+    "angle": "A build-vs-partner decision every consumer-app PM eventually faces — why own the payment rail now?",
+    "source": "https://www.whalesbook.com/news/English/tech/Zepto-Integrates-UPI-In-App-Rivals-Swiggy-and-Zomato-Lead-Payments-Trend/695d1a70ef4ed95f98fbf810"
+  },
+  {
+    "headline": "Deendayal Port Kandla Crosses 70 MMT Cargo Milestone, Fastest Major Port to Hit the Target",
+    "date": "2026-08-24",
+    "category": "Operations",
+    "summary": "Deendayal Port Authority in Kandla crossed the 70-million-tonne cargo mark for FY27 on August 22, 2026, becoming the fastest of India's major ports to reach the milestone, 32 days ahead of last year's pace.",
+    "angle": "A concrete metric for discussing India's port capacity build-out and its link to export competitiveness.",
+    "source": "https://aninews.in/news/business/deendayal-port-authority-crosses-historic-70-mmt-cargo-handling-milestone-becomes-fastest-major-port-to-hit-target20260824055117/"
   },
   {
     "headline": "Delhi High Court Forces Kent RO to Pull Ads Attacking Urban Company's Water Purifiers",
@@ -360,6 +464,14 @@
     "source": "https://www.goingconcern.com/monday-morning-accounting-news-brief-the-newspaper-says-its-probably-for-the-best-if-you-got-laid-off-from-kpmg-irs-employee-union-has-beef-with-ceo-role-8-24-26/"
   },
   {
+    "headline": "Meesho's Rs 76,814-Crore IPO Subscribed 79 Times as Lenskart Trades Flat",
+    "date": "2026-08-24",
+    "category": "Finance",
+    "summary": "E-commerce platform Meesho's IPO was subscribed 79 times at a valuation of Rs 76,814 crore, even as recently listed Lenskart continues to trade barely above its issue price.",
+    "angle": "Contrasts investor appetite for new listings with post-listing performance discipline — useful for 'how do you value a loss-making platform' questions.",
+    "source": "https://www.businesstoday.in/markets/stocks/story/block-deals-today-meesho-lenskart-shares-to-see-action-likely-selling-shareholders-targets-550818-2026-08-24"
+  },
+  {
     "headline": "NBFCs Pivot Hard to Secured Lending and Gold Loans Amid a Credit Reshuffle",
     "date": "2026-08-24",
     "category": "Finance",
@@ -406,6 +518,14 @@
     "summary": "Urban Company filed a disparagement suit in Delhi High Court against Kent RO for ads and influencer posts calling its Native water purifier's filter claim a 'gimmick' and 'unsafe'; Kent has agreed to withdraw the contested ads.",
     "angle": "Where is the legal line between competitive/comparative advertising and disparagement, and what does this signal about incumbent-vs-D2C brand battles as Urban Company expands into appliances?",
     "source": "https://www.afaqs.com/news/advertising/urban-company-takes-kent-ro-to-court-over-native-purifier-ads-12426775"
+  },
+  {
+    "headline": "YouTube Redefines a 'View' — Counting Now Starts From the First Frame",
+    "date": "2026-08-24",
+    "category": "Marketing",
+    "summary": "From August 24, YouTube began counting a public view the moment a video starts playing rather than after a delay, a change that could reshape creator pricing and campaign benchmarks.",
+    "angle": "A good prompt on how a measurement-metric change ripples into media-buying and influencer-marketing contracts.",
+    "source": "https://bestmediainfo.com/mediainfo/advertising/top-advertising-marketing-and-media-news-headlines-of-today-august-24-2026-12425257"
   },
   {
     "headline": "YouTube redefines what counts as a \"view\"",
@@ -616,6 +736,14 @@
     "source": "https://www.business-standard.com/amp/economy/news/india-private-sector-pmi-august-services-manufacturing-hsbc-126082100396_1.html"
   },
   {
+    "headline": "India's Manufacturing PMI Slips to 52.9 in August, Lowest Since 2021",
+    "date": "2026-08-21",
+    "category": "Operations",
+    "summary": "The HSBC Flash India Manufacturing PMI fell to 52.9 in August from 53.5 in July, its lowest reading since August 2021, even as services activity kept the composite index resilient.",
+    "angle": "Tests whether a candidate can separate a manufacturing slowdown from an economy-wide one — services picked up the slack.",
+    "source": "https://www.business-standard.com/amp/economy/news/india-private-sector-pmi-august-services-manufacturing-hsbc-126082100396_1.html"
+  },
+  {
     "headline": "Manufacturing momentum cools slightly in August",
     "date": "2026-08-21",
     "category": "Operations",
@@ -712,6 +840,14 @@
     "source": "https://workspaceupdates.googleblog.com/2026/08/ask-gemini-in-chat.html"
   },
   {
+    "headline": "India's Consulting Market Set to Nearly Double to $17 Billion by 2031",
+    "date": "2026-08-20",
+    "category": "Consulting",
+    "summary": "India's management consulting services market is estimated at $9.36 billion in 2026 and is projected to grow at a 12.68% CAGR to $17.01 billion by 2031, driven by AI adoption and SEBI's sustainability-reporting rules.",
+    "angle": "Reconciles the layoff headlines with a market that is still growing — useful for 'are consulting jobs actually shrinking' questions.",
+    "source": "https://www.mordorintelligence.com/industry-reports/india-management-consulting-services-market"
+  },
+  {
     "headline": "India's industrial and warehousing leasing up 15% YoY in H1 2026: Knight Frank",
     "date": "2026-08-20",
     "category": "Operations",
@@ -728,6 +864,14 @@
     "source": "https://aninews.in/news/business/india-warehousing-market-set-for-strong-h2-growth-as-manufacturing-3rd-party-logistics-drive-demand-knight-frank20260820132734/"
   },
   {
+    "headline": "Inside Consulting's AI Toolkit: McKinsey's Lilli, BCG's Deckster, Deloitte's GPT Tools",
+    "date": "2026-08-20",
+    "category": "Consulting",
+    "summary": "McKinsey's internal assistant Lilli can scan over 100,000 documents in seconds to draft slide decks, BCG's 'Deckster' automatically polishes PowerPoint presentations, and Deloitte has tested GPT-based tools for writing proposals and code.",
+    "angle": "A concrete look at how the 'pyramid' consultants are trained on is being automated from the bottom up.",
+    "source": "https://futureofconsulting.ai/ai-leadership/2026-consultings-ai-revolution-update/"
+  },
+  {
     "headline": "Jio Financial Unveils New Corporate Identity, Keeps smallcase Separate",
     "date": "2026-08-20",
     "category": "Marketing",
@@ -742,6 +886,14 @@
     "summary": "Neptune's India subsidiary will now manage advertising operations for KRAFTON's Battlegrounds Mobile India (BGMI), with plans to expand into gaming, entertainment and community ad inventory.",
     "angle": "Tests whether you see in-game and esports advertising as a fast-growing, still under-measured media channel brands are only beginning to systematize.",
     "source": "https://bestmediainfo.com/mediainfo/advertising/top-advertising-marketing-and-media-news-headlines-of-today-august-20-2026-12397604"
+  },
+  {
+    "headline": "Mahindra Doubles Down on Multi-Sourcing to Counter Supply-Chain Shocks",
+    "date": "2026-08-20",
+    "category": "Operations",
+    "summary": "Mahindra & Mahindra is strengthening supplier localisation, multi-sourcing, and platform flexibility to protect production from repeated geopolitical and trade disruptions.",
+    "angle": "Directly testable in an ops interview: the resilience-versus-efficiency trade-off in sourcing strategy.",
+    "source": "https://boldnewsonline.com/india-pushes-manufacturing-drive-as-global-firms-expand-supply-chains/"
   },
   {
     "headline": "Push to keep UPI free for small merchants as Parliament clears way for fees",
@@ -1512,6 +1664,14 @@
     "source": "https://the420.in/india-consulting-legal-accounting-global-firms-procurement-reform/"
   },
   {
+    "headline": "AI-Driven Cuts Spread Across Consulting: Bain, BCG, Deloitte, KPMG Follow McKinsey",
+    "date": "2026-08-14",
+    "category": "Consulting",
+    "summary": "Bain, BCG, and Deloitte have each reduced headcount or slowed hiring in 2026, while KPMG has cut roughly 400 US advisory positions, as AI tools compress delivery timelines industry-wide.",
+    "angle": "Shows this is a structural shift, not a one-firm story — good for 'is this cyclical or permanent' interview probing.",
+    "source": "https://www.caseinterviewhub.com/post/consulting-crisis-mckinsey-bcg-bain"
+  },
+  {
     "headline": "Apple ramps iPhone 18 Pro production in India for global export",
     "date": "2026-08-14",
     "category": "Operations",
@@ -1534,6 +1694,22 @@
     "summary": "The I&B Ministry removed the 2006-era rule capping television ads at 12 minutes per hour, citing unfettered digital competition and India's growth from 62 to over 900 TV channels; the change takes effect once formally gazetted.",
     "angle": "Opens a discussion on media deregulation, TV-vs-digital ad economics, and how policy shifts reshape broadcaster monetization strategy.",
     "source": "https://www.freepressjournal.in/business/govt-removes-12-minute-tv-ad-cap-allows-channels-greater-monetisation"
+  },
+  {
+    "headline": "Honasa's Mamaearth Posts 27% Revenue Growth as Derma Co. Crosses Rs 1,000-Crore Run Rate",
+    "date": "2026-08-14",
+    "category": "Marketing",
+    "summary": "Honasa Consumer reported 27% YoY revenue growth to Rs 755.9 crore, with like-for-like growth of 32%, while The Derma Co. crossed a Rs 1,000-crore annualised net sales run rate.",
+    "angle": "A useful case on how a D2C 'house of brands' scales beyond its founding brand.",
+    "source": "https://bestmediainfo.com/mediainfo/advertising/top-advertising-marketing-and-media-news-headlines-of-today-august-14-2026-12258931"
+  },
+  {
+    "headline": "McKinsey to Cut 10% of Its Global Workforce, Its Largest Reduction Since 2008",
+    "date": "2026-08-14",
+    "category": "Consulting",
+    "summary": "McKinsey plans to cut 3,000-4,000 jobs, roughly 10% of its global workforce, citing how AI tools have reduced the consulting hours needed for research and data analysis.",
+    "angle": "The headline case for 'how is generative AI changing the professional-services staffing pyramid.'",
+    "source": "https://aijobclock.com/blog/breaking-mckinsey-announces-major-layoffs-citing-ai-automation-for-th-2026-08-14"
   },
   {
     "headline": "PhysicsWallah pivots from exam-prep to full K-12 platform",
@@ -1936,6 +2112,14 @@
     "source": "https://www.medianews4u.com/cadbury-celebrations-refreshes-raksha-bandhan-portfolio-with-premium-gifting-range-and-thistakraarissweet-campaign/"
   },
   {
+    "headline": "Centre Sanctions Rs 7.24 Crore Under Sagarmala for Kollam Port Berth",
+    "date": "2026-08-10",
+    "category": "Operations",
+    "summary": "The Union government approved Rs 7.24 crore in Sagarmala Programme funding toward a Rs 15.15-crore multi-purpose berth and wharf at Kollam Port in Kerala, alongside the developing Vizhinjam seaport.",
+    "angle": "Shows how India upgrades secondary ports to feed a larger logistics network rather than over-relying on flagship ports.",
+    "source": "https://www.theweek.in/news/maritime/2026/08/10/kollam-port-to-get-indian-rupee7-24-crore-push-from-centre-for-berth-development-why-it-matters.html"
+  },
+  {
     "headline": "Doctors demand a watershed ban on junk food ads to children",
     "date": "2026-08-10",
     "category": "Marketing",
@@ -1974,6 +2158,14 @@
     "summary": "Mahindra Group named Shveta Arya (outgoing MD of Cummins India) as Group Chief Strategy Officer effective September 15, while consolidating its Mahindra Lifespace (real estate) and Mahindra Holidays (hospitality) businesses into a single strategic vertical led by Amit Kumar Sinha.",
     "angle": "A textbook conglomerate-portfolio-strategy case — bundling secondary 'growth gem' businesses under focused leadership to unlock capital and operational synergies, useful for discussing diversified Indian business group strategy.",
     "source": "https://www.business-standard.com/industry/news/mahindra-group-dedicated-focus-real-estate-hospitality-growth-126081000773_1.html"
+  },
+  {
+    "headline": "Meta Open-Sources Its Most Powerful AI Model Yet",
+    "date": "2026-08-10",
+    "category": "Product Management",
+    "summary": "Meta released Muse Glimmer as an open-weight model, taking a direct swipe at OpenAI and Anthropic's closed-model approach.",
+    "angle": "A sharp prompt on open-weight versus closed-model strategy and how a PM should think about platform moats in AI products.",
+    "source": "https://www.cnbc.com/2026/08/10/meta-muse-glimmer-open-weight-ai.html"
   },
   {
     "headline": "Meta open-sources Muse Glimmer, a 30B-parameter on-device AI model",
@@ -2150,6 +2342,14 @@
     "summary": "Punt Creative was appointed as PizzaExpress India’s communications agency following a competitive multi-agency pitch, taking charge of digital strategy, social media, content and integrated campaigns.",
     "angle": "Useful for agency-client pitch dynamics and how QSR/casual-dining brands build digital-first engagement in India.",
     "source": "https://bestmediainfo.com/mediainfo/mediainfo-marketing/punt-creative-wins-pizzaexpress-india-communications-mandate-12234270"
+  },
+  {
+    "headline": "RBI Holds Repo Rate at 5.25% for Fourth Straight Meeting, Lifts GDP Forecast to 6.7%",
+    "date": "2026-08-06",
+    "category": "Finance",
+    "summary": "The RBI's MPC unanimously kept the repo rate unchanged in its August review, holding a neutral stance while raising its FY27 GDP growth forecast to 6.7% on resilient domestic demand and exports.",
+    "angle": "A baseline reference point for any finance interview — pairs the growth-inflation trade-off with the RBI's current policy stance.",
+    "source": "https://www.outlookmoney.com/banking/rbi-mpc-august-2026-meeting-live-updates-governor-sanjay-malhotra-speech-repo-rate-inflation-gdp-news"
   },
   {
     "headline": "RBI to Pilot India's First Polymer ₹10 and ₹20 Notes",
