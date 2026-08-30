@@ -1,5 +1,21 @@
 [
   {
+    "headline": "HDFC Bank CEO Sashidhar Jagdishan to Retire, Won't Seek Reappointment",
+    "date": "2026-08-29",
+    "category": "Finance",
+    "summary": "Jagdishan told HDFC Bank's board on August 29 that he will retire on October 26, 2026; the board says it will fast-track choosing a successor.",
+    "angle": "A prime case for talking succession planning and governance at India's largest private bank.",
+    "source": "https://www.businesstoday.in/latest/corporate/story/hdfc-bank-leadership-shake-up-ceo-sashidhar-jagdishan-to-retire-on-oct-26-will-not-seek-reappointment-552056-2026-08-29"
+  },
+  {
+    "headline": "LIC Housing Finance Names Sandeep Kumar as New MD & CEO",
+    "date": "2026-08-29",
+    "category": "Finance",
+    "summary": "LIC Housing Finance's board appointed Sandeep Kumar as MD and CEO effective August 29, 2026, after T. Adhikari's superannuation.",
+    "angle": "Opens discussion on leadership transitions at NBFCs and how insurance-parent-backed lenders manage internal succession.",
+    "source": "https://www.screener.in/company/LICHSGFIN/consolidated/"
+  },
+  {
     "headline": "Google Ships Gemini 3.5 Transcribe as Two Separate Speech-to-Text Endpoints",
     "date": "2026-08-28",
     "category": "Product Management",
@@ -22,6 +38,14 @@
     "summary": "OpenAI's India MD said advertising on ChatGPT will not shape the model's responses, advertisers will not get access to user conversations, and users retain control over personalisation.",
     "angle": "Raises the trust-versus-monetisation tension every AI platform now faces — can a candidate argue whether this promise is credible?",
     "source": "https://bestmediainfo.com/mediainfo/advertising/top-advertising-marketing-and-media-news-headlines-of-today-august-28-2026-12446393"
+  },
+  {
+    "headline": "AM/NS India Arm Wins 30-Year Concession to Mechanise Paradip Port Berth",
+    "date": "2026-08-27",
+    "category": "Operations",
+    "summary": "AM/NS Paradip Logistics secured a 30-year concession for a 10 MTPA captive berth at Paradip Port, mechanising cargo handling with an estimated Rs 451 crore investment.",
+    "angle": "A textbook port-privatisation/PPP case for discussing capacity planning and how mechanisation cuts turnaround time.",
+    "source": "https://www.business-standard.com/companies/news/am-ns-india-secures-30-year-concession-for-captive-berth-at-paradip-port-126082700578_1.html"
   },
   {
     "headline": "Deepinder Goyal's Temple acquires longevity clinic Longevous",
@@ -64,6 +88,14 @@
     "source": "https://www.businesstoday.in/india/story/benign-asset-quality-strong-credit-growth-but-banks-are-facing-these-twin-near-term-challenges-551828-2026-08-27"
   },
   {
+    "headline": "Neptune to Run Ad Operations for KRAFTON's BGMI in India",
+    "date": "2026-08-27",
+    "category": "Marketing",
+    "summary": "Neptune's India arm will manage advertising operations for Battlegrounds Mobile India and plans to expand its media network into gaming, entertainment and community platforms.",
+    "angle": "Illustrates gaming's rise as a serious ad-monetisation channel — useful for media-planning and platform-strategy questions.",
+    "source": "https://bestmediainfo.com/mediainfo/advertising/top-advertising-marketing-and-media-news-headlines-of-today-august-27-2026-12442051"
+  },
+  {
     "headline": "Nvidia reportedly agrees to buy Hugging Face for $12.9 billion",
     "date": "2026-08-27",
     "category": "Product Management",
@@ -86,6 +118,14 @@
     "summary": "OpenAI will let Indian advertisers self-serve ads on ChatGPT starting September 4, 2026, with a minimum daily spend of Rs 725, as more than 50 brands prepare to go live this week.",
     "angle": "A new ad channel competing with Google and Meta for India's digital budgets — good for 'how would you allocate a marketing budget across channels' questions.",
     "source": "https://bestmediainfo.com/mediainfo/advertising/top-advertising-marketing-and-media-news-headlines-of-today-august-27-2026-12442051"
+  },
+  {
+    "headline": "OpenAI Rolls Out ChatGPT Ads in India",
+    "date": "2026-08-27",
+    "category": "Marketing",
+    "summary": "OpenAI began showing ads to ChatGPT's Free and Go plan users in India, with more than 50 brands on board at launch; ads are labelled \"sponsored\" and kept visually separate from AI-generated answers.",
+    "angle": "Tests whether a candidate can weigh the tension between platform monetisation and user trust when advertising enters a conversational AI product.",
+    "source": "https://www.business-standard.com/technology/artificial-intelligence/openai-to-start-showing-ads-to-chatgpt-free-go-users-in-india-126082701281_1.html"
   },
   {
     "headline": "RBI Steps Up Dollar Sales to Defend the Rupee as Oil Prices Rise",
@@ -256,6 +296,14 @@
     "source": "https://www.cnbc.com/2026/08/25/amazon-service-that-jeff-bezos-called-artificial-ai-is-shutting-down.html"
   },
   {
+    "headline": "Avanade Names Former Cognizant India Head Achal Kataria as India CEO",
+    "date": "2026-08-25",
+    "category": "Consulting",
+    "summary": "Avanade appointed Achal Kataria, previously Cognizant's India business head, as Managing Director and CEO of its India operations with immediate effect.",
+    "angle": "Useful for talent-movement questions: why a Microsoft-Accenture joint venture recruits leadership from a rival IT services major.",
+    "source": "https://www.storyboard18.com/brand-makers/avanade-appoints-former-cognizant-india-head-achal-kataria-as-md-and-ceo-108205.htm"
+  },
+  {
     "headline": "Bank credit growth outruns deposit growth",
     "date": "2026-08-25",
     "category": "Finance",
@@ -424,6 +472,14 @@
     "source": "https://www.businesstoday.in/india/story/after-scrutiny-of-top-food-chains-like-burger-king-pizza-hut-fssai-suspends-marche-retail-licence-for-30-days-550866-2026-08-24"
   },
   {
+    "headline": "FSSAI Suspends Marche Retail's Licence, Fires Off 150+ Notices to Food Brands",
+    "date": "2026-08-24",
+    "category": "Marketing",
+    "summary": "The food regulator suspended Marche Retail's operating licence for 30 days over hygiene lapses, part of a wider crackdown that has sent 150+ notices to food brands, including major QSR chains.",
+    "angle": "Shows how compliance and hygiene failures can undo a food brand's marketing investment overnight — good for brand-trust and crisis-management questions.",
+    "source": "https://www.businesstoday.in/india/story/after-scrutiny-of-top-food-chains-like-burger-king-pizza-hut-fssai-suspends-marche-retail-licence-for-30-days-550866-2026-08-24"
+  },
+  {
     "headline": "Goyal defends steel safeguard duty, pitches Japan on Indian steel",
     "date": "2026-08-24",
     "category": "Operations",
@@ -456,6 +512,14 @@
     "source": "https://ianslive.in/govt-schemes-accelerate-indias-manufacturing-growth-attract-global-supplychain-shifts-report--20260824133618"
   },
   {
+    "headline": "KPMG Australia Cuts 360 Jobs and 27 Partners as Consulting Revenue Falls 16.9%",
+    "date": "2026-08-24",
+    "category": "Consulting",
+    "summary": "KPMG Australia is cutting around 360 employees and 27 partners after its consulting revenue fell 16.9%, one of the sharpest cuts yet in the sector's global slowdown.",
+    "angle": "Anchors a discussion on why traditional consulting headcount models are under pressure from AI and slower discretionary spending.",
+    "source": "https://www.goingconcern.com/layoff-watch-26-kpmg-cuts-4-from-consulting/"
+  },
+  {
     "headline": "KPMG Australia's layoffs seen as just the start",
     "date": "2026-08-24",
     "category": "Consulting",
@@ -478,6 +542,14 @@
     "summary": "NBFC credit grew 14.4% year-on-year to ₹57.8 trillion by June 2026, with gold loans surging 69.3% and consumer-durable loans 46.8%, as lenders shift toward secured, retail-heavy books and tighter underwriting.",
     "angle": "Useful for probing why gold loans are booming (rallying gold prices, easy collateral recovery) and whether regulators should worry about concentration risk in secured retail lending.",
     "source": "https://www.theweek.in/news/biz-tech/2026/08/24/nbfcs-india-secured-lending-trends.html"
+  },
+  {
+    "headline": "OpenAI Expands ChatGPT Ads to Europe",
+    "date": "2026-08-24",
+    "category": "Product Management",
+    "summary": "OpenAI extended its ads rollout in ChatGPT to European markets, following the earlier US launch, keeping ads visually separate from chat responses.",
+    "angle": "Prompts a discussion on how a product team sequences a monetisation feature's geographic rollout and manages regulatory differences like EU privacy rules.",
+    "source": "https://openai.com/news/product-releases/"
   },
   {
     "headline": "OpenAI starts showing ads inside ChatGPT's free tier in Europe",
@@ -504,12 +576,28 @@
     "source": "https://www.business-standard.com/markets/news/jpmorgan-india-unit-to-argue-that-any-regulatory-breach-was-technical-126082401446_1.html"
   },
   {
+    "headline": "SEBI Extends AI Surveillance from Trades to Corporate Balance Sheets",
+    "date": "2026-08-24",
+    "category": "Finance",
+    "summary": "SEBI is building a dedicated AI model to scan corporate filings and quarterly results for financial misstatements, extending AI surveillance beyond real-time trade monitoring.",
+    "angle": "A strong regtech story on how regulators are shifting from reactive to proactive enforcement using AI.",
+    "source": "https://www.business-standard.com/markets/news/from-trades-to-balance-sheets-sebi-widens-its-ai-powered-surveillance-net-126082401060_1.html"
+  },
+  {
     "headline": "Streaming giants slow subscription price hikes as ad-tiers grow",
     "date": "2026-08-24",
     "category": "Marketing",
     "summary": "New Ampere Analysis data shows Netflix, Disney+ and Amazon have shrunk the size of subscription price increases over the past three years while keeping ad-supported tiers markedly cheaper, suggesting they're nearing the ceiling of what consumers will pay.",
     "angle": "How does this freemium/ad-tier pricing playbook map onto India's own OTT pricing battles (JioHotstar, Netflix India, Prime Video) as subscriber bases mature?",
     "source": "https://www.advanced-television.com/2026/08/24/analysis-netflix-disney-amazon-pull-brake-on-price-rises/"
+  },
+  {
+    "headline": "TCS to Acquire Porsche's MHP Consulting Unit for $373 Million",
+    "date": "2026-08-24",
+    "category": "Consulting",
+    "summary": "Tata Consultancy Services agreed to buy Porsche's MHP management-and-IT consulting arm for about €320m, alongside a five-year, $1.46 billion AI services partnership with Porsche.",
+    "angle": "A rich case on how IT services firms buy specialist consulting capability (here, automotive/AI) to move up the value chain.",
+    "source": "https://www.consultancy.uk/news/45458/tcs-acquires-mhp-management-amid-porsche-partnership"
   },
   {
     "headline": "Urban Company sues Kent RO over disparaging ads",
@@ -614,6 +702,14 @@
     "summary": "Flipkart Minutes is now delivering 1.1-1.2 million orders/day, up from ~390,000 in November, closing in on Swiggy Instamart's ~1.4 million/day after a rapid dark-store buildout.",
     "angle": "A textbook case of a late entrant using capital and network density to close a scale gap.",
     "source": "https://techcrunch.com/2026/08/22/two-years-after-launch-walmarts-flipkart-is-closing-in-on-indias-quick-commerce-leaders/"
+  },
+  {
+    "headline": "Indian Railways Runs First Long-Haul Double-Stack Container Train",
+    "date": "2026-08-22",
+    "category": "Operations",
+    "summary": "A 1.3km double-stack container train carrying 360 TEUs ran from JNPT Mumbai to CONCOR's Vadodara terminal on the Western Dedicated Freight Corridor.",
+    "angle": "Good for discussing how dedicated freight corridors cut per-unit rail logistics cost versus road transport.",
+    "source": "https://aninews.in/news/national/general-news/railways-operates-first-double-stack-long-haul-container-train-from-jawaharlal-nehru-port-trust-mumbai20260822222400/"
   },
   {
     "headline": "RBI’s dollar-swap facility pulls in $72.85 billion",
@@ -768,6 +864,14 @@
     "source": "https://www.consultancy.in/news/4555/akshita-summan-returns-to-pwc-india-as-director"
   },
   {
+    "headline": "RBI Advances Closure of Its Dollar Swap Window After $72.85 Billion Inflows",
+    "date": "2026-08-21",
+    "category": "Finance",
+    "summary": "RBI will shut its FCNR(B) forex swap facility on August 31 — a month early — after it drew $72.85 billion, with FCNR(B) deposits contributing nearly 90% of the total.",
+    "angle": "Tests understanding of how forex swap windows are used to manage the rupee and capital inflows.",
+    "source": "https://www.business-standard.com/finance/news/rbi-forex-swap-facility-attracts-72-85-billion-inflows-as-of-august-21-126082200553_1.html"
+  },
+  {
     "headline": "Reddit tests AI-narrated audio and video for text posts",
     "date": "2026-08-21",
     "category": "Marketing",
@@ -822,6 +926,14 @@
     "summary": "EY's H1 2026 Private Credit Report shows domestic funds accounted for 74% of India's $3.5 billion private credit deal value, up sharply as global funds' share fell from 68% to 26% year-on-year.",
     "angle": "Signals a structural shift in who finances Indian companies outside traditional bank lending — relevant to any \"alternative financing\" discussion.",
     "source": "https://www.ey.com/en_in/newsroom/2026/08/domestic-funds-drive-indias-private-credit-market-as-investments-reach-us-dollor-3-point-5-billion-in-h1-2026-ey-report"
+  },
+  {
+    "headline": "ED Freezes Rs 51.75 Crore in DHFL's Rs 34,615-Crore Bank Fraud Case",
+    "date": "2026-08-20",
+    "category": "Finance",
+    "summary": "The Enforcement Directorate froze bank deposits worth Rs 51.75 crore linked to a UK property allegedly used to divert funds, part of a probe into Rs 34,615 crore of alleged losses to a 17-bank consortium.",
+    "angle": "Useful anchor for discussing loan-fraud detection and consortium-lending risk in NBFCs.",
+    "source": "https://www.freepressjournal.in/business/ed-freezes-rs-5175-crore-bank-deposit-in-34615-crore-dhfl-fraud-case"
   },
   {
     "headline": "Forbes names Accenture, Deloitte, McKinsey top global consulting firms for 2026",
@@ -992,6 +1104,14 @@
     "source": "https://www.business-standard.com/companies/news/hul-sues-beco-hul-moves-delhi-hc-against-beco-parent-over-surf-excel-vim-ad-campaign-126081900893_1.html"
   },
   {
+    "headline": "HUL Sues Beco Over Comparative \"War on What's Hidden\" Campaign",
+    "date": "2026-08-19",
+    "category": "Marketing",
+    "summary": "Hindustan Unilever moved the Delhi High Court against D2C brand Beco after it directly named Surf Excel and Vim in an ingredient-transparency campaign; the court has issued notice to Beco.",
+    "angle": "A ready-made case for discussing the legal limits of comparative advertising and how challenger brands pick fights with category leaders.",
+    "source": "https://www.storyboard18.com/advertising/hul-sues-beco-over-waronwhatshidden-ad-campaign-ws-lo-108232.htm"
+  },
+  {
     "headline": "HUL takes Beco to court over its \"toxin-free\" ad war",
     "date": "2026-08-19",
     "category": "Marketing",
@@ -1160,6 +1280,14 @@
     "source": "https://www.business-standard.com/economy/news/fm-asks-psbs-to-boost-farm-credit-for-pulses-oilseeds-cut-imports-126081801411_1.html"
   },
   {
+    "headline": "ICRA: India's Manufacturing Growth May Slow to Near Two-Year Low in Q1 FY27",
+    "date": "2026-08-18",
+    "category": "Operations",
+    "summary": "ICRA estimates manufacturing GVA growth moderating to around 6% in Q1 FY27, even as manufacturing volume growth actually accelerated to 6.3% from 4.7% the prior quarter.",
+    "angle": "Tests whether candidates can reconcile mixed signals — volume growth up, value-added growth down — in one sector snapshot.",
+    "source": "https://aninews.in/news/business/indias-manufacturing-sector-growth-may-slow-to-nearly-two-year-low-in-q1-icra20260818193841/"
+  },
+  {
     "headline": "Indo-MIM’s profit jumps 32% on operating leverage",
     "date": "2026-08-18",
     "category": "Finance",
@@ -1206,6 +1334,14 @@
     "summary": "OpenAI rolled out ChatGPT for Teens (ages 13–17) with age-prediction auto-routing and blocks on self-harm and romantic/sexual conversations, years after teens had already been using the adult product.",
     "angle": "A strong case on designing for a vulnerable user segment — trading capability for safety, and building age-detection into the core product rather than bolting it on.",
     "source": "https://techcrunch.com/2026/08/18/openai-launches-a-safer-chatgpt-for-teens-years-after-teens-started-using-it/"
+  },
+  {
+    "headline": "OpenAI Previews \"Ultrafast\" Mode for GPT-5.6, Up to 14x Faster",
+    "date": "2026-08-18",
+    "category": "Product Management",
+    "summary": "OpenAI previewed an Ultrafast mode for GPT-5.6 (\"Sol\") that runs up to 14 times faster than standard mode, aimed at latency-sensitive use cases.",
+    "angle": "Good for a product trade-off question: when does a PM ship a faster-but-costlier model tier versus optimising the default experience.",
+    "source": "https://openai.com/news/product-releases/"
   },
   {
     "headline": "Perplexity's free AI push drives a surge in Indian users",
@@ -1632,6 +1768,14 @@
     "source": "https://www.ciol.com/news/flipkart-to-launch-bengaluru-food-delivery-by-mid-august-on-1011-commission-12224466"
   },
   {
+    "headline": "Flipkart Enters Food Delivery With Lower Commission Than Swiggy and Zomato",
+    "date": "2026-08-15",
+    "category": "Product Management",
+    "summary": "Flipkart launched a food delivery app in Bengaluru, charging restaurants around 10% commission versus the 16-30% charged by Swiggy and Zomato.",
+    "angle": "A strong GTM-strategy story on using pricing as a wedge to enter an established two-player market.",
+    "source": "https://www.theweek.in/news/biz-tech/2026/08/03/swiggy-zomato-boycott-did-flipkart-luck-out-in-its-food-delivery-launch-timing.html"
+  },
+  {
     "headline": "Flipkart Enters Food Delivery, Undercutting Swiggy-Zomato on Commission",
     "date": "2026-08-15",
     "category": "Product Management",
@@ -1808,6 +1952,14 @@
     "source": "https://fortune.com/2026/08/13/microsoft-begins-merge-consumer-and-enterprise-copilot-ai-apps/"
   },
   {
+    "headline": "Microsoft Begins Merging Copilot, Cowork and GitHub Copilot into One App",
+    "date": "2026-08-13",
+    "category": "Product Management",
+    "summary": "Microsoft started rolling out changes on August 18 to unify Copilot Chat, Copilot Cowork and GitHub Copilot under one identity and interface, with a new \"Autopilot\" agent layer to follow.",
+    "angle": "A clean case study on product-portfolio consolidation and the trade-offs of merging consumer and enterprise experiences into one app.",
+    "source": "https://fortune.com/2026/08/13/microsoft-begins-merge-consumer-and-enterprise-copilot-ai-apps/"
+  },
+  {
     "headline": "Microsoft merges its two Copilot apps into one",
     "date": "2026-08-13",
     "category": "Product Management",
@@ -1864,6 +2016,14 @@
     "source": "https://www.ey.com/en_in/newsroom/2026/08/it-services-m-a-records-449-deals-worth-us-dollor-14-point-8-billion-in-h1-2026-as-ai-reshapes-buyer-priorities"
   },
   {
+    "headline": "EY: India IT Services M&A Hits $14.8 Billion Across 449 Deals in H1 2026",
+    "date": "2026-08-12",
+    "category": "Consulting",
+    "summary": "EY's India IT Services H1 2026 report found 449 deals worth $14.8 billion, roughly flat on volume year-on-year, with AI reshaping buyer priorities toward scale and sector depth.",
+    "angle": "Good for questions on deal-making logic in IT services and how AI is changing what acquirers value in a target.",
+    "source": "https://www.ey.com/en_in/newsroom/2026/08/it-services-m-a-records-449-deals-worth-us-dollor-14-point-8-billion-in-h1-2026-as-ai-reshapes-buyer-priorities"
+  },
+  {
     "headline": "EY: IT services M&A hits 449 deals worth $14.8 billion in H1 2026 as AI reshapes buyer priorities",
     "date": "2026-08-12",
     "category": "Consulting",
@@ -1902,6 +2062,14 @@
     "summary": "India’s CPI inflation rose to 4.45% in July 2026, up from 4.38% in June and the highest reading in 19 months, driven by rising food and energy prices linked to the Middle East conflict’s impact on crude and the rupee.",
     "angle": "Directly feeds the RBI rate-hike debate — candidates should connect inflation data to the central bank’s next policy move.",
     "source": "https://www.forbesindia.com/amp/article/news/july-retail-inflation-inches-up-to-4-45-percent/2997013/1"
+  },
+  {
+    "headline": "IndiaAI Mission Sanctions 93 Lakh GPU Hours Across 237 Projects",
+    "date": "2026-08-12",
+    "category": "Product Management",
+    "summary": "The government told the Lok Sabha that IndiaAI Mission has sanctioned 93.18 lakh GPU hours to 237 projects and ordered a 1.1 EFLOPS compute system for the NIC Data Centre in Delhi.",
+    "angle": "Relevant for discussing how subsidised compute infrastructure shapes which AI products domestic startups can actually build.",
+    "source": "https://techobserver.in/news/egov/indiaai-mission-gpu-hours-compute-system-lok-sabha-327929/"
   },
   {
     "headline": "Klook launches global AI-generated brand platform across 15 markets",
@@ -2376,6 +2544,14 @@
     "source": "https://www.bloomberg.com/news/articles/2026-08-06/whatsapp-tests-age-confirmation-in-largest-market-india"
   },
   {
+    "headline": "Kim Kardashian's SKIMS Enters India Exclusively via Reliance Brands",
+    "date": "2026-08-05",
+    "category": "Marketing",
+    "summary": "Global shapewear label SKIMS opened its first India stores in Delhi and Mumbai through an exclusive tie-up with Reliance Brands, which will run the brand across physical and digital channels.",
+    "angle": "Good prompt on market-entry strategy for celebrity-founded global brands and why they lean on a local retail partner instead of a solo launch.",
+    "source": "https://www.theretailbulletin.com/fashion/kim-kardashians-skims-launches-in-india-via-reliance-brands-deal-06-08-2026/"
+  },
+  {
     "headline": "Kim Kardashian’s SKIMS enters India via exclusive Reliance Brands tie-up",
     "date": "2026-08-05",
     "category": "Marketing",
@@ -2576,6 +2752,14 @@
     "source": "https://blog.google/innovation-and-ai/models-and-research/google-deepmind/gemini-robotics-er-2/"
   },
   {
+    "headline": "PLI Schemes Cross Rs 2.40 Lakh Crore in Actual Investment",
+    "date": "2026-07-30",
+    "category": "Operations",
+    "summary": "Government data tabled in the Lok Sabha shows PLI schemes have drawn Rs 2.40 lakh crore in actual investment and created 14.15 lakh jobs as of March 2026, led by solar PV, pharma and autos.",
+    "angle": "A core reference for questions on whether India's subsidy-linked manufacturing policy is delivering scale.",
+    "source": "https://www.pib.gov.in/PressReleasePage.aspx?PRID=2287008&reg=48&lang=2"
+  },
+  {
     "headline": "Tata Motors to Launch Four New EVs in 12-18 Months",
     "date": "2026-07-30",
     "category": "Operations",
@@ -2606,6 +2790,22 @@
     "summary": "Torrential rain (300-500mm in 24 hours) and flooding in Gujarat halted production at Tata Motors' Sanand plants (Nexon, Tiago, Tigor, Sierra) and disrupted several component suppliers, with recovery underway.",
     "angle": "A textbook case for single-location manufacturing risk and multi-tier supplier resilience planning in operations strategy.",
     "source": "https://www.businesstoday.in/auto/story/tata-motors-flags-severe-disruption-at-sanand-plant-in-gujarat-due-to-floods-545546-2026-07-27"
+  },
+  {
+    "headline": "Accenture Names Ex-McKinsey Partner Pradeep Prabhala to Lead India Market Unit",
+    "date": "2026-07-21",
+    "category": "Consulting",
+    "summary": "Accenture appointed former McKinsey partner Pradeep Prabhala to head its India Market Unit effective September 1, 2026.",
+    "angle": "A case of the \"one-firm\" convergence between strategy consulting and large IT-services/SI firms — good for firm-positioning questions.",
+    "source": "https://www.bwpeople.in/article/pradeep-prabhala-to-lead-accenture-s-india-business-from-september-615866"
+  },
+  {
+    "headline": "Tata Electronics Overtakes Foxconn in India iPhone Export Value",
+    "date": "2026-07-08",
+    "category": "Operations",
+    "summary": "Under the PLI scheme's FY22-26 window, Tata Electronics' iPhone exports hit $26.3 billion, edging past Foxconn's $25.6 billion, as Tata expands assembly and OSAT capacity in India.",
+    "angle": "Useful for discussing how contract manufacturers compete on scale, yield and incentive capture within one supply chain.",
+    "source": "https://www.business-standard.com/industry/news/tata-electronics-takes-on-foxconn-in-india-s-iphone-manufacturing-126070801414_1.html"
   },
   {
     "headline": "Amazon India ships AI seller assistant, built on Bedrock, Nova and Claude, to 1.7 million sellers",
