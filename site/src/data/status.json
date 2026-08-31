@@ -1,13 +1,13 @@
 {
-  "generated": "2026-08-31T00:13:45.516Z",
+  "generated": "2026-08-31T05:56:11.228Z",
   "radar": {
     "total": 25,
     "unrated": 0,
     "maybeLater": 1,
     "byStatus": {
       "Radar Idea": 11,
-      "Drafting": 4,
-      "Published": 10
+      "Published": 11,
+      "Drafting": 3
     },
     "byTrack": {
       "Technical": 15,
@@ -22,7 +22,7 @@
     "total": 20,
     "inFlight": 0,
     "draftReady": 0,
-    "approved": 1,
+    "approved": 0,
     "byTrack": {
       "Technical": 8,
       "Business": 4,
