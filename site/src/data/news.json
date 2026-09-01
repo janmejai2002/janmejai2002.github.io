@@ -1,5 +1,29 @@
 [
   {
+    "headline": "HDFC Bank succession watch builds as CEO's six-year tenure faces scrutiny",
+    "date": "2026-08-31",
+    "category": "Finance",
+    "summary": "Discussion is building around HDFC Bank CEO Sashidhar Jagdishan's six-year tenure, marked by the HDFC merger, governance controversies and scrutiny of the bank's Dubai operations, as the board weighs succession.",
+    "angle": "How should a board balance continuity versus fresh leadership at India's largest private bank after a transformative merger?",
+    "source": "https://www.business-standard.com/"
+  },
+  {
+    "headline": "Pharma stocks slide on Trump's proposed generic drug tariffs",
+    "date": "2026-08-31",
+    "category": "Finance",
+    "summary": "Shares of Glenmark, Biocon and Aurobindo fell around 3%, and Dr Reddy's Labs hit a 52-week low, after President Trump signalled a new tariff plan targeting generic drug imports.",
+    "angle": "How exposed is India's generics-led pharma export model to US trade policy risk, and how might companies hedge it?",
+    "source": "https://www.business-standard.com/"
+  },
+  {
+    "headline": "RBI moves up FCNR(B) deposit deadline after $56.8 billion forex inflows",
+    "date": "2026-08-30",
+    "category": "Finance",
+    "summary": "The RBI brought forward the deadline for banks to raise FCNR(B) deposits under its swap facility to August 31, from September 30, after inflows through the scheme touched $56.8 billion, with FCNR(B) deposits alone accounting for $52.3 billion.",
+    "angle": "Why would a central bank shorten a well-subscribed facility's window, and what does it say about India's forex reserve comfort?",
+    "source": "https://gulfnews.com/business/banking/rbi-brings-forward-deadline-for-banks-to-raise-fcnr-deposits-after-strong-response-1.500641215"
+  },
+  {
     "headline": "HDFC Bank CEO Sashidhar Jagdishan to Retire, Won't Seek Reappointment",
     "date": "2026-08-29",
     "category": "Finance",
@@ -8,12 +32,36 @@
     "source": "https://www.businesstoday.in/latest/corporate/story/hdfc-bank-leadership-shake-up-ceo-sashidhar-jagdishan-to-retire-on-oct-26-will-not-seek-reappointment-552056-2026-08-29"
   },
   {
+    "headline": "Himalaya names Vikas Gupta as CEO, India, effective September 23",
+    "date": "2026-08-29",
+    "category": "Marketing",
+    "summary": "Himalaya has appointed Vikas Gupta, a 27-year FMCG and digital-commerce veteran, as CEO of its India business effective September 23, 2026.",
+    "angle": "How legacy Ayurveda/FMCG brands recruit outside digital-commerce talent to compete with D2C challengers.",
+    "source": "https://bestmediainfo.com/mediainfo/mediainfo-marketing/talent-tracker-of-the-week-leadership-movements-across-media-marketing-and-corporate-india-12260919"
+  },
+  {
     "headline": "LIC Housing Finance Names Sandeep Kumar as New MD & CEO",
     "date": "2026-08-29",
     "category": "Finance",
     "summary": "LIC Housing Finance's board appointed Sandeep Kumar as MD and CEO effective August 29, 2026, after T. Adhikari's superannuation.",
     "angle": "Opens discussion on leadership transitions at NBFCs and how insurance-parent-backed lenders manage internal succession.",
     "source": "https://www.screener.in/company/LICHSGFIN/consolidated/"
+  },
+  {
+    "headline": "Mahindra Group creates a Group Chief Strategy Office, names Shveta Arya to lead it",
+    "date": "2026-08-29",
+    "category": "Consulting",
+    "summary": "Mahindra Group appointed Shveta Arya as its first Group Chief Strategy Officer, effective September 15, 2026, giving her a seat on the Group Executive Board reporting directly to CEO Anish Shah.",
+    "angle": "Why are large conglomerates building in-house strategy offices, and what does it mean for the traditional strategy-consulting engagement model?",
+    "source": "https://bestmediainfo.com/mediainfo/mediainfo-marketing/talent-tracker-of-the-week-leadership-movements-across-media-marketing-and-corporate-india-12260919"
+  },
+  {
+    "headline": "FMCG demand forecast to grow 9-11% this festive season, consumers stay selective",
+    "date": "2026-08-28",
+    "category": "Marketing",
+    "summary": "Tax relief and easier financing are expected to lift FMCG demand 9-11% between August and November 2026, though analysts note consumers remain choosy amid food inflation.",
+    "angle": "How does a marketer balance a broad demand tailwind against continued value-consciousness in the same consumer?",
+    "source": "https://www.outlookbusiness.com/corporate/fmcg-demand-set-to-rise-911-this-festive-season-but-consumers-stay-selective"
   },
   {
     "headline": "Google Ships Gemini 3.5 Transcribe as Two Separate Speech-to-Text Endpoints",
@@ -86,6 +134,14 @@
     "summary": "Indian banks are seeing resilient credit growth and benign asset quality, but analysts flag near-term pressure from tightening deposit growth and margin compression.",
     "angle": "Tests understanding of how a bank's balance sheet health can look strong even as profitability headwinds build elsewhere.",
     "source": "https://www.businesstoday.in/india/story/benign-asset-quality-strong-credit-growth-but-banks-are-facing-these-twin-near-term-challenges-551828-2026-08-27"
+  },
+  {
+    "headline": "JSW Steel starts up new Toranagallu plant, adds pelletising capacity at Paradeep",
+    "date": "2026-08-27",
+    "category": "Operations",
+    "summary": "Primetals Technologies confirmed the startup of JSW Vijayanagar Metallics' Toranagallu plant in Karnataka and won an order for two more pelletising plants at JSW's Paradeep facility in Odisha.",
+    "angle": "Why would a steelmaker invest in pelletising, an upstream input step, rather than just adding finishing capacity?",
+    "source": "https://megaproject.com/news/steel/jsw-steel-launches-construction-of-rs-65000-crore-mega-plant-in-odisha"
   },
   {
     "headline": "Neptune to Run Ad Operations for KRAFTON's BGMI in India",
@@ -190,6 +246,14 @@
     "summary": "A CLSA report shows Flipkart Minutes now runs 627 dark stores versus Swiggy Instamart's 615 across India's top 10 cities, though Blinkit (969) and Zepto (828) still lead, as Flipkart scales toward 1,500 micro-fulfilment centres by year-end.",
     "angle": "A ready-made case on quick-commerce unit economics and how a later entrant prioritizes infrastructure build-out to close a competitive gap against incumbents with a head start.",
     "source": "https://entrackr.com/news/flipkart-minutes-overtakes-swiggy-instamart-in-dark-stores-across-top-10-cities-clsa-12435433"
+  },
+  {
+    "headline": "FMCG stocks rally as GST 2.0 rate cuts take effect",
+    "date": "2026-08-26",
+    "category": "Marketing",
+    "summary": "Britannia, HUL and Nestle India rose 2-3% while ITC, Marico, Godrej Consumer, Tata Consumer, Dabur and Colgate gained up to 1% after GST 2.0 collapsed the 12%/28% slabs into a simpler 5%/18% structure.",
+    "angle": "How does a tax-driven demand tailwind change a marketer's pricing and promotion calendar for the festive quarter?",
+    "source": "https://www.business-standard.com/markets/news/hul-britannia-nestle-gain-up-to-3-is-this-good-time-to-buy-fmcg-stocks-125082600649_1.html"
   },
   {
     "headline": "India Takes Its Growth Pitch Abroad as Foreign Investors Pull Back",
@@ -336,6 +400,14 @@
     "source": "https://www.business-standard.com/technology/artificial-intelligence/fireflies-to-launch-new-products-plans-india-specific-pricing-ceo-126082500909_1.html"
   },
   {
+    "headline": "FMCG majors ramp up ad spend as quick commerce reshapes brand strategy",
+    "date": "2026-08-25",
+    "category": "Marketing",
+    "summary": "India's biggest consumer companies including HUL, Nestle and Marico are increasing ad and promotional spend as growth increasingly depends on visibility inside 10-minute delivery apps like Blinkit and Zepto.",
+    "angle": "How should brand budgets shift when discovery moves from TV/search to app home-screens?",
+    "source": "https://indiantelevision.com/iworld/fmcg-giants-raise-ad-spends-as-quick-commerce-reshapes-brand-strategy/"
+  },
+  {
     "headline": "Government Opens All Conventional Missile Technology to Private Industry",
     "date": "2026-08-25",
     "category": "Consulting",
@@ -382,6 +454,14 @@
     "summary": "Maharashtra FDA issued a show-cause notice alleging a Vimal Elaichi ad featuring Shah Rukh Khan, Ajay Devgn and Tiger Shroff amounts to surrogate promotion of banned Vimal Pan Masala; the actors had not responded as of the latest reports.",
     "angle": "Should celebrities be legally accountable for products they endorse without due diligence, and are India's surrogate-advertising rules for tobacco/pan masala being effectively enforced?",
     "source": "https://www.business-standard.com/industry/news/celebrity-food-endorsements-under-fssai-scrutiny-what-do-the-rules-say-126082500643_1.html"
+  },
+  {
+    "headline": "McKinsey ties a quarter of its fees to client outcomes as AI cuts into billable hours",
+    "date": "2026-08-25",
+    "category": "Consulting",
+    "summary": "McKinsey now earns roughly 25% of its global fees from outcome-based pricing instead of billable hours, as AI tools like its internal assistant Lilli cut consultant time on knowledge work by up to 30%.",
+    "angle": "How does AI-driven productivity force a shift from time-based to outcome-based pricing, and what does that mean for junior consultant staffing pyramids?",
+    "source": "https://aiweekly.co/alerts/mckinsey-ties-25-of-fees-to-outcomes-as-ai-erodes-billable-hours"
   },
   {
     "headline": "Nearly 1 in 4 CTV ad impressions in India found to be fake",
@@ -704,6 +784,14 @@
     "source": "https://techcrunch.com/2026/08/22/two-years-after-launch-walmarts-flipkart-is-closing-in-on-indias-quick-commerce-leaders/"
   },
   {
+    "headline": "IDBI Bank privatisation advances with revised bids from Fairfax and Emirates NBD",
+    "date": "2026-08-22",
+    "category": "Finance",
+    "summary": "The Indian government has received revised financial bids from Fairfax Financial and Emirates NBD for its planned sale of a 60.72% stake in IDBI Bank.",
+    "angle": "What should a global financial buyer weigh before acquiring a majority stake in a public-sector Indian bank?",
+    "source": "https://www.business-standard.com/industry/banking"
+  },
+  {
     "headline": "Indian Railways Runs First Long-Haul Double-Stack Container Train",
     "date": "2026-08-22",
     "category": "Operations",
@@ -734,6 +822,14 @@
     "summary": "Acer India named Akshay Kumar as brand ambassador for \"House of Acer,\" a new ecosystem bringing its PCs together with Acerpure-branded TVs, ACs and washing machines.",
     "angle": "Useful for discussing brand extension/category diversification and using a trusted celebrity face to build credibility in an unfamiliar category.",
     "source": "https://www.gizmochina.com/2026/08/21/acer-brand-ambassador-india/"
+  },
+  {
+    "headline": "Air India cuts cargo transit time from two days to hours with new transshipment network",
+    "date": "2026-08-21",
+    "category": "Operations",
+    "summary": "Air India expanded its cargo transshipment framework linking five Indian cities to three European gateways, cutting Delhi connection times from 36-48 hours to just 5-8 hours by letting sealed freight skip piece-by-piece re-screening.",
+    "angle": "How can process redesign, not new assets, unlock a step-change in logistics throughput time?",
+    "source": "https://www.nomadlawyer.org/air-india-widens-cargo-transshipment-india-europe-hub-2026"
   },
   {
     "headline": "Car makers hike prices just as festive season begins",
@@ -832,6 +928,14 @@
     "source": "https://www.business-standard.com/amp/economy/news/india-private-sector-pmi-august-services-manufacturing-hsbc-126082100396_1.html"
   },
   {
+    "headline": "India's manufacturing growth slows to a 5-year low, factory employment falls",
+    "date": "2026-08-21",
+    "category": "Operations",
+    "summary": "The HSBC Flash India Manufacturing PMI slipped to 52.9 in August from 53.5 in July, its weakest reading since 2021, with new orders growing at their slowest pace in five years and manufacturing employment declining for the first time in two-and-a-half years.",
+    "angle": "What operational levers should a manufacturer pull when order growth cools but capacity has already been built out?",
+    "source": "https://www.fxstreet.com/news/529-indias-hsbc-manufacturing-pmi-falls-in-august-202608210503"
+  },
+  {
     "headline": "India's Manufacturing PMI Slips to 52.9 in August, Lowest Since 2021",
     "date": "2026-08-21",
     "category": "Operations",
@@ -912,6 +1016,14 @@
     "source": "https://www.business-standard.com/markets/capital-market-news/aditya-birla-capital-forays-into-gold-loan-biz-126082000212_1.html"
   },
   {
+    "headline": "Bain & Company names Parijat Ghosh as India managing partner",
+    "date": "2026-08-20",
+    "category": "Consulting",
+    "summary": "Bain & Company appointed Parijat Ghosh as its new managing partner for India, taking charge of one of the firm's largest Asia offices amid a tough hiring market.",
+    "angle": "What does a change in country leadership signal about a consulting firm's strategic priorities for the India market?",
+    "source": "https://www.consultancy.in/news/popular"
+  },
+  {
     "headline": "Bank of Maharashtra's advances jump 27% YoY to Rs 3.06 trillion",
     "date": "2026-08-20",
     "category": "Finance",
@@ -950,6 +1062,14 @@
     "summary": "Starting August 26, 2026, Google Chat replaces its side panel with 'Ask Gemini,' letting users search Workspace data, draft updates, schedule meetings and manage tasks without leaving the conversation.",
     "angle": "A strong PM case on feature consolidation — replacing a standalone panel with an AI-native surface that unifies multiple workflows into one entry point.",
     "source": "https://workspaceupdates.googleblog.com/2026/08/ask-gemini-in-chat.html"
+  },
+  {
+    "headline": "Google's Gemini 3.5 Pro reportedly running months behind schedule",
+    "date": "2026-08-20",
+    "category": "Product Management",
+    "summary": "Google's next flagship model, Gemini 3.5 Pro, is in testing but reported to be running months behind its planned release schedule, even as rivals ship model updates more frequently.",
+    "angle": "How should a PM manage stakeholder expectations when a flagship release slips significantly behind schedule?",
+    "source": "https://aiweekly.co/issues/what-ai-models-are-actually-coming-in-the-next-six-months"
   },
   {
     "headline": "India's Consulting Market Set to Nearly Double to $17 Billion by 2031",
@@ -1048,6 +1168,14 @@
     "source": "https://www.business-standard.com/companies/news/welspun-one-logistics-investment-karnataka-tamil-nadu-warehousing-125082000729_1.html"
   },
   {
+    "headline": "WhatsApp launches usernames, letting users connect without sharing phone numbers",
+    "date": "2026-08-20",
+    "category": "Product Management",
+    "summary": "WhatsApp rolled out usernames so people can connect without exchanging phone numbers, alongside a new voice-message transcript feature that converts voice notes to text.",
+    "angle": "How does removing a core identifier like a phone number as the primary connection method change a platform's trust and safety model?",
+    "source": "https://www.jotme.io/blog/whatsapp-update"
+  },
+  {
     "headline": "Ad industry groups back Google in court fight over age-based ad targeting",
     "date": "2026-08-19",
     "category": "Marketing",
@@ -1126,6 +1254,14 @@
     "summary": "Hindustan Unilever moved the Delhi High Court against Beco’s parent Kwick Living, alleging commercial disparagement and trademark infringement over ads claiming Surf Excel and Vim contain “harmful chemicals.” The court issued notice to Beco but has not granted an injunction, and is examining whether it has jurisdiction to hear the case.",
     "angle": "A classic test of where comparative advertising ends and disparagement begins — useful for questions on brand ethics, legal risk in challenger-brand marketing, and D2C-vs-FMCG incumbent dynamics.",
     "source": "https://www.business-standard.com/companies/news/delhi-hc-seeks-beco-s-response-in-disparagement-suit-filed-by-hul-126081901204_1.html"
+  },
+  {
+    "headline": "India's trade surplus with the US shrinks to $33.8 billion as tariffs bite exports",
+    "date": "2026-08-19",
+    "category": "Finance",
+    "summary": "India's trade surplus with the US narrowed to $33.8 billion as of mid-August 2026, with exports falling for three consecutive months under US tariffs, even after they were cut to 18% from a peak of 50%.",
+    "angle": "How resilient is India's export competitiveness to sustained US tariff pressure, and which sectors are most exposed?",
+    "source": "https://www.bloomberg.com/news/newsletters/2026-08-19/trump-s-tariffs-haven-t-diminished-india-s-export-reliance-on-the-us"
   },
   {
     "headline": "Indian Bank Raises $400 Million via Its GIFT City Branch",
@@ -1238,6 +1374,14 @@
     "summary": "Zoho launched Cliq 7.0, its most comprehensive upgrade yet, adding multi-LLM AI support (Claude, Gemini, ChatGPT, Zia), no-code bots, picture-in-picture meetings, and accessibility features like sign-language mode.",
     "angle": "Illustrates platform-strategy thinking — bundling many small feature bets into one release to defend an enterprise collaboration suite against Slack/Teams.",
     "source": "https://www.zoho.com/blog/cliq/zoho-cliq-7-built-to-keep-work-flowing.html"
+  },
+  {
+    "headline": "BCG appoints Rahul Jain to lead its India organisation",
+    "date": "2026-08-18",
+    "category": "Consulting",
+    "summary": "Boston Consulting Group named Rahul Jain as the new leader of its India business, one of the firm's largest markets globally with over 460 consultants.",
+    "angle": "What does BCG's scale in India, and its position as a top recruiter at premier B-schools, mean for a new country leader's mandate?",
+    "source": "https://www.consultancy.in/firms/boston-consulting-group/news"
   },
   {
     "headline": "Beco's ad war forces HUL to defend Surf Excel, Vim",
@@ -1438,6 +1582,14 @@
     "summary": "As Blinkit leads India's quick-commerce market with 46% share versus Zepto's 22%, Zepto is leaning on category expansion — Zepto Cafe and a 10-minute pharmacy offering — to close the scale gap ahead of its IPO.",
     "angle": "A classic 'expand the basket vs defend the core' PM question for a challenger in a market it doesn't lead.",
     "source": "https://quashbugs.com/blog/blinkit-surpasses-zomato-in-quick-commerce"
+  },
+  {
+    "headline": "Apple's Siri AI delay settlement gets preliminary court approval",
+    "date": "2026-08-17",
+    "category": "Product Management",
+    "summary": "Apple's $250 million settlement over Siri AI's delayed launch received preliminary court approval, though final approval and consumer payouts won't happen until 2027.",
+    "angle": "How should a PM weigh marketing a feature before it's ready against the long-term cost to user trust and legal exposure?",
+    "source": "https://www.macrumors.com/2026/08/17/siri-ai-settlement-final-approval-in-2027/"
   },
   {
     "headline": "Ather Energy expands EV product line into Nepal with 450X Overtones",
@@ -1728,6 +1880,14 @@
     "source": "https://aninews.in/news/business/indias-growth-story-broadens-as-banks-autos-e-commerce-and-private-capital-gain-momentum-mckinsey20260816090438/"
   },
   {
+    "headline": "Bain lays off up to 250 staff in India after Tiger Global-linked work dries up",
+    "date": "2026-08-15",
+    "category": "Consulting",
+    "summary": "Bain & Company has laid off between 150 and 250 employees across its India offices, largely tied to the slowdown in work stemming from Tiger Global Management's pullback.",
+    "angle": "How exposed is a consulting firm's staffing model to a single major client's fortunes, and what does that say about client-concentration risk?",
+    "source": "https://www.consultancy.in/news/popular"
+  },
+  {
     "headline": "BCG-FICCI-IBA playbook says Indian banks must make agentic AI a core strategy",
     "date": "2026-08-15",
     "category": "Consulting",
@@ -1806,6 +1966,14 @@
     "summary": "In his Independence Day speech, PM Modi asked why no Indian consulting, legal or accounting firm has scaled to rival the global Big Four, and the Department of Expenditure has already issued a July 22 advisory nudging government procurement away from favoring large, brand-name consulting firms.",
     "angle": "Directly testable in a GD/WAT: can homegrown Indian consulting firms actually compete with McKinsey, BCG and Deloitte, and what would it take?",
     "source": "https://the420.in/india-consulting-legal-accounting-global-firms-procurement-reform/"
+  },
+  {
+    "headline": "Quick-commerce dark-store network crosses 5,600 stores as Flipkart Minutes scales up",
+    "date": "2026-08-15",
+    "category": "Operations",
+    "summary": "The combined dark-store network of Blinkit, Zepto and Swiggy Instamart passed 5,600 stores across 408 cities, while Flipkart Minutes is targeting roughly 1,500 fulfilment centres across 180+ cities.",
+    "angle": "What's the operational math (density vs. delivery radius vs. capex) that makes quick-commerce dark-store networks viable at this scale?",
+    "source": "https://www.medianama.com/2026/08/223-fmcg-companies-quick-commerce-ai/"
   },
   {
     "headline": "AI-Driven Cuts Spread Across Consulting: Bain, BCG, Deloitte, KPMG Follow McKinsey",
@@ -2320,6 +2488,14 @@
     "source": "https://splash247.com/aegis-brings-36000-tonne-ammonia-terminal-online-at-pipavav/"
   },
   {
+    "headline": "Indian government hires McKinsey and BCG to restructure two digital public entities",
+    "date": "2026-08-10",
+    "category": "Consulting",
+    "summary": "The Indian government engaged Boston Consulting Group and McKinsey to streamline the operations of two of its digital-focused public entities.",
+    "angle": "What unique challenges does public-sector consulting present versus private-sector engagements, on accountability, procurement and political risk?",
+    "source": "https://www.consultancy.in/news/popular"
+  },
+  {
     "headline": "Mahindra Group consolidates real estate, hospitality under new CSO",
     "date": "2026-08-10",
     "category": "Consulting",
@@ -2341,6 +2517,14 @@
     "category": "Product Management",
     "summary": "Meta released Muse Glimmer, an Apache 2.0-licensed 30-billion-parameter multimodal model designed to run locally on a single consumer GPU, positioning itself against OpenAI and Anthropic's closed offerings.",
     "angle": "A strong prompt on open-source vs. closed AI models as a platform strategy to compete on developer distribution.",
+    "source": "https://www.cnbc.com/2026/08/10/meta-muse-glimmer-open-weight-ai.html"
+  },
+  {
+    "headline": "Meta releases open-weight Muse Spark 1.2 to challenge OpenAI and Anthropic",
+    "date": "2026-08-10",
+    "category": "Product Management",
+    "summary": "Meta launched Muse Spark 1.2 and announced plans to open-source its weights, a direct move to compete with closed models from OpenAI and Anthropic.",
+    "angle": "What's the product strategy logic behind open-sourcing a flagship AI model instead of monetizing it directly?",
     "source": "https://www.cnbc.com/2026/08/10/meta-muse-glimmer-open-weight-ai.html"
   },
   {
@@ -2544,6 +2728,14 @@
     "source": "https://www.bloomberg.com/news/articles/2026-08-06/whatsapp-tests-age-confirmation-in-largest-market-india"
   },
   {
+    "headline": "Apple gates its overhauled Siri AI to only its newest hardware",
+    "date": "2026-08-05",
+    "category": "Product Management",
+    "summary": "Apple confirmed that Siri AI's full feature set, including customizable voice pace and expressivity, will only work on newer devices like iPhone 17 Pro, M4+ iPads and M3+ Macs, leaving older hardware behind.",
+    "angle": "When does gating a flagship AI feature to premium hardware make sense versus risking a fragmented, two-tier user base?",
+    "source": "https://9to5mac.com/2026/08/05/siri-ai-is-coming-to-newer-apple-devices-only-heres-the-full-list/"
+  },
+  {
     "headline": "Kim Kardashian's SKIMS Enters India Exclusively via Reliance Brands",
     "date": "2026-08-05",
     "category": "Marketing",
@@ -2624,6 +2816,14 @@
     "source": "https://www.forbesindia.com/article/news/rbi-mpc-live-updates-august-2026-repo-rate-sanjay-malhotra-policy-announcement-liveblog/2996705/1"
   },
   {
+    "headline": "RBI holds repo rate at 5.25%, raises FY27 growth forecast to 6.7%",
+    "date": "2026-08-05",
+    "category": "Finance",
+    "summary": "The RBI's Monetary Policy Committee unanimously kept the repo rate unchanged at 5.25% at its August 3-5 meeting, retaining a neutral stance while raising its FY27 GDP growth forecast to 6.7% and lowering the inflation projection to 5.0%.",
+    "angle": "What does a 'neutral' stance signal about the RBI's next move, and how should a bank or NBFC plan its funding costs around it?",
+    "source": "https://www.forbesindia.com/article/news/rbi-mpc-live-updates-august-2026-repo-rate-sanjay-malhotra-policy-announcement-liveblog/2996705/1"
+  },
+  {
     "headline": "RBI proposes harmonised interest-rate framework across regulated entities",
     "date": "2026-08-05",
     "category": "Finance",
@@ -2656,6 +2856,14 @@
     "source": "https://www.businesstoday.in/latest/trends/photo/zomato-swiggy-and-now-flipkart-indias-food-delivery-war-just-got-a-powerful-new-player-547178-2026-08-04"
   },
   {
+    "headline": "Flipkart enters food delivery, undercutting Zomato and Swiggy on commissions",
+    "date": "2026-08-03",
+    "category": "Marketing",
+    "summary": "Flipkart launched a food delivery app in Bengaluru charging restaurants roughly 10% commission versus Zomato and Swiggy's 16-30%, timed with a restaurant boycott over high platform fees.",
+    "angle": "How does a low-commission challenger position itself against entrenched incumbents without a price war eroding its own unit economics?",
+    "source": "https://officechai.com/startups/flipkart-announces-food-delivery-entry-zomato-falls-3-swiggy-falls-5/"
+  },
+  {
     "headline": "Rapido's Zero-Commission 'Ownly' Grabs Early Share From Swiggy-Zomato",
     "date": "2026-08-03",
     "category": "Product Management",
@@ -2669,6 +2877,14 @@
     "category": "Operations",
     "summary": "Maruti Suzuki produced a record 248,845 units in July 2026, up 33% year-on-year, as its new Plant D at Hansalpur pushed total manufacturing capacity to 29 lakh units annually.",
     "angle": "Good for capacity-planning questions — how phased plant commissioning helps a manufacturer match a demand upswing without overbuilding.",
+    "source": "https://www.business-standard.com/industry/auto/maruti-suzuki-clocks-record-monthly-production-in-july-at-248-845-units-126080200207_1.html"
+  },
+  {
+    "headline": "Maruti Suzuki posts record monthly production as new plant ramps up",
+    "date": "2026-08-02",
+    "category": "Operations",
+    "summary": "Maruti Suzuki produced a record 248,845 units in July, up 33% year-on-year, as its new Plant D at Hansalpur came online, lifting total capacity across Haryana and Gujarat to 29 lakh units a year.",
+    "angle": "How should a manufacturer sequence capacity additions against demand signals like GST-driven consumption upticks to avoid over- or under-building?",
     "source": "https://www.business-standard.com/industry/auto/maruti-suzuki-clocks-record-monthly-production-in-july-at-248-845-units-126080200207_1.html"
   },
   {
