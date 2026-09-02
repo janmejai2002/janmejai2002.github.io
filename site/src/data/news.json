@@ -1,11 +1,51 @@
 [
   {
+    "headline": "PhonePe Extends UPI to Feature Phones",
+    "date": "2026-09-02",
+    "category": "Product Management",
+    "summary": "PhonePe launched UPI 123Pay support for feature phones, enabling digital payments for users on basic 2G handsets who cannot use a smartphone UPI app.",
+    "angle": "A clean example of designing for the 'next billion users' - accessibility and inclusion as a product strategy, not just a CSR talking point.",
+    "source": "https://www.medianama.com/2026/09/223-phonepe-upi-feature-phone-123pay/"
+  },
+  {
+    "headline": "ChatGPT Adds Public Healthcare Data Tools for Clinicians",
+    "date": "2026-09-01",
+    "category": "Product Management",
+    "summary": "OpenAI rolled out 'Healthcare Public Data' for eligible Clinician users in the US - nine read-only apps that pull from sources like ClinicalTrials.gov, CMS, RxNorm and PubMed directly inside ChatGPT.",
+    "angle": "A good prompt on vertical AI product strategy - bundling trusted public data sources to build defensibility in a regulated domain like healthcare.",
+    "source": "https://www.pymnts.com/news/artificial-intelligence/2026/openai-brings-epic-health-records-to-chatgpt-for-clinicians/"
+  },
+  {
+    "headline": "E2E Networks Locks in Rs 1,000 Crore GPU Capacity Deal Through 2029",
+    "date": "2026-09-01",
+    "category": "Operations",
+    "summary": "Data-centre firm E2E Networks signed a binding term sheet with an unnamed Indian sovereign AI company to supply NVIDIA Blackwell cloud GPUs, converting an existing pay-as-you-go arrangement into a long-term commitment worth about Rs 1,000 crore.",
+    "angle": "A great example of capacity-planning trade-offs - locking in long-term contracts for revenue visibility versus staying flexible on pricing.",
+    "source": "https://www.business-standard.com/markets/capital-market-news/e2e-networks-rises-after-signing-rs-1-000-crore-ai-infrastructure-term-sheet-126090100220_1.html"
+  },
+  {
+    "headline": "India's Factory Growth Hits a 5-Year Low",
+    "date": "2026-09-01",
+    "category": "Operations",
+    "summary": "The HSBC India Manufacturing PMI fell to 52.8 in August from 53.5 in July - the weakest expansion since 2021 - as new orders and output growth slowed and manufacturing employment contracted for the first time in over two years.",
+    "angle": "A go-to macro data point for discussing demand slowdown, capacity utilization, and how manufacturers balance input costs against falling orders.",
+    "source": "https://www.business-standard.com/economy/news/manufacturing-pmi-slips-to-52-8-in-august-weakest-expansion-in-five-years-126090100258_1.html"
+  },
+  {
     "headline": "HDFC Bank succession watch builds as CEO's six-year tenure faces scrutiny",
     "date": "2026-08-31",
     "category": "Finance",
     "summary": "Discussion is building around HDFC Bank CEO Sashidhar Jagdishan's six-year tenure, marked by the HDFC merger, governance controversies and scrutiny of the bank's Dubai operations, as the board weighs succession.",
     "angle": "How should a board balance continuity versus fresh leadership at India's largest private bank after a transformative merger?",
     "source": "https://www.business-standard.com/"
+  },
+  {
+    "headline": "OpenAI Expands ChatGPT for Teachers to More US School Districts",
+    "date": "2026-08-31",
+    "category": "Product Management",
+    "summary": "OpenAI widened access to its free ChatGPT for Teachers product to additional US school districts, part of its broader push into education-specific AI tooling.",
+    "angle": "A good discussion point on freemium-to-institutional go-to-market strategy and designing for a non-paying but influential user base versus the actual buyer.",
+    "source": "https://openai.com/news/product-releases/"
   },
   {
     "headline": "Pharma stocks slide on Trump's proposed generic drug tariffs",
@@ -72,6 +112,14 @@
     "source": "https://techstartups.com/2026/08/28/top-tech-news-today-august-28-2026-alibaba-anthropic-openai-google-marvell-microsoft-waymo-more/"
   },
   {
+    "headline": "Jio Platforms Gets SEBI Nod for What Could Be India's Biggest-Ever IPO",
+    "date": "2026-08-28",
+    "category": "Finance",
+    "summary": "SEBI cleared Reliance's Jio Platforms to proceed with its IPO, filed in June, with a fresh issue of up to 270 million shares; analyst valuations range from $136-170 billion.",
+    "angle": "A classic case for discussing IPO valuation methods, telecom capital intensity, and why a cash-generative subsidiary would list separately from its parent.",
+    "source": "https://www.business-standard.com/markets/ipo/sebi-gives-green-light-to-jio-platforms-ipo-six-other-public-offers-126082800898_1.html"
+  },
+  {
     "headline": "OpenAI Details Its First Custom Inference Chip, 'Jalapeno'",
     "date": "2026-08-28",
     "category": "Product Management",
@@ -126,6 +174,14 @@
     "summary": "EY's H1 2026 report shows domestic funds now drive 74% of India's private credit deal value, with mid-sized transactions overtaking large deals for the first time, and real estate the top sector at 35% of investment.",
     "angle": "A concrete data point for discussing why domestic capital is displacing foreign private credit funds in India.",
     "source": "https://www.ey.com/en_in/newsroom/2026/08/domestic-funds-drive-indias-private-credit-market-as-investments-reach-us-dollor-3-point-5-billion-in-h1-2026-ey-report"
+  },
+  {
+    "headline": "India's Private Credit Market Holds Steady at $3.5 Billion in H1 2026",
+    "date": "2026-08-27",
+    "category": "Finance",
+    "summary": "EY's report shows India's private credit investments were roughly flat at $3.5 billion across 100+ deals in H1 2026, with real estate the top sector and domestic funds now driving 74% of deal value.",
+    "angle": "Useful for a discussion on the rise of private credit as an alternative to bank lending and NBFC financing in India.",
+    "source": "https://www.business-standard.com/companies/news/healthcare-becomes-private-credit-s-no-2-sector-with-13-share-h1-2026-ey-126082700687_1.html"
   },
   {
     "headline": "Indian banks post strong credit growth, but two challenges loom",
@@ -302,6 +358,14 @@
     "summary": "Meta has agreed to pay roughly $18 billion and adopt new teen-safety guardrails - usage limits, hidden likes, restricted filters - as part of a US settlement, with related teen-safety features already rolling out in India.",
     "angle": "Raises the question of how brands should adapt influencer and youth-targeted marketing as platforms tighten teen engagement design.",
     "source": "https://aninews.in/news/business/meta-agrees-to-payments-of-up-to-usd-18-billion-under-us-teen-safety-settlement20260826234718/"
+  },
+  {
+    "headline": "Salesforce and Anthropic Launch 'Claudeforce'",
+    "date": "2026-08-26",
+    "category": "Product Management",
+    "summary": "Salesforce and Anthropic announced an expanded partnership, Claudeforce, embedding Claude's reasoning directly into Salesforce's CRM stack; select pilot customers have access now, with open beta planned for September 2026.",
+    "angle": "A useful case on build-versus-partner decisions in enterprise AI - why a CRM leader chooses a foundation-model partner instead of building everything in-house.",
+    "source": "https://www.salesforce.com/news/press-releases/2026/08/26/salesforce-and-anthropic-announce-claudeforce/"
   },
   {
     "headline": "Swiggy Dineout Launches 'Order-in-Cinemas', Delivering Food to Your Seat",
@@ -662,6 +726,14 @@
     "summary": "SEBI is building a dedicated AI model to scan corporate filings and quarterly results for financial misstatements, extending AI surveillance beyond real-time trade monitoring.",
     "angle": "A strong regtech story on how regulators are shifting from reactive to proactive enforcement using AI.",
     "source": "https://www.business-standard.com/markets/news/from-trades-to-balance-sheets-sebi-widens-its-ai-powered-surveillance-net-126082401060_1.html"
+  },
+  {
+    "headline": "SoftBank Trims Lenskart Stake as BlackRock Buys In",
+    "date": "2026-08-24",
+    "category": "Finance",
+    "summary": "SoftBank sold nearly 2.6% of Lenskart for Rs 2,888 crore via block deal; BlackRock was among the new institutional buyers after Lenskart's inclusion in the MSCI standard index.",
+    "angle": "A good discussion starter on index-inclusion flows, early-investor exit strategy, and how newly listed unicorns transition to institutional ownership.",
+    "source": "https://www.business-standard.com/companies/news/softbank-group-pares-nearly-2-6-stake-in-lenskart-for-2-888-crore-126082401238_1.html"
   },
   {
     "headline": "Streaming giants slow subscription price hikes as ad-tiers grow",
@@ -1880,6 +1952,14 @@
     "source": "https://aninews.in/news/business/indias-growth-story-broadens-as-banks-autos-e-commerce-and-private-capital-gain-momentum-mckinsey20260816090438/"
   },
   {
+    "headline": "WhatsApp Pay Overtakes CRED and Amazon Pay in UPI Volumes",
+    "date": "2026-08-16",
+    "category": "Product Management",
+    "summary": "WhatsApp Pay processed 167.9 million UPI transactions worth Rs 12,957 crore in July, moving past CRED and Amazon Pay after NPCI lifted its user-onboarding cap.",
+    "angle": "A textbook example of how a regulatory constraint, not product quality, was the real bottleneck to growth - worth probing in a prioritization discussion.",
+    "source": "https://www.business-standard.com/finance/news/whatsapp-pay-doubles-upi-volumes-moves-ahead-of-cred-amazon-pay-126081600554_1.html"
+  },
+  {
     "headline": "Bain lays off up to 250 staff in India after Tiger Global-linked work dries up",
     "date": "2026-08-15",
     "category": "Consulting",
@@ -2024,12 +2104,28 @@
     "source": "https://aijobclock.com/blog/breaking-mckinsey-announces-major-layoffs-citing-ai-automation-for-th-2026-08-14"
   },
   {
+    "headline": "McKinsey to Cut Up to 4,000 Jobs in Its Largest Reduction Since 2008",
+    "date": "2026-08-14",
+    "category": "Consulting",
+    "summary": "McKinsey plans to cut 3,000-4,000 positions, roughly 10% of its global workforce, concentrated in non-client-facing and back-office roles, as generative AI takes over research and support work once done by junior analysts.",
+    "angle": "A direct prompt on how AI is compressing the traditional consulting staffing pyramid, and what it means for entry-level hiring at MBB firms.",
+    "source": "https://aijobclock.com/blog/breaking-mckinsey-announces-major-layoffs-citing-ai-automation-for-th-2026-08-14"
+  },
+  {
     "headline": "PhysicsWallah pivots from exam-prep to full K-12 platform",
     "date": "2026-08-14",
     "category": "Product Management",
     "summary": "PhysicsWallah's Q1 FY27 results showed revenue up 24% YoY and net loss narrowing to about Rs 88 crore, with its K-12/early-learning segment revenue jumping 88% to Rs 105 crore as the edtech firm expands beyond JEE/NEET into 16+ exam categories.",
     "angle": "A textbook TAM-expansion case — moving from a single high-intent exam-prep product to a broad K-12 platform, useful for discussing product-market widening and unit-economics trade-offs.",
     "source": "https://www.business-standard.com/companies/quarterly-results/physicswallah-q1fy27-net-loss-narrows-to-rs-88-crore-revenue-rises-24-126081401822_1.html"
+  },
+  {
+    "headline": "RBI Closes Special Dollar-Deposit Window Early After $56.8 Billion Inflow",
+    "date": "2026-08-14",
+    "category": "Finance",
+    "summary": "The RBI moved up the deadline for banks to raise FCNR(B) deposits under its forex swap facility from September 30 to August 31, after inflows crossed $56.8 billion, well ahead of target.",
+    "angle": "A concrete example of unconventional RBI tools used to defend the rupee and shore up forex reserves without touching the repo rate.",
+    "source": "https://gulfnews.com/business/banking/rbi-brings-forward-deadline-for-banks-to-raise-fcnr-deposits-after-strong-response-1.500641215"
   },
   {
     "headline": "20 Firms Bid to Build India's Rare-Earth Magnet Factories",
@@ -2198,6 +2294,14 @@
     "summary": "EY's H1 2026 deal report finds IT services M&A activity held broadly steady on volume, with cloud, data/analytics and cybersecurity targets leading deal-making even as discretionary spending stays soft.",
     "angle": "Good material on how AI is shifting the rationale for M&A from pure scale to sector depth and ecosystem strength — a useful consulting/corp-strategy talking point.",
     "source": "https://www.ey.com/en_in/newsroom/2026/08/it-services-m-a-records-449-deals-worth-us-dollor-14-point-8-billion-in-h1-2026-as-ai-reshapes-buyer-priorities"
+  },
+  {
+    "headline": "FICCI-KPMG Report Charts India's AI Skilling Roadmap",
+    "date": "2026-08-12",
+    "category": "Consulting",
+    "summary": "A new FICCI-KPMG report, 'Human Capability in the Age of AI,' argues India's competitiveness will depend on combining AI fluency with human skills like critical thinking, judgement and adaptability, launched at the 17th FICCI Global Skills Summit.",
+    "angle": "Good material for a 'future of work' question - why consulting firms frame AI adoption as a reskilling problem rather than a pure automation story.",
+    "source": "https://kpmg.com/in/en/events/2026/02/cii-future-works-summit-2026.html"
   },
   {
     "headline": "Gold rallies to $4,399/oz as rate-cut bets and central bank buying drive demand",
@@ -2624,6 +2728,14 @@
     "source": "https://www.medianews4u.com/98-of-summer-advertising-claims-failed-compliance-checks-asci/"
   },
   {
+    "headline": "ASCI Finds 98% of Summer Ad Claims Needed Correction",
+    "date": "2026-08-07",
+    "category": "Marketing",
+    "summary": "The Advertising Standards Council of India reviewed 40 seasonal ads across personal care, cooling appliances, sunscreens and wearables from April-June 2026; 21 were modified or withdrawn voluntarily and 18 were formally ruled in violation of the ad code.",
+    "angle": "Tests whether a candidate understands self-regulation versus statutory regulation in advertising, and where exaggerated performance claims cross a legal line.",
+    "source": "https://www.telugutimes.net/en/bnews/asci-report-the-heat-is-on-reveals-98-of-examined-summer-ad-claims-required-correction-355970.html"
+  },
+  {
     "headline": "Dentsu Names India Its Top APAC Growth Market",
     "date": "2026-08-07",
     "category": "Marketing",
@@ -2672,6 +2784,14 @@
     "source": "https://bostoninstituteofanalytics.org/blog/weekly-digital-marketing-news-roundup-july-31-august-7-2026-google-openai-meta-india-marketing-updates/"
   },
   {
+    "headline": "CCPA Fines Nine Platforms Over 'Dark Pattern' Practices",
+    "date": "2026-08-06",
+    "category": "Marketing",
+    "summary": "India's consumer regulator penalized nine digital platforms across e-commerce, quick commerce, aviation, edtech and cybersecurity a combined Rs 20 lakh for deceptive UX practices such as false urgency and forced actions.",
+    "angle": "A sharp prompt on ethics in growth marketing - how far can UX and conversion-rate tactics go before they become regulatory and reputational risk?",
+    "source": "https://www.aninews.in/news/business/govt-says-ccpa-imposes-rs-20-lakh-for-dark-patterns-steps-up-action-against-deceptive-online-practices20260806161831/"
+  },
+  {
     "headline": "Nielsen to acquire ad-verification firm DoubleVerify for $2.15 billion",
     "date": "2026-08-06",
     "category": "Consulting",
@@ -2710,6 +2830,14 @@
     "summary": "Governor Sanjay Malhotra confirmed a pilot of polymer currency notes beginning FY28 (1 billion pieces each of ₹10 and ₹20), with a tender for polymer substrate sheets closing August 18, 2026.",
     "angle": "Currency-management economics — why pilot cautiously rather than switch India's whole note supply to more durable polymer at once?",
     "source": "https://www.republicworld.com/business/rbi-to-roll-out-india-s-first-polymer-rs-10-rs-20-currency-notes-at-start-of-next-financial-year-2026-08-06-134110"
+  },
+  {
+    "headline": "Swiggy's Instamart Narrows Losses, Plans 75 New Dark Stores",
+    "date": "2026-08-06",
+    "category": "Operations",
+    "summary": "Instamart's contribution margin improved to -0.2% of gross order value (from -1.8%) in the June quarter, helped by ad income and repeat orders; Swiggy plans 75 new dark stores this quarter and targets Rs 10,000 crore in core earnings by FY31.",
+    "angle": "A strong case for discussing unit economics in quick commerce - how dark-store density and ad monetization change the profitability curve.",
+    "source": "https://www.business-standard.com/companies/news/swiggy-targets-10-000-cr-core-earnings-by-fy31-on-instamart-growth-126080600334_1.html"
   },
   {
     "headline": "WhatsApp starts testing age verification for Indian users ahead of DPDP Act rollout",
@@ -2984,6 +3112,14 @@
     "source": "https://www.meraev.com/blog/tata-four-new-electric-cars-2026-2027-roadmap"
   },
   {
+    "headline": "Zepto Pauses IPO, Raises Rs 1,000 Crore Pre-IPO Round at Lower Valuation",
+    "date": "2026-07-30",
+    "category": "Finance",
+    "summary": "Facing a valuation gap with domestic institutional investors, Zepto shelved its near-term IPO plan and instead raised about Rs 1,000 crore at a $4.5 billion valuation - well below the $7 billion it commanded in October 2025.",
+    "angle": "A real-world case of down-round dynamics and why founders sometimes prioritize raising domestic ownership over listing speed.",
+    "source": "https://www.business-standard.com/companies/news/zepto-pauses-ipo-to-raise-rs-1k-cr-in-pre-ipo-round-at-4-5-bn-valuation-126073001618_1.html"
+  },
+  {
     "headline": "PwC: Indian manufacturers back AI for growth but lag China on innovation",
     "date": "2026-07-29",
     "category": "Consulting",
@@ -3000,12 +3136,28 @@
     "source": "https://www.consultancy.in/news/4537/indian-manufacturers-race-ahead-on-ai-but-lag-china-on-innovation"
   },
   {
+    "headline": "Cognizant Launches Dedicated EMEA AI Unit",
+    "date": "2026-07-28",
+    "category": "Consulting",
+    "summary": "Cognizant launched a new EMEA AI Unit offering three service tiers - Foundation, Accelerate and Transform - to help enterprises move from AI strategy and prototypes to production-scale agentic AI deployments.",
+    "angle": "Useful for discussing how IT services and consulting firms are restructuring their offerings around AI maturity stages rather than traditional project scopes.",
+    "source": "https://www.hpcwire.com/aiwire/2026/07/28/cognizant-launches-emea-ai-unit-to-help-enterprises-scale-agentic-ai-adoption/"
+  },
+  {
     "headline": "Tata Motors' Sanand plants hit by Gujarat floods, supplier network disrupted",
     "date": "2026-07-27",
     "category": "Operations",
     "summary": "Torrential rain (300-500mm in 24 hours) and flooding in Gujarat halted production at Tata Motors' Sanand plants (Nexon, Tiago, Tigor, Sierra) and disrupted several component suppliers, with recovery underway.",
     "angle": "A textbook case for single-location manufacturing risk and multi-tier supplier resilience planning in operations strategy.",
     "source": "https://www.businesstoday.in/auto/story/tata-motors-flags-severe-disruption-at-sanand-plant-in-gujarat-due-to-floods-545546-2026-07-27"
+  },
+  {
+    "headline": "US Forced-Labor Tariffs on 60 Economies Take Effect",
+    "date": "2026-07-24",
+    "category": "Operations",
+    "summary": "A US Section 301 action imposing 10-12.5% duties on goods from roughly 60 economies linked to forced-labor supply chains came into force, adding to a stack of tariff actions reshaping global sourcing decisions.",
+    "angle": "Ties directly to 'China+1' sourcing strategy discussions and how compliance risk is becoming as important as cost in supplier selection.",
+    "source": "https://ustr.gov/trade-topics/presidential-tariff-actions"
   },
   {
     "headline": "Accenture Names Ex-McKinsey Partner Pradeep Prabhala to Lead India Market Unit",
@@ -3024,6 +3176,14 @@
     "source": "https://www.business-standard.com/industry/news/tata-electronics-takes-on-foxconn-in-india-s-iphone-manufacturing-126070801414_1.html"
   },
   {
+    "headline": "Accenture Edge and Google Cloud Target Mid-Market Firms with Agentic AI",
+    "date": "2026-07-07",
+    "category": "Consulting",
+    "summary": "Accenture's newly launched Accenture Edge business teamed up with Google Cloud to offer scalable agentic AI solutions aimed at mid-market companies that previously lacked access to enterprise-grade AI transformation services.",
+    "angle": "A clean example of consulting firms creating a new business line to serve a previously underserved mid-market segment.",
+    "source": "https://newsroom.accenture.com/news/2026/accenture-edge-and-google-cloud-bring-scalable-agentic-ai-solutions-to-mid-market-companies"
+  },
+  {
     "headline": "Amazon India ships AI seller assistant, built on Bedrock, Nova and Claude, to 1.7 million sellers",
     "date": "2026-06-10",
     "category": "Product Management",
@@ -3038,6 +3198,14 @@
     "summary": "PhonePe introduced SmartPages inside its Payment Gateway dashboard, letting merchants describe their product in plain language, including vernacular, and have AI generate a ready-to-use payment page.",
     "angle": "Useful to discuss cutting merchant onboarding friction as a growth lever for a payments platform, and vernacular AI as a product differentiator in India.",
     "source": "https://www.business-standard.com/amp/companies/news/phonepe-launches-ai-tool-to-help-merchants-build-payment-pages-in-minutes-126061000756_1.html"
+  },
+  {
+    "headline": "Quick-Commerce Ad Revenue Set to Near Rs 4,900 Crore in 2026",
+    "date": "2026-06-02",
+    "category": "Marketing",
+    "summary": "Blinkit, Zepto and Instamart's combined advertising revenue is projected to rise to nearly Rs 4,900 crore this year, up from about Rs 3,000 crore in 2025, as FMCG and beauty brands shift ad budgets to retail media.",
+    "angle": "A good prompt on the rise of 'retail media' as a new marketing channel and how it is reshaping FMCG media-mix decisions.",
+    "source": "https://www.storyboard18.com/brand-marketing/fmcg-brands-increase-ad-spend-on-blinkit-zepto-and-instamart-for-growth-ws-l-99756.htm"
   },
   {
     "headline": "Welspun One to nearly double its warehousing footprint",
