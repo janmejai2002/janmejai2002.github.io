@@ -1,5 +1,5 @@
 {
-  "generated": "2026-09-02T05:56:24.438Z",
+  "generated": "2026-09-02T11:35:59.086Z",
   "radar": {
     "total": 25,
     "unrated": 0,
@@ -19,17 +19,17 @@
     "newestIdea": "2026-08-28T13:14:00.000Z"
   },
   "production": {
-    "total": 32,
+    "total": 34,
     "inFlight": 0,
-    "draftReady": 4,
+    "draftReady": 6,
     "approved": 0,
     "byTrack": {
       "Technical": 13,
-      "Business": 6,
+      "Business": 8,
       "Basics": 5,
       "Case Studies": 4,
       "Talks": 4
     },
-    "newestDraft": "2026-09-01"
+    "newestDraft": "2026-09-02"
   }
 }
