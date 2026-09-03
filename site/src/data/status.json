@@ -1,8 +1,8 @@
 {
-  "generated": "2026-09-02T23:53:18.430Z",
+  "generated": "2026-09-03T04:53:21.422Z",
   "radar": {
     "total": 26,
-    "unrated": 1,
+    "unrated": 0,
     "maybeLater": 1,
     "byStatus": {
       "Radar Idea": 12,
@@ -21,7 +21,7 @@
   "production": {
     "total": 36,
     "inFlight": 0,
-    "draftReady": 7,
+    "draftReady": 5,
     "approved": 1,
     "byTrack": {
       "Technical": 13,
