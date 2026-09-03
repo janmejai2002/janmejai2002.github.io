@@ -1,22 +1,22 @@
 {
-  "generated": "2026-09-03T05:30:15.083Z",
+  "generated": "2026-09-03T05:55:35.406Z",
   "radar": {
-    "total": 26,
-    "unrated": 0,
+    "total": 27,
+    "unrated": 1,
     "maybeLater": 1,
     "byStatus": {
-      "Radar Idea": 12,
+      "Radar Idea": 13,
       "Published": 11,
       "Drafting": 3
     },
     "byTrack": {
       "Technical": 16,
       "Business": 6,
-      "Basics": 4,
+      "Basics": 5,
       "Case Studies": 0,
       "Talks": 0
     },
-    "newestIdea": "2026-09-02T20:07:00.000Z"
+    "newestIdea": "2026-09-03T05:44:00.000Z"
   },
   "production": {
     "total": 36,
