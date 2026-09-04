@@ -1,11 +1,163 @@
 [
   {
+    "headline": "OpenAI opens self-serve ChatGPT Ads to Indian businesses",
+    "date": "2026-09-04",
+    "category": "Product Management",
+    "summary": "OpenAI's self-serve Ads Manager went live in India, letting any business run its own ad campaigns inside ChatGPT with daily budgets from Rs 725, following an initial managed-ads rollout with 50+ brands via WPP and Omnicom.",
+    "angle": "A textbook monetisation-pivot case: how an AI chat product introduces ads without eroding trust in its answers, why India is a launch priority, and how this reshapes the AI-vs-search advertising battle.",
+    "source": "https://www.cnbc.com/2026/08/28/openai-strategy-india-anthropic-ipo.html"
+  },
+  {
+    "headline": "Fed rate-hike odds rise as Waller says August inflation data will be decisive",
+    "date": "2026-09-03",
+    "category": "Finance",
+    "summary": "Ahead of the September 15-16 FOMC meeting, Fed Governor Christopher Waller said the August inflation report will largely determine whether he backs a rate hike, with futures pricing roughly a 60% chance of a 25bp hike.",
+    "angle": "A classic macro question on Fed policy spillover to EM currencies and capital flows, and how Indian markets and the rupee could react to a September Fed hike.",
+    "source": "https://www.local10.com/business/2026/09/03/will-federal-reserve-hike-rates-later-this-month-waller-muddies-the-outlook/"
+  },
+  {
+    "headline": "Goyal: India-US trade deal to be finalised only once tariff advantage is secured",
+    "date": "2026-09-03",
+    "category": "Finance",
+    "summary": "Commerce Minister Piyush Goyal said India will sign the bilateral trade agreement with the US only once Washington grants Indian exporters a preferential tariff rate versus competitors, noting exports still grew despite tariff pressure.",
+    "angle": "Directly testable on India's trade negotiation strategy, the current US tariff on Indian goods, and how export-led sectors are being protected during negotiations.",
+    "source": "https://indiawest.com/goyal-india-will-seal-us-trade-deal-once-tariff-advantage-is-secured/"
+  },
+  {
+    "headline": "Rupee jumps to 2-month high as RBI's FX defences and inflows kick in",
+    "date": "2026-09-03",
+    "category": "Finance",
+    "summary": "The rupee opened about 67 paise stronger at 94.30/USD, its best level since late June, as rising forex reserves and strong dollar inflows eased fears of sharp depreciation after months of pressure from oil prices and capital outflows.",
+    "angle": "Tests understanding of RBI's currency-defence toolkit (spot sales, forex swaps, NOP caps) and the link between forex reserves, oil prices and the rupee.",
+    "source": "https://www.businesstoday.in/latest/economy/story/rupee-jumps-67-paise-to-open-at-94-30-against-the-us-dollar-highest-level-in-two-months-553025-2026-09-03"
+  },
+  {
+    "headline": "TSMC ramps up equipment orders as AI chip demand outpaces supply-chain planning",
+    "date": "2026-09-03",
+    "category": "Operations",
+    "summary": "TSMC is doubling down on equipment purchases as surging AI-driven chip demand outstrips the semiconductor supply chain's capacity-planning assumptions, per industry reporting from Taiwan.",
+    "angle": "A capacity-planning/demand-forecasting story from the world's top foundry - useful for discussing bullwhip effects and capacity-vs-demand mismatches in high-tech supply chains.",
+    "source": "https://www.digitimes.com/news/a20260903PD217/tsmc-equipment-demand-supply-chain-taiwan.html"
+  },
+  {
+    "headline": "WhatsApp launches in-app bill payments across India",
+    "date": "2026-09-03",
+    "category": "Product Management",
+    "summary": "Meta rolled out a Bill Payments feature inside WhatsApp for Indian users, letting them pay electricity, gas, water, FASTag, insurance and loan bills via 22,722 billers on the government-backed Bharat Connect (BBPS) network, accessed through a new rupee icon on the home screen.",
+    "angle": "A classic platform-strategy case: why a messaging app expands into bill payments, how it competes with PhonePe/GPay's existing utility features, and what bundling financial services does to engagement and stickiness.",
+    "source": "https://www.businesstoday.in/technology/news/story/whatsapp-gets-a-new-bill-payment-feature-in-india-what-you-can-pay-and-how-it-works-553093-2026-09-03"
+  },
+  {
+    "headline": "Adani Ports posts record 50 MMT cargo in a single month",
+    "date": "2026-09-02",
+    "category": "Operations",
+    "summary": "Adani Ports and SEZ handled a record 50 million tonnes of cargo in August 2026, up 19% year-on-year, with container volumes up about 15% YoY across its domestic and international port network.",
+    "angle": "Illustrates capacity utilisation and port-led logistics growth, relevant to questions on India's logistics-cost reduction and EXIM trade infrastructure.",
+    "source": "https://www.socialnews.xyz/2026/09/02/adani-ports-handles-record-50-mmt-cargo-in-august-2026-logs-19-pc-growth/"
+  },
+  {
+    "headline": "Axe brings back 2000s body sprays, pokes fun at its own past",
+    "date": "2026-09-02",
+    "category": "Marketing",
+    "summary": "Unilever's Axe launched an 'Afterdate' social-first campaign and re-released three 2000s-era fragrances in 'Y2K Reboot' packaging, using self-deprecating humour about its old over-spraying image to reposition the brand as more mature.",
+    "angle": "A textbook case of nostalgia marketing and legacy-brand reinvention for Gen Z, equally relevant to Indian legacy FMCG brands trying to stay culturally current.",
+    "source": "https://www.marketingdive.com/news/axe-vies-for-more-mature-brand-positioning-while-nodding-to-y2k-roots/829426/"
+  },
+  {
+    "headline": "Byju Raveendran offers Aakash shares to settle Qatar Holding's $235 million claim",
+    "date": "2026-09-02",
+    "category": "Consulting",
+    "summary": "Byju's founder proposed relinquishing his beneficial interest in 17.89 million Aakash Educational Services shares, about 5.7% equity, to partially settle a Singapore arbitration award exceeding $235 million owed to Qatar's sovereign investor.",
+    "angle": "A live case study in founder governance failure and cross-border arbitration enforcement, showing how a collapsed edtech giant is still being unwound asset-by-asset.",
+    "source": "https://inc42.com/buzz/byju-raveendran-offers-aakash-shares-to-settle-qatar-holdings-235-mn-claim/"
+  },
+  {
+    "headline": "Fintech CheQ becomes title sponsor of Mumbai's chess franchise",
+    "date": "2026-09-02",
+    "category": "Marketing",
+    "summary": "Credit-card management platform CheQ signed a multi-year title sponsorship with Global Chess League franchise Mumba Masters, rebranded 'CheQ Mumba Masters' from Season 4, featuring stars like Magnus Carlsen and Viswanathan Anand.",
+    "angle": "A fintech using a niche, strategy-associated sport for brand positioning and premium-audience targeting instead of mass-reach cricket sponsorship - good for a sponsorship ROI and brand-fit discussion.",
+    "source": "https://www.adgully.com/post/20023/mumba-masters-signs-cheq-as-title-sponsor-in-multi-year-deal"
+  },
+  {
+    "headline": "Google avoids forced breakup of its ad-tech business",
+    "date": "2026-09-02",
+    "category": "Marketing",
+    "summary": "A US federal judge ruled that Google, despite being found guilty of illegally monopolizing digital ad technology, will not be forced to sell its AdX ad exchange, ordering behavioral remedies like data-sharing and equal access for rival ad-tech firms instead.",
+    "angle": "Classic 'structural vs behavioral remedy' antitrust debate that extends naturally to India's own CCI probes into Google/Meta ad dominance and what it means for publishers and advertisers.",
+    "source": "https://www.cnbc.com/2026/09/02/google-defeats-us-bid-to-force-ad-tech-sale.html"
+  },
+  {
+    "headline": "Google ships Gemini 3.8 Flash, its third Flash model in six weeks",
+    "date": "2026-09-02",
+    "category": "Product Management",
+    "summary": "Google released Gemini 3.8 Flash, a faster, cheaper multimodal model with a 1M-token context window that Google says beats its predecessor on every published benchmark, at unchanged introductory pricing through end of 2026.",
+    "angle": "Useful for discussing rapid iterative product releases versus big-bang launches, and pricing-for-adoption strategy in a fast-commoditising AI model market.",
+    "source": "https://9to5google.com/2026/09/02/gemini-3-8-flash-launch/"
+  },
+  {
+    "headline": "Indian firms lean harder into supply-chain diversification, DP World report finds",
+    "date": "2026-09-02",
+    "category": "Operations",
+    "summary": "DP World's Global Trade Observatory India Country Report 2026, surveying 451 senior supply-chain and logistics executives, found Indian businesses prioritising supplier diversification, higher inventory buffers and friend-shoring more than global peers.",
+    "angle": "Directly usable for GD/PI questions on supply-chain resilience strategies - diversification, inventory buffering, friend-shoring - in the Indian context.",
+    "source": "https://www.itln.in/logistics/indian-businesses-diversify-supply-chains-to-build-resilience-1360479"
+  },
+  {
+    "headline": "Indian marketers map out festive-season game plan at Social Samosa camp",
+    "date": "2026-09-02",
+    "category": "Marketing",
+    "summary": "20+ marketers from brands like Dabur, Akasa Air, Cars24, Libas and Keventers, plus Kantar and Taboola, discussed balancing cultural relevance, regional targeting, real-time media allocation and creator marketing to win India's 2026 festive season.",
+    "angle": "Maps directly to a likely GD/PI prompt - 'how should Indian brands plan festive marketing' - with real named brands and frameworks to cite.",
+    "source": "https://www.socialsamosa.com/festive-marketing-camp/marketers-what-takes-win-India-festive-season-12484443"
+  },
+  {
     "headline": "PhonePe Extends UPI to Feature Phones",
     "date": "2026-09-02",
     "category": "Product Management",
     "summary": "PhonePe launched UPI 123Pay support for feature phones, enabling digital payments for users on basic 2G handsets who cannot use a smartphone UPI app.",
     "angle": "A clean example of designing for the 'next billion users' - accessibility and inclusion as a product strategy, not just a CSR talking point.",
     "source": "https://www.medianama.com/2026/09/223-phonepe-upi-feature-phone-123pay/"
+  },
+  {
+    "headline": "Scapia adds fingerprint/Face ID login to skip UPI PIN for small payments",
+    "date": "2026-09-02",
+    "category": "Product Management",
+    "summary": "Travel-focused fintech Scapia launched biometric authentication on Scapia Pay, letting users approve UPI payments under Rs 10,000 with a fingerprint or Face ID scan instead of entering their UPI PIN.",
+    "angle": "A good prompt on friction-reduction vs security tradeoffs in payment UX, and how a niche fintech differentiates on product experience rather than scale.",
+    "source": "https://businessnewsthisweek.com/technology/scapia-pay-launches-biometric-authentication-for-pin-free-upi-payments/"
+  },
+  {
+    "headline": "SEBI moves closer to clearing India's biggest-ever IPO: the NSE listing",
+    "date": "2026-09-02",
+    "category": "Finance",
+    "summary": "SEBI issued observations on the National Stock Exchange's draft IPO papers, an offer-for-sale of about 14.9 crore shares at a roughly Rs 5 lakh crore valuation, with the exchange's bankers now expected to respond before a final go-ahead.",
+    "angle": "A live case study on the IPO regulatory process, exchange self-listing conflicts of interest, and capital market development.",
+    "source": "https://www.thehansindia.com/business/market-compass/sebi-awaits-clarification-from-nse-ipo-bankers-after-observations-1116897"
+  },
+  {
+    "headline": "Taiwan honours Micron, GlobalWafers at chip summit as global semiconductor cooperation deepens",
+    "date": "2026-09-02",
+    "category": "Operations",
+    "summary": "At the Semicon Network Summit 2026, Taiwan's President recognised leaders of GlobalWafers and Micron Technology for strengthening global semiconductor supply-chain cooperation, with the summit focused on AI chips, silicon photonics and supply-chain resilience.",
+    "angle": "A good entry point for questions on the geopolitics of the chip supply chain, Taiwan's centrality, and how India's semiconductor ambitions fit into this global network.",
+    "source": "https://www.globenewswire.com/news-release/2026/09/02/3354875/0/en/semicon-network-summit-2026-advances-global-chip-collaboration-in-the-ai-era.html"
+  },
+  {
+    "headline": "Anthropic ships Claude Fable 5.1 with breaking API changes",
+    "date": "2026-09-01",
+    "category": "Product Management",
+    "summary": "Anthropic released Claude Fable 5.1, keeping headline pricing flat but cutting cache-read costs 75%, while introducing breaking API changes for developers building on the platform.",
+    "angle": "Illustrates the tension between shipping model improvements fast and maintaining backward compatibility for enterprise developers - a real tradeoff between innovation velocity and platform stability.",
+    "source": "https://tech-ish.com/2026/09/01/anthropic-releases-claude-fable-5-1-and-mythos-5-1-here-is-what-changed/"
+  },
+  {
+    "headline": "Bank unions call nationwide strikes over five-day week, pay incentives",
+    "date": "2026-09-01",
+    "category": "Finance",
+    "summary": "The United Forum of Bank Unions, representing over 90% of India's banking workforce, announced a one-day strike on September 11 and a further three-day strike from September 28-30, demanding a five-day banking week and a rollback of a revised incentive scheme they call discriminatory.",
+    "angle": "A good HR/industrial-relations angle for finance interviews: labour relations in PSU banks, incentive-design fairness, and the operational impact of banking disruptions.",
+    "source": "https://www.deccanchronicle.com/nation/bank-unions-announce-sept-11-strike-cite-unresolved-issues-1984020"
   },
   {
     "headline": "ChatGPT Adds Public Healthcare Data Tools for Clinicians",
@@ -24,6 +176,14 @@
     "source": "https://www.business-standard.com/markets/capital-market-news/e2e-networks-rises-after-signing-rs-1-000-crore-ai-infrastructure-term-sheet-126090100220_1.html"
   },
   {
+    "headline": "India notifies full Rs 1.27 lakh crore Semicon 2.0 scheme across six pillars",
+    "date": "2026-09-01",
+    "category": "Consulting",
+    "summary": "The government issued the complete gazette notification for Semicon 2.0, covering chip design, fabs, materials/machines, OSAT/ATMP, R&D and talent development, and will form a panel to identify strategically important chips.",
+    "angle": "A strong topic on industrial policy as a strategic enabler - how targeted incentives shape a nascent sector's global competitiveness and supply-chain security ambitions.",
+    "source": "https://www.digitimes.com/news/a20260901PR200/semicon-design-policy-talent-chip-supply.html"
+  },
+  {
     "headline": "India's Factory Growth Hits a 5-Year Low",
     "date": "2026-09-01",
     "category": "Operations",
@@ -32,12 +192,68 @@
     "source": "https://www.business-standard.com/economy/news/manufacturing-pmi-slips-to-52-8-in-august-weakest-expansion-in-five-years-126090100258_1.html"
   },
   {
+    "headline": "India's manufacturing PMI slips to a 5-year low",
+    "date": "2026-09-01",
+    "category": "Operations",
+    "summary": "The HSBC/S&P Global India Manufacturing PMI fell to 52.8 in August 2026 from 53.5 in July, the slowest pace of factory expansion in five years, as softer domestic demand, weaker export momentum and cautious hiring weighed on manufacturers, though still above the 50-mark growth line.",
+    "angle": "Tests whether candidates can read a leading operations indicator and connect it to real drivers (demand, exports, hiring) rather than just quoting the number.",
+    "source": "https://www.business-standard.com/economy/news/india-manufacturing-pmi-august-2026-hsbc-demand-jobs-126090100499_1.html"
+  },
+  {
+    "headline": "JioHotstar goes global, launching in UK, Canada and Singapore",
+    "date": "2026-09-01",
+    "category": "Consulting",
+    "summary": "Reliance's JioHotstar replaced the legacy Hotstar app in three international markets with a redesigned platform targeting the South Asian diaspora while courting a broader global audience for Indian content.",
+    "angle": "A good prompt on international market-entry strategy and diaspora-led globalisation of an Indian media/tech platform, plus content-led differentiation versus Netflix and Amazon Prime abroad.",
+    "source": "https://www.business-standard.com/industry/news/jiohotstar-enters-uk-canada-and-singapore-as-it-expands-global-footprint-126090101465_1.html"
+  },
+  {
+    "headline": "Legal-tech platform Lawyered launches celebrity-led 'ChallanPay - Aaram Se' campaign",
+    "date": "2026-09-01",
+    "category": "Marketing",
+    "summary": "Lawyered's ChallanPay unveiled a humour-led brand film starring actor Pratik Gandhi at Ideabaaz Startup Fest 2026, shifting from pure performance marketing to long-term brand recall for its traffic-challan resolution platform.",
+    "angle": "A useful example of a startup moving from performance marketing to brand-building, and using celebrity storytelling to normalise a mundane, negative consumer behaviour.",
+    "source": "https://aninews.in/news/business/lawyered-launches-challanpay-aaram-se-campaign-featuring-pratik-gandhi-to-promote-smarter-road-behaviour20260901173918/"
+  },
+  {
+    "headline": "New EV localisation rules hit e-bus and e-truck makers as China's magnet crunch bites",
+    "date": "2026-09-01",
+    "category": "Operations",
+    "summary": "Stricter domestic-manufacturing requirements for traction motors in electric buses and trucks under the PM E-DRIVE scheme took effect from September 1, but SIAM has sought a fresh extension citing continued disruption to rare-earth magnet supply from China's export curbs.",
+    "angle": "A live case of policy-driven localisation colliding with a single-source supply chain risk - good for questions on China+1, PLI/localisation trade-offs and supplier dependency.",
+    "source": "https://www.autopunditz.com/post/new-ev-localisation-rules-india-september-2026"
+  },
+  {
+    "headline": "upGrad completes $200M acquisition of Unacademy, an edtech down-round consolidation",
+    "date": "2026-09-01",
+    "category": "Consulting",
+    "summary": "upGrad finalised its all-share-swap acquisition of Unacademy at just over $200 million, about 94% below Unacademy's 2021 peak valuation of $3.44 billion, with angel investors cashed out at closing.",
+    "angle": "Classic case-interview fodder on distressed M&A and industry consolidation: why an acquirer buys a struggling rival via stock swap, and what a 94% valuation haircut says about the post-pandemic edtech model.",
+    "source": "https://techcrunch.com/2026/09/01/indias-unacademy-sells-to-rival-upgrad-for-206m-about-94-less-than-its-peak-valuation/"
+  },
+  {
+    "headline": "Aon to buy USI Insurance from KKR for $17 billion, one of 2026's largest PE exits",
+    "date": "2026-08-31",
+    "category": "Consulting",
+    "summary": "Insurance broker Aon agreed to acquire USI Insurance Services from private equity firm KKR in an all-cash $17 billion deal, giving KKR roughly 6x its original invested equity from 2017.",
+    "angle": "Useful for discussing PE value-creation playbooks, strategic-buyer versus sponsor economics, and consolidation in professional/financial services distribution.",
+    "source": "https://www.bloomberg.com/news/articles/2026-08-31/aon-agrees-to-buy-usi-insurance-from-kkr-in-17-billion-deal"
+  },
+  {
     "headline": "HDFC Bank succession watch builds as CEO's six-year tenure faces scrutiny",
     "date": "2026-08-31",
     "category": "Finance",
     "summary": "Discussion is building around HDFC Bank CEO Sashidhar Jagdishan's six-year tenure, marked by the HDFC merger, governance controversies and scrutiny of the bank's Dubai operations, as the board weighs succession.",
     "angle": "How should a board balance continuity versus fresh leadership at India's largest private bank after a transformative merger?",
     "source": "https://www.business-standard.com/"
+  },
+  {
+    "headline": "India's Q1 FY27 GDP growth surges to 7.8%, beating RBI estimates",
+    "date": "2026-08-31",
+    "category": "Finance",
+    "summary": "MoSPI data showed India's economy grew 7.8% in the April-June quarter of FY27, up from 6.9% a year earlier and above the RBI's 7% estimate, driven by 9.2% manufacturing growth and an 11.9% jump in investment demand.",
+    "angle": "A classic prompt on whether India is decoupling from global headwinds (US tariffs, oil shocks) and what's driving the manufacturing-investment led growth mix.",
+    "source": "https://www.business-standard.com/economy/news/india-s-gdp-growth-accelerates-to-7-8-in-q1-fy27-despite-west-asia-shocks-126083100761_1.html"
   },
   {
     "headline": "OpenAI Expands ChatGPT for Teachers to More US School Districts",
@@ -54,6 +270,14 @@
     "summary": "Shares of Glenmark, Biocon and Aurobindo fell around 3%, and Dr Reddy's Labs hit a 52-week low, after President Trump signalled a new tariff plan targeting generic drug imports.",
     "angle": "How exposed is India's generics-led pharma export model to US trade policy risk, and how might companies hedge it?",
     "source": "https://www.business-standard.com/"
+  },
+  {
+    "headline": "PhonePe brings UPI to India's 200 million feature-phone users",
+    "date": "2026-08-31",
+    "category": "Product Management",
+    "summary": "PhonePe launched 'UPI 123Pay' for feature phones, using an SMS-based system that works even on limited 2G connectivity, pre-bundled on select Nokia, HMD, Lava and Itel devices, making it the first major UPI app to serve non-smartphone users.",
+    "angle": "A strong case on market segmentation and financial inclusion - building a stripped-down product for the 'next billion' users, and the tradeoffs of investing engineering effort in a shrinking device category.",
+    "source": "https://www.medianama.com/2026/09/223-phonepe-upi-feature-phone-123pay/"
   },
   {
     "headline": "RBI moves up FCNR(B) deposit deadline after $56.8 billion forex inflows",
