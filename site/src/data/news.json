@@ -1,11 +1,43 @@
 [
   {
+    "headline": "Android Phones in India Start Switching from Google Assistant to Gemini",
+    "date": "2026-09-04",
+    "category": "Product Management",
+    "summary": "Google began auto-switching Android phones in India from Google Assistant to Gemini on September 4, with the AI assistant supporting English and nine Indian languages as it becomes the default voice experience.",
+    "angle": "Ideal for a question on default-setting as a product strategy - how owning the OS lets Google force a platform-wide migration.",
+    "source": "https://www.careerindia.com/news/google-assistant-to-gemini-switch-india-2026-update-android-settings-011-65087.html"
+  },
+  {
     "headline": "OpenAI opens self-serve ChatGPT Ads to Indian businesses",
     "date": "2026-09-04",
     "category": "Product Management",
     "summary": "OpenAI's self-serve Ads Manager went live in India, letting any business run its own ad campaigns inside ChatGPT with daily budgets from Rs 725, following an initial managed-ads rollout with 50+ brands via WPP and Omnicom.",
     "angle": "A textbook monetisation-pivot case: how an AI chat product introduces ads without eroding trust in its answers, why India is a launch priority, and how this reshapes the AI-vs-search advertising battle.",
     "source": "https://www.cnbc.com/2026/08/28/openai-strategy-india-anthropic-ipo.html"
+  },
+  {
+    "headline": "RBI to Lock Up ₹7 Trillion for 30 Days as Liquidity Glut Surges",
+    "date": "2026-09-04",
+    "category": "Finance",
+    "summary": "The RBI will conduct a ₹7 trillion (~$74 billion), 30-day variable-rate reverse repo auction to absorb a record liquidity surplus fuelled by its push to attract dollar inflows from overseas Indians.",
+    "angle": "Good test of whether a candidate can connect liquidity management tools to broader forex and NRI-deposit policy.",
+    "source": "https://www.bloomberg.com/news/articles/2026-09-04/rbi-moves-to-longer-cash-drain-as-india-liquidity-surges"
+  },
+  {
+    "headline": "Ultrahuman Raises $70 Million to Scale Its Health-Intelligence Platform",
+    "date": "2026-09-04",
+    "category": "Product Management",
+    "summary": "Wearable-health startup Ultrahuman raised a $70 million round led by Qualcomm Ventures, with participation from Labcorp and Blume Ventures, to expand its health-intelligence platform beyond its ring and band devices.",
+    "angle": "A good prompt on product-led growth in hardware-plus-software startups - how a wearable maker turns a device into a broader health platform.",
+    "source": "https://startuptalky.com/news/daily-indian-funding-roundup-key-news-4-september-2026/"
+  },
+  {
+    "headline": "Banks Slash FCNR Deposit Rates as Government Hedging Subsidy Ends",
+    "date": "2026-09-03",
+    "category": "Finance",
+    "summary": "HDFC Bank, ICICI Bank, SBI and others sharply cut interest rates on FCNR deposits from September 1, after the government withdrew a special hedging subsidy on 3-5 year foreign-currency deposits.",
+    "angle": "Tests understanding of how a subsidy withdrawal ripples into bank pricing and NRI-deposit inflows.",
+    "source": "https://www.businesstoday.in/personal-finance/story/major-banks-slash-fcnr-deposit-rates-from-september-1-hdfc-bank-sbi-pnb-axis-bank-rates-compared-552992-2026-09-03"
   },
   {
     "headline": "Fed rate-hike odds rise as Waller says August inflation data will be decisive",
@@ -24,6 +56,14 @@
     "source": "https://indiawest.com/goyal-india-will-seal-us-trade-deal-once-tariff-advantage-is-secured/"
   },
   {
+    "headline": "PepsiCo Drops Omnicom, Hands Global Media to Publicis Without a Pitch",
+    "date": "2026-09-03",
+    "category": "Marketing",
+    "summary": "PepsiCo moved its entire global media account, worth about $3.4 billion a year, to Publicis Groupe without running a competitive pitch, ending Omnicom's 25-year hold on the business; Omnicom shares fell 5% on the news.",
+    "angle": "Tests whether a candidate understands how AI and data-integration capability, not creative pitches, now decide big media reviews.",
+    "source": "https://adage.com/agencies/accounts-in-review/aa-pepsico-shifts-global-media-to-publicis-from-omnicom/"
+  },
+  {
     "headline": "Rupee jumps to 2-month high as RBI's FX defences and inflows kick in",
     "date": "2026-09-03",
     "category": "Finance",
@@ -40,6 +80,14 @@
     "source": "https://www.digitimes.com/news/a20260903PD217/tsmc-equipment-demand-supply-chain-taiwan.html"
   },
   {
+    "headline": "Warner Music India Bets on Regional Folk with 'Maati' Season 2",
+    "date": "2026-09-03",
+    "category": "Marketing",
+    "summary": "Warner Music India launched season two of its folk-music franchise \"Maati\" on September 3, opening with a Sufi qawwali and releasing tracks across eight Indian languages after season one crossed 78 million streams.",
+    "angle": "A ready example for discussing regional-language content strategy and localisation in India's multilingual media market.",
+    "source": "https://variety.com/2026/music/global/warner-music-india-maati-season-2-1236849988/"
+  },
+  {
     "headline": "WhatsApp launches in-app bill payments across India",
     "date": "2026-09-03",
     "category": "Product Management",
@@ -54,6 +102,14 @@
     "summary": "Adani Ports and SEZ handled a record 50 million tonnes of cargo in August 2026, up 19% year-on-year, with container volumes up about 15% YoY across its domestic and international port network.",
     "angle": "Illustrates capacity utilisation and port-led logistics growth, relevant to questions on India's logistics-cost reduction and EXIM trade infrastructure.",
     "source": "https://www.socialnews.xyz/2026/09/02/adani-ports-handles-record-50-mmt-cargo-in-august-2026-logs-19-pc-growth/"
+  },
+  {
+    "headline": "Adobe Quietly Acquires Bengaluru AI Startup Rilo for Agentic Marketing",
+    "date": "2026-09-02",
+    "category": "Product Management",
+    "summary": "Adobe acquired Rilo, a Bengaluru startup founded by two IIT Bombay graduates whose AI agents handled prospecting, campaign research and social content for marketing teams; Rilo's standalone product will shut down as its team and IP move to Adobe.",
+    "angle": "A clean \"build vs. buy\" case - why a large software company would acquire a sub-one-year-old startup instead of building agentic features in-house.",
+    "source": "https://www.business-standard.com/companies/news/adobe-acquires-indian-ai-automation-startup-rilo-to-boost-agentic-push-126090201601_1.html"
   },
   {
     "headline": "Axe brings back 2000s body sprays, pokes fun at its own past",
@@ -112,6 +168,14 @@
     "source": "https://www.socialsamosa.com/festive-marketing-camp/marketers-what-takes-win-India-festive-season-12484443"
   },
   {
+    "headline": "JioHotstar Goes Global, Launches in UK, Canada and Singapore",
+    "date": "2026-09-02",
+    "category": "Marketing",
+    "summary": "JioStar's JioHotstar platform launched internationally on September 2 with new quarterly subscription plans, live Bigg Boss voting across six languages, and early access to shows ahead of Indian TV broadcast, targeting the Indian diaspora.",
+    "angle": "Useful for a question on diaspora monetisation and how a domestically dominant platform designs pricing and content for an international launch.",
+    "source": "https://www.broadbandtvnews.com/2026/09/04/jiohotstar-launches-in-uk-canada-and-singapore/"
+  },
+  {
     "headline": "PhonePe Extends UPI to Feature Phones",
     "date": "2026-09-02",
     "category": "Product Management",
@@ -142,6 +206,14 @@
     "summary": "At the Semicon Network Summit 2026, Taiwan's President recognised leaders of GlobalWafers and Micron Technology for strengthening global semiconductor supply-chain cooperation, with the summit focused on AI chips, silicon photonics and supply-chain resilience.",
     "angle": "A good entry point for questions on the geopolitics of the chip supply chain, Taiwan's centrality, and how India's semiconductor ambitions fit into this global network.",
     "source": "https://www.globenewswire.com/news-release/2026/09/02/3354875/0/en/semicon-network-summit-2026-advances-global-chip-collaboration-in-the-ai-era.html"
+  },
+  {
+    "headline": "WhatsApp Launches Bill Payments in India, Taking On PhonePe and Google Pay",
+    "date": "2026-09-02",
+    "category": "Product Management",
+    "summary": "WhatsApp rolled out bill payments in India on September 2, giving its 500-million-plus users access to over 22,000 billers across 30 categories via the Bharat Connect (BBPS) network, with payment support for UPI, debit and credit cards.",
+    "angle": "A great case for \"why would a messaging app add a payments feature\" - tests understanding of platform expansion and monetising a captive user base.",
+    "source": "https://www.techtimes.com/articles/326720/20260904/whatsapp-targets-google-pay-recurring-bill-payments-indias-bbps-network.htm"
   },
   {
     "headline": "Anthropic ships Claude Fable 5.1 with breaking API changes",
@@ -200,6 +272,14 @@
     "source": "https://www.business-standard.com/economy/news/india-manufacturing-pmi-august-2026-hsbc-demand-jobs-126090100499_1.html"
   },
   {
+    "headline": "India's Manufacturing PMI Slips to a Five-Year Low",
+    "date": "2026-09-01",
+    "category": "Operations",
+    "summary": "India's manufacturing PMI fell to 52.8 in August from 53.5 in July - the weakest expansion in factory activity in five years - as softer domestic demand, slowing exports and cautious hiring weighed on producers.",
+    "angle": "Tests a candidate's ability to read a leading indicator and connect softening PMI to demand, export and hiring decisions on the shop floor.",
+    "source": "https://www.business-standard.com/economy/news/india-manufacturing-pmi-august-2026-hsbc-demand-jobs-126090100499_1.html"
+  },
+  {
     "headline": "JioHotstar goes global, launching in UK, Canada and Singapore",
     "date": "2026-09-01",
     "category": "Consulting",
@@ -216,12 +296,28 @@
     "source": "https://aninews.in/news/business/lawyered-launches-challanpay-aaram-se-campaign-featuring-pratik-gandhi-to-promote-smarter-road-behaviour20260901173918/"
   },
   {
+    "headline": "Maruti Crosses 1 Million Sales in FY27 as Tata Motors PV Sales Jump 56%",
+    "date": "2026-09-01",
+    "category": "Operations",
+    "summary": "Maruti Suzuki crossed one million cumulative sales in the first five months of FY27, while Tata Motors' passenger-vehicle sales surged 56% year-on-year in August 2026, led by strong domestic and export demand.",
+    "angle": "A good numbers-heavy prompt on how production planning and dealer inventory respond to a sudden demand upswing.",
+    "source": "https://aninews.in/news/business/maruti-crosses-1-million-sales-in-fy27-as-hyundai-tata-motors-report-strong-august-numbers20260901130954/"
+  },
+  {
     "headline": "New EV localisation rules hit e-bus and e-truck makers as China's magnet crunch bites",
     "date": "2026-09-01",
     "category": "Operations",
     "summary": "Stricter domestic-manufacturing requirements for traction motors in electric buses and trucks under the PM E-DRIVE scheme took effect from September 1, but SIAM has sought a fresh extension citing continued disruption to rare-earth magnet supply from China's export curbs.",
     "angle": "A live case of policy-driven localisation colliding with a single-source supply chain risk - good for questions on China+1, PLI/localisation trade-offs and supplier dependency.",
     "source": "https://www.autopunditz.com/post/new-ev-localisation-rules-india-september-2026"
+  },
+  {
+    "headline": "RBI Holds Repo Rate at 5.25%, Raises FY27 Growth Forecast to 6.7%",
+    "date": "2026-09-01",
+    "category": "Finance",
+    "summary": "The Reserve Bank of India kept its policy repo rate unchanged at 5.25% with a neutral stance, while raising its FY27 real GDP growth forecast to 6.7% and lowering its inflation projection to 5%.",
+    "angle": "Classic monetary-policy question - candidates should be able to explain why a central bank holds rates even as it turns more optimistic on growth.",
+    "source": "https://tradingeconomics.com/india/interest-rate/news/523674"
   },
   {
     "headline": "upGrad completes $200M acquisition of Unacademy, an edtech down-round consolidation",
@@ -336,6 +432,14 @@
     "source": "https://techstartups.com/2026/08/28/top-tech-news-today-august-28-2026-alibaba-anthropic-openai-google-marvell-microsoft-waymo-more/"
   },
   {
+    "headline": "Government Clears RBI's Plan to Pilot Plastic ₹10 and ₹20 Notes",
+    "date": "2026-08-28",
+    "category": "Finance",
+    "summary": "The Indian government approved an RBI proposal to field-trial polymer banknotes in ₹10 and ₹20 denominations, with a pilot targeted for the start of FY28 after climate and durability testing.",
+    "angle": "Opens a discussion on currency-management economics - why durability gains from polymer notes matter most for high-circulation, low-value denominations.",
+    "source": "https://www.karmactive.com/rbi-polymer-currency-notes-fy28/"
+  },
+  {
     "headline": "Jio Platforms Gets SEBI Nod for What Could Be India's Biggest-Ever IPO",
     "date": "2026-08-28",
     "category": "Finance",
@@ -358,6 +462,22 @@
     "summary": "OpenAI's India MD said advertising on ChatGPT will not shape the model's responses, advertisers will not get access to user conversations, and users retain control over personalisation.",
     "angle": "Raises the trust-versus-monetisation tension every AI platform now faces — can a candidate argue whether this promise is credible?",
     "source": "https://bestmediainfo.com/mediainfo/advertising/top-advertising-marketing-and-media-news-headlines-of-today-august-28-2026-12446393"
+  },
+  {
+    "headline": "RBI Seeks NBFC Feedback on Revolving Credit Rules, Flags Digital Lending Risks",
+    "date": "2026-08-28",
+    "category": "Finance",
+    "summary": "RBI's draft directions would restrict most NBFCs to offering only term loans (with an exception for RBI-authorised credit-card issuers), while the regulator pressed lenders to tighten compliance and internal audits as digital lending grows.",
+    "angle": "A strong prompt on regulatory tightening in shadow banking and why product-design restrictions follow periods of rapid, unchecked growth.",
+    "source": "https://telanganatoday.com/rbi-seeks-nbfc-feedback-on-draft-rules-for-revolving-credit-facilities"
+  },
+  {
+    "headline": "TVS Motor Names Peyman Kargar as CEO to Drive Global Expansion",
+    "date": "2026-08-28",
+    "category": "Operations",
+    "summary": "TVS Motor Company named Peyman Kargar, currently its President of International Business, as its next CEO effective January 2027, succeeding K N Radhakrishnan as the company pushes further into overseas markets.",
+    "angle": "Useful for a succession-planning question - why a company picks an international-business veteran to lead its next growth phase.",
+    "source": "https://www.business-standard.com/companies/news/companies-tvs-motor-names-peyman-kargar-as-new-ceo-to-succeed-k-n-radhakrishnan-126082800402_1.html"
   },
   {
     "headline": "AM/NS India Arm Wins 30-Year Concession to Mechanise Paradip Port Berth",
@@ -1312,6 +1432,14 @@
     "source": "https://www.business-standard.com/markets/capital-market-news/aditya-birla-capital-forays-into-gold-loan-biz-126082000212_1.html"
   },
   {
+    "headline": "Avanade Names Ex-Cognizant India Head Achal Kataria as India CEO",
+    "date": "2026-08-20",
+    "category": "Consulting",
+    "summary": "Avanade appointed Achal Kataria, formerly Vice President and Country Head of India at Cognizant, as Managing Director and CEO of its India business effective immediately.",
+    "angle": "Useful for a leadership-hire question - what a three-decade technology-services veteran brings to a consulting-and-implementation firm chasing growth in India.",
+    "source": "https://www.peoplematters.in/news/leadership/avanade-appoints-former-cognizant-leader-achal-kataria-as-india-ceo-51562"
+  },
+  {
     "headline": "Bain & Company names Parijat Ghosh as India managing partner",
     "date": "2026-08-20",
     "category": "Consulting",
@@ -1342,6 +1470,14 @@
     "summary": "The Enforcement Directorate froze bank deposits worth Rs 51.75 crore linked to a UK property allegedly used to divert funds, part of a probe into Rs 34,615 crore of alleged losses to a 17-bank consortium.",
     "angle": "Useful anchor for discussing loan-fraud detection and consortium-lending risk in NBFCs.",
     "source": "https://www.freepressjournal.in/business/ed-freezes-rs-5175-crore-bank-deposit-in-34615-crore-dhfl-fraud-case"
+  },
+  {
+    "headline": "EY: India's Private Credit Market Hits $3.5 Billion in H1 2026, Domestic Funds Now Dominant",
+    "date": "2026-08-20",
+    "category": "Consulting",
+    "summary": "India's private credit market saw $3.5 billion invested across 102 deals in H1 2026, with domestic funds now accounting for about 74% of deal value as real estate and healthcare led sector activity.",
+    "angle": "A strong data point for questions on alternative financing and why domestic capital is displacing global funds in private credit.",
+    "source": "https://www.ey.com/en_in/newsroom/2026/08/domestic-funds-drive-indias-private-credit-market-as-investments-reach-us-dollor-3-point-5-billion-in-h1-2026-ey-report"
   },
   {
     "headline": "Forbes names Accenture, Deloitte, McKinsey top global consulting firms for 2026",
@@ -1720,6 +1856,14 @@
     "source": "https://www.business-standard.com/economy/news/fm-asks-psbs-to-boost-farm-credit-for-pulses-oilseeds-cut-imports-126081801411_1.html"
   },
   {
+    "headline": "Gujarat Gets Two New Chip Plants as India Readies for Semicon India 2026",
+    "date": "2026-08-18",
+    "category": "Operations",
+    "summary": "The Union Cabinet approved two new semiconductor units in Gujarat - Crystal Matrix and Suchi Semicon - worth a combined ₹3,936 crore, ahead of a PM Modi-hosted CEO roundtable on September 16 and the Semicon India 2026 summit (September 17-19).",
+    "angle": "A strong prompt on industrial-policy execution - how PLI-style incentives translate into plant approvals and supply-chain localisation.",
+    "source": "https://www.techtimes.com/articles/322695/20260802/indias-12-chip-sites-show-assembly-works-semicon-20-bets-materials-machines.htm"
+  },
+  {
     "headline": "ICRA: India's Manufacturing Growth May Slow to Near Two-Year Low in Q1 FY27",
     "date": "2026-08-18",
     "category": "Operations",
@@ -1773,6 +1917,14 @@
     "category": "Product Management",
     "summary": "OpenAI rolled out ChatGPT for Teens (ages 13–17) with age-prediction auto-routing and blocks on self-harm and romantic/sexual conversations, years after teens had already been using the adult product.",
     "angle": "A strong case on designing for a vulnerable user segment — trading capability for safety, and building age-detection into the core product rather than bolting it on.",
+    "source": "https://techcrunch.com/2026/08/18/openai-launches-a-safer-chatgpt-for-teens-years-after-teens-started-using-it/"
+  },
+  {
+    "headline": "OpenAI Launches ChatGPT for Teens with Parental Controls",
+    "date": "2026-08-18",
+    "category": "Product Management",
+    "summary": "OpenAI rolled out \"ChatGPT for Teens\" globally from August 18, adding stronger safety guardrails and parental controls that let parents set \"Quiet Hours\" and receive alerts in high-risk situations.",
+    "angle": "Tests a candidate's grasp of trust-and-safety as a product requirement, and how age-gating features get retrofitted after a product scales.",
     "source": "https://techcrunch.com/2026/08/18/openai-launches-a-safer-chatgpt-for-teens-years-after-teens-started-using-it/"
   },
   {
@@ -3272,6 +3424,14 @@
     "source": "https://tradingeconomics.com/india/manufacturing-pmi/news/535817"
   },
   {
+    "headline": "India's Management Consulting Market Set to Nearly Double by 2031",
+    "date": "2026-08-01",
+    "category": "Consulting",
+    "summary": "India's management consulting services market is estimated at $9.36 billion in 2026 and is projected to reach $17 billion by 2031, growing at a 12.68% CAGR as digital-transformation and BRSR-compliance work drive demand.",
+    "angle": "Good context for \"why is consulting demand growing in India\" - ties AI adoption and new sustainability-reporting rules to advisory spend.",
+    "source": "https://www.mordorintelligence.com/industry-reports/india-management-consulting-services-market"
+  },
+  {
     "headline": "McKinsey names a new country boss for Germany and Austria",
     "date": "2026-08-01",
     "category": "Consulting",
@@ -3408,6 +3568,14 @@
     "source": "https://newsroom.accenture.com/news/2026/accenture-edge-and-google-cloud-bring-scalable-agentic-ai-solutions-to-mid-market-companies"
   },
   {
+    "headline": "India's GCC Hiring Hits a Record 5.1 Lakh Jobs, AI Skills Now Dominate",
+    "date": "2026-07-01",
+    "category": "Consulting",
+    "summary": "India's Global Capability Centre hiring is projected to reach 510,452 jobs in 2026 - a 3.4x rise since 2021 - with 64% of new roles now requiring AI, data-science or automation skills even as overall hiring softened.",
+    "angle": "A must-know data point for any consulting interview on India's GCC boom and the shift in skills employers now demand.",
+    "source": "https://www.businesstoday.in/jobs/story/at-5-1-lakh-jobs-indias-global-capability-centre-hiring-boom-scales-new-peak-540328-2026-07-01"
+  },
+  {
     "headline": "Amazon India ships AI seller assistant, built on Bedrock, Nova and Claude, to 1.7 million sellers",
     "date": "2026-06-10",
     "category": "Product Management",
@@ -3494,6 +3662,14 @@
     "summary": "PwC India’s “AI Edge for Viksit Bharat” framework estimates AI could add $550 billion in value across agriculture, healthcare, energy, education and manufacturing by 2035, built on real pilots like AI-driven TB detection and smart metering.",
     "angle": "Useful for macro/GD questions on AI-and-development — moving the conversation from productivity buzzwords to sector-specific, India-relevant economic modelling.",
     "source": "https://www.consultancy.in/news/4549/ai-could-unlock-550-billion-in-value-for-india-by-2035-says-pwc"
+  },
+  {
+    "headline": "BCG: AI Work Now Drives a Quarter of Its Global Revenue",
+    "date": "2026-01-15",
+    "category": "Consulting",
+    "summary": "BCG's AI Radar 2026 report found that AI-related consulting work generated roughly $3.6 billion - about 25% - of its 2025 revenue, based on a survey of 2,360 executives across 16 markets.",
+    "angle": "A sharp illustration of how AI is reshaping consulting firms' own revenue mix and fee models, not just client work.",
+    "source": "https://www.bcg.com/publications/2026/as-ai-investments-surge-ceos-take-the-lead"
   },
   {
     "headline": "Consulting keeps winning the campus placement race at IIMs",
