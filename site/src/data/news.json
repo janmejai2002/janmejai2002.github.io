@@ -1,11 +1,59 @@
 [
   {
+    "headline": "CBI books Essel Group's Subhash Chandra in ₹1,322-crore fraud case",
+    "date": "2026-09-05",
+    "category": "Finance",
+    "summary": "The CBI registered a case against Essel Group chairman Subhash Chandra and three others over allegedly inflated net-worth declarations used to secure ₹1,322 crore in loans from LIC Housing Finance, which later defaulted.",
+    "angle": "A live corporate-governance and NBFC-lending case — red flags in promoter-guarantee-backed lending and why net-worth verification failed.",
+    "source": "https://www.freepressjournal.in/business/cbi-registers-case-against-subhash-chandra-over-alleged-1322-crore-lic-housing-finance-loan-fraud"
+  },
+  {
+    "headline": "NSE gets SEBI approval for a ~₹30,000 crore IPO",
+    "date": "2026-09-05",
+    "category": "Finance",
+    "summary": "SEBI cleared NSE's long-pending IPO, potentially one of India's biggest-ever listings; existing shareholders including SBI will sell ~14.9 crore shares, with subscription expected around September 15 and listing around September 25.",
+    "angle": "A rare case of a stock exchange itself going public — market infrastructure, regulatory approval timelines, and conflicts of interest when an exchange lists its own shares.",
+    "source": "https://newstodaynet.com/2026/09/05/nse-gets-sebi-nod-for-rs-30000-cr-ipo-one-of-indias-largest-public-issues/"
+  },
+  {
     "headline": "Android Phones in India Start Switching from Google Assistant to Gemini",
     "date": "2026-09-04",
     "category": "Product Management",
     "summary": "Google began auto-switching Android phones in India from Google Assistant to Gemini on September 4, with the AI assistant supporting English and nine Indian languages as it becomes the default voice experience.",
     "angle": "Ideal for a question on default-setting as a product strategy - how owning the OS lets Google force a platform-wide migration.",
     "source": "https://www.careerindia.com/news/google-assistant-to-gemini-switch-india-2026-update-android-settings-011-65087.html"
+  },
+  {
+    "headline": "Coca-Cola India signs Diljit Dosanjh and Janhvi Kapoor for new campaign",
+    "date": "2026-09-04",
+    "category": "Marketing",
+    "summary": "Coca-Cola India launched a new campaign fronted by Diljit Dosanjh and Janhvi Kapoor, timed to a film release on September 4 and conceived by WPP's VML.",
+    "angle": "Celebrity-led tentpole marketing tied to cultural moments — how FMCG majors pick endorsement pairings to maximise reach across demographics.",
+    "source": "https://www.indianretailer.com/brandlicense/archives/news/coca-cola-india-launches-new-campaign-diljit-dosanjh-and-janhvi-kapoor.n5214"
+  },
+  {
+    "headline": "Google pushes Gemini deeper into agentic, production workloads",
+    "date": "2026-09-04",
+    "category": "Product Management",
+    "summary": "Google positioned Gemini 3.1 Pro around reasoning, long-context and agent-style workflows, supporting text, image, audio, video and code with up to a 1-million-token context window.",
+    "angle": "Why \"context window\" and agentic-workflow support are becoming key product differentiators in the LLM race, versus raw benchmark scores.",
+    "source": "https://techstartups.com/2026/09/04/top-tech-news-today-september-4-2026-amazon-google-microsoft-nvidia-openai-tesla-more/"
+  },
+  {
+    "headline": "Microsoft undercuts rivals with MAI-Transcribe-2, cuts price 72%",
+    "date": "2026-09-04",
+    "category": "Product Management",
+    "summary": "Microsoft released MAI-Transcribe-2, a speech-to-text model priced at $0.10 per audio hour (down 72% from its predecessor) and positioned as faster and cheaper than OpenAI, Google and ElevenLabs, supporting 60 languages.",
+    "angle": "A pricing-strategy case — when a core AI capability commoditises this fast, is aggressive price-cutting a moat or a race to the bottom?",
+    "source": "https://techstartups.com/2026/09/04/top-tech-news-today-september-4-2026-amazon-google-microsoft-nvidia-openai-tesla-more/"
+  },
+  {
+    "headline": "OpenAI launches GPT-6 Astra, its most capable model yet",
+    "date": "2026-09-04",
+    "category": "Product Management",
+    "summary": "OpenAI released GPT-6 Astra, claiming new benchmarks in software engineering, computer use and science tasks; the model also crossed OpenAI's \"Critical\" cybersecurity capability threshold, meaning it can find and exploit unknown vulnerabilities without human direction.",
+    "angle": "How should a PM balance shipping frontier capability against safety thresholds that the product itself just crossed?",
+    "source": "https://techstartups.com/2026/09/04/top-tech-news-today-september-4-2026-amazon-google-microsoft-nvidia-openai-tesla-more/"
   },
   {
     "headline": "OpenAI opens self-serve ChatGPT Ads to Indian businesses",
@@ -30,6 +78,14 @@
     "summary": "Wearable-health startup Ultrahuman raised a $70 million round led by Qualcomm Ventures, with participation from Labcorp and Blume Ventures, to expand its health-intelligence platform beyond its ring and band devices.",
     "angle": "A good prompt on product-led growth in hardware-plus-software startups - how a wearable maker turns a device into a broader health platform.",
     "source": "https://startuptalky.com/news/daily-indian-funding-roundup-key-news-4-september-2026/"
+  },
+  {
+    "headline": "Warner Bros. Discovery to shut discovery+ standalone app in India from November 3",
+    "date": "2026-09-04",
+    "category": "Marketing",
+    "summary": "WBD will discontinue the discovery+ app and website in India from November 3, 2026; new subscriptions stopped from September 3, and content moves to partner platforms like Prime Video Channels, JioTV and Tata Play Binge.",
+    "angle": "A classic direct-to-consumer streaming retreat — whether owning a standalone app still makes sense for niche content brands versus distributing through aggregator platforms.",
+    "source": "https://www.storyboard18.com/media-and-entertainment/warner-bros-discovery-to-shut-down-discovery-standalone-app-in-india-from-november-3-109678.htm"
   },
   {
     "headline": "Banks Slash FCNR Deposit Rates as Government Hedging Subsidy Ends",
@@ -120,12 +176,28 @@
     "source": "https://www.marketingdive.com/news/axe-vies-for-more-mature-brand-positioning-while-nodding-to-y2k-roots/829426/"
   },
   {
+    "headline": "BCG says India's auto-component sector has a decade-defining opportunity",
+    "date": "2026-09-02",
+    "category": "Consulting",
+    "summary": "BCG's new India report, \"Beyond Resilience: Built to Endure,\" argues the auto-component sector must convert current cyclical momentum into resilient, repeatable growth to build lasting competitive advantage.",
+    "angle": "Good sector-deep-dive fodder — what \"scale, momentum and optionality\" concretely means for a mid-sized auto-component supplier deciding where to invest next.",
+    "source": "https://www.bcg.com/india/latest-insights"
+  },
+  {
     "headline": "Byju Raveendran offers Aakash shares to settle Qatar Holding's $235 million claim",
     "date": "2026-09-02",
     "category": "Consulting",
     "summary": "Byju's founder proposed relinquishing his beneficial interest in 17.89 million Aakash Educational Services shares, about 5.7% equity, to partially settle a Singapore arbitration award exceeding $235 million owed to Qatar's sovereign investor.",
     "angle": "A live case study in founder governance failure and cross-border arbitration enforcement, showing how a collapsed edtech giant is still being unwound asset-by-asset.",
     "source": "https://inc42.com/buzz/byju-raveendran-offers-aakash-shares-to-settle-qatar-holdings-235-mn-claim/"
+  },
+  {
+    "headline": "EY: Indian enterprises are building \"agentic AI\" digital workforces",
+    "date": "2026-09-02",
+    "category": "Consulting",
+    "summary": "EY's \"AIdea of India: Outlook 2026\" report finds 24% of Indian business leaders are already deploying agentic AI, with hybrid pods of humans and AI agents starting to expand capacity without adding headcount.",
+    "angle": "A live prompt on consulting's own product — how advisory firms sell and govern autonomous AI agents inside client organisations.",
+    "source": "https://www.ey.com/en_in/insights/ai/agentic-ai-india/agents-and-digital-workforce"
   },
   {
     "headline": "Fintech CheQ becomes title sponsor of Mumbai's chess franchise",
@@ -182,6 +254,14 @@
     "summary": "PhonePe launched UPI 123Pay support for feature phones, enabling digital payments for users on basic 2G handsets who cannot use a smartphone UPI app.",
     "angle": "A clean example of designing for the 'next billion users' - accessibility and inclusion as a product strategy, not just a CSR talking point.",
     "source": "https://www.medianama.com/2026/09/223-phonepe-upi-feature-phone-123pay/"
+  },
+  {
+    "headline": "Reddit launches 15-second \"Engaged Video Views\" for advertisers globally",
+    "date": "2026-09-02",
+    "category": "Marketing",
+    "summary": "Reddit rolled out a new video ad optimisation goal that counts a view only after 15 seconds of watch time, aimed at brand storytelling and longer-form creative; alpha testers saw a 51% jump in 15-second view-through rate.",
+    "angle": "Platforms are redefining \"engagement\" as attention becomes scarce — a good prompt on how marketers should choose KPIs for brand versus performance campaigns.",
+    "source": "https://bestmediainfo.com/interviews/digital/reddit-launches-15-second-engaged-video-views-advertisers-globally-12482146"
   },
   {
     "headline": "Scapia adds fingerprint/Face ID login to skip UPI PIN for small payments",
@@ -248,6 +328,22 @@
     "source": "https://www.business-standard.com/markets/capital-market-news/e2e-networks-rises-after-signing-rs-1-000-crore-ai-infrastructure-term-sheet-126090100220_1.html"
   },
   {
+    "headline": "Flipkart Pay Later goes live on PhonePe",
+    "date": "2026-09-01",
+    "category": "Product Management",
+    "summary": "Pre-approved Flipkart users can now activate \"Flipkart Pay Later\" on PhonePe, letting them use the credit line to pay at millions of PhonePe merchants beyond Flipkart's own platform.",
+    "angle": "A cross-platform product-integration case — how two Walmart-owned products decide what to bundle versus keep separate, and who owns the customer relationship.",
+    "source": "https://www.phonepe.com/press/flipkart-pay-later-now-available-on-phonepe/"
+  },
+  {
+    "headline": "GST collections hit record ₹1.99 lakh crore in August",
+    "date": "2026-09-01",
+    "category": "Finance",
+    "summary": "Gross GST collections rose 14.8% year-on-year to nearly ₹2 lakh crore in August, driven by a 29% jump in import IGST revenue, even as refunds surged 68%.",
+    "angle": "Does rising GST revenue reflect genuine consumption strength, or mostly import growth and better refund processing?",
+    "source": "https://www.business-standard.com/economy/news/gst-collections-august-2026-gross-revenue-imports-refunds-126090100504_1.html"
+  },
+  {
     "headline": "India notifies full Rs 1.27 lakh crore Semicon 2.0 scheme across six pillars",
     "date": "2026-09-01",
     "category": "Consulting",
@@ -267,6 +363,14 @@
     "headline": "India's manufacturing PMI slips to a 5-year low",
     "date": "2026-09-01",
     "category": "Operations",
+    "summary": "India's manufacturing PMI fell to 52.8 in August, a five-year low, as new business and output grew at their slowest pace in five years even though the index stayed above the 50 growth mark.",
+    "angle": "A clean demand-side operations prompt — what falling new-order growth (versus a still-positive PMI) tells you about capacity-planning decisions.",
+    "source": "https://www.business-standard.com/economy/news/india-manufacturing-pmi-august-2026-hsbc-demand-jobs-126090100499_1.html"
+  },
+  {
+    "headline": "India's manufacturing PMI slips to a 5-year low",
+    "date": "2026-09-01",
+    "category": "Operations",
     "summary": "The HSBC/S&P Global India Manufacturing PMI fell to 52.8 in August 2026 from 53.5 in July, the slowest pace of factory expansion in five years, as softer domestic demand, weaker export momentum and cautious hiring weighed on manufacturers, though still above the 50-mark growth line.",
     "angle": "Tests whether candidates can read a leading operations indicator and connect it to real drivers (demand, exports, hiring) rather than just quoting the number.",
     "source": "https://www.business-standard.com/economy/news/india-manufacturing-pmi-august-2026-hsbc-demand-jobs-126090100499_1.html"
@@ -278,6 +382,14 @@
     "summary": "India's manufacturing PMI fell to 52.8 in August from 53.5 in July - the weakest expansion in factory activity in five years - as softer domestic demand, slowing exports and cautious hiring weighed on producers.",
     "angle": "Tests a candidate's ability to read a leading indicator and connect softening PMI to demand, export and hiring decisions on the shop floor.",
     "source": "https://www.business-standard.com/economy/news/india-manufacturing-pmi-august-2026-hsbc-demand-jobs-126090100499_1.html"
+  },
+  {
+    "headline": "India's Q1 FY27 GDP grows 7.8%, beats RBI's forecast",
+    "date": "2026-09-01",
+    "category": "Finance",
+    "summary": "India's economy expanded 7.8% year-on-year in April-June 2026, beating the RBI's 7% estimate, with manufacturing (9.2%) and services (10%) leading growth while agriculture and mining lagged.",
+    "angle": "Which sectors are actually driving India's growth story, and whether headline GDP prints match on-ground demand signals like PMI.",
+    "source": "https://www.econiti.org/daily-news/2026-09-01/2026-09-01-india-q1-fy27-gdp-7-8-percent/"
   },
   {
     "headline": "JioHotstar goes global, launching in UK, Canada and Singapore",
@@ -310,6 +422,14 @@
     "summary": "Stricter domestic-manufacturing requirements for traction motors in electric buses and trucks under the PM E-DRIVE scheme took effect from September 1, but SIAM has sought a fresh extension citing continued disruption to rare-earth magnet supply from China's export curbs.",
     "angle": "A live case of policy-driven localisation colliding with a single-source supply chain risk - good for questions on China+1, PLI/localisation trade-offs and supplier dependency.",
     "source": "https://www.autopunditz.com/post/new-ev-localisation-rules-india-september-2026"
+  },
+  {
+    "headline": "PhonePe launches UPI 123Pay for feature phones",
+    "date": "2026-09-01",
+    "category": "Product Management",
+    "summary": "PhonePe rolled out UPI 123Pay support for feature phones, letting users with limited 2G connectivity make UPI payments without a smartphone or internet.",
+    "angle": "A strong \"designing for the next billion users\" case — what trade-offs does a PM make building for low-bandwidth, non-smartphone segments in a market like India?",
+    "source": "https://www.medianama.com/2026/09/223-phonepe-upi-feature-phone-123pay/"
   },
   {
     "headline": "RBI Holds Repo Rate at 5.25%, Raises FY27 Growth Forecast to 6.7%",
@@ -702,6 +822,14 @@
     "summary": "Meta has agreed to pay roughly $18 billion and adopt new teen-safety guardrails - usage limits, hidden likes, restricted filters - as part of a US settlement, with related teen-safety features already rolling out in India.",
     "angle": "Raises the question of how brands should adapt influencer and youth-targeted marketing as platforms tighten teen engagement design.",
     "source": "https://aninews.in/news/business/meta-agrees-to-payments-of-up-to-usd-18-billion-under-us-teen-safety-settlement20260826234718/"
+  },
+  {
+    "headline": "Quick-commerce ad rates jump 30-40% this festive season",
+    "date": "2026-08-26",
+    "category": "Marketing",
+    "summary": "Premium placements on quick-commerce apps are getting 30-40% pricier through Diwali as FMCG and D2C brands shift 15-20% more of their digital budgets away from Meta and Google toward quick commerce, chasing 3-8% conversion rates.",
+    "angle": "A live case on channel-mix trade-offs — why brands pay a premium for lower-funnel, high-intent inventory during the festive quarter.",
+    "source": "https://www.storyboard18.com/advertising/festive-rush-pushes-quick-commerce-ad-rates-up-30-40-as-brands-shift-more-digital-spend-108755.htm"
   },
   {
     "headline": "Salesforce and Anthropic Launch 'Claudeforce'",
@@ -2472,6 +2600,14 @@
     "source": "https://bestmediainfo.com/mediainfo/advertising/top-advertising-marketing-and-media-news-headlines-of-today-august-14-2026-12258931"
   },
   {
+    "headline": "McKinsey to cut 10% of global workforce as AI eats junior research work",
+    "date": "2026-08-14",
+    "category": "Consulting",
+    "summary": "McKinsey plans to cut roughly 3,000-4,000 jobs (about 10% of staff), concentrated in back-office, research and junior analyst roles, in its largest downsizing in 16 years, citing generative AI automating work that used to take analyst teams weeks.",
+    "angle": "The starkest case yet of AI hollowing out the traditional \"pyramid\" staffing model at MBB firms — what it means for how junior consultants build differentiated skills.",
+    "source": "https://www.hrkatha.com/news/layoff/mckinsey-trims-global-workforce-by-10-in-largest-downsizing-exercise/"
+  },
+  {
     "headline": "McKinsey to Cut 10% of Its Global Workforce, Its Largest Reduction Since 2008",
     "date": "2026-08-14",
     "category": "Consulting",
@@ -3232,6 +3368,14 @@
     "source": "https://www.bloomberg.com/news/articles/2026-08-06/whatsapp-tests-age-confirmation-in-largest-market-india"
   },
   {
+    "headline": "Zomato wishes rival Swiggy happy birthday without naming it",
+    "date": "2026-08-06",
+    "category": "Marketing",
+    "summary": "Zomato ran a minimalist newspaper ad in Swiggy's signature orange, thanking \"the other food delivery app\" for pushing it to be better, without mentioning Swiggy by name.",
+    "angle": "A textbook case of rival-baiting and real-time marketing for free media coverage — when it builds brand warmth versus when it looks gimmicky.",
+    "source": "https://www.afaqs.com/news/print/zomato-wishes-swiggy-on-its-birthday-with-a-cheeky-newspaper-ad-12234573"
+  },
+  {
     "headline": "Apple gates its overhauled Siri AI to only its newest hardware",
     "date": "2026-08-05",
     "category": "Product Management",
@@ -3310,6 +3454,14 @@
     "summary": "The RBI's MPC unanimously kept the repo rate unchanged at 5.25% in its August policy review, while raising India's GDP growth projection to 6.7% on resilient domestic demand and robust exports.",
     "angle": "Staple GD/PI topic — link a \"neutral\" policy stance with June's above-target inflation print and the growth-inflation trade-off the RBI is managing.",
     "source": "https://www.outlookmoney.com/banking/rbi-mpc-august-2026-meeting-live-updates-governor-sanjay-malhotra-speech-repo-rate-inflation-gdp-news"
+  },
+  {
+    "headline": "RBI holds repo rate at 5.25% for fourth straight review",
+    "date": "2026-08-05",
+    "category": "Finance",
+    "summary": "The RBI's Monetary Policy Committee kept the repo rate unchanged at 5.25% with a neutral stance, while raising its FY27 GDP growth forecast to 6.7% and lowering the inflation projection to 5%.",
+    "angle": "A staple GD/PI topic — why hold rates despite strong growth, and what \"wanting greater clarity on inflation\" signals about the RBI's reaction function.",
+    "source": "https://www.forbesindia.com/article/news/rbi-mpc-live-updates-august-2026-repo-rate-sanjay-malhotra-policy-announcement-liveblog/2996705/1"
   },
   {
     "headline": "RBI holds repo rate at 5.25%, lifts growth forecast",
@@ -3432,6 +3584,14 @@
     "source": "https://www.mordorintelligence.com/industry-reports/india-management-consulting-services-market"
   },
   {
+    "headline": "India's warehousing leasing rises 15% YoY in H1 2026",
+    "date": "2026-08-01",
+    "category": "Operations",
+    "summary": "Industrial and warehousing leasing across India's eight primary markets rose 15% year-on-year to 36.8 million sq ft in H1 2026, per Knight Frank, despite elevated freight costs and geopolitical disruption.",
+    "angle": "A solid supply-chain-infrastructure prompt — what's structurally driving warehousing demand (e-commerce, manufacturing, 3PL) even as freight costs rise?",
+    "source": "https://www.indiasnews.net/news/279253971/india-warehousing-market-set-for-strong-h2-growth-as-manufacturing-3rd-party-logistics-drive-demand-knight-frank"
+  },
+  {
     "headline": "McKinsey names a new country boss for Germany and Austria",
     "date": "2026-08-01",
     "category": "Consulting",
@@ -3520,6 +3680,14 @@
     "source": "https://www.consultancy.in/news/4537/indian-manufacturers-race-ahead-on-ai-but-lag-china-on-innovation"
   },
   {
+    "headline": "Trump's tariff plan pushes Indian pharma to rethink its manufacturing footprint",
+    "date": "2026-07-29",
+    "category": "Operations",
+    "summary": "The US plans a 100% tariff on generic drug imports from August 2028 (200% after) unless makers build US plants; India supplies 35% of US generic imports, with Lupin, Aurobindo and Dr Reddy's facing the highest exposure.",
+    "angle": "A textbook reshoring/operations-strategy question — when does relocating manufacturing closer to the end market beat cost arbitrage, and how should firms sequence capacity investment under tariff uncertainty?",
+    "source": "https://www.forbesindia.com/article/news/deep-dive/trumps-pharma-tariff-how-exposed-is-indian-pharma/2996458/1"
+  },
+  {
     "headline": "Cognizant Launches Dedicated EMEA AI Unit",
     "date": "2026-07-28",
     "category": "Consulting",
@@ -3552,6 +3720,14 @@
     "source": "https://www.bwpeople.in/article/pradeep-prabhala-to-lead-accenture-s-india-business-from-september-615866"
   },
   {
+    "headline": "TCS to cut ~12,200 jobs in an AI-led \"future-ready\" overhaul",
+    "date": "2026-07-20",
+    "category": "Operations",
+    "summary": "TCS announced plans to cut about 2% of its global workforce, largely in middle and senior management, as part of a restructuring toward AI-driven service delivery.",
+    "angle": "How AI changes headcount planning and org design in services delivery, and the risk of hollowing out experienced middle-management layers.",
+    "source": "https://finance.yahoo.com/news/tcs-cut-more-12-000-091131053.html"
+  },
+  {
     "headline": "Tata Electronics Overtakes Foxconn in India iPhone Export Value",
     "date": "2026-07-08",
     "category": "Operations",
@@ -3574,6 +3750,14 @@
     "summary": "India's Global Capability Centre hiring is projected to reach 510,452 jobs in 2026 - a 3.4x rise since 2021 - with 64% of new roles now requiring AI, data-science or automation skills even as overall hiring softened.",
     "angle": "A must-know data point for any consulting interview on India's GCC boom and the shift in skills employers now demand.",
     "source": "https://www.businesstoday.in/jobs/story/at-5-1-lakh-jobs-indias-global-capability-centre-hiring-boom-scales-new-peak-540328-2026-07-01"
+  },
+  {
+    "headline": "Accenture's guidance cut triggers a Nifty IT selloff",
+    "date": "2026-06-19",
+    "category": "Consulting",
+    "summary": "Accenture narrowed its revenue growth guidance and issued soft Q4 commentary, triggering a selloff that dragged Nifty IT down as much as 6%, with Infosys and Mphasis falling 8% and TCS nearing a 6-year low.",
+    "angle": "A go-to example of how one bellwether's guidance reprices an entire sector — correlated demand risk across Indian IT services clients.",
+    "source": "https://www.cnbc.com/2026/06/19/india-it-stocks-fall-accenture-cuts-revenue-forecast.html"
   },
   {
     "headline": "Amazon India ships AI seller assistant, built on Bedrock, Nova and Claude, to 1.7 million sellers",
