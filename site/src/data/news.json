@@ -1,5 +1,37 @@
 [
   {
+    "headline": "CCPA fines McVitie's maker ₹1 lakh over 'Wholewheat' claim",
+    "date": "2026-09-07",
+    "category": "Marketing",
+    "summary": "The Central Consumer Protection Authority fined Pladis India (United Biscuits) ₹1 lakh for marketing its McVitie's Marie biscuits as 'Wholewheat' when they contained only 19.5% whole wheat flour, rejecting the company's trademark defence.",
+    "angle": "A sharp prompt on FMCG label claims, health-washing, and where trademark rights end and consumer-protection law begins.",
+    "source": "https://bestmediainfo.com/mediainfo/advertising/ccpa-fines-pladis-india-rs-1-lakh-over-misleading-wholewheat-claim-on-mcvities-biscuits-12501269"
+  },
+  {
+    "headline": "Income Tax raids on Dentsu India wrap up after six days",
+    "date": "2026-09-07",
+    "category": "Marketing",
+    "summary": "Income Tax officials concluded a six-day search of Dentsu India's Mumbai, Delhi and Gurgaon offices, examining overseas payments and the flow of money through the ad group's influencer marketing operations.",
+    "angle": "Tests whether a candidate can discuss regulatory risk in agency-client-influencer payment chains and why global ad networks keep facing India tax scrutiny.",
+    "source": "https://bestmediainfo.com/mediainfo/advertising/dentsu-tax-search-wraps-up-after-six-days-royalty-influencer-payments-under-lens-12501375"
+  },
+  {
+    "headline": "Lokmat's Karan Darda elected President of Indian Newspaper Society",
+    "date": "2026-09-07",
+    "category": "Marketing",
+    "summary": "Karan Rajendra Darda of Lokmat Media was elected President of the Indian Newspaper Society for 2026-27 at its AGM, succeeding Vivek Gupta, with Tanmay Maheshwari named Deputy President.",
+    "angle": "Useful for discussing print media's continued institutional relevance and leadership succession in legacy media businesses even as ad dollars shift digital.",
+    "source": "https://www.adgully.com/post/20234/karan-rajendra-darda-elected-ins-president-for-2026-27"
+  },
+  {
+    "headline": "Pixxel raises $100 million in India's largest space-tech round",
+    "date": "2026-09-07",
+    "category": "Finance",
+    "summary": "Bengaluru-based hyperspectral satellite startup Pixxel raised $100 million in a Series C led by Temasek and Seraphim Space, taking total funding to $195 million, to fund new satellites, its Aurora software and India/US manufacturing.",
+    "angle": "A strong prompt on how deep-tech startups justify capital-intensive bets to global institutional investors and India's push into sovereign space capability.",
+    "source": "https://www.deccanherald.com/business/google-backed-space-startup-pixxel-raises-100-million-4137483"
+  },
+  {
     "headline": "Premium Demand and Bargain-Hunting Set to Split This Year's Festive Shopping",
     "date": "2026-09-06",
     "category": "Marketing",
@@ -64,6 +96,14 @@
     "source": "https://www.cxodigitalpulse.com/havells-brings-multilingual-agentic-ai-voice-to-its-connected-home-ecosystem-with-elevenlabs/"
   },
   {
+    "headline": "HUL rolls out 'SASSY' brand-building framework",
+    "date": "2026-09-04",
+    "category": "Marketing",
+    "summary": "Hindustan Unilever unveiled SASSY (Science, Aesthetics, Sensorials, Said by Others, Youthful), backed by a 30,000-creator network, AI-enabled content studios and a target of 10% better media effectiveness, as part of its 'Winning in New India' growth strategy.",
+    "angle": "A textbook case for discussing how a legacy FMCG giant is re-architecting brand-building for a creator-and-AI-first world after a growth slowdown.",
+    "source": "https://bestmediainfo.com/mediainfo/mediainfo-marketing/hul-goes-sassy-with-marketing-30000-creators-ai-studios-and-10-media-effectiveness-target-12501389"
+  },
+  {
     "headline": "Microsoft undercuts rivals with MAI-Transcribe-2, cuts price 72%",
     "date": "2026-09-04",
     "category": "Product Management",
@@ -102,6 +142,22 @@
     "summary": "The RBI will conduct a ₹7 trillion (~$74 billion), 30-day variable-rate reverse repo auction to absorb a record liquidity surplus fuelled by its push to attract dollar inflows from overseas Indians.",
     "angle": "Good test of whether a candidate can connect liquidity management tools to broader forex and NRI-deposit policy.",
     "source": "https://www.bloomberg.com/news/articles/2026-09-04/rbi-moves-to-longer-cash-drain-as-india-liquidity-surges"
+  },
+  {
+    "headline": "SEBI proposes new Settlement Regulations, 2026",
+    "date": "2026-09-04",
+    "category": "Finance",
+    "summary": "SEBI floated draft Settlement of Proceedings Regulations, 2026 to replace its 2018 framework, aiming to cut litigation and streamline enforcement settlements while retaining deterrence; public comments closed September 4.",
+    "angle": "Tests whether a candidate can discuss the trade-off between faster regulatory resolution and deterrence in India's securities enforcement regime.",
+    "source": "https://www.livelaw.in/articles/sebi-proposed-settlement-regulations2026-rational-predictable-effective-settlement-regime-546173"
+  },
+  {
+    "headline": "Sensex snaps four-day losing streak on Fed rate-cut hopes",
+    "date": "2026-09-04",
+    "category": "Finance",
+    "summary": "The Sensex jumped 362 points to 76,515 and the Nifty rose to 23,898 after US Fed officials signalled openness to holding rates steady, easing global rate-hike fears; Tata Steel, Reliance and Bajaj Finance led gainers.",
+    "angle": "Good for testing understanding of how US Fed signalling transmits into Indian equity markets and sector rotation in real time.",
+    "source": "https://www.businesstoday.in/markets/stocks/story/sensex-nifty-snap-four-sessions-of-losing-streak-ril-tata-steel-boost-sentiment-553377-2026-09-04"
   },
   {
     "headline": "Survey: 99% of Indian CFOs Are Confident, but Only 8% See Measurable AI Value",
@@ -166,6 +222,14 @@
     "summary": "OpenAI released GPT-6 Astra, its most capable model yet, built to operate software directly — browsing, coding, running QA checks and manipulating design tools — rather than just generating text.",
     "angle": "Tests whether a candidate can discuss how agentic AI changes product requirements and workflow design, not just model quality.",
     "source": "https://fortune.com/2026/09/03/openai-debuts-gpt-6-astra-computer-use-greg-brockman-says-start-of-agi/"
+  },
+  {
+    "headline": "OpenAI ships GPT-6 Astra, its first 'Critical'-risk cyber model",
+    "date": "2026-09-03",
+    "category": "Product Management",
+    "summary": "OpenAI released GPT-6 Astra, its most capable model yet and the first to cross the 'Critical' cybersecurity-capability threshold under its Preparedness Framework, pairing the launch with stricter internal safeguards and a limited-access track for defenders.",
+    "angle": "A rich prompt on how product teams ship a capability while simultaneously restricting access to it — the tension between shipping speed and safety-gating in frontier AI products.",
+    "source": "https://www.csoonline.com/article/4218679/openai-launches-gpt-6-astra-its-first-model-to-cross-a-critical-cybersecurity-threshold.html"
   },
   {
     "headline": "PepsiCo Drops Omnicom, Hands Global Media to Publicis Without a Pitch",
@@ -248,6 +312,14 @@
     "source": "https://www.bcg.com/india/latest-insights"
   },
   {
+    "headline": "BCG-ACMA report flags risks to India's $200-billion auto-component ambition",
+    "date": "2026-09-02",
+    "category": "Consulting",
+    "summary": "A joint BCG-ACMA report said India's auto-component industry can reach $200 billion in turnover by FY30 but flagged rising competition for talent and raw materials as key execution risks.",
+    "angle": "A strong case-style prompt: candidates can be asked how they'd advise a client on scaling manufacturing capacity while managing talent and input-cost risk.",
+    "source": "https://aninews.in/news/business/indias-auto-component-industry-targets-usd-200-bn-turnover-by-fy30-amid-rising-risks-bcg-acma20260902135552/"
+  },
+  {
     "headline": "Byju Raveendran offers Aakash shares to settle Qatar Holding's $235 million claim",
     "date": "2026-09-02",
     "category": "Consulting",
@@ -288,6 +360,14 @@
     "source": "https://www.cnbc.com/2026/09/02/google-defeats-us-bid-to-force-ad-tech-sale.html"
   },
   {
+    "headline": "Google ships a security-only Gemini variant",
+    "date": "2026-09-02",
+    "category": "Product Management",
+    "summary": "Google DeepMind launched Gemini 3.8 Flash Cyber, a version of its Flash model built specifically for vulnerability detection and automated patching, scoring 86.2% on the CyberGym benchmark.",
+    "angle": "A good example of vertical, use-case-specific product variants versus general-purpose models — worth discussing segmentation strategy in platform products.",
+    "source": "https://tech.yahoo.com/ai/meta-ai/articles/google-meta-released-rival-ai-053947618.html"
+  },
+  {
     "headline": "Google ships Gemini 3.8 Flash, its third Flash model in six weeks",
     "date": "2026-09-02",
     "category": "Product Management",
@@ -318,6 +398,14 @@
     "summary": "JioStar's JioHotstar platform launched internationally on September 2 with new quarterly subscription plans, live Bigg Boss voting across six languages, and early access to shows ahead of Indian TV broadcast, targeting the Indian diaspora.",
     "angle": "Useful for a question on diaspora monetisation and how a domestically dominant platform designs pricing and content for an international launch.",
     "source": "https://www.broadbandtvnews.com/2026/09/04/jiohotstar-launches-in-uk-canada-and-singapore/"
+  },
+  {
+    "headline": "Meta undercuts rivals with Muse Spark 1.3",
+    "date": "2026-09-02",
+    "category": "Product Management",
+    "summary": "Meta released Muse Spark 1.3 — its fourth Muse Spark model in five months — pricing it aggressively against OpenAI and Google offerings as part of its push to compete on cost-efficiency in the AI model market.",
+    "angle": "Tests whether a candidate can discuss pricing-led product strategy and rapid iteration cadence as a competitive weapon in commoditizing markets.",
+    "source": "https://www.axios.com/2026/09/02/meta-debuts-muse-spark-13-as-personal-agent-work-continues"
   },
   {
     "headline": "Nykaa Launches ‘Be The Face of Nykaa’ Gen Z Creator Campaign",
@@ -374,6 +462,14 @@
     "summary": "WhatsApp rolled out bill payments in India on September 2, giving its 500-million-plus users access to over 22,000 billers across 30 categories via the Bharat Connect (BBPS) network, with payment support for UPI, debit and credit cards.",
     "angle": "A great case for \"why would a messaging app add a payments feature\" - tests understanding of platform expansion and monetising a captive user base.",
     "source": "https://www.techtimes.com/articles/326720/20260904/whatsapp-targets-google-pay-recurring-bill-payments-indias-bbps-network.htm"
+  },
+  {
+    "headline": "Accenture names new India Market Unit lead",
+    "date": "2026-09-01",
+    "category": "Consulting",
+    "summary": "Accenture appointed Pradeep Prabhala to lead its India business effective September 1, 2026, tasking him with helping clients scale AI and data adoption and supporting global firms setting up Global Capability Centres in India.",
+    "angle": "A clean prompt on leadership transitions at consulting/GCC-enabler firms and why India remains central to their global AI and GCC strategy.",
+    "source": "https://www.bwpeople.in/article/pradeep-prabhala-to-lead-accenture-s-india-business-from-september-615866"
   },
   {
     "headline": "AlikeAudience Data Goes Live on Amazon DSP Audience Hub in India",
@@ -480,6 +576,14 @@
     "source": "https://www.business-standard.com/economy/news/india-manufacturing-pmi-august-2026-hsbc-demand-jobs-126090100499_1.html"
   },
   {
+    "headline": "India's manufacturing PMI slumps to a five-year low",
+    "date": "2026-09-01",
+    "category": "Operations",
+    "summary": "India's HSBC manufacturing PMI fell to 52.8 in August 2026 from 53.5 in July — the lowest since August 2021 — as new business and output growth slowed to five-year lows and factory employment contracted for the first time in 2.5 years.",
+    "angle": "Classic operations prompt on reading PMI sub-indices (new orders, employment, export orders) to diagnose real demand versus capacity issues.",
+    "source": "https://www.business-standard.com/economy/news/india-manufacturing-pmi-august-2026-hsbc-demand-jobs-126090100499_1.html"
+  },
+  {
     "headline": "India's Q1 FY27 GDP grows 7.8%, beats RBI's forecast",
     "date": "2026-09-01",
     "category": "Finance",
@@ -528,12 +632,28 @@
     "source": "https://www.medianama.com/2026/09/223-phonepe-upi-feature-phone-123pay/"
   },
   {
+    "headline": "Quick commerce operators race to add categories ahead of festive season",
+    "date": "2026-09-01",
+    "category": "Operations",
+    "summary": "India's quick-commerce platforms are rapidly expanding beyond groceries into fashion, electronics, beauty and home categories, racing to convert festive-season demand as dark-store networks cross 6,000 nationally.",
+    "angle": "A good case for discussing last-mile fulfilment economics and category-expansion trade-offs (SKU complexity vs. delivery speed) in quick commerce.",
+    "source": "https://yourstory.com/2026/09/quick-commerce-reshapes-online-shopping-this-festive-season"
+  },
+  {
     "headline": "RBI Holds Repo Rate at 5.25%, Raises FY27 Growth Forecast to 6.7%",
     "date": "2026-09-01",
     "category": "Finance",
     "summary": "The Reserve Bank of India kept its policy repo rate unchanged at 5.25% with a neutral stance, while raising its FY27 real GDP growth forecast to 6.7% and lowering its inflation projection to 5%.",
     "angle": "Classic monetary-policy question - candidates should be able to explain why a central bank holds rates even as it turns more optimistic on growth.",
     "source": "https://tradingeconomics.com/india/interest-rate/news/523674"
+  },
+  {
+    "headline": "SEBI's new nomination rules kick in for demat and mutual fund accounts",
+    "date": "2026-09-01",
+    "category": "Finance",
+    "summary": "From September 1, SEBI's revised nomination norms require investors opening new demat accounts or mutual fund folios to either add up to three nominees or formally opt out.",
+    "angle": "A simple but real test of whether a candidate tracks retail-investor protection reforms and succession-planning gaps in India's capital markets.",
+    "source": "https://www.careerindia.com/features/september-1-new-rules-2026-immigration-sebi-nomination-milk-price-changes-011-64855.html"
   },
   {
     "headline": "Swiggy Raises Platform Fee to ₹15, Zomato to ₹12, Ahead of Festive Demand",
@@ -3704,6 +3824,14 @@
     "source": "https://www.businesstoday.in/latest/trends/photo/zomato-swiggy-and-now-flipkart-indias-food-delivery-war-just-got-a-powerful-new-player-547178-2026-08-04"
   },
   {
+    "headline": "India's industrial and logistics leasing hits a record H1",
+    "date": "2026-08-04",
+    "category": "Operations",
+    "summary": "Gross leasing of industrial and logistics space across India's top eight cities hit an all-time H1 high of 36.2 million sq ft in H1 2026, driven by manufacturing, automobile and third-party logistics demand.",
+    "angle": "Useful for connecting real-estate/warehousing data to broader supply-chain and 'China+1' manufacturing narratives.",
+    "source": "https://aninews.in/news/business/manufacturing-auto-sectors-drive-indias-logistics-and-industrial-space-in-h1-2026-report20260804151051/"
+  },
+  {
     "headline": "Flipkart enters food delivery, undercutting Zomato and Swiggy on commissions",
     "date": "2026-08-03",
     "category": "Marketing",
@@ -3856,6 +3984,14 @@
     "source": "https://www.business-standard.com/companies/news/zepto-pauses-ipo-to-raise-rs-1k-cr-in-pre-ipo-round-at-4-5-bn-valuation-126073001618_1.html"
   },
   {
+    "headline": "NPCI orders UPI apps to mask mobile numbers and account details",
+    "date": "2026-07-29",
+    "category": "Operations",
+    "summary": "NPCI directed all banks and UPI apps to stop displaying full mobile numbers, UPI IDs and account numbers to counterparties from September 4, following complaints — especially from women users — about harassment and privacy risk.",
+    "angle": "Tests understanding of how payments infrastructure operators balance frictionless UX against safety and privacy risk at national scale.",
+    "source": "https://www.business-standard.com/india-news/npci-plans-to-mask-phone-numbers-on-upi-apps-to-boost-user-privacy-126072900602_1.html"
+  },
+  {
     "headline": "PwC: Indian manufacturers back AI for growth but lag China on innovation",
     "date": "2026-07-29",
     "category": "Consulting",
@@ -3934,6 +4070,14 @@
     "summary": "Accenture's newly launched Accenture Edge business teamed up with Google Cloud to offer scalable agentic AI solutions aimed at mid-market companies that previously lacked access to enterprise-grade AI transformation services.",
     "angle": "A clean example of consulting firms creating a new business line to serve a previously underserved mid-market segment.",
     "source": "https://newsroom.accenture.com/news/2026/accenture-edge-and-google-cloud-bring-scalable-agentic-ai-solutions-to-mid-market-companies"
+  },
+  {
+    "headline": "India's GCC base crosses 2,100 centres, Zinnov-Nasscom finds",
+    "date": "2026-07-02",
+    "category": "Consulting",
+    "summary": "The Zinnov-Nasscom India GCC Landscape 2026 report found India now hosts 2,117 global capability centres employing 2.36 million professionals, up 32% since FY2021, as GCCs shift from delivery engines to enterprise decision hubs.",
+    "angle": "Central to any consulting/GCC-strategy discussion on why global firms keep deepening India captive centres instead of only outsourcing to third-party vendors.",
+    "source": "https://zinnov.com/centers-of-excellence/zinnov-nasscom-india-gcc-landscape-2026-report/"
   },
   {
     "headline": "India's GCC Hiring Hits a Record 5.1 Lakh Jobs, AI Skills Now Dominate",
