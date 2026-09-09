@@ -1,5 +1,53 @@
 [
   {
+    "headline": "Amazon India's seller base crosses 20 lakh, AI seller-assistant usage jumps 7.5x",
+    "date": "2026-09-08",
+    "category": "Product Management",
+    "summary": "Amazon India said its marketplace seller base topped 20 lakh after adding over 3 lakh new sellers in a year, driven by zero referral fees on 12.5 crore+ products and rising use of its Hinglish-language AI 'Seller Assistant' tool.",
+    "angle": "A discussion point on two-sided marketplace growth loops - how fee cuts and AI-assisted onboarding drive supply-side growth ahead of festive season.",
+    "source": "https://www.medianews4u.com/amazon-india-seller-base-hits-20-lakh-seller-assistant-interactions-jump-7-5x/"
+  },
+  {
+    "headline": "India's IPO market sees one of its busiest days ever - 10 issues open together",
+    "date": "2026-09-08",
+    "category": "Finance",
+    "summary": "As many as 10 IPOs were open for subscription simultaneously, seeking to raise nearly Rs 6,950 crore, as issuers rush to list before their SEBI approvals expire on September 30.",
+    "angle": "Illustrates primary-market cycles - why issuers cluster IPOs around regulatory deadlines and how liquidity conditions shape listing timing.",
+    "source": "https://www.businesstoday.in/markets/ipo-corner/story/ipo-corner-10-issues-open-september-9-2026-rs-6950-crore-investor-strategy-553916-2026-09-08"
+  },
+  {
+    "headline": "IndiGo marks 20th anniversary with brand film reframing flying as 'everyday'",
+    "date": "2026-09-08",
+    "category": "Marketing",
+    "summary": "IndiGo released an anniversary campaign repositioning air travel as a routine part of Indian life rather than an aspirational milestone, marking two decades of the airline's growth.",
+    "angle": "A good example of brand repositioning at the maturity stage - moving the narrative from aspirational/status symbol to ubiquity.",
+    "source": "https://www.afaqs.com/news/advertising/indigo-turns-20-celebrating-the-moments-behind-every-journey-12503552"
+  },
+  {
+    "headline": "Rupee slips to 94.66/USD as Brent crude nears $98 on Middle East tensions",
+    "date": "2026-09-08",
+    "category": "Finance",
+    "summary": "The rupee fell 10 paise to 94.66 against the US dollar as Brent crude rose to around $97.6/barrel amid escalating US-Iran tensions and fears of a Strait of Hormuz disruption; RBI dollar sales helped keep it range-bound.",
+    "angle": "Classic case for exchange-rate transmission - how oil-import dependence, geopolitical risk and RBI's managed float interact to determine currency stability.",
+    "source": "https://www.business-standard.com/finance/news/rupee-falls-10-paise-to-94-66-against-us-dollar-during-early-trade-126090800185_1.html"
+  },
+  {
+    "headline": "Sensex, Nifty fall for second straight session on oil and Fed-rate worries",
+    "date": "2026-09-08",
+    "category": "Finance",
+    "summary": "Sensex declined 555 points to 75,577.58 and Nifty fell to 23,635.10, their lowest since mid-June, as rising crude prices, US-Iran tensions and Fed rate-hike worries weighed on sentiment; bank stocks were among top losers.",
+    "angle": "Shows how global macro shocks (oil, Fed policy) transmit into domestic equity markets and why rate-sensitive banking stocks react most.",
+    "source": "https://www.business-standard.com/markets/news/stock-market-live-september-8-nse-bse-sensex-today-nifty50-gift-nifty-brent-crude-oil-price-deepa-jewllers-ipo-listing-today-126090800082_1.html"
+  },
+  {
+    "headline": "Swiss Beauty bets on Bigg Boss plus regional creators for festive push",
+    "date": "2026-09-08",
+    "category": "Marketing",
+    "summary": "Swiss Beauty detailed its first large-scale TV sponsorship (Bigg Boss Hindi Season 20), pairing it with regional influencers and cultural activations to drive pan-India recall this festive season.",
+    "angle": "Useful for discussing integrated marketing communications - blending mass reach (TV) with micro-targeted regional influencer content as a D2C brand scales nationally.",
+    "source": "https://bestmediainfo.com/mediainfo/mediainfo-marketing/you-need-to-become-part-of-the-culture-mohit-goyal-on-swiss-beautys-marketing-playbook-12505440"
+  },
+  {
     "headline": "CCPA fines McVitie's maker ₹1 lakh over 'Wholewheat' claim",
     "date": "2026-09-07",
     "category": "Marketing",
@@ -8,12 +56,36 @@
     "source": "https://bestmediainfo.com/mediainfo/advertising/ccpa-fines-pladis-india-rs-1-lakh-over-misleading-wholewheat-claim-on-mcvities-biscuits-12501269"
   },
   {
+    "headline": "CCPA fines McVitie's maker Pladis India over misleading 'Wholewheat' claim",
+    "date": "2026-09-07",
+    "category": "Marketing",
+    "summary": "The Central Consumer Protection Authority penalized Pladis India Rs 1 lakh for labelling McVitie's Marie biscuits 'Wholewheat' when the product had only 19.5% whole wheat flour versus 52% refined flour (maida), ordering the claim removed from packaging and ads.",
+    "angle": "A sharp prompt on ethics in marketing and how regulators (CCPA/ASCI) are tightening scrutiny of FMCG label and health claims.",
+    "source": "https://bestmediainfo.com/mediainfo/advertising/ccpa-fines-pladis-india-rs-1-lakh-over-misleading-wholewheat-biscuits-12501269"
+  },
+  {
+    "headline": "HUL overhauls marketing playbook with 30,000 creators and AI-led media strategy",
+    "date": "2026-09-07",
+    "category": "Marketing",
+    "summary": "At its Capital Markets Day, Hindustan Unilever revealed it has scaled its creator network to ~30,000, pushed digital to 60%+ of premium-brand media spend, and set a target of 10% better media effectiveness via AI across content creation and ROI optimization.",
+    "angle": "Classic case for discussing shifts in the marketing mix from mass media to social/creator-led brand building, and how legacy FMCG giants use AI to defend share against D2C challengers.",
+    "source": "https://bestmediainfo.com/mediainfo/mediainfo-marketing/hul-goes-sassy-with-marketing-30000-creators-ai-studios-and-10-media-effectiveness-target-12501389"
+  },
+  {
     "headline": "Income Tax raids on Dentsu India wrap up after six days",
     "date": "2026-09-07",
     "category": "Marketing",
     "summary": "Income Tax officials concluded a six-day search of Dentsu India's Mumbai, Delhi and Gurgaon offices, examining overseas payments and the flow of money through the ad group's influencer marketing operations.",
     "angle": "Tests whether a candidate can discuss regulatory risk in agency-client-influencer payment chains and why global ad networks keep facing India tax scrutiny.",
     "source": "https://bestmediainfo.com/mediainfo/advertising/dentsu-tax-search-wraps-up-after-six-days-royalty-influencer-payments-under-lens-12501375"
+  },
+  {
+    "headline": "Jio's Rs 3,599 annual plan bundles Gemini Pro to compete with Airtel and Vi",
+    "date": "2026-09-07",
+    "category": "Product Management",
+    "summary": "Jio, Airtel and Vi are all pricing their flagship annual recharge at Rs 3,599, but differentiating on bundled value - Jio adds an 18-month Google Gemini Pro subscription, Airtel bundles Adobe Express Premium, and Vi offers flexible data rollover.",
+    "angle": "A clean case of commoditized pricing forcing product differentiation through bundling rather than price - relevant to platform and feature-prioritization questions.",
+    "source": "https://www.businesstoday.in/technology/news/story/jios-rs3599-anniversary-plan-vs-airtel-and-vi-which-annual-recharge-offers-the-most-value-553579-2026-09-07"
   },
   {
     "headline": "Lokmat's Karan Darda elected President of Indian Newspaper Society",
@@ -32,6 +104,22 @@
     "source": "https://www.deccanherald.com/business/google-backed-space-startup-pixxel-raises-100-million-4137483"
   },
   {
+    "headline": "SEBI's revamped ETF price-band and base-price rules take effect",
+    "date": "2026-09-07",
+    "category": "Finance",
+    "summary": "SEBI's new ETF trading framework came into force from September 7; equity/debt ETFs now start with a 10% price band (expandable to 20%) and the base price is computed from the prior day's last-30-minute VWAP instead of NAV.",
+    "angle": "Ties into market microstructure and investor protection - why regulators recalibrate circuit-breakers for passive products as ETF volumes grow.",
+    "source": "https://bonanzawealth.com/sebi-etf-trading-rules-september-7-2026/"
+  },
+  {
+    "headline": "Festive online shopping to split between premium demand and bargain-hunting",
+    "date": "2026-09-06",
+    "category": "Operations",
+    "summary": "Industry watchers expect India's festive e-commerce season to show divergent consumer behaviour - strong appetite for premium products alongside heavy discount-seeking - forcing platforms to rethink inventory mix.",
+    "angle": "Useful for a demand-forecasting and inventory-segmentation discussion on planning SKU mix for a bifurcated demand curve.",
+    "source": "https://www.business-standard.com/industry/news/premium-demand-bargain-hunting-set-to-drive-festive-online-shopping-126090600310_1.html"
+  },
+  {
     "headline": "Premium Demand and Bargain-Hunting Set to Split This Year's Festive Shopping",
     "date": "2026-09-06",
     "category": "Marketing",
@@ -48,12 +136,28 @@
     "source": "https://www.freepressjournal.in/business/cbi-registers-case-against-subhash-chandra-over-alleged-1322-crore-lic-housing-finance-loan-fraud"
   },
   {
+    "headline": "KPMG report says workforce productivity is India's biggest underused manufacturing lever",
+    "date": "2026-09-05",
+    "category": "Consulting",
+    "summary": "A KPMG India analysis of 130+ large manufacturers over 10 years found a sustained 30% improvement in workforce productivity could drive ~35% of India's future manufacturing output - more than scale or demand-led growth.",
+    "angle": "A good springboard for operations-strategy and 'Make in India' case discussions - productivity vs scale as a growth lever.",
+    "source": "https://www.consultancy.in/news/4588/workforce-productivity-is-indias-most-underused-manufacturing-lever-kpmg-finds"
+  },
+  {
     "headline": "Mindsprint Launches Conversational AI 'PR Agent' on Its Procuresprint Platform",
     "date": "2026-09-05",
     "category": "Product Management",
     "summary": "Wipro-owned Mindsprint launched a Purchase Requisition Agent on Procuresprint that lets employees raise purchase requisitions via natural conversation on Microsoft Teams, automating a routine procurement workflow.",
     "angle": "Good example of narrow, workflow-specific AI agents inside enterprise software — a common PM interview theme on where to apply AI first.",
     "source": "https://cionow.in/mindsprint-launches-conversational-ai-pr-agent-on-procuresprint/"
+  },
+  {
+    "headline": "Mundra Port container strike disrupts India's biggest container gateway",
+    "date": "2026-09-05",
+    "category": "Operations",
+    "summary": "Empty-container depot operators at Adani Ports' Mundra terminal have been on strike since August 28 after APSEZ mandated empty containers be handled only inside its own SEZ yards; roughly 5,000 containers a day are held up, risking missed vessel cut-offs.",
+    "angle": "A textbook case on supply-chain resilience and stakeholder management when a dominant operator changes process without a transition plan.",
+    "source": "https://www.theweek.in/news/maritime/2026/09/05/mundra-port-ops-to-be-affected-further-adani-ports-goes-ahead-with-empty-container-yard-plans-despite-standoff.html"
   },
   {
     "headline": "NSE gets SEBI approval for a ~₹30,000 crore IPO",
@@ -72,6 +176,14 @@
     "source": "https://www.careerindia.com/news/google-assistant-to-gemini-switch-india-2026-update-android-settings-011-65087.html"
   },
   {
+    "headline": "Blinkit and Instamart triple dark-store capex as quick commerce scales up",
+    "date": "2026-09-04",
+    "category": "Operations",
+    "summary": "A UBS report shows Blinkit and Swiggy Instamart have raised per-store capex guidance to about Rs 2.5 crore (from Rs 1 crore two years ago) as dark stores grow from 2,000-3,000 sq ft to 5,000+ sq ft to support wider assortment.",
+    "angle": "Ties directly to fulfillment-network design - the trade-off between speed (small hyperlocal stores) and breadth (larger fulfillment hubs).",
+    "source": "https://www.business-standard.com/industry/news/blinkit-instamart-dark-store-capex-quick-commerce-ubs-report-126090400571_1.html"
+  },
+  {
     "headline": "Coca-Cola India signs Diljit Dosanjh and Janhvi Kapoor for new campaign",
     "date": "2026-09-04",
     "category": "Marketing",
@@ -86,6 +198,14 @@
     "summary": "Google positioned Gemini 3.1 Pro around reasoning, long-context and agent-style workflows, supporting text, image, audio, video and code with up to a 1-million-token context window.",
     "angle": "Why \"context window\" and agentic-workflow support are becoming key product differentiators in the LLM race, versus raw benchmark scores.",
     "source": "https://techstartups.com/2026/09/04/top-tech-news-today-september-4-2026-amazon-google-microsoft-nvidia-openai-tesla-more/"
+  },
+  {
+    "headline": "Grant Thornton Bharat survey: Indian CFOs bullish on AI, but only 8% see measurable value",
+    "date": "2026-09-04",
+    "category": "Consulting",
+    "summary": "Grant Thornton Bharat's survey of 149 CFOs and senior finance executives found 85% are more optimistic than six months ago, yet only 8% report significant measurable value from AI and just 14% have an advanced, integrated tech stack.",
+    "angle": "A classic AI-adoption-gap story - useful for discussing the difference between AI hype and realized ROI in advisory work.",
+    "source": "https://www.consultancy.in/news/4585/indias-cfos-are-betting-on-ai-but-only-8-see-measurable-value"
   },
   {
     "headline": "Havells Launches Multilingual Agentic AI Voice Across Its Connected-Home App",
@@ -112,12 +232,28 @@
     "source": "https://techstartups.com/2026/09/04/top-tech-news-today-september-4-2026-amazon-google-microsoft-nvidia-openai-tesla-more/"
   },
   {
+    "headline": "NSE clears SEBI hurdle for its long-awaited ~Rs 30,000 crore IPO",
+    "date": "2026-09-04",
+    "category": "Finance",
+    "summary": "SEBI approved NSE's IPO (an offer-for-sale of ~14.89 crore shares, ~6% of paid-up capital, with SBI as the largest selling shareholder); the exchange targets a price-band announcement around September 11 at a possible valuation near Rs 5.26 lakh crore.",
+    "angle": "A landmark case on market-infrastructure companies going public and the conflict-of-interest question of an exchange listing itself.",
+    "source": "https://www.business-standard.com/markets/ipo/nse-gets-sebi-approval-to-proceed-with-long-awaited-ipo-126090400972_1.html"
+  },
+  {
     "headline": "OpenAI launches GPT-6 Astra, its most capable model yet",
     "date": "2026-09-04",
     "category": "Product Management",
     "summary": "OpenAI released GPT-6 Astra, claiming new benchmarks in software engineering, computer use and science tasks; the model also crossed OpenAI's \"Critical\" cybersecurity capability threshold, meaning it can find and exploit unknown vulnerabilities without human direction.",
     "angle": "How should a PM balance shipping frontier capability against safety thresholds that the product itself just crossed?",
     "source": "https://techstartups.com/2026/09/04/top-tech-news-today-september-4-2026-amazon-google-microsoft-nvidia-openai-tesla-more/"
+  },
+  {
+    "headline": "OpenAI opens self-serve ChatGPT Ads Manager to Indian businesses",
+    "date": "2026-09-04",
+    "category": "Marketing",
+    "summary": "Following managed ads for Free/Go tiers with WPP and Omnicom as launch partners, OpenAI opened self-serve Ads Manager access in India, letting any business run ChatGPT ad campaigns with daily budgets starting around Rs 725.",
+    "angle": "Strong WAT/GD topic on AI chat interfaces emerging as a new ad channel that challenges the Google-Meta duopoly in India's digital ad market.",
+    "source": "https://respawn.outlookindia.com/pop-culture/pop-culture-news/openai-brings-chatgpt-ads-to-india"
   },
   {
     "headline": "OpenAI opens self-serve ChatGPT Ads to Indian businesses",
@@ -232,12 +368,28 @@
     "source": "https://www.csoonline.com/article/4218679/openai-launches-gpt-6-astra-its-first-model-to-cross-a-critical-cybersecurity-threshold.html"
   },
   {
+    "headline": "OpenAI ships GPT-6 Astra, its first model gated behind a 'critical cyber' safety threshold",
+    "date": "2026-09-03",
+    "category": "Product Management",
+    "summary": "OpenAI released GPT-6 Astra (1M-token context, $10/$50 per million input/output tokens), notable as the first model to trigger OpenAI's own critical-cyber-risk safeguard, resulting in gated enterprise access rather than an open rollout.",
+    "angle": "Useful for discussing responsible-AI product gating as a deliberate go-to-market decision, and premium pricing tiers for frontier capability.",
+    "source": "https://valueaddvc.com/pulse/google-meta-ai-launches-overshadowed-gpt-6-astra-2026"
+  },
+  {
     "headline": "PepsiCo Drops Omnicom, Hands Global Media to Publicis Without a Pitch",
     "date": "2026-09-03",
     "category": "Marketing",
     "summary": "PepsiCo moved its entire global media account, worth about $3.4 billion a year, to Publicis Groupe without running a competitive pitch, ending Omnicom's 25-year hold on the business; Omnicom shares fell 5% on the news.",
     "angle": "Tests whether a candidate understands how AI and data-integration capability, not creative pitches, now decide big media reviews.",
     "source": "https://adage.com/agencies/accounts-in-review/aa-pepsico-shifts-global-media-to-publicis-from-omnicom/"
+  },
+  {
+    "headline": "Rare-earth magnet shortage exposes India's import dependency",
+    "date": "2026-09-03",
+    "category": "Operations",
+    "summary": "At SIAM's 66th annual convention, PM's advisor Tarun Kapoor said the rare-earth magnet shortage from China's export curbs showed how a single country can disrupt India, spurring a Rs 7,280-crore domestic magnet manufacturing push.",
+    "angle": "Directly usable for discussing supplier concentration risk, China+1 sourcing strategy and PLI-driven import substitution.",
+    "source": "https://www.business-standard.com/india-news/rare-earth-magnet-issue-showed-how-a-country-can-hold-us-to-ransom-kapoor-126090301342_1.html"
   },
   {
     "headline": "Rupee jumps to 2-month high as RBI's FX defences and inflows kick in",
@@ -328,6 +480,14 @@
     "source": "https://inc42.com/buzz/byju-raveendran-offers-aakash-shares-to-settle-qatar-holdings-235-mn-claim/"
   },
   {
+    "headline": "E-commerce and logistics firms ramp up festive-season hiring",
+    "date": "2026-09-02",
+    "category": "Operations",
+    "summary": "Amazon India has created over 1.6 lakh seasonal roles across 400+ cities and Meesho expects to enable over 10 lakh seasonal opportunities, as TeamLease projects festive temp hiring will rise 15-20% this year.",
+    "angle": "A good peg for capacity planning and the 'peak vs steady-state' operations problem retailers face around Diwali.",
+    "source": "https://www.business-standard.com/industry/news/ecom-logistics-firms-ramp-up-hiring-as-festive-demand-gathers-momentum-126090201115_1.html"
+  },
+  {
     "headline": "EY: Agentic AI Could Automate 80% of Routine Treasury Work",
     "date": "2026-09-02",
     "category": "Consulting",
@@ -350,6 +510,14 @@
     "summary": "Credit-card management platform CheQ signed a multi-year title sponsorship with Global Chess League franchise Mumba Masters, rebranded 'CheQ Mumba Masters' from Season 4, featuring stars like Magnus Carlsen and Viswanathan Anand.",
     "angle": "A fintech using a niche, strategy-associated sport for brand positioning and premium-audience targeting instead of mass-reach cricket sponsorship - good for a sponsorship ROI and brand-fit discussion.",
     "source": "https://www.adgully.com/post/20023/mumba-masters-signs-cheq-as-title-sponsor-in-multi-year-deal"
+  },
+  {
+    "headline": "Google and Meta quietly ship AI updates a day before OpenAI's GPT-6 Astra grabs headlines",
+    "date": "2026-09-02",
+    "category": "Product Management",
+    "summary": "Google released Gemini 3.8 Flash plus an updated Lyria 3.5 music model, while Meta shipped Muse Spark 1.3 and a low-latency Muse Voice Transcribe model - both got comparatively little attention versus OpenAI's Astra reveal the next day.",
+    "angle": "A good prompt on launch-timing strategy - how incremental releases compete for attention against a rival's flagship announcement.",
+    "source": "https://valueaddvc.com/pulse/google-meta-ai-launches-overshadowed-gpt-6-astra-2026"
   },
   {
     "headline": "Google avoids forced breakup of its ad-tech business",
@@ -680,6 +848,14 @@
     "source": "https://www.bloomberg.com/news/articles/2026-08-31/aon-agrees-to-buy-usi-insurance-from-kkr-in-17-billion-deal"
   },
   {
+    "headline": "BCG India chairman Janmejaya Sinha named to RBI's central board",
+    "date": "2026-08-31",
+    "category": "Consulting",
+    "summary": "Janmejaya Sinha, BCG India's chairman, was appointed a part-time, non-official director on the RBI central board for a four-year term.",
+    "angle": "Illustrates the consulting-to-policy pipeline and how strategy consultants' expertise feeds into financial regulation.",
+    "source": "https://www.consultancy.in/news/4576/bcg-india-chairman-janmejaya-sinha-appointed-to-rbi-central-board"
+  },
+  {
     "headline": "HDFC Bank succession watch builds as CEO's six-year tenure faces scrutiny",
     "date": "2026-08-31",
     "category": "Finance",
@@ -718,6 +894,14 @@
     "summary": "PhonePe launched 'UPI 123Pay' for feature phones, using an SMS-based system that works even on limited 2G connectivity, pre-bundled on select Nokia, HMD, Lava and Itel devices, making it the first major UPI app to serve non-smartphone users.",
     "angle": "A strong case on market segmentation and financial inclusion - building a stripped-down product for the 'next billion' users, and the tradeoffs of investing engineering effort in a shrinking device category.",
     "source": "https://www.medianama.com/2026/09/223-phonepe-upi-feature-phone-123pay/"
+  },
+  {
+    "headline": "PhonePe launches UPI 123Pay to bring feature-phone users onto UPI without internet",
+    "date": "2026-08-31",
+    "category": "Product Management",
+    "summary": "PhonePe became the first major UPI app to extend payments to India's 200 million-plus feature-phone users via an SMS-based, internet-free architecture, pre-bundled on Nokia/HMD/Lava/Itel devices.",
+    "angle": "A strong case for product-market fit and TAM expansion at the bottom of the pyramid - designing for low-connectivity, non-smartphone users.",
+    "source": "https://indianstartupnews.com/news/digital-payments-platform-phonepe-launches-upi-123pay-for-feature-phones-payments-work-without-internet-12458682"
   },
   {
     "headline": "RBI moves up FCNR(B) deposit deadline after $56.8 billion forex inflows",
@@ -862,6 +1046,14 @@
     "summary": "Temple, the health-tech venture co-founded by Zomato's Deepinder Goyal, acquired London-based longevity practice Longevous to bring in clinical and scientific expertise ahead of launching its debut wearable device.",
     "angle": "An acqui-hire made specifically to validate a hardware product before launch - good material on de-risking a product roadmap through M&A.",
     "source": "https://www.businesstoday.in/technology/story/deepinder-goyals-temple-acquires-london-based-longevity-medicine-firm-longevous-551824-2026-08-27"
+  },
+  {
+    "headline": "EY report: India's private credit market holds steady at $3.5B in H1 2026, domestic funds now dominate",
+    "date": "2026-08-27",
+    "category": "Consulting",
+    "summary": "EY's H1 2026 report found India private credit investments reached $3.5 billion across 100+ deals, with domestic funds now accounting for 74% of deal value; real estate led sectors at 35%, followed by healthcare at 13%.",
+    "angle": "Strong case material on alternative financing and sector-wise capital allocation - relevant to finance/consulting crossover questions.",
+    "source": "https://www.ey.com/en_in/newsroom/2026/08/domestic-funds-drive-indias-private-credit-market-as-investments-reach-us-dollor-3-point-5-billion-in-h1-2026-ey-report"
   },
   {
     "headline": "EY: India's private credit market hits $3.5 billion in H1 2026",
