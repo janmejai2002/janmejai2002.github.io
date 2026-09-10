@@ -1,11 +1,27 @@
 [
   {
+    "headline": "12th Product Management Summit & Awards 2026 convenes 1,350+ leaders in Bengaluru",
+    "date": "2026-09-10",
+    "category": "Product Management",
+    "summary": "The 12th edition of India's Product Management Summit & Awards took place in Bengaluru on September 10, bringing together over 1,350 product leaders to discuss AI-driven product strategy.",
+    "angle": "Good context on what the Indian product community itself sees as the top priorities for the next decade of product building.",
+    "source": "https://productmanagementsummit.in/"
+  },
+  {
     "headline": "Amazon India's seller base crosses 20 lakh, AI seller-assistant usage jumps 7.5x",
     "date": "2026-09-08",
     "category": "Product Management",
     "summary": "Amazon India said its marketplace seller base topped 20 lakh after adding over 3 lakh new sellers in a year, driven by zero referral fees on 12.5 crore+ products and rising use of its Hinglish-language AI 'Seller Assistant' tool.",
     "angle": "A discussion point on two-sided marketplace growth loops - how fee cuts and AI-assisted onboarding drive supply-side growth ahead of festive season.",
     "source": "https://www.medianews4u.com/amazon-india-seller-base-hits-20-lakh-seller-assistant-interactions-jump-7-5x/"
+  },
+  {
+    "headline": "GST-driven festive push: FMCG and auto to lead a 12% rise in ad spend",
+    "date": "2026-09-08",
+    "category": "Marketing",
+    "summary": "Industry estimates suggest India's ad spend will rise around 12% this festive quarter, with FMCG and auto sectors leading as GST rate cuts fuel consumer demand and bigger festive marketing budgets.",
+    "angle": "Classic GD/WAT link: fiscal policy (GST) to consumer demand to marketing spend - interviewers love a cross-functional connect.",
+    "source": "https://www.storyboard18.com/amp/advertising/gst-rate-cuts-to-drive-12-rise-in-adex-fmcg-auto-sectors-to-lead-spending-surge-80235.htm"
   },
   {
     "headline": "India's IPO market sees one of its busiest days ever - 10 issues open together",
@@ -22,6 +38,22 @@
     "summary": "IndiGo released an anniversary campaign repositioning air travel as a routine part of Indian life rather than an aspirational milestone, marking two decades of the airline's growth.",
     "angle": "A good example of brand repositioning at the maturity stage - moving the narrative from aspirational/status symbol to ubiquity.",
     "source": "https://www.afaqs.com/news/advertising/indigo-turns-20-celebrating-the-moments-behind-every-journey-12503552"
+  },
+  {
+    "headline": "InfoComm India 2026 to showcase 130+ new AV products with embedded AI",
+    "date": "2026-09-08",
+    "category": "Product Management",
+    "summary": "InfoComm India 2026, running September 16-18 in Mumbai, will feature over 160 exhibitors and 130-plus new product launches, with more than one in ten featuring embedded AI.",
+    "angle": "A concrete example of AI moving from software into hardware product lines - good for questions on category-specific AI adoption.",
+    "source": "https://www.industryemea.com/news/114555-infocomm-india-2026-expands-pro-av-technology-and-ai-demonstrations"
+  },
+  {
+    "headline": "Magnite runs first fully agentic ad campaign in EMEA, cuts setup time 70%",
+    "date": "2026-09-08",
+    "category": "Marketing",
+    "summary": "Ad-tech firm Magnite said its first agentic campaign in EMEA, run with trading desk Amnet France, cut campaign setup time by roughly 70% and delivered a 95% video view-through rate.",
+    "angle": "Useful for discussing how agentic AI is moving from pilot projects to measurable media-buying efficiency gains.",
+    "source": "https://agilebrandguide.com/yesterdays-marketing-technology-ai-news-september-9-2026/"
   },
   {
     "headline": "Rupee slips to 94.66/USD as Brent crude nears $98 on Middle East tensions",
@@ -64,6 +96,14 @@
     "source": "https://bestmediainfo.com/mediainfo/advertising/ccpa-fines-pladis-india-rs-1-lakh-over-misleading-wholewheat-biscuits-12501269"
   },
   {
+    "headline": "Fintech Slice raises $100M Series D, builds toward full banking licence",
+    "date": "2026-09-07",
+    "category": "Finance",
+    "summary": "Slice raised $100 million in a Series D led by Neo Wealth Management, continuing its 2026 transformation after merging with North East Small Finance Bank as it works toward a full digital banking licence.",
+    "angle": "A strong case on fintech-bank convergence: why would a lending startup want a banking licence, and what regulatory hurdles come with it?",
+    "source": "https://beststartup.in/india-startup-funding-september-2026-week-one/"
+  },
+  {
     "headline": "HUL overhauls marketing playbook with 30,000 creators and AI-led media strategy",
     "date": "2026-09-07",
     "category": "Marketing",
@@ -96,6 +136,14 @@
     "source": "https://www.adgully.com/post/20234/karan-rajendra-darda-elected-ins-president-for-2026-27"
   },
   {
+    "headline": "OpenAI to launch \"Managed Agents\" at DevDay on September 29",
+    "date": "2026-09-07",
+    "category": "Product Management",
+    "summary": "OpenAI is preparing to unveil Managed Agents at DevDay 2026, letting developers and enterprises build AI agents with customizable environments, skills and plugins.",
+    "angle": "Tests understanding of how platform companies are productizing agent-building itself, and what that means for smaller AI-agent startups.",
+    "source": "https://www.progressiverobot.com/2026/09/07/openai-managed-agents-environments-devday-2026/"
+  },
+  {
     "headline": "Pixxel raises $100 million in India's largest space-tech round",
     "date": "2026-09-07",
     "category": "Finance",
@@ -112,6 +160,14 @@
     "source": "https://bonanzawealth.com/sebi-etf-trading-rules-september-7-2026/"
   },
   {
+    "headline": "AI pricing models force a structural reshape of India's $315B IT-services sector",
+    "date": "2026-09-06",
+    "category": "Consulting",
+    "summary": "A new report says AI-driven outcome-based pricing is restructuring India's IT services and consulting sector, cutting demand for junior engineers while raising the premium on specialists who can configure, govern and audit AI-generated work.",
+    "angle": "Directly relevant to \"future of consulting\" prompts - ties AI adoption to how campus hiring and career ladders are changing at IT-consulting firms.",
+    "source": "https://news.outsourceaccelerator.com/india-it-sector-reshape/"
+  },
+  {
     "headline": "Festive online shopping to split between premium demand and bargain-hunting",
     "date": "2026-09-06",
     "category": "Operations",
@@ -126,6 +182,22 @@
     "summary": "Retailers expect 8-10% festive-season growth as premiumized, feature-rich products such as AI-enabled TVs and appliances drive spend at the top end, even as price-sensitive shoppers in smaller towns pull back.",
     "angle": "Great for discussing market segmentation and how brands price and position across a bifurcating consumer base.",
     "source": "https://www.business-standard.com/industry/news/premium-demand-bargain-hunting-set-to-drive-festive-online-shopping-126090600310_1.html"
+  },
+  {
+    "headline": "57th GST Council meeting scheduled for September 12 in New Delhi",
+    "date": "2026-09-05",
+    "category": "Finance",
+    "summary": "The GST Council's next meeting is set for September 12, expected to take up further rate and compliance tweaks following last year's GST 2.0 rate rationalisation.",
+    "angle": "Lets you show awareness of how tax policy keeps evolving and its knock-on effect on corporate pricing and compliance costs.",
+    "source": "https://cleartax.in/s/budget-2026-highlights-gst-business-compliance"
+  },
+  {
+    "headline": "Big Four firms slow promotions and salary hikes amid demand softness",
+    "date": "2026-09-05",
+    "category": "Consulting",
+    "summary": "KPMG, EY, PwC and Deloitte have begun slowing promotions, rethinking salary increments, and reducing the number of seniors elevated to partner as consulting demand cools.",
+    "angle": "A direct placement-relevant story: what softer partner-track promotions signal about near-term hiring and compensation at Big Four firms.",
+    "source": "https://taxconcept.net/shorts/slowdown-in-promotions-and-salary-hikes-among-big-four-consulting-firms/"
   },
   {
     "headline": "CBI books Essel Group's Subhash Chandra in ₹1,322-crore fraud case",
@@ -166,6 +238,22 @@
     "summary": "SEBI cleared NSE's long-pending IPO, potentially one of India's biggest-ever listings; existing shareholders including SBI will sell ~14.9 crore shares, with subscription expected around September 15 and listing around September 25.",
     "angle": "A rare case of a stock exchange itself going public — market infrastructure, regulatory approval timelines, and conflicts of interest when an exchange lists its own shares.",
     "source": "https://newstodaynet.com/2026/09/05/nse-gets-sebi-nod-for-rs-30000-cr-ipo-one-of-indias-largest-public-issues/"
+  },
+  {
+    "headline": "Swiggy and Zomato hike platform fees ahead of festive demand",
+    "date": "2026-09-05",
+    "category": "Marketing",
+    "summary": "Swiggy raised its food-delivery platform fee to Rs 15 and Zomato moved its fee to Rs 12 per order, just ahead of the festive-season demand surge.",
+    "angle": "A live pricing-strategy case: how food-delivery platforms balance unit economics against consumer price sensitivity right before peak demand.",
+    "source": "https://indianretailer.com/news/swiggy-raises-platform-fee-rs-15-zomato-moves-rs-12-ahead-festive-demand"
+  },
+  {
+    "headline": "A wave of new AI agent tools launches in early September",
+    "date": "2026-09-04",
+    "category": "Product Management",
+    "summary": "Multiple new AI agent frameworks and tools launched within days of each other in early September, as existing platforms also rolled out significant agent-related updates.",
+    "angle": "Useful to discuss how fast the agentic-AI tooling landscape is moving, and the build-vs-buy dilemma it creates for product teams.",
+    "source": "https://www.dutchstartup.ai/en/news/a-wave-of-new-ai-agent-tools-is-emerging-around-early-september-2026"
   },
   {
     "headline": "Android Phones in India Start Switching from Google Assistant to Gemini",
@@ -248,6 +336,14 @@
     "source": "https://techstartups.com/2026/09/04/top-tech-news-today-september-4-2026-amazon-google-microsoft-nvidia-openai-tesla-more/"
   },
   {
+    "headline": "OpenAI opens self-serve ChatGPT Ads Manager in India",
+    "date": "2026-09-04",
+    "category": "Marketing",
+    "summary": "OpenAI opened self-serve access to its Ads Manager in India on September 4, letting any business create and run ChatGPT ad campaigns directly; ChatGPT Ads has already hit a $1 billion annualized revenue run rate in under 200 days.",
+    "angle": "Tests whether you can discuss conversational AI as a new paid-media channel and what it means for search and social ad budgets.",
+    "source": "https://technocratiq.com/insights/chatgpt-ads-india-2026/"
+  },
+  {
     "headline": "OpenAI opens self-serve ChatGPT Ads Manager to Indian businesses",
     "date": "2026-09-04",
     "category": "Marketing",
@@ -280,6 +376,14 @@
     "source": "https://www.bloomberg.com/news/articles/2026-09-04/rbi-moves-to-longer-cash-drain-as-india-liquidity-surges"
   },
   {
+    "headline": "RBI to run Rs 7 trillion, 30-day VRRR auction amid liquidity surge",
+    "date": "2026-09-04",
+    "category": "Finance",
+    "summary": "The RBI announced a Rs 7 trillion ($74.1B), 30-day variable rate reverse repo auction, extending the duration of its cash-draining operations to manage a record banking liquidity surplus partly fueled by NRI dollar inflows.",
+    "angle": "Tests understanding of liquidity-management tools (VRRR vs repo) and why excess liquidity, not just inflation, worries a central bank.",
+    "source": "https://www.bloomberg.com/news/articles/2026-09-04/rbi-moves-to-longer-cash-drain-as-india-liquidity-surges"
+  },
+  {
     "headline": "SEBI proposes new Settlement Regulations, 2026",
     "date": "2026-09-04",
     "category": "Finance",
@@ -294,6 +398,14 @@
     "summary": "The Sensex jumped 362 points to 76,515 and the Nifty rose to 23,898 after US Fed officials signalled openness to holding rates steady, easing global rate-hike fears; Tata Steel, Reliance and Bajaj Finance led gainers.",
     "angle": "Good for testing understanding of how US Fed signalling transmits into Indian equity markets and sector rotation in real time.",
     "source": "https://www.businesstoday.in/markets/stocks/story/sensex-nifty-snap-four-sessions-of-losing-streak-ril-tata-steel-boost-sentiment-553377-2026-09-04"
+  },
+  {
+    "headline": "September IPO pipeline could hit Rs 70,000 crore, led by Jio Platforms and NSE",
+    "date": "2026-09-04",
+    "category": "Finance",
+    "summary": "India's primary market is bracing for a record September, with base estimates of Rs 20,000-25,000 crore in fresh issuance that could swell to Rs 70,000 crore if mega IPOs from Jio Platforms (~$3.8B) and NSE (~Rs 30,000 crore) launch this month.",
+    "angle": "A strong WAT topic on what's driving India's IPO boom and whether current valuations are sustainable.",
+    "source": "https://www.business-standard.com/markets/ipo/september-ipo-pipeline-set-to-eclipse-july-s-record-fundraising-milestone-126090401245_1.html"
   },
   {
     "headline": "Survey: 99% of Indian CFOs Are Confident, but Only 8% See Measurable AI Value",
@@ -350,6 +462,14 @@
     "summary": "Commerce Minister Piyush Goyal said India will sign the bilateral trade agreement with the US only once Washington grants Indian exporters a preferential tariff rate versus competitors, noting exports still grew despite tariff pressure.",
     "angle": "Directly testable on India's trade negotiation strategy, the current US tariff on Indian goods, and how export-led sectors are being protected during negotiations.",
     "source": "https://indiawest.com/goyal-india-will-seal-us-trade-deal-once-tariff-advantage-is-secured/"
+  },
+  {
+    "headline": "Layoffs reach PwC as Big Four continue an audit-workforce reset",
+    "date": "2026-09-03",
+    "category": "Consulting",
+    "summary": "PwC has begun a fresh round of layoffs as Big Four firms continue resetting audit and advisory headcount in response to slower demand and efficiency pressures.",
+    "angle": "Pairs well with the promotions story above - good for a WAT on structural change in the Big Four's talent pyramid.",
+    "source": "https://www.peoplematters.in/news/strategic-hr/layoffs-reach-pwc-as-big-four-firms-continue-audit-workforce-reset-50778"
   },
   {
     "headline": "OpenAI Launches GPT-6 Astra With Native Computer-Use Capability",
@@ -480,6 +600,14 @@
     "source": "https://inc42.com/buzz/byju-raveendran-offers-aakash-shares-to-settle-qatar-holdings-235-mn-claim/"
   },
   {
+    "headline": "E-commerce and logistics firms ramp up festive hiring as demand gathers momentum",
+    "date": "2026-09-02",
+    "category": "Operations",
+    "summary": "Temporary hiring across e-commerce, quick commerce and logistics is set to grow 15-20% this festive season, with Amazon India alone creating over 1.6 lakh seasonal roles across 400 cities.",
+    "angle": "A classic operations-scaling question: how do you plan workforce and fulfilment capacity for a demand spike that lasts only a few weeks?",
+    "source": "https://www.business-standard.com/industry/news/ecom-logistics-firms-ramp-up-hiring-as-festive-demand-gathers-momentum-126090201115_1.html"
+  },
+  {
     "headline": "E-commerce and logistics firms ramp up festive-season hiring",
     "date": "2026-09-02",
     "category": "Operations",
@@ -600,6 +728,14 @@
     "source": "https://bestmediainfo.com/interviews/digital/reddit-launches-15-second-engaged-video-views-advertisers-globally-12482146"
   },
   {
+    "headline": "Reliance enters the ice cream market, expanding its FMCG operations",
+    "date": "2026-09-02",
+    "category": "Operations",
+    "summary": "Reliance Industries entered the ice cream category, marking its latest expansion into a new FMCG vertical as it builds out manufacturing and cold-chain distribution capacity.",
+    "angle": "Useful for discussing how conglomerates leverage existing retail and cold-chain infrastructure to enter adjacent categories.",
+    "source": "https://hdfcsky.com/news/stocks-to-watch-today-wednesday-september-2-2026-tata-motors-gland-pharma-reliance-industries-ujjivan-small-finance-bank-adani-green-energy"
+  },
+  {
     "headline": "Scapia adds fingerprint/Face ID login to skip UPI PIN for small payments",
     "date": "2026-09-02",
     "category": "Product Management",
@@ -688,6 +824,14 @@
     "source": "https://www.phonepe.com/press/flipkart-pay-later-now-available-on-phonepe/"
   },
   {
+    "headline": "Google force-migrates Search campaigns to \"AI Max\"; Microsoft matches",
+    "date": "2026-09-01",
+    "category": "Marketing",
+    "summary": "From September 1, Google began automatically upgrading Search campaigns using Broad Match or Automatically Created Assets to its AI Max format with no opt-in required, and Microsoft Advertising made its own AI Max generally available, switched on by default.",
+    "angle": "A good prompt on how automation is eroding manual campaign control for marketers, and what skills stay valuable in an \"AI Max\" world.",
+    "source": "https://searchengineland.com/google-sets-ai-max-migration-timeline-for-search-campaigns-485006"
+  },
+  {
     "headline": "GST collections hit record ₹1.99 lakh crore in August",
     "date": "2026-09-01",
     "category": "Finance",
@@ -710,6 +854,22 @@
     "summary": "The HSBC India Manufacturing PMI fell to 52.8 in August from 53.5 in July - the weakest expansion since 2021 - as new orders and output growth slowed and manufacturing employment contracted for the first time in over two years.",
     "angle": "A go-to macro data point for discussing demand slowdown, capacity utilization, and how manufacturers balance input costs against falling orders.",
     "source": "https://www.business-standard.com/economy/news/manufacturing-pmi-slips-to-52-8-in-august-weakest-expansion-in-five-years-126090100258_1.html"
+  },
+  {
+    "headline": "India's management consulting market set to grow at 12.7% CAGR to $17B by 2031",
+    "date": "2026-09-01",
+    "category": "Consulting",
+    "summary": "India's management consulting market, estimated at about $9.4 billion in 2026, is projected to grow roughly 12.7% annually to $17 billion by 2031, with the Big Four still capturing 55-60% of total spend.",
+    "angle": "Gives you hard numbers to cite on market sizing - useful for any \"why consulting in India\" GD prompt.",
+    "source": "https://www.pkcindia.com/blog/top-12-management-consulting-firms-in-india-2026/"
+  },
+  {
+    "headline": "India's manufacturing PMI slips to a 4.5-year low",
+    "date": "2026-09-01",
+    "category": "Operations",
+    "summary": "India's manufacturing PMI fell to its lowest level in four and a half years, signalling a sharp slowdown in factory output and new orders growth.",
+    "angle": "Tests whether you can connect a leading operations indicator (PMI) to broader demand and capacity-planning decisions.",
+    "source": "https://tradingeconomics.com/india/manufacturing-pmi/news/535817"
   },
   {
     "headline": "India's manufacturing PMI slips to a 5-year low",
@@ -750,6 +910,14 @@
     "summary": "India's HSBC manufacturing PMI fell to 52.8 in August 2026 from 53.5 in July — the lowest since August 2021 — as new business and output growth slowed to five-year lows and factory employment contracted for the first time in 2.5 years.",
     "angle": "Classic operations prompt on reading PMI sub-indices (new orders, employment, export orders) to diagnose real demand versus capacity issues.",
     "source": "https://www.business-standard.com/economy/news/india-manufacturing-pmi-august-2026-hsbc-demand-jobs-126090100499_1.html"
+  },
+  {
+    "headline": "India's PM hiring up 42% YoY, driven by AI-skills demand",
+    "date": "2026-09-01",
+    "category": "Product Management",
+    "summary": "Product-manager hiring in India rose 42% year-over-year, with 61% of PM job postings now requiring AI experience and demand for AI-savvy PMs outpacing supply roughly 3x.",
+    "angle": "A great prompt on how the PM role itself is being redefined by AI, and what skills a fresher should prioritize.",
+    "source": "https://blog.productmanagementsociety.com/product-management-hiring-trends-2026-breakdown-by-country/"
   },
   {
     "headline": "India's Q1 FY27 GDP grows 7.8%, beats RBI's forecast",
@@ -1029,6 +1197,14 @@
     "category": "Operations",
     "summary": "TVS Motor named Peyman Kargar, its President of International Business, as CEO effective January 2027, succeeding K N Radhakrishnan, who has led the company since 2008.",
     "angle": "A useful case on leadership succession planning and why a company might pick an international-growth executive to lead its next phase.",
+    "source": "https://www.business-standard.com/companies/news/companies-tvs-motor-names-peyman-kargar-as-new-ceo-to-succeed-k-n-radhakrishnan-126082800402_1.html"
+  },
+  {
+    "headline": "TVS Motor names Peyman Kargar as new CEO to succeed K N Radhakrishnan",
+    "date": "2026-08-28",
+    "category": "Operations",
+    "summary": "TVS Motor announced that International Business President Peyman Kargar will take over as CEO from January 2027, succeeding K N Radhakrishnan, with a focus on technology, AI adoption and global expansion.",
+    "angle": "A good leadership-transition case: how do large manufacturers plan succession while sustaining operational momentum?",
     "source": "https://www.business-standard.com/companies/news/companies-tvs-motor-names-peyman-kargar-as-new-ceo-to-succeed-k-n-radhakrishnan-126082800402_1.html"
   },
   {
@@ -1550,6 +1726,14 @@
     "summary": "The food regulator suspended Marche Retail's operating licence for 30 days over hygiene lapses, part of a wider crackdown that has sent 150+ notices to food brands, including major QSR chains.",
     "angle": "Shows how compliance and hygiene failures can undo a food brand's marketing investment overnight — good for brand-trust and crisis-management questions.",
     "source": "https://www.businesstoday.in/india/story/after-scrutiny-of-top-food-chains-like-burger-king-pizza-hut-fssai-suspends-marche-retail-licence-for-30-days-550866-2026-08-24"
+  },
+  {
+    "headline": "Govt appoints BCG India chairman Janmejaya Sinha to RBI's central board",
+    "date": "2026-08-24",
+    "category": "Consulting",
+    "summary": "The government appointed BCG India chairman Janmejaya Sinha, along with ex-Finance Ministry special secretary Annie George Mathew and former diplomat Syed Akbaruddin, as part-time non-official directors on the RBI's central board for a four-year term.",
+    "angle": "Signals how top consulting leaders are increasingly shaping public policy - a good talking point on the blurring line between consulting and government.",
+    "source": "https://www.business-standard.com/finance/news/govt-appoints-mathew-sinha-akbaruddin-as-part-time-rbi-board-directors-126082401341_1.html"
   },
   {
     "headline": "Goyal defends steel safeguard duty, pitches Japan on Indian steel",
@@ -3776,6 +3960,14 @@
     "source": "https://www.inkl.com/news/leap-india-ipo-day-2-check-gmp-subscription-status-issue-details-should-you-subscribe"
   },
   {
+    "headline": "RBI proposes barring most NBFCs from revolving credit products",
+    "date": "2026-08-07",
+    "category": "Finance",
+    "summary": "RBI's draft amendments to Credit Facilities Directions would stop most NBFCs (except card-issuers like SBI Card and BoB Cards) from offering revolving/flexi-credit products, pushing them toward term loans to curb \"evergreening\" risk.",
+    "angle": "A sharp regulation-vs-innovation question: why RBI is clamping down on flexi-credit, and how NBFCs like Bajaj Finance and Tata Capital should respond.",
+    "source": "https://www.business-standard.com/finance/news/rbi-s-draft-revolving-credit-curbs-drag-nbfc-stocks-bajaj-finance-down-6-126080701605_1.html"
+  },
+  {
     "headline": "RBI's draft ban on revolving credit erases Rs 55,000 crore from Bajaj group in a day",
     "date": "2026-08-07",
     "category": "Finance",
@@ -4246,6 +4438,14 @@
     "summary": "TCS announced plans to cut about 2% of its global workforce, largely in middle and senior management, as part of a restructuring toward AI-driven service delivery.",
     "angle": "How AI changes headcount planning and org design in services delivery, and the risk of hollowing out experienced middle-management layers.",
     "source": "https://finance.yahoo.com/news/tcs-cut-more-12-000-091131053.html"
+  },
+  {
+    "headline": "TCS to cut 12,200 jobs as AI reshapes IT-services operating models",
+    "date": "2026-07-15",
+    "category": "Operations",
+    "summary": "TCS will cut around 2% of its global workforce (roughly 12,200 jobs) in FY26 - its largest-ever single-year reduction - as AI adoption and outcome-based pricing restructure how IT services firms staff delivery teams.",
+    "angle": "A meaty topic on how AI-driven efficiency gains are changing headcount and skill-mix decisions in operations-heavy service businesses.",
+    "source": "https://gulfnews.com/business/markets/ai-overhaul-indias-tcs-to-cut-12000-jobs-this-year-after-growth-slows-in-q1-1.500212931"
   },
   {
     "headline": "Tata Electronics Overtakes Foxconn in India iPhone Export Value",
