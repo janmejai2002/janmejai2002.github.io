@@ -1,5 +1,5 @@
 {
-  "generated": "2026-09-15T00:20:38.407Z",
+  "generated": "2026-09-15T05:10:18.129Z",
   "radar": {
     "total": 27,
     "unrated": 0,
@@ -22,7 +22,7 @@
     "total": 41,
     "inFlight": 2,
     "draftReady": 7,
-    "approved": 2,
+    "approved": 1,
     "byTrack": {
       "Technical": 15,
       "Business": 9,
