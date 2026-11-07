@@ -1,5 +1,13 @@
 [
   {
+    "headline": "Accenture Hits $74.2B Revenue as AI Compresses Billable Hour Model",
+    "date": "2026-11-07",
+    "category": "Consulting",
+    "summary": "Accenture reported $74.18 billion in FY26 revenue—split between $37.30 billion in Managed Services (up 8%) and $36.88 billion in Consulting (up 5%)—alongside $84.54 billion in new bookings across its 814,000-person workforce. To offset generative AI compressing traditional billable analyst hours, the firm spent $923 million on workforce optimization severance and deployed $4.9 billion across 17 acquisitions to pivot toward outcome-based contracts and proprietary AI workflows.",
+    "angle": "Strategy interviewers will ask how a consulting firm with 814,000 employees protects its 15.4% operating margin when generative AI automates junior analyst research and cannibalizes time-and-materials billing. If AI cuts billable hours per engagement, how must partners restructure project pricing toward outcome-based fees and managed service annuities without shrinking revenue per client?",
+    "source": "https://fourweekmba.com/accenture-business-model-in-a-nutshell/"
+  },
+  {
     "headline": "Consultancies reshape IPO due diligence around quick-commerce margins",
     "date": "2026-11-07",
     "category": "Consulting",
@@ -14,6 +22,38 @@
     "summary": "India's mainboard primary market crossed ₹1.58 lakh crore in capital raised across 109 issues in 2026, marking one of its busiest listing stretches before entering a brief consolidation ahead of December mega-offerings.",
     "angle": "Classic B-school corporate finance question on valuation froth vs capital depth — how CFOs decide whether to list during peak liquidity windows or wait out secondary market volatility.",
     "source": "https://www.businesstoday.in/"
+  },
+  {
+    "headline": "India Q3 Warehousing Leasing Rises 12% as Grade A Share Hits 66%",
+    "date": "2026-11-07",
+    "category": "Operations",
+    "summary": "Knight Frank India's Q3 2026 report shows warehousing leasing across eight primary Indian markets rose 12% year-on-year to 19.1 million sq-ft, bringing total stock to 597.7 million sq-ft. Manufacturing and third-party logistics (3PL) occupiers drove 76% of quarterly demand, while Grade A facilities captured 66% of total leasing (up from 56% in Q3 2025) and pushed rents up 3% to 5% year-on-year.",
+    "angle": "Operations interviewers will challenge you on why occupiers pay 3% to 5% higher rents for Grade A warehouses in Mumbai and Bengaluru even when city-level vacancy exceeds 14%. When designing a supply chain network, how do you trade off the higher fixed lease cost of automated Grade A hubs against the variable flexibility of outsourcing to 3PL operators amid volatile freight costs?",
+    "source": "https://www.constructionweekonline.in/business/india-warehousing-leasing-up-12-yoy-in-q326-report"
+  },
+  {
+    "headline": "Indian IPOs Raise Record Rs 2.23 Lakh Crore Across 375 Issues",
+    "date": "2026-11-07",
+    "category": "Finance",
+    "summary": "India's primary equity market mobilized an all-time high of Rs 2.23 lakh crore across 375 mainboard and SME IPOs during Samvat 2082, with 230 issues listing above their offer prices. Mainboard offerings alone raised Rs 2.12 lakh crore across 131 issues between October 21, 2025 and November 6, 2026, marking a 19.6% increase over the Rs 1.78 lakh crore raised across 104 issues in the prior year.",
+    "angle": "Expect finance panelists to probe whether a record Rs 2.12 lakh crore mainboard IPO wave—where over a third of total issues still list at or below offer price—signals healthy capital formation or late-cycle retail liquidity froth. How would you value an Offer-for-Sale (OFS)-heavy listing when promoters exit at peak multiples while secondary market breadth narrows?",
+    "source": "https://www.mid-day.com/business/business-news/article/indian-ipos-raise-record-rs-223-lakh-crore-during-samvat-2082-23658926"
+  },
+  {
+    "headline": "K-Beauty Surge Drives Flipkart Festive Ad CPCs Up 2.5x",
+    "date": "2026-11-07",
+    "category": "Marketing",
+    "summary": "Korean skincare now accounts for nearly 50% of digital agency HiveMinds' beauty portfolio for a major Indian retailer as shoppers shortlist brands before festive sales begin. During the 2026 festive window, Flipkart click costs jumped up to 2.5 times normal levels while generic keyword efficiency fell by roughly 50%, and marketplace gadget conversions dropped from 4% to 2% when delivery stretched beyond next-day fulfillment.",
+    "angle": "An interviewer will press you on the customer acquisition cost (CAC) trap between upper-funnel brand building and lower-funnel retail media bidding when marketplace CPCs spike 2.5x during peak sales. How should a challenger D2C beauty brand allocate budget across creator-led discovery, marketplace search ads, and quick-commerce dark store inventory when slower delivery cuts conversion in half?",
+    "source": "https://www.exchange4media.com/marketing-news/how-is-korean-skincare-creating-a-new-battleground-for-beauty-advertisers-159986.html"
+  },
+  {
+    "headline": "PowerUp Money Raises $10M at $73M Valuation to Monetize AI Wealth",
+    "date": "2026-11-07",
+    "category": "Product Management",
+    "summary": "Indian WealthTech startup PowerUp Money raised $10 million led by Flourish Ventures at a $73 million valuation, following its $12 million Series A in December 2025. The platform tracks over Rs 2.5 lakh crore in assets across more than 1.5 million users and is launching paid AI-led advisory and managed wealth products as India's monthly mutual fund SIP inflows hit a record Rs 32,490 crore.",
+    "angle": "Product panelists will test how a freemium fintech app tracking Rs 2.5 lakh crore for 1.5 million users can convert passive portfolio trackers into paying advisory subscribers without triggering high churn. Should the PM monetize via flat SaaS subscriptions, AUM-linked fees, or embedded transaction commissions when zero-commission direct mutual fund apps dominate user habits?",
+    "source": "https://fintech.global/2026/11/06/powerup-money-bets-10m-on-ai-led-wealth-advice-in-india/"
   },
   {
     "headline": "RBI forms TCCFM panel to manage currency and bond volatility",
