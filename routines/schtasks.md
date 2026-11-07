@@ -14,31 +14,31 @@ inside the same minute (the current in-app crons have `business-radar` and
 ```bat
 :: technical radar — 07:08 daily
 schtasks /create /tn "waibi\daily-ai-seo-radar" /sc daily /st 07:08 ^
-  /tr "pwsh -NoProfile -File C:\Users\Janmejai\PluginsClaude\routines\run.ps1 -Routine daily-ai-seo-radar" /rl LIMITED /f
+  /tr "powershell -NoProfile -File C:\Users\Janmejai\janmejai2002.github.io\routines\run.ps1 -Routine daily-ai-seo-radar" /rl LIMITED /f
 
 :: business radar — 07:12 daily
 schtasks /create /tn "waibi\business-radar" /sc daily /st 07:12 ^
-  /tr "pwsh -NoProfile -File C:\Users\Janmejai\PluginsClaude\routines\run.ps1 -Routine business-radar" /rl LIMITED /f
+  /tr "powershell -NoProfile -File C:\Users\Janmejai\janmejai2002.github.io\routines\run.ps1 -Routine business-radar" /rl LIMITED /f
 
 :: basics radar — 07:16 daily
 schtasks /create /tn "waibi\basics-radar" /sc daily /st 07:16 ^
-  /tr "pwsh -NoProfile -File C:\Users\Janmejai\PluginsClaude\routines\run.ps1 -Routine basics-radar" /rl LIMITED /f
+  /tr "powershell -NoProfile -File C:\Users\Janmejai\janmejai2002.github.io\routines\run.ps1 -Routine basics-radar" /rl LIMITED /f
 
 :: writer — every 4 hours
 schtasks /create /tn "waibi\ai-article-writer" /sc hourly /mo 4 /st 00:05 ^
-  /tr "pwsh -NoProfile -File C:\Users\Janmejai\PluginsClaude\routines\run.ps1 -Routine ai-article-writer" /rl LIMITED /f
+  /tr "powershell -NoProfile -File C:\Users\Janmejai\janmejai2002.github.io\routines\run.ps1 -Routine ai-article-writer" /rl LIMITED /f
 
 :: talks writer — 08:33 daily
 schtasks /create /tn "waibi\talks-writer" /sc daily /st 08:33 ^
-  /tr "pwsh -NoProfile -File C:\Users\Janmejai\PluginsClaude\routines\run.ps1 -Routine talks-writer" /rl LIMITED /f
+  /tr "powershell -NoProfile -File C:\Users\Janmejai\janmejai2002.github.io\routines\run.ps1 -Routine talks-writer" /rl LIMITED /f
 
 :: case studies writer — 08:52 daily
 schtasks /create /tn "waibi\case-studies-writer" /sc daily /st 08:52 ^
-  /tr "pwsh -NoProfile -File C:\Users\Janmejai\PluginsClaude\routines\run.ps1 -Routine case-studies-writer" /rl LIMITED /f
+  /tr "powershell -NoProfile -File C:\Users\Janmejai\janmejai2002.github.io\routines\run.ps1 -Routine case-studies-writer" /rl LIMITED /f
 
 :: artwork — every 4 hours at :35
 schtasks /create /tn "waibi\artwork-routine" /sc hourly /mo 4 /st 01:35 ^
-  /tr "pwsh -NoProfile -File C:\Users\Janmejai\PluginsClaude\routines\run.ps1 -Routine artwork-routine" /rl LIMITED /f
+  /tr "powershell -NoProfile -File C:\Users\Janmejai\janmejai2002.github.io\routines\run.ps1 -Routine artwork-routine" /rl LIMITED /f
 ```
 
 ## The watchdog
@@ -47,10 +47,10 @@ Independent of the routine cutover — safe to add now.
 
 ```bat
 schtasks /create /tn "waibi\manager" /sc minute /mo 10 ^
-  /tr "pwsh -NoProfile -File C:\Users\Janmejai\PluginsClaude\routines\manager.ps1" /rl LIMITED /f
+  /tr "powershell -NoProfile -File C:\Users\Janmejai\janmejai2002.github.io\routines\manager.ps1" /rl LIMITED /f
 ```
 
-Test it first: `pwsh routines\manager.ps1 -DryRun`.
+Test it first: `powershell routines\manager.ps1 -DryRun`.
 
 ## Disable the in-app twin as each one is proven
 

@@ -26,3 +26,9 @@ publish-manifest.json
 # manager watchdog state + log
 /routines/.manager-state.json
 /routines/manager.log
+
+# codemap AST graph
+.codegraph/
+
+# Archify visual-check sidecars
+*.visual-check.*

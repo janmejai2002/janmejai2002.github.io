@@ -1,5 +1,45 @@
 [
   {
+    "headline": "Consultancies reshape IPO due diligence around quick-commerce margins",
+    "date": "2026-11-07",
+    "category": "Consulting",
+    "summary": "Capital market advisory practices report that FMCG and retail DRHPs are pivoting pitch books from traditional distributor metrics to quick-commerce GMV splits, forcing consultants to audit dark store unit economics rather than legacy retail shelf share.",
+    "angle": "High-yield strategy consulting interview prompt on channel conflict — whether FMCG margin dilution in quick commerce can be offset by customer acquisition velocity.",
+    "source": "https://redseer.com/"
+  },
+  {
+    "headline": "India IPO market hits ₹1.58 lakh crore across 109 issues in 2026",
+    "date": "2026-11-07",
+    "category": "Finance",
+    "summary": "India's mainboard primary market crossed ₹1.58 lakh crore in capital raised across 109 issues in 2026, marking one of its busiest listing stretches before entering a brief consolidation ahead of December mega-offerings.",
+    "angle": "Classic B-school corporate finance question on valuation froth vs capital depth — how CFOs decide whether to list during peak liquidity windows or wait out secondary market volatility.",
+    "source": "https://www.businesstoday.in/"
+  },
+  {
+    "headline": "RBI forms TCCFM panel to manage currency and bond volatility",
+    "date": "2026-11-06",
+    "category": "Operations",
+    "summary": "The Reserve Bank of India formed the Technical Consultative Committee for Financial Markets headed by Deputy Governor Rohit Jain to tackle forex reserves shifts, money-market operational friction, and market volatility through quarterly external expert reviews.",
+    "angle": "Tests macroeconomic and treasury operations literacy — how central bank liquidity absorption tools impact commercial bank net interest margins (NIMs).",
+    "source": "https://www.business-standard.com/"
+  },
+  {
+    "headline": "Wealthtechs convert to public corporate structures ahead of 2027 IPOs",
+    "date": "2026-11-06",
+    "category": "Product Management",
+    "summary": "Indian wealth-management apps led by Scripbox and peers restructured corporate charters to public limited entities, aligning user retention metrics and fee structures with strict SEBI governance mandates ahead of anticipated listings.",
+    "angle": "Essential product management question on SaaS vs AUM monetization — how financial product teams navigate user churn when transitioning from commission-based models to fee-only advisory.",
+    "source": "https://eletsonline.com/"
+  },
+  {
+    "headline": "Retail media ad spend surges as quick-commerce dark stores expand",
+    "date": "2026-11-05",
+    "category": "Marketing",
+    "summary": "FMCG brands redirected over 18% of their festive digital ad budgets into in-app sponsored listings on quick commerce platforms, creating a fast-growing retail media network rivaling traditional e-commerce marketplaces.",
+    "angle": "Core brand marketing interview challenge on attribution — how CMOs justify high platform bidding costs when quick-commerce purchases cannibalize existing supermarket sales.",
+    "source": "https://www.storyboard18.com/"
+  },
+  {
     "headline": "12th Product Management Summit & Awards 2026 convenes 1,350+ leaders in Bengaluru",
     "date": "2026-09-10",
     "category": "Product Management",
@@ -987,14 +1027,6 @@
     "headline": "India's manufacturing PMI slips to a 5-year low",
     "date": "2026-09-01",
     "category": "Operations",
-    "summary": "India's manufacturing PMI fell to 52.8 in August, a five-year low, as new business and output grew at their slowest pace in five years even though the index stayed above the 50 growth mark.",
-    "angle": "A clean demand-side operations prompt — what falling new-order growth (versus a still-positive PMI) tells you about capacity-planning decisions.",
-    "source": "https://www.business-standard.com/economy/news/india-manufacturing-pmi-august-2026-hsbc-demand-jobs-126090100499_1.html"
-  },
-  {
-    "headline": "India's manufacturing PMI slips to a 5-year low",
-    "date": "2026-09-01",
-    "category": "Operations",
     "summary": "The HSBC/S&P Global India Manufacturing PMI fell to 52.8 in August 2026 from 53.5 in July, the slowest pace of factory expansion in five years, as softer domestic demand, weaker export momentum and cautious hiring weighed on manufacturers, though still above the 50-mark growth line.",
     "angle": "Tests whether candidates can read a leading operations indicator and connect it to real drivers (demand, exports, hiring) rather than just quoting the number.",
     "source": "https://www.business-standard.com/economy/news/india-manufacturing-pmi-august-2026-hsbc-demand-jobs-126090100499_1.html"
@@ -1821,14 +1853,6 @@
     "category": "Consulting",
     "summary": "The government appointed BCG India chairman Janmejaya Sinha as a part-time, non-official director on the RBI's central board for four years, alongside former diplomat Syed Akbaruddin and ex-bureaucrat Annie George Mathew.",
     "angle": "A sharp example of the revolving door between top consultants and economic policymaking — good for questions on how consulting expertise translates to public policy.",
-    "source": "https://www.business-standard.com/finance/news/govt-appoints-mathew-sinha-akbaruddin-as-part-time-rbi-board-directors-126082401341_1.html"
-  },
-  {
-    "headline": "BCG India Chairman Janmejaya Sinha Named to RBI's Central Board",
-    "date": "2026-08-24",
-    "category": "Consulting",
-    "summary": "The government appointed Janmejaya Sinha, chairman of BCG India, as a part-time, non-official director on RBI's central board for a four-year term effective August 24, 2026.",
-    "angle": "Signals how consulting leadership increasingly bridges into public monetary-policy institutions — expect a question on where consulting expertise adds value inside a regulator.",
     "source": "https://www.business-standard.com/finance/news/govt-appoints-mathew-sinha-akbaruddin-as-part-time-rbi-board-directors-126082401341_1.html"
   },
   {
@@ -4678,14 +4702,6 @@
     "summary": "Blinkit, Zepto and Instamart's combined advertising revenue is projected to rise to nearly Rs 4,900 crore this year, up from about Rs 3,000 crore in 2025, as FMCG and beauty brands shift ad budgets to retail media.",
     "angle": "A good prompt on the rise of 'retail media' as a new marketing channel and how it is reshaping FMCG media-mix decisions.",
     "source": "https://www.storyboard18.com/brand-marketing/fmcg-brands-increase-ad-spend-on-blinkit-zepto-and-instamart-for-growth-ws-l-99756.htm"
-  },
-  {
-    "headline": "Welspun One to nearly double its warehousing footprint",
-    "date": "2026-06-02",
-    "category": "Operations",
-    "summary": "Warehousing developer Welspun One plans to lease over 10 million sq ft of new logistics space over the next three years, after a record 2.5 million sq ft leased in FY26 to clients including Amazon and 3PL operators.",
-    "angle": "Ties directly to India's e-commerce and manufacturing growth story - a good so-what on why logistics real estate is booming.",
-    "source": "https://www.business-standard.com/companies/news/welspun-one-plans-leasing-over-10-million-sq-ft-in-next-3-years-126060201006_1.html"
   },
   {
     "headline": "Welspun One to nearly double its warehousing footprint",

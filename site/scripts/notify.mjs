@@ -19,17 +19,19 @@
  */
 import { readFileSync } from 'node:fs';
 
-const LOCAL_ENV = 'C:/Users/Janmejai/Notion/.env';
+const LOCAL_ENVS = ['C:/Users/Janmejai/.env.global', 'C:/Users/Janmejai/Notion/.env'];
 
 function fromEnv(name) {
   if (process.env[name]) return process.env[name].trim();
-  try {
-    const line = readFileSync(LOCAL_ENV, 'utf8')
-      .split(/\r?\n/)
-      .find((l) => l.startsWith(`${name}=`));
-    if (line) return line.slice(name.length + 1).trim().replace(/^["']|["']$/g, '');
-  } catch {
-    /* not on the authoring machine */
+  for (const envPath of LOCAL_ENVS) {
+    try {
+      const line = readFileSync(envPath, 'utf8')
+        .split(/\r?\n/)
+        .find((l) => l.startsWith(`${name}=`));
+      if (line) return line.slice(name.length + 1).trim().replace(/^["']|["']$/g, '');
+    } catch {
+      /* continue */
+    }
   }
   return null;
 }

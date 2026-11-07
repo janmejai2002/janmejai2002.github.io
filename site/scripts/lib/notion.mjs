@@ -10,22 +10,24 @@
 import { readFileSync } from 'node:fs';
 
 const NOTION_VERSION = '2025-09-03';
-const LOCAL_ENV = 'C:/Users/Janmejai/Notion/.env';
+const LOCAL_ENVS = ['C:/Users/Janmejai/.env.global', 'C:/Users/Janmejai/Notion/.env'];
 
 export const PIPELINE_DS = '511e41a3-c1cd-47e0-8fa2-d319feef0ced';
 export const PRODUCTION_DS = 'd39ea073-cc87-4c25-8a3c-d9f276a59b68';
 
 export function token() {
   if (process.env.NOTION_TOKEN) return process.env.NOTION_TOKEN.trim();
-  try {
-    const line = readFileSync(LOCAL_ENV, 'utf8')
-      .split(/\r?\n/)
-      .find((l) => l.startsWith('NOTION_TOKEN='));
-    if (line) return line.slice('NOTION_TOKEN='.length).trim().replace(/^["']|["']$/g, '');
-  } catch {
-    /* not on the authoring machine — fall through to the error below */
+  for (const envPath of LOCAL_ENVS) {
+    try {
+      const line = readFileSync(envPath, 'utf8')
+        .split(/\r?\n/)
+        .find((l) => l.startsWith('NOTION_TOKEN='));
+      if (line) return line.slice('NOTION_TOKEN='.length).trim().replace(/^["']|["']$/g, '');
+    } catch {
+      /* continue checking next path */
+    }
   }
-  throw new Error('No NOTION_TOKEN in the environment. In CI, set it as a repository secret.');
+  throw new Error('No NOTION_TOKEN in the environment. Set NOTION_TOKEN in .env.global or as a repository secret.');
 }
 
 export async function api(path, { method = 'GET', body } = {}) {

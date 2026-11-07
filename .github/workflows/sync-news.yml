@@ -79,14 +79,14 @@ jobs:
         working-directory: site
         run: npm ci
 
-      - name: Refresh news.json from Notion
+      - name: Refresh news.json from Sources (Google Sheet + Notion)
         working-directory: site
         env:
           NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+          GOOGLE_SHEET_ID: ${{ vars.GOOGLE_SHEET_ID }}
         run: node scripts/sync-news.mjs
 
-      # The /status/ page reads this. Same token, same schedule, same commit —
-      # there is no reason to run it on its own cadence.
+      # The /status/ page reads this.
       - name: Refresh status.json from Notion
         working-directory: site
         env:
@@ -96,7 +96,7 @@ jobs:
       - name: Check whether anything changed
         id: diff
         run: |
-          if [ -n "$(git status --porcelain site/src/data/)" ]; then
+          if [ -n "$(git status --porcelain site/src/data/news.json)" ]; then
             echo "changed=true" >> "$GITHUB_OUTPUT"
             echo "count=$(node -e "console.log(require('./site/src/data/news.json').length)")" >> "$GITHUB_OUTPUT"
           else

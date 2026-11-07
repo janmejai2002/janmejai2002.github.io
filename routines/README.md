@@ -51,9 +51,9 @@ Confirm it with `runs.jsonl` once a few runs have gone through.
    writes are not.
 1. **Prereqs**: `notion.mjs`, `notify.mjs`, `log-run.mjs` on `main`; `NOTION_TOKEN`
    in `C:/Users/Janmejai/Notion/.env` (already there).
-2. **One dry run**: `pwsh routines/run.ps1 -Routine business-radar -DryRun`
+2. **One dry run**: `powershell routines/run.ps1 -Routine business-radar -DryRun`
    — prints the command, runs nothing.
-3. **One real run by hand**: `pwsh routines/run.ps1 -Routine business-radar`
+3. **One real run by hand**: `powershell routines/run.ps1 -Routine business-radar`
    Then check Notion: did it file an idea row that looks like a normal
    `business-radar` run? Check `routines/runs/` for the transcript and
    `routines/runs.jsonl` for the token count.
@@ -66,7 +66,7 @@ Confirm it with `runs.jsonl` once a few runs have gone through.
 
 ## Trying Haiku on the radars
 
-`pwsh routines/run.ps1 -Routine daily-ai-seo-radar -Model haiku`. Run both
+`powershell routines/run.ps1 -Routine daily-ai-seo-radar -Model haiku`. Run both
 models for two weeks; compare the owner's `Interest Rating`s on what each filed.
 Keep the writers on `sonnet` regardless.
 
@@ -78,7 +78,7 @@ deploy/publish **once** (rate-limited, logged), push one alert for anything a
 human must see, and once a day a plain-language digest via a `claude -p`
 one-shot. It never writes Notion, never runs git, never sets Draft Status; it
 only ever dispatches `deploy.yml` / `publish-from-notion.yml`, capped at 4
-re-triggers per rolling day. Test: `pwsh routines/manager.ps1 -DryRun`. Wire it
+re-triggers per rolling day. Test: `powershell routines/manager.ps1 -DryRun`. Wire it
 up from `schtasks.md`.
 
 ## Files

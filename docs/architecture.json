@@ -1,0 +1,248 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "wAIbi-sabi System Architecture",
+    "output": "wAIbi-sabi-architecture.html",
+    "quality_profile": "showcase",
+    "views": [
+      {
+        "id": "full-flow",
+        "label": "End-to-End Pipeline",
+        "focus": ["notion", "notion_cli", "routines", "guardrails", "artwork_gen", "astro_build", "github_actions", "github_pages", "close_loop", "readers"],
+        "note": "Follow content from Notion idea through autonomous routines, quality gates, static build, edge deployment, and closed-loop reconciliation."
+      },
+      {
+        "id": "editorial-gates",
+        "label": "Editorial & Quality Gates",
+        "focus": ["notion", "routines", "guardrails", "artwork_gen", "astro_build"],
+        "note": "Strict assertion gates: title caps, claim ledgers, palette tokens, and build verification."
+      },
+      {
+        "id": "reconciliation",
+        "label": "Edge Deploy & Reconciliation",
+        "focus": ["astro_build", "github_actions", "github_pages", "close_loop", "notion"],
+        "note": "Close-loop verification: Notion rows are only marked Published after the live URL serves HTTP 200."
+      }
+    ]
+  },
+  "components": [
+    {
+      "id": "notion",
+      "type": "database",
+      "label": "Notion Control Plane",
+      "sublabel": "Radar, Drafts, News DB",
+      "pos": [40, 70],
+      "size": [160, 52],
+      "tag": "Source of Truth"
+    },
+    {
+      "id": "notion_cli",
+      "type": "backend",
+      "label": "Headless Notion CLI",
+      "sublabel": "scripts/notion.mjs",
+      "pos": [260, 70],
+      "size": [150, 52],
+      "tag": "Token-cheap"
+    },
+    {
+      "id": "routines",
+      "type": "backend",
+      "label": "Scheduled Routines",
+      "sublabel": "7 Radars & Writers",
+      "pos": [470, 70],
+      "size": [150, 52],
+      "tag": "Local tasks"
+    },
+    {
+      "id": "guardrails",
+      "type": "security",
+      "label": "Editorial Guard",
+      "sublabel": "check-build.mjs",
+      "pos": [260, 195],
+      "size": [150, 52],
+      "tag": "70/160 Caps"
+    },
+    {
+      "id": "artwork_gen",
+      "type": "backend",
+      "label": "Artwork Engine",
+      "sublabel": "make-images.mjs",
+      "pos": [470, 195],
+      "size": [150, 52],
+      "tag": "SVG to WebP"
+    },
+    {
+      "id": "astro_build",
+      "type": "frontend",
+      "label": "Astro 5 SSG",
+      "sublabel": "site/src/ (40+ pages)",
+      "pos": [680, 195],
+      "size": [150, 52],
+      "tag": "Zero runtime JS"
+    },
+    {
+      "id": "close_loop",
+      "type": "backend",
+      "label": "Close-Loop Reconciler",
+      "sublabel": "scripts/close-loop.mjs",
+      "pos": [40, 320],
+      "size": [160, 52],
+      "tag": "Verify 200"
+    },
+    {
+      "id": "github_actions",
+      "type": "cloud",
+      "label": "GitHub Actions",
+      "sublabel": "deploy.yml / sync.yml",
+      "pos": [260, 320],
+      "size": [150, 52],
+      "tag": "CI/CD Orchestrator"
+    },
+    {
+      "id": "github_pages",
+      "type": "cloud",
+      "label": "GitHub Pages Edge",
+      "sublabel": "janmejai2002.github.io",
+      "pos": [470, 320],
+      "size": [150, 52],
+      "tag": "Live CDN"
+    },
+    {
+      "id": "readers",
+      "type": "external",
+      "label": "Readers & Students",
+      "sublabel": "5 Tracks & Archive",
+      "pos": [680, 320],
+      "size": [150, 52],
+      "tag": "Global Traffic"
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "Control & Authoring Plane",
+      "wraps": ["notion", "notion_cli", "routines"]
+    },
+    {
+      "kind": "security-group",
+      "label": "Build & Validation Pipeline",
+      "wraps": ["guardrails", "artwork_gen", "astro_build"]
+    },
+    {
+      "kind": "region",
+      "label": "Delivery & Verification Edge",
+      "wraps": ["close_loop", "github_actions", "github_pages", "readers"]
+    }
+  ],
+  "connections": [
+    {
+      "id": "notion-to-cli",
+      "from": "notion",
+      "to": "notion_cli",
+      "label": "REST query",
+      "labelDy": -19
+    },
+    {
+      "id": "cli-to-routines",
+      "from": "notion_cli",
+      "to": "routines",
+      "label": "prompts & ideas",
+      "labelDy": -19
+    },
+    {
+      "id": "routines-to-guardrails",
+      "from": "routines",
+      "to": "guardrails",
+      "label": "claim ledger & text",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "labelAt": [425, 155]
+    },
+    {
+      "id": "guardrails-to-artwork",
+      "from": "guardrails",
+      "to": "artwork_gen",
+      "label": "approved plate",
+      "labelDy": -19
+    },
+    {
+      "id": "artwork-to-astro",
+      "from": "artwork_gen",
+      "to": "astro_build",
+      "label": "WebP assets",
+      "labelDy": -19
+    },
+    {
+      "id": "astro-to-actions",
+      "from": "astro_build",
+      "to": "github_actions",
+      "label": "git push / PR",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "labelAt": [595, 280]
+    },
+    {
+      "id": "actions-to-pages",
+      "from": "github_actions",
+      "to": "github_pages",
+      "label": "deploy dist/",
+      "variant": "emphasis",
+      "labelDy": -19
+    },
+    {
+      "id": "pages-to-readers",
+      "from": "github_pages",
+      "to": "readers",
+      "label": "serve static HTML",
+      "variant": "emphasis",
+      "labelDy": -19
+    },
+    {
+      "id": "actions-to-closeloop",
+      "from": "github_actions",
+      "to": "close_loop",
+      "label": "post-deploy check",
+      "labelDy": -19
+    },
+    {
+      "id": "closeloop-to-notion",
+      "from": "close_loop",
+      "to": "notion",
+      "label": "mark Published (200 OK)",
+      "variant": "security",
+      "fromSide": "top",
+      "toSide": "bottom",
+      "labelAt": [120, 220]
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Notion Control Plane",
+      "items": [
+        "Three central databases: Pipeline Radar, Article Production, News Archive",
+        "Human gate: Interest Rating 4/5 & Draft Status = Approved",
+        "Headless scripts/notion.mjs CLI replaces MCP to save ~100k tokens per run"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Five Themed Tracks",
+      "items": [
+        "Technical (Mizu teal), Business (Ochre), Basics (Plum)",
+        "Case Studies (Moss green) & Talks (Hanko red)",
+        "Two paths: Unattended for Talks/Cases, Reviewed PR for Tech/Biz"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "Unbreakable Guardrails",
+      "items": [
+        "Strict schema caps: Title <= 70, Meta description <= 160, Question <= 120",
+        "check-build.mjs asserts zero escaped HTML, valid SVG, required heroAlt",
+        "Close-loop reconciler writes Published to Notion ONLY on live HTTP 200"
+      ]
+    }
+  ]
+}
