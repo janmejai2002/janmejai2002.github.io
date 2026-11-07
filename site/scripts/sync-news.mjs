@@ -202,11 +202,11 @@ if (notionToken) {
             method: 'POST',
             headers: {
               Authorization: `Bearer ${notionToken.trim()}`,
-              'Notion-Version': '2022-06-28',
+              'Notion-Version': '2025-09-03',
               'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-              parent: { database_id: DATA_SOURCE_ID },
+              parent: { type: 'data_source_id', data_source_id: DATA_SOURCE_ID },
               properties: {
                 Headline: { title: [{ text: { content: item.headline } }] },
                 Date: { date: { start: item.date } },
