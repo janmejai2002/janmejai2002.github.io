@@ -1,5 +1,45 @@
 [
   {
+    "headline": "BARC Faces Cash Crunch as Monthly Burn Hits Rs 25 Cr in TRP Freeze",
+    "date": "2026-11-08",
+    "category": "Marketing",
+    "summary": "Broadcast Audience Research Council (BARC) India is burning nearly Rs 25 crore a month—roughly Rs 300 crore annualized—while a government television ratings suspension since March 2026 threatens a six-month revenue loss of Rs 40 crore to Rs 150 crore. Even as broadcasters delay subscription dues, BARC must expand its metered panel from 70,876 to 80,000 households by December under the revised 2026 policy, putting 1,500 measurement jobs at risk.",
+    "angle": "An interviewer will ask how a consumer brand manager should price linear TV inventory during the festive peak when the industry's sole measurement currency is blacked out. If broadcasters still charge a floor of 0.8% of net ad revenue to fund BARC, how much budget should a media planner shift from unmeasured linear TV into retail media and connected TV where attribution is immediate?",
+    "source": "https://www.exchange4media.com/media-tv-news/barc-running-out-of-funds-as-monthly-expenses-touch-rs25-crore-nakul-chopra-flags-concerns-160009.html"
+  },
+  {
+    "headline": "Coca-Cola India Bottler HCCH Files DRHP for 99.75-Cr Share IPO",
+    "date": "2026-11-08",
+    "category": "Finance",
+    "summary": "Hindustan Coca-Cola Holdings (HCCH), owned 60% by Coca-Cola's overseas arm and 40% by Jubilant Beverages, filed draft papers with SEBI for an Offer for Sale of up to 99.75 crore equity shares. The bottler runs 14 plants serving 1.7 million outlets via 2,273 distributors and grew June-quarter operating revenue 20.46% year-on-year to Rs 4,310.17 crore on 18.61% volume growth, after raising Rs 2,420 crore ($290 million) from refranchising northern and eastern territories in 2024.",
+    "angle": "Finance panelists will press you on why global FMCG parents use pure Offer-for-Sale (OFS) listings and refranchising to strip capital-heavy bottling plants off their balance sheets while keeping high-margin concentrate economics. When zero IPO proceeds enter HCCH for capex, how should institutional investors benchmark its valuation multiple against listed peers like Varun Beverages?",
+    "source": "https://timesofindia.indiatimes.com/business/india-business/coca-colas-indian-bottling-business-files-for-ipo-99-75-crore-shares-up-for-sale/articleshow/135633740.cms"
+  },
+  {
+    "headline": "Nasscom Flags IT Fresher Squeeze as Net Hiring Slows to 135,000",
+    "date": "2026-11-08",
+    "category": "Consulting",
+    "summary": "Nasscom president Rajesh Nambiar warned that AI automation of entry-level coding and software testing is shrinking fresher hiring across India's 6-million-person tech workforce, which added just 135,000 net jobs (up 2.3% year-on-year) in FY26 against 2.6 million engineering enrollments across 5,903 colleges. While TCS grew annualized AI revenue 19% to $3.1 billion (0.5% sequential total growth) and Infosys grew quarterly AI revenue 29% while cutting FY27 revenue guidance to 1–2%, Nasscom and the UGC are co-designing a revised undergraduate AI curriculum targeted for approval in six months.",
+    "angle": "Consulting interviewers will press you on both the enterprise delivery pyramid and the public-policy translation gap: if AI eliminates the entry-level coding and testing tasks that historically trained junior analysts at TCS and Infosys, how do advisory firms build future mid-level architects? On the policy side, can a six-month UGC curriculum overhaul realistically fix employability across 5,903 colleges when corporate clients are cutting headcount growth to 1–2%?",
+    "source": "https://aiweekly.co/alerts/nasscom-chief-warns-ai-is-squeezing-indias-it-freshers-out"
+  },
+  {
+    "headline": "Production AI Agents Run on $15-$100 Monthly Token Costs per Job",
+    "date": "2026-11-08",
+    "category": "Product Management",
+    "summary": "Field benchmarks from Automaton show custom enterprise AI agents cost $2,000 to $50,000 to build on top of $20-to-$200 monthly seat licenses, while model inference runs just $15 to $100 per month per workflow when routine tasks route to $0.10-per-million-token models. An estate-planning intake agent cut lead reply times from 52 hours to under 4 minutes and lifted consultations 2.4x, though Gartner projects over 40% of agentic AI projects will be canceled by 2027 due to missing human hand-off rules and dirty CRM data.",
+    "angle": "Product interviewers will ask where to draw the boundary between autonomous execution (Tier A) and mandatory human approval (Tier B) when designing B2B workflow agents. Since token inference costs are negligible compared to integration cleanup and six-to-twelve-month tuning retainers, how should a PM price an agent product—per seat, per resolved outcome, or via hybrid platform retainers?",
+    "source": "https://automatonagency.com/insights/ai-agents-for-business"
+  },
+  {
+    "headline": "Zepto Peak Hits 14,000 Coins an Hour as Diwali Buyers Use Q-Comm",
+    "date": "2026-11-08",
+    "category": "Operations",
+    "summary": "Zepto delivered over 14,000 gold and silver coins per hour (298 coins per minute) at peak Dhanteras demand while broom and steel utensil orders jumped 38.6x and 20x over normal days. Swiggy Instamart recorded a 23x spike in gold coin orders—including single carts worth Rs 1.73 lakh—and a 903% surge in midnight-to-2-AM decorative light orders, while Flipkart Minutes saw overall orders triple and kitchen appliance sales rise 10x.",
+    "angle": "Operations panelists will probe the dark store inventory and security tradeoffs of stocking high-value, low-cube SKUs like gold coins alongside bulky, seasonal items like air fryers and dinner sets that spike 344% for just one week. How do you model working capital, shrinkage risk, and midnight rider utilization when non-grocery festive assortment distorts standard 10-minute replenishment cycles?",
+    "source": "https://economictimes.indiatimes.com/industry/services/retail/happy-diwali-2026-14000-gold-silver-coins-delivered-per-hour-shopping-shifts-to-quick-commerce-zepto-instamart-flipkart/articleshow/135631310.cms"
+  },
+  {
     "headline": "Accenture Hits $74.2B Revenue as AI Compresses Billable Hour Model",
     "date": "2026-11-07",
     "category": "Consulting",
