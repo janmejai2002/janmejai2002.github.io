@@ -3,6 +3,7 @@ title: 'Zubin Ghahramani: Why AI Needs to Doubt Itself'
 description: 'DeepMind''s Zubin Ghahramani says true AI needs uncertainty, not just confident answers. What his 30-year case holds up and what doesn''t.'
 pubDate: 2026-09-02
 track: talks
+draft: true
 question: 'Can an AI that never says ''I don''t know'' ever be trusted?'
 keywords:
   - Zubin Ghahramani
@@ -64,10 +65,3 @@ The supplied transcript cuts off mid-sentence, mid-anecdote about early parallel
 
 - Google DeepMind, "The Podcast" — interview with Zubin Ghahramani (professor, University of Cambridge; co-lead of frontier AI, Google DeepMind), transcript as supplied for this piece. Note: the transcript's automatic speaker labeling renders his name as "Zuben Garammani," an evident transcription error for Zubin Ghahramani.
 - No independent sources were consulted for this draft; per protocol, only the supplied transcript was available in this pass. Figures such as "99%" and "orders of magnitude" are quoted as spoken and have not been cross-checked against any named paper or dataset.
-
-<!--
-Artwork brief — from the writer routine. Draw per docs/ARTWORK.md,
-then delete this comment.
-
-Argument in one sentence: an AI that answers with total confidence in every situation is more dangerous than one that knows when to hesitate. Geometry: a single circle rendered slightly off-round, with one segment of its line broken into a dotted, uncertain arc instead of solid — order interrupted by an honest gap. Accent hanko: small red stamped square bearing a stylized question mark in place of a character. Deliberate imperfection: the dotted arc should not close cleanly against the solid line — leave a visible, asymmetric seam where they meet.
--->

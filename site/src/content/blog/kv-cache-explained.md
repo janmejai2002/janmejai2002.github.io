@@ -2,7 +2,7 @@
 title: 'Memory Bandwidth Not GPU Compute Limits LLM Token Generation Speed'
 description: 'Autoregressive LLM decoding stalls on HBM bandwidth at ~1 FLOP/byte while H100 Tensor Cores need 295 FLOPs/byte. Learn KV cache math, GQA, and MLA.'
 pubDate: 2026-11-09
-track: basics
+track: technical
 question: 'Why does token generation saturate GPU memory bandwidth while compute units sit idle?'
 keywords:
   - KV Cache Memory Bandwidth
@@ -81,34 +81,36 @@ In Step $t=3$, query $q_3$ is a $1\times d_{\text{head}}$ vector, making $q_3 K^
 
 Production LLM inference splits requests into two phases with opposite bottlenecks ([Optimizing Offline Inference with Resource-Aware Batching, arXiv:2411.16102](https://arxiv.org/html/2411.16102v2)). Contrasting the prefill vs decode phase numerically explains why is first token slower than rest in interactive apps.
 
-Consider an 8B model ($P=8\times 10^9$ parameters, `16GB` in FP16) on an [NVIDIA H100 SXM5](https://www.nvidia.com/en-us/data-center/h100/) (ridge point: `295.2 FLOPs/byte`):
+Consider an 8B model (`P = 8 × 10⁹` parameters, `16GB` in FP16) on an [NVIDIA H100 SXM5](https://www.nvidia.com/en-us/data-center/h100/) (ridge point: `295.2 FLOPs/byte`):
 
-1. **Prefill Phase (Time-to-First-Token / TTFT):** At $S=2,048$ prompt tokens ($B=1$), the GPU loads `16GB` of weights once and multiplies them across all 2,048 tokens in parallel via GEMM kernels, executing $2\cdot P\cdot S=32.77\text{ TFLOPs}$ while reading `16GB` of weights and writing `268.4MB` of KV states (`16.27GB` traffic). Arithmetic intensity hits $32.77\text{ TFLOPs}/16.27\text{GB}\approx 2,014\text{ FLOPs/byte}$ ([NeevCloud / Databricks Analysis](https://neevcloud.com/blogs/gpu-memory-bandwidth-vs-compute-what-actually-limits-llm-inf)), nearly 7x above the `295.2 FLOPs/byte` ridge point. Prefill is compute-bound, waiting on Tensor Cores to finish $32.77\text{ TFLOPs}$ before emitting token one.
-1. **Decode Phase (Inter-Token Latency / ITL):** Generating $S_{\text{step}}=1$ token executes $16\text{ GFLOPs}$ of weight math plus $1.07\text{ GFLOPs}$ of attention (`17.07 GFLOPs` total) while streaming `16GB` of weights plus `268.4MB` of KV cache (`16.27GB`). Arithmetic intensity transformer decoding drops to $17.07\text{ GFLOPs}/16.27\text{GB}\approx 1.05\text{ FLOPs/byte}$, sitting 280x below the H100 ridge point. Even at batch size $B=32$, reading `16GB` of shared weights plus $32\times 268.4\text{MB}=8.59\text{GB}$ of KV caches reaches only $\approx 22.2\text{ FLOPs/byte}$.
+1. **Prefill Phase (Time-to-First-Token / TTFT):** At sequence length `S = 2,048` prompt tokens (`B = 1`), the GPU loads `16GB` of weights once and multiplies them across all 2,048 tokens in parallel via GEMM kernels, executing `2 · P · S = 32.77 TFLOPs` while reading `16GB` of weights and writing `268.4MB` of KV states (`16.27GB` traffic). Arithmetic intensity hits `32.77 TFLOPs / 16.27GB ≈ 2,014 FLOPs/byte` ([NeevCloud / Databricks Analysis](https://neevcloud.com/blogs/gpu-memory-bandwidth-vs-compute-what-actually-limits-llm-inf)), nearly 7x above the `295.2 FLOPs/byte` ridge point. Prefill is compute-bound, waiting on Tensor Cores to finish `32.77 TFLOPs` before emitting token one.
+2. **Decode Phase (Inter-Token Latency / ITL):** Generating `S_step = 1` token executes `16 GFLOPs` of weight math plus `1.07 GFLOPs` of attention (`17.07 GFLOPs` total) while streaming `16GB` of weights plus `268.4MB` of KV cache (`16.27GB`). Arithmetic intensity transformer decoding drops to `17.07 GFLOPs / 16.27GB ≈ 1.05 FLOPs/byte`, sitting 280x below the H100 ridge point. Even at batch size `B = 32`, reading `16GB` of shared weights plus `32 × 268.4MB = 8.59GB` of KV caches reaches only `≈ 22.2 FLOPs/byte`.
 
-When does decoding flip back to compute-bound? First, when continuous batching in [vLLM](https://arxiv.org/abs/2309.06180) scales batch size past $B\ge 296$ at short contexts, weight reuse pushes intensity above `295.2 FLOPs/byte` and saturates Tensor Cores ([Spheron Batch Scaling Benchmarks](https://www.spheron.network/blog/myth-doubling-batch-size-doesn-t-double-your-inference-throu/)). Second, when INT4 KV quantization uses non-fused dequantization kernels, bitwise unpacking stalls CUDA cores before HBM saturates.
+When does decoding flip back to compute-bound? First, when continuous batching in [vLLM](https://arxiv.org/abs/2309.06180) scales batch size past `B ≥ 296` at short contexts, weight reuse pushes intensity above `295.2 FLOPs/byte` and saturates Tensor Cores ([Spheron Batch Scaling Benchmarks](https://www.spheron.network/blog/myth-doubling-batch-size-doesn-t-double-your-inference-throu/)). Second, when INT4 KV quantization uses non-fused dequantization kernels, bitwise unpacking stalls CUDA cores before HBM saturates.
 
 ## Calculating cache footprint and taming the memory bottleneck with modern attention primitives
 
-Knowing how to calculate KV cache VRAM usage prevents Out-of-Memory (OOM) crashes. Storing one Key and one Value vector (factor of `2`) across $n_{\text{layers}}$ layers, $n_{\text{kv\_heads}}$ heads, head dimension $d_{\text{head}}$, sequence length $S$, and batch size $B$ requires:
+Knowing how to calculate KV cache VRAM usage prevents Out-of-Memory (OOM) crashes. Storing one Key and one Value vector (factor of 2) across layers, KV heads, head dimension, sequence length, and batch size requires:
 
-$$\text{KVBytes}=2\cdot n_{\text{layers}}\cdot n_{\text{kv\_heads}}\cdot d_{\text{head}}\cdot S\cdot B\cdot\text{bytes}$$
-
-Using official [Llama 3.1 70B parameters](https://arxiv.org/abs/2407.21783) ($n_{\text{layers}}=80$, $d_{\text{model}}=8,192$, query heads $n_{\text{heads}}=64$, $d_{\text{head}}=128$) in FP16 (`2 bytes` per element) for one session ($B=1$):
-
-- **Baseline Multi-Head Attention (MHA, $n_{\text{kv\_heads}}=64$):** Consumes $2\cdot 80\cdot 64\cdot 128\cdot 2=2.62\text{ MB/token}$. One session takes `85.90GB` at $S=32,768$ tokens (overflowing an 80GB H100) and `343.60GB` at $S=131,072$ tokens.
-- **Grouped-Query Attention (GQA, $n_{\text{kv\_heads}}=8$):** Generalizing [Multi-Query Attention (arXiv:1911.02150)](https://arxiv.org/abs/1911.02150), [Ainslie et al. (arXiv:2305.13245)](https://arxiv.org/abs/2305.13245) group 64 query heads into 8 clusters sharing 8 KV heads. That cuts grouped query attention memory by 8x to `327.68KB/token` (`10.74GB` at 32K context; `42.95GB` at 128K).
-- **Multi-Head Latent Attention (MLA):** Introduced in [DeepSeek-V2 (arXiv:2405.04434)](https://arxiv.org/abs/2405.04434), MLA projects keys and values into a compressed 576-element latent vector per layer, cutting KV cache memory by `93.3%` versus MHA and raising maximum throughput by `5.76x`. Meanwhile, [FlashAttention (arXiv:2205.14135)](https://arxiv.org/abs/2205.14135) tiles attention in SRAM to avoid $O(S^2)$ HBM writes, and [PagedAttention (arXiv:2309.06180)](https://arxiv.org/abs/2309.06180) stores KV states in non-contiguous pages to cut fragmentation.
-
+```text
+KV Cache Memory (Bytes) = 2 × Layers × KV Heads × Head Dimension × Sequence Length × Batch Size × Bytes per Param
 ```
+
+Using official [Llama 3.1 70B parameters](https://arxiv.org/abs/2407.21783) (80 layers, head dimension 128) in FP16 (2 bytes per element) for one session (`B = 1`):
+
+- **Baseline Multi-Head Attention (MHA, 64 KV heads):** Consumes `2 × 80 × 64 × 128 × 2 = 2.62 MB/token`. One session takes `85.90GB` at `S = 32,768` tokens (overflowing an 80GB H100) and `343.60GB` at `S = 131,072` tokens.
+- **Grouped-Query Attention (GQA, 8 KV heads):** Generalizing [Multi-Query Attention (arXiv:1911.02150)](https://arxiv.org/abs/1911.02150), [Ainslie et al. (arXiv:2305.13245)](https://arxiv.org/abs/2305.13245) group 64 query heads into 8 clusters sharing 8 KV heads. That cuts grouped query attention memory by 8x to `327.68KB/token` (`10.74GB` at 32K context; `42.95GB` at 128K).
+- **Multi-Head Latent Attention (MLA):** Introduced in [DeepSeek-V2 (arXiv:2405.04434)](https://arxiv.org/abs/2405.04434), MLA projects keys and values into a compressed 576-element latent vector per layer, cutting KV cache memory by `93.3%` versus MHA and raising maximum throughput by `5.76x`. Meanwhile, [FlashAttention (arXiv:2205.14135)](https://arxiv.org/abs/2205.14135) tiles attention in SRAM to avoid `O(S²)` HBM writes, and [PagedAttention (arXiv:2309.06180)](https://arxiv.org/abs/2309.06180) stores KV states in non-contiguous pages to cut fragmentation.
+
+```python
 def kv_profile(layers: int, q_h: int, kv_h: int, dim: int, params_b: float, seq: int, bw: float = 6700.0):
-    kv_gb = (2*layers*kv_h*dim*seq*2)/1e9
-    tot_gb = (params_b*2)+kv_gb
-    ai = ((2*params_b*1e9)+(4*layers*q_h*dim*seq))/(tot_gb*1e9)
-    return round(kv_gb,2), round(ai,2), round(bw/tot_gb,1)
+    kv_gb = (2 * layers * kv_h * dim * seq * 2) / 1e9
+    tot_gb = (params_b * 2) + kv_gb
+    ai = ((2 * params_b * 1e9) + (4 * layers * q_h * dim * seq)) / (tot_gb * 1e9)
+    return round(kv_gb, 2), round(ai, 2), round(bw / tot_gb, 1)
 
 for s in (4096, 32768, 131072):
-    print(s, "MHA:", kv_profile(80,64,64,128,70.6,s), "GQA:", kv_profile(80,64,8,128,70.6,s))
+    print(s, "MHA:", kv_profile(80, 64, 64, 128, 70.6, s), "GQA:", kv_profile(80, 64, 8, 128, 70.6, s))
 ```
 
 Across two H100 SXM5 GPUs (`6,700GB/s` bandwidth) at `131,072` tokens, MHA streams `343.60GB` of KV cache plus `141.20GB` of weights per step (`13.8 tok/s`), whereas GQA streams `42.95GB` of KV cache to sustain `36.4 tok/s` at `1.22 FLOPs/byte`.
@@ -130,12 +132,3 @@ Across two H100 SXM5 GPUs (`6,700GB/s` bandwidth) at `131,072` tokens, MHA strea
 - [Bandwidth vs Compute (NeevCloud)](https://neevcloud.com/blogs/gpu-memory-bandwidth-vs-compute-what-actually-limits-llm-inf)
 - [Batch Scaling (Spheron)](https://www.spheron.network/blog/myth-doubling-batch-size-doesn-t-double-your-inference-throu/)
 
-<!--
-Artwork brief — from the writer routine. Draw per docs/ARTWORK.md,
-then delete this comment.
-
-- Argument in one sentence: A Cartesian grid of compute cores sits 90% unlit on the right while a narrow memory channel on the left is choked with Key-Value cache ticks.
-- Geometry: Hairline Cartesian grid, vertical tick marks representing Key-Value vectors, and a sloped Roofline boundary meeting a horizontal compute ceiling.
-- Accent: moss
-- Deliberate imperfection: A severed Roofline arc that snaps at the 1 FLOP/byte decode bottleneck before the 295 FLOPs/byte ridge point.
--->

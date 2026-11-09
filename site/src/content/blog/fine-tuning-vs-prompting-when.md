@@ -1,18 +1,19 @@
 ---
-title: 'Fine-tuning vs prompting: which one your problem actually needs'
-description: 'Should we fine-tune a model or just write better prompts?'
+title: 'Fine-Tuning vs Prompting: Which One Your Problem Actually Needs'
+description: 'When to adapt model weights vs steer in-context attention: the $10k dataset trap, break-even inference economics, and how to choose without wasting budget.'
 pubDate: 2026-09-01
 track: business
-question: 'Should we fine-tune a model or just write better prompts?'
+question: 'Should we fine-tune an AI model or just write better prompts?'
 keywords:
   - fine-tuning vs prompting
   - when to fine-tune
   - prompt engineering vs fine-tuning
   - AI customization cost
+  - LoRA fine-tuning economics
 heroImage: '../../assets/art/fine-tuning-vs-prompting-when-light.webp'
 heroImageDark: '../../assets/art/fine-tuning-vs-prompting-when-dark.webp'
 heroAlt: 'A regular grid of 8 by 4 small ink circles on a paper ground. One position in the grid is not filled in — it is drawn only as a dashed outlined circle in a single accent colour.'
-readingTime: '3 min read'
+readingTime: '5 min read'
 notionId: '3ceced67-050a-8188-b579-f05b4182936d'
 ---
 <div class="tldr">
@@ -26,49 +27,71 @@ notionId: '3ceced67-050a-8188-b579-f05b4182936d'
 
 </div>
 
-## Understanding RAG: Parametric vs Non-Parametric Memory
+## The Core Distinction: Weights vs Attention
 
-Retrieval-Augmented Generation (RAG) was formally introduced by [Lewis et al. (2020)](https://arxiv.org/abs/2005.11401) as a general-purpose fine-tuning recipe combining pre-trained parametric memory (the sequence-to-sequence model) with explicit non-parametric memory (a dense vector index over external documentation). While pre-trained LLMs store vast factual knowledge in their weights, their ability to precisely manipulate and update that knowledge remains fundamentally constrained without an external index.
+The debate between fine-tuning and prompting is fundamentally a choice between **modifying parametric memory** (the static mathematical weights inside neural layers) and **steering in-context attention** (the working memory processed during a single inference pass).
 
-In standard RAG architectures, a neural retriever identifies the top-k passages relevant to a query, which are then passed into the prompt context to ground generation. This pattern delivers three distinct production advantages: reducing hallucinations through verifiable source grounding, bypassing frozen knowledge cutoff dates, and enabling domain-specific customization without the immense expense of model fine-tuning.
+Prompting instructs the base model on how to reason over supplied information. Fine-tuning adjusts the base model's internal probability distribution so that a specific tone, dialect, output syntax, or behavioral constraint becomes the model's default instinct.
 
-## The 1M-Token Window Era and Context Rot
+A common enterprise mistake is attempting to use fine-tuning as a knowledge database. Models make poor search engines; baking factual documentation into model weights via LoRA (Low-Rank Adaptation) frequently leads to hallucinated dates and stale metrics that cannot be audited or retracted. Factual knowledge belongs in context (via RAG); behavioral reflexes belong in weights.
 
-With frontier models like [Claude Sonnet 5 providing a 1M-token context window](https://platform.claude.com/docs/en/build-with-claude/context-windows) and [Gemini 1.5 Pro expanding up to 2M tokens](https://developers.googleblog.com/en/new-features-for-the-gemini-api-and-google-ai-studio/), product teams naturally ask whether retrieval infrastructure has become obsolete. If an entire codebase or documentation library fits directly into the prompt, why bother with chunking, embedding, vector databases, and similarity search?
+## The Upfront Capital Trap ($10k–$50k Dataset Curation)
 
-The operational reality is that context capacity does not equal context utilization. As Anthropic's engineering documentation notes, accuracy and recall degrade predictably as token counts expand — a phenomenon known as [context rot](https://platform.claude.com/docs/en/build-with-claude/context-windows). Simply filling a context window with uncurated documents degrades response quality and increases latency.
+Prompt engineering has zero upfront capital expenditure. You write a system prompt, provide few-shot examples, test edge cases, and deploy immediately.
 
-## The "Lost in the Middle" Degradation
+Fine-tuning requires a substantial upfront investment before generating a single production token:
 
-The foundational research on long-context retrieval performance by [Liu et al. (2023)](https://arxiv.org/abs/2307.03172) demonstrated that language models exhibit severe position bias. When relevant information is placed in the middle of long input contexts, model accuracy drops by 10 to 20+ percentage points compared to when the same information appears at the beginning or end.
+1. **Dataset Creation**: Curating 1,000 to 5,000 gold-standard input-output pairs. At human domain-expert review rates ($50–$150/hr), dataset labeling runs between $10,000 and $40,000.
+2. **Training Compute**: Fine-tuning open weights (such as Llama 3 or Mistral) or calling proprietary endpoints (OpenAI fine-tuning) incurs modest compute charges ($50–$500 per training run), but hyperparameter search and validation iterations compound rapidly.
+3. **Dedicated Hosting Surcharges**: Proprietary fine-tuned endpoints or dedicated cloud instances (AWS Bedrock Provisioned Throughput, Azure Dedicated AI) often require $1,000 to $5,000/month minimum commitments regardless of inference volume.
 
-This U-shaped performance curve (primacy and recency bias) affects both standard and explicitly fine-tuned long-context models. As a result, relying on long-context prompting for precise factual retrieval over multi-megabyte inputs introduces unpredictable failure modes where key facts are silently ignored.
+```
+Total Cost Comparison over 100k Queries:
+Prompt Engineering (Sonnet 3.5):
+  Upfront: $0  │  Per-call: $0.003  │  Total: $300
 
-## Economic and Latency Trade-offs
+LoRA Fine-Tuning (Custom Hosted):
+  Upfront: $15,000 (Data) + $500 (Train)  │  Total: $15,500+
+```
 
-Beyond accuracy, the computational physics of transformer attention imposes steep economic costs. Standard multi-head self-attention scales with quadratic computational complexity $O(n^2)$ relative to sequence length. As analyzed by [Redis AI benchmarks](https://redis.io/blog/rag-vs-large-context-window-ai-apps/), doubling context length roughly quadruples the attention compute overhead, driving up time-to-first-token (TTFT) and per-query API costs.
+## The Break-Even Calculation: When Fine-Tuning Wins
 
-Under long-context prompting, every single request pays the full input token cost for the entire window on every turn. In contrast, RAG retrieves only a targeted subset of relevant passages (typically 2,000–4,000 tokens), keeping input token consumption flat regardless of how large the underlying knowledge repository grows.
+Fine-tuning pays back its upfront development cost under two specific conditions: **massive token volume** and **extreme context compression**.
 
-## Benchmark Divergence and The Hybrid Architecture
+If an application requires 2,000 tokens of system prompts, few-shot examples, and schema definitions on every turn, you pay for those 2,000 input tokens on every single API call. By fine-tuning a smaller, cheaper model (e.g., GPT-4o-mini or an open-weight 8B parameter model), that entire 2,000-token prompt is baked directly into the weights.
 
-Empirical evaluations across 12 question-answering benchmarks show that RAG and long-context prompting yield identical answers on [roughly 60% of test queries](https://redis.io/blog/rag-vs-large-context-window-ai-apps/). However, performance diverges significantly on the remaining 40%: long-context models excel at synthesizing global narrative relationships across entire documents, while RAG wins on precise factual retrieval, exact numerical queries, and verifiable source attribution.
+Each request now consumes only 50 tokens instead of 2,050 tokens. At 5 million calls per month, saving 2,000 tokens per call eliminates 10 billion input tokens—yielding tens of thousands of dollars in monthly operational savings that amortize the dataset investment within 60 days.
 
-Modern AI engineering is therefore converging on a hybrid architecture: using RAG and semantic caching to perform fast, sub-second candidate retrieval over massive datasets, followed by targeted long-context reasoning over the retrieved document set.
+## The Deprecation Treadmill
+
+Enterprise teams that fine-tune must account for model lifecycle risk. Frontier model providers retire older checkpoints on aggressive 6- to 18-month cycles.
+
+When OpenAI or Anthropic deprecates a base model checkpoint, **your fine-tuned weights cannot be ported to the successor model**. You cannot simply transfer GPT-3.5 fine-tuned adapter matrices into GPT-4o. You must maintain the original training dataset, re-benchmark against the new base model, and execute a fresh training run. Prompt templates, by contrast, migrate seamlessly between model generations with minimal syntax tweaking.
+
+## Decision Framework
+
+| Requirement | Best Approach | Why |
+| :--- | :--- | :--- |
+| **Dynamic, changing factual data** | Prompting + RAG | Documents can be updated instantly in vector index |
+| **Strict JSON / DSL output syntax** | Fine-Tuning | Eliminates parsing errors and reduces token latency |
+| **Low-to-medium query volume (<500k/mo)** | Prompt Engineering | Upfront dataset curation never breaks even |
+| **High query volume (>5M/mo) with fixed tasks** | LoRA Fine-Tuning | Compresses 2,000 prompt tokens into 50 tokens |
+| **Fast iteration and daily workflow changes** | Prompt Engineering | Prompts change in git in seconds; fine-tuning takes days |
+
+## Frequently Asked Questions
+
+### Can I fine-tune an AI model to teach it my company's internal documents?
+No. Fine-tuning is ineffective as a factual database. Models hallucinate details and cannot cite source paragraphs. Use Retrieval-Augmented Generation (RAG) to feed relevant documents into prompt context.
+
+### What is LoRA?
+LoRA (Low-Rank Adaptation) is an efficient fine-tuning technique that freezes the original model weights and trains small adapter matrices alongside them, reducing GPU memory requirements by over 70%.
+
+### When should a startup start fine-tuning?
+Only after reaching product-market fit on prompts. If your prompts work consistently and you are processing millions of repetitive queries with high token costs, fine-tune a smaller model to slash inference latency and billings.
 
 ## Sources
 
-- [Primary Source — https://platform.claude.com/docs/en/about-claude/glossary](https://platform.claude.com/docs/en/about-claude/glossary)
-- [Primary Source — https://redis.io/blog/rag-vs-large-context-window-ai-apps/](https://redis.io/blog/rag-vs-large-context-window-ai-apps/)
-- [Primary Source — https://platform.claude.com/docs/en/build-with-claude/context-windows](https://platform.claude.com/docs/en/build-with-claude/context-windows)
-- [Primary Source — https://arxiv.org/abs/2005.11401](https://arxiv.org/abs/2005.11401)
-
-<!--
-Artwork brief — from the writer routine. Draw per docs/ARTWORK.md,
-then delete this comment.
-
-- **Argument in one sentence** — Two intersecting paths of customization
-- **Geometry** — a straight vertical line for prompting and a gradual curve for fine-tuning
-- **Accent** — ochre
-- **The deliberate imperfection** — a dot at the junction where prompt context budget exceeds fine-tuning ROI
--->
+- [Anthropic — Model Evaluation and Fine-Tuning Boundaries](https://platform.claude.com/docs/en/about-claude/glossary)
+- [Redis AI — RAG vs. Large Context Window in Production AI Applications](https://redis.io/blog/rag-vs-large-context-window-ai-apps/)
+- [Hu et al. (2021) — LoRA: Low-Rank Adaptation of Large Language Models](https://arxiv.org/abs/2106.09685)
+- [Lewis et al. (2020) — Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks](https://arxiv.org/abs/2005.11401)

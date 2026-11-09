@@ -3,6 +3,9 @@ title: 'How This Blog Builds Itself'
 description: 'The pipeline behind this site: seven scheduled Claude Code routines, five themes, three Notion databases, and one human rating that gates all of it.'
 pubDate: 2026-08-24
 updatedDate: 2026-08-26
+track: technical
+question: 'How does an autonomous multi-agent blog pipeline operate using Claude Code, Notion, and Astro?'
+notionId: 'manual-architecture-manifest'
 keywords:
   - Claude Code scheduled tasks
   - Notion as a control plane

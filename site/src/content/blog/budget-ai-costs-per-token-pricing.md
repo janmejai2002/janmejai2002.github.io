@@ -74,13 +74,3 @@ Budgeting for AI isn't about finding the cheapest sticker price per million toke
 
 - [Anthropic pricing table — input, output, and cached rates by model](https://platform.claude.com/docs/en/build-with-claude/prompt-caching)
 - [Anthropic glossary — token definition and character conversion](https://platform.claude.com/docs/en/about-claude/glossary)
-
-<!--
-Artwork brief — from the writer routine. Draw per docs/ARTWORK.md,
-then delete this comment.
-
-- **Argument in one sentence** — A bet you pay for upfront that only pays back if the prefix stays byte-identical.
-- **Geometry** — Rows of identical short bars, one row shifted out of true.
-- **Accent** — ochre — money and incentives.
-- **The deliberate imperfection** — the single shifted row: the one changed byte that voids the cache.
--->

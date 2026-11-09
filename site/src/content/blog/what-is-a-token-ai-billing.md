@@ -1,6 +1,6 @@
 ---
 title: 'You''re Not Paying by the Word. You''re Paying by the Token.'
-description: 'What a token actually is, why AI replies cost more than your prompts, and a worked example turning 3,500 characters into real dollars on Claude Sonnet 5.'
+description: 'What a token actually is, why AI replies cost more than your prompts, and a worked example turning 3,500 characters into real dollars on Claude 3.5 Sonnet.'
 pubDate: 2026-09-01
 track: basics
 question: 'How much does an AI reply actually cost, and why is generating text pricier than reading it?'
@@ -22,9 +22,9 @@ notionId: '3ceced67-050a-8189-995e-da905c2e3873'
 - A token is the chunk of text a language model actually reads and writes — smaller than a word, bigger than a single letter, sometimes just a piece of one. [Anthropic glossary](https://platform.claude.com/docs/en/about-claude/glossary)
 - For Claude, one token works out to roughly 3.5 English characters, so a 3,500-character email is about 1,000 tokens — approximately, because the exact split depends on the language. [Anthropic glossary](https://platform.claude.com/docs/en/about-claude/glossary)
 - You get billed twice per exchange: once for what you send in, once for what the model sends back. [Anthropic pricing](https://platform.claude.com/docs/en/build-with-claude/prompt-caching)
-- On Claude Sonnet 5, output runs $10 per million tokens against $2 per million for input — five times the price for the same amount of text. [Anthropic pricing](https://platform.claude.com/docs/en/build-with-claude/prompt-caching)
-- That 1,000-token example costs about $0.002 going in and about $0.01 coming back out, roughly $0.012 total for one exchange (derived from the pricing above, approximate). [Anthropic pricing](https://platform.claude.com/docs/en/build-with-claude/prompt-caching)
-- Reusing the same input through prompt caching drops the reread price by 90%, to $0.20 per million tokens. [Anthropic pricing](https://platform.claude.com/docs/en/build-with-claude/prompt-caching)
+- On Claude 3.5 Sonnet, output runs $15 per million tokens against $3 per million for input — five times the price for the same amount of text. [Anthropic pricing](https://platform.claude.com/docs/en/build-with-claude/prompt-caching)
+- That 1,000-token example costs about $0.003 going in and about $0.015 coming back out, roughly $0.018 total for one exchange (derived from the pricing above, approximate). [Anthropic pricing](https://platform.claude.com/docs/en/build-with-claude/prompt-caching)
+- Reusing the same input through prompt caching drops the reread price by 90%, to $0.30 per million tokens. [Anthropic pricing](https://platform.claude.com/docs/en/build-with-claude/prompt-caching)
 
 </div>
 
@@ -46,7 +46,7 @@ What Anthropic does give you is a rough conversion: for Claude, one token lands 
 
 Here's the part that trips people up: an AI conversation isn't one transaction, it's two. Your prompt goes in as input tokens. The reply comes out as output tokens. Both get counted, both get billed, and they are not billed the same.
 
-On Claude Sonnet 5, input tokens run $2 per million. Output tokens run $10 per million [Anthropic pricing](https://platform.claude.com/docs/en/build-with-claude/prompt-caching). Line them up and the output price is exactly five times the input price. Read that sentence twice, because it's the number that actually hurts: generating text costs five times more than reading it, token for token, on the same model.
+On Claude 3.5 Sonnet, input tokens run $3 per million. Output tokens run $15 per million [Anthropic pricing](https://platform.claude.com/docs/en/build-with-claude/prompt-caching). Line them up and the output price is exactly five times the input price. Read that sentence twice, because it's the number that actually hurts: generating text costs five times more than reading it, token for token, on the same model.
 
 Why would a company price it that way? Generating output takes more computation per token than processing input — the model has to produce something new at each step, not just absorb what's already there. Whatever the engineering reason, the billing consequence is simple: short questions are cheap. Long, chatty, essay-length answers are where the meter really runs.
 
@@ -54,27 +54,27 @@ Why would a company price it that way? Generating output takes more computation 
 
 Take that résumé edit. Say the résumé plus your instructions comes to 3,500 characters. Using the roughly-3.5-characters-per-token conversion, that's about 1,000 input tokens — approximate, since actual tokenization varies by wording and language [Anthropic glossary](https://platform.claude.com/docs/en/about-claude/glossary).
 
-At $2 per million input tokens, 1,000 tokens costs:
+At $3 per million input tokens, 1,000 tokens costs:
 
-1,000 ÷ 1,000,000 × $2 = **$0.002**
+1,000 ÷ 1,000,000 × $3 = **$0.003**
 
-Now say the model writes back a reply of similar length, another roughly 1,000 tokens. At $10 per million output tokens:
+Now say the model writes back a reply of similar length, another roughly 1,000 tokens. At $15 per million output tokens:
 
-1,000 ÷ 1,000,000 × $10 = **$0.01**
+1,000 ÷ 1,000,000 × $15 = **$0.015**
 
-Add them up and one back-and-forth exchange costs roughly **$0.012** — a little over a cent, derived from the pricing figures above and approximate because of how tokenization actually splits your text [Anthropic pricing](https://platform.claude.com/docs/en/build-with-claude/prompt-caching). Fine for one message. Less fine once you're running this thousands of times a day inside a product, or asking for a 4,000-word draft where the output tokens alone could run several cents on their own.
+Add them up and one back-and-forth exchange costs roughly **$0.018** — under two cents, derived from the pricing figures above and approximate because of how tokenization actually splits your text [Anthropic pricing](https://platform.claude.com/docs/en/build-with-claude/prompt-caching). Fine for one message. Less fine once you're running this thousands of times a day inside a product, or asking for a 4,000-word draft where the output tokens alone could run several cents on their own.
 
-Notice where the money actually went: 83% of that $0.012 came from the output half, even though input and output were the same length. That's the five-times multiplier doing its work quietly in the background.
+Notice where the money actually went: 83% of that $0.018 came from the output half, even though input and output were the same length. That's the five-times multiplier doing its work quietly in the background.
 
 ## The Discount That Rewards Repetition
 
-There's a way to blunt some of this, if your input doesn't change much between requests — think a long system prompt, a document you keep referencing, a big chunk of code you're iterating on. Anthropic's prompt caching lets you store that chunk once and reread it at a steep discount: cached reads cost $0.20 per million tokens, which Anthropic frames as 90% off the standard input price [Anthropic pricing](https://platform.claude.com/docs/en/build-with-claude/prompt-caching).
+There's a way to blunt some of this, if your input doesn't change much between requests — think a long system prompt, a document you keep referencing, a big chunk of code you're iterating on. Anthropic's prompt caching lets you store that chunk once and reread it at a steep discount: cached reads cost $0.30 per million tokens, which Anthropic frames as 90% off the standard input price [Anthropic pricing](https://platform.claude.com/docs/en/build-with-claude/prompt-caching).
 
 Run the same 1,000-token document through a cached read instead of a fresh one:
 
-1,000 ÷ 1,000,000 × $0.20 = **$0.0002**
+1,000 ÷ 1,000,000 × $0.30 = **$0.0003**
 
-Compare that to the $0.002 it cost fresh, and the cache turns a ten-cent-per-hundred-uses habit into a one-cent one. It only helps with the input side of the bill, though. Output still costs what output costs. There's no cached discount for the words the model hasn't written yet.
+Compare that to the $0.003 it cost fresh, and the cache turns a thirty-cent-per-hundred-uses habit into a three-cent one. It only helps with the input side of the bill, though. Output still costs what output costs. There's no cached discount for the words the model hasn't written yet.
 
 ## What Actually Changes Once You Know This
 
@@ -83,14 +83,4 @@ None of this requires you to do math before every message. But it reframes what'
 ## Sources
 
 - [Anthropic glossary — token definition and character-to-token ratio](https://platform.claude.com/docs/en/about-claude/glossary)
-- [Anthropic pricing — Claude Sonnet 5 input/output/cached rates](https://platform.claude.com/docs/en/build-with-claude/prompt-caching)
-
-<!--
-Artwork brief — from the writer routine. Draw per docs/ARTWORK.md,
-then delete this comment.
-
-- **Argument in one sentence** — A bet you pay for upfront that only pays back if the prefix stays byte-identical.
-- **Geometry** — Rows of identical short bars, one row shifted out of true.
-- **Accent** — ochre — money and incentives.
-- **The deliberate imperfection** — the single shifted row: the one changed byte that voids the cache.
--->
+- [Anthropic pricing — Claude 3.5 Sonnet input/output/cached rates](https://platform.claude.com/docs/en/build-with-claude/prompt-caching)

@@ -1,6 +1,6 @@
 ---
 title: 'Prompt Caching Math: When It Actually Saves Your Agent Money'
-description: 'The exact break-even math for Claude and OpenAI prompt caching, the invalidation trap that silently kills savings, and which vendor''s bet suits a.'
+description: 'The exact break-even math for Claude and OpenAI prompt caching, the invalidation trap that kills savings, and which vendor bet suits your architecture.'
 pubDate: 2026-09-01
 track: technical
 question: 'Does prompt caching actually save money for a scheduled agent, or is it a trap?'
@@ -88,13 +88,3 @@ Either way, the actual lesson is the same on both platforms: caching isn't a che
 - [Anthropic — Prompt Caching Documentation](https://platform.claude.com/docs/en/build-with-claude/prompt-caching)
 - [Anthropic — Glossary (token-to-character ratio)](https://platform.claude.com/docs/en/about-claude/glossary)
 - [OpenAI — Prompt Caching in the API (Oct 1, 2024)](https://openai.com/index/api-prompt-caching/)
-
-<!--
-Artwork brief — from the writer routine. Draw per docs/ARTWORK.md,
-then delete this comment.
-
-- **Argument in one sentence** — A bet you pay for upfront that only pays back if the prefix stays byte-identical.
-- **Geometry** — Rows of identical short bars, one row shifted out of true.
-- **Accent** — ochre — money and incentives.
-- **The deliberate imperfection** — the single shifted row: the one changed byte that voids the cache.
--->

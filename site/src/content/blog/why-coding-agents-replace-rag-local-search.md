@@ -37,7 +37,7 @@ In production coding workflows, this architecture collapsed under the weight of 
 
 An autonomous coding agent does not execute a single search. It runs an investigative loop. When instructed to resolve a bug or refactor an endpoint, the agent inspects a directory, traces a caller, reads a type definition, checks an error handler, and validates imported modules. A single user command triggers between 6 and 14 sequential retrieval turns.
 
-```
+```text
 Cloud RAG Round-Trip per Search Turn:
 [Agent Query] 
    → POST https://api.openai.com/v1/embeddings (150ms - 350ms)
@@ -63,7 +63,7 @@ Compilers and interpreters do not operate on conceptual relatedness. They requir
 
 Consider what occurs when a coding agent investigates a failing integration test caused by an authentication failure:
 
-```
+```typescript
 // The agent searches for the exact error symbol:
 const ERR_AUTH_TOKEN_EXPIRED = "E_AUTH_419";
 ```
@@ -76,7 +76,7 @@ In a traditional vector database indexed with standard dense embeddings (such as
 
 The exact line where `const ERR_AUTH_TOKEN_EXPIRED = "E_AUTH_419"` is declared in `src/constants/errors.ts` may score 0.76 and drop off the top-5 retrieval threshold entirely.
 
-```
+```text
 Retrieval Accuracy on Exact Identifiers:
 - ripgrep (`rg`):           100% precision (exact line number and column)
 - AST-grep (`sg`):          100% precision (exact syntax node match)
@@ -99,7 +99,7 @@ Autonomous agent runtimes like Aider introduced a cleaner primitive: the algorit
 
 Instead of paying third-party APIs to chunk and embed source files, Aider uses Tree-sitter parsers locally to build an Abstract Syntax Tree (AST) for every file in the project. Tree-sitter extracts every function declaration, class definition, method signature, and exported interface.
 
-```
+```text
                   ┌────────────────────────┐
                   │ Source Code Repository │
                   └───────────┬────────────┘
@@ -138,14 +138,14 @@ Rather than requiring an external vector service running on AWS or GCP, `zvec-gr
 1. **Lexical BM25 Scoring**: Ranking term frequency and inverse document frequency across local files.
 1. **In-Process Dense Vectors**: Running local embedding models through lightweight embedded vector databases (such as Alibaba Zvec or LanceDB) directly on the local filesystem.
 
-```
+```bash
 # Querying via unified local CLI without cloud egress:
 zg query --human "Where are user theme preferences hydrated on startup?"
 ```
 
 Because indexing and vector comparisons happen in-process on local NVMe storage, query execution takes 15ms to 45ms. Zero proprietary code leaves the developer machine or private build runner, resolving data residency concerns for enterprise security teams.
 
-Furthermore, `zvec-grep` provides a Model Context Protocol (MCP) server adapter. AI coding agents running in Claude Code, Cursor, or Cline can invoke a single programmatic tool call to execute hybrid local queries, receiving line-numbered citations with minimal token footprint.
+In addition, `zvec-grep` provides a Model Context Protocol (MCP) server adapter. AI coding agents running in Claude Code, Cursor, or Cline can invoke a single programmatic tool call to execute hybrid local queries, receiving line-numbered citations with minimal token footprint.
 
 ## The Honest Tradeoff: Where Local Search Still Struggles
 
@@ -182,13 +182,3 @@ Engineering teams should not treat code retrieval as an either-or dogma. Product
 | Multi-repo documentation wikis (Notion, Confluence) | Hosted Vector RAG | 250ms - 800ms | External SaaS API |
 
 The shift from cloud vector RAG to local-first search is not a retreat from artificial intelligence; it is an architectural correction. Software engineering requires mathematical precision, immediate feedback, and structural awareness. By shifting the first three layers of retrieval directly onto the developer machine, coding agents gain the speed and accuracy necessary to build real software.
-
-<!--
-Artwork brief — from the writer routine. Draw per docs/ARTWORK.md,
-then delete this comment.
-
-- Argument in one sentence: The transition from remote cloud vector spaces to structured local disk retrieval for AI coding agents.
-- Geometry: Concentric circular radar lines intersected by horizontal code-frequency bars and an offset cyan coordinate marker.
-- Accent: mizu
-- Deliberate imperfection: A severed outer perimeter circle indicating local query escape from the cloud boundary.
--->

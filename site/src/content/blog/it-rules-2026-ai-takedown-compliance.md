@@ -28,11 +28,11 @@ notionId: '3c8ced67-050a-8127-9f5c-db10763e18cb'
 - Miss the window on a valid order and a platform doesn't just get fined. It loses safe-harbour protection under the IT Act entirely and becomes liable as if it had posted the content itself. Platforms with 5 million-plus registered India users carry extra declaration duties on top.
 - The rules are still moving. A follow-up draft floated by MeitY in April 2026 would replace "prominent visibility" with a requirement that labels stay visible for the entire length of the clip, not just the opening seconds.
 
+</div>
+
 Six months ago, an Indian platform had 36 hours to act on a takedown order. Today it has three.
 
 That compression is the headline most coverage led with, and it's real. But the takedown clock is the easy part to understand and the easy part to build for: it's a webhook and an on-call rotation. The harder part, and the part almost nobody outside the law firms has explained plainly, is that MeitY told platforms to label and permanently tag AI content without telling them how. The Information Technology (Intermediary Guidelines and Digital Media Ethics Code) Amendment Rules, 2026 came into force on 20 February 2026, and they mark the first time an Indian statute has tried to regulate synthetic media directly rather than through general intermediary-liability language. If your product generates content and distributes it to other users, this rule decides whether you keep your safe harbour, regardless of how large your platform is.
-
-</div>
 
 ## What actually counts as SGI
 
@@ -85,13 +85,3 @@ No confirmed enforcement action or safe-harbour-loss case under these rules had 
 - [Finnovate — India's SGI Labelling Rules Explained: What the IT Rules 2026 Actually Say](https://www.finnovate.in/learn/blog/sgi-labelling-india-it-rules-2026-explained)
 - [Bhatt & Joshi Associates — India's 2026 IT Rules Amendment: The World's First Binding Synthetic Content Provenance Mandate](https://bhattandjoshiassociates.com/indias-2026-it-rules-amendment-the-worlds-first-binding-synthetic-content-provenance-mandate/)
 - [WITNESS — India's Synthetic Media Rules Build Enforcement on the Wrong Foundation](https://www.witness.org/indias-synthetic-media-rules-build-enforcement-on-the-wrong-foundation/)
-
-<!--
-Artwork brief — from the writer routine. Draw per docs/ARTWORK.md,
-then delete this comment.
-
-- **Argument in one sentence:** The law demands permanence and precision (a clean, locked grid) while the actual compliance surface, undefined labels and unverifiable metadata, stays genuinely open.
-- **Geometry:** A regular grid of small square "tiles" (rows and columns of thin-stroke squares, evenly spaced), each representing one compliance clause. Most tiles are fully enclosed (closed strokes). No icons, no illustration.
-- **Accent:** Ochre. This is fundamentally about liability and cost exposure (safe-harbour loss), the incentive layer, not the technical or human layer.
-- **The deliberate imperfection:** One tile in the grid has an open side, an unclosed square where the line simply doesn't meet: the metadata/standard requirement that the rule states but never actually closes. Everything else in the grid is locked; that one gap is where the real compliance risk lives.
--->

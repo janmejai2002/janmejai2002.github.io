@@ -1,6 +1,6 @@
 ---
 title: 'Opus vs Sonnet vs Haiku: What Caching Changes About Tier Cost'
-description: 'Picking a Claude tier isn''t just about raw capability. Here''s how prompt caching''s 5-minute clock and paid 1-hour option reshape what moving up actually costs.'
+description: 'Picking a Claude tier isn''t just about capability. Here''s how prompt caching''s 5-minute clock and 1-hour option reshape what moving up actually costs.'
 pubDate: 2026-09-01
 track: technical
 question: 'Which Claude model should I use, and what does moving up a tier actually cost?'
@@ -64,12 +64,3 @@ Worth saying plainly: the documentation referenced here explains caching mechani
 
 - [Prompt caching — Claude Platform Docs](https://platform.claude.com/docs/en/build-with-claude/prompt-caching)
 
-<!--
-Artwork brief — from the writer routine. Draw per docs/ARTWORK.md,
-then delete this comment.
-
-- **Argument in one sentence** — A bet you pay for upfront that only pays back if the prefix stays byte-identical.
-- **Geometry** — Rows of identical short bars, one row shifted out of true.
-- **Accent** — ochre — money and incentives.
-- **The deliberate imperfection** — the single shifted row: the one changed byte that voids the cache.
--->

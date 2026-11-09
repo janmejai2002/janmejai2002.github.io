@@ -2,6 +2,8 @@
 title: 'Gemini 3.7 Flash and DeepSeek V4: Fast, Cheap Vision Models'
 description: 'Gemini 3.7 Flash and DeepSeek''s new vision model just cut the price of AI image understanding twice in eight days. Here''s what changed and why.'
 pubDate: 2026-08-25
+track: technical
+question: 'How do Gemini 3.7 Flash and DeepSeek V4 compare on speed, price, and visual agent capabilities?'
 keywords:
   - Gemini 3.7
   - DeepSeek V4

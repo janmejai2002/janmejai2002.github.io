@@ -3,6 +3,7 @@ title: 'Applying the Feynman Technique to Prompt Engineering'
 description: 'Prompt engineering has a mental-model problem, not a syntax problem. The Feynman Technique fixes it — with consulting, HR, and marketing examples.'
 pubDate: 2026-08-25
 track: technical
+question: 'How can applying the Feynman Technique improve prompt engineering for complex AI workflows?'
 keywords:
   - Prompt Engineering
   - Mental Models

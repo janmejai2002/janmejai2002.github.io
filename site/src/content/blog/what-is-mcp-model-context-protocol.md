@@ -1,6 +1,6 @@
 ---
-title: 'What MCP (Model Context Protocol) is, and why every AI tool suddenly'
-description: 'What is MCP, and why should I care that a tool ''supports MCP''?'
+title: 'What MCP Is, and Why Every AI Tool Is Adopting It'
+description: 'How Anthropic''s Model Context Protocol standardizes AI integrations across tools, resources, and prompts using JSON-RPC, replacing one-off glue code.'
 pubDate: 2026-09-01
 track: technical
 question: 'What is MCP, and why should I care that a tool ''supports MCP''?'
@@ -9,10 +9,11 @@ keywords:
   - Model Context Protocol explained
   - MCP connector
   - AI tool integration
+  - JSON-RPC AI tools
 heroImage: '../../assets/art/what-is-mcp-model-context-protocol-light.webp'
 heroImageDark: '../../assets/art/what-is-mcp-model-context-protocol-dark.webp'
 heroAlt: 'A row of 9 identical upright rectangles standing like columns. One rectangle leans out of alignment and is drawn in a single accent colour; the rest are upright ink outlines.'
-readingTime: '3 min read'
+readingTime: '5 min read'
 notionId: '3ceced67-050a-81dd-9b51-c0775482d320'
 ---
 <div class="tldr">
@@ -27,50 +28,77 @@ notionId: '3ceced67-050a-81dd-9b51-c0775482d320'
 
 </div>
 
-## Understanding RAG: Parametric vs Non-Parametric Memory
+## The N × M Integration Problem
 
-Retrieval-Augmented Generation (RAG) was formally introduced by [Lewis et al. (2020)](https://arxiv.org/abs/2005.11401) as a general-purpose fine-tuning recipe combining pre-trained parametric memory (the sequence-to-sequence model) with explicit non-parametric memory (a dense vector index over external documentation). While pre-trained LLMs store vast factual knowledge in their weights, their ability to precisely manipulate and update that knowledge remains fundamentally constrained without an external index.
+Before the [Model Context Protocol (MCP)](https://www.anthropic.com/news/model-context-protocol), connecting an AI agent to an external system required custom, bespoke glue code for every combination of client and tool. If you had 5 AI interfaces (Claude Desktop, Cursor, Zed, LangChain, custom CLI) and 10 enterprise data sources (GitHub, Postgres, Slack, Jira, Google Drive), engineering teams had to build and maintain 50 separate integration pipelines ($N \times M$).
 
-In standard RAG architectures, a neural retriever identifies the top-k passages relevant to a query, which are then passed into the prompt context to ground generation. This pattern delivers three distinct production advantages: reducing hallucinations through verifiable source grounding, bypassing frozen knowledge cutoff dates, and enabling domain-specific customization without the immense expense of model fine-tuning.
+Whenever an API schema changed, every client wrapper broke independently.
 
-## The 1M-Token Window Era and Context Rot
+```
+Without MCP (N × M fragmentation):
+[Claude Desktop] ──┬──> [Custom GitHub API Client]
+[Cursor Editor]   ──┼──> [Custom Postgres Driver]
+[Zed / CLI]       ──┴──> [Custom Slack Bot]
 
-With frontier models like [Claude Sonnet 5 providing a 1M-token context window](https://platform.claude.com/docs/en/build-with-claude/context-windows) and [Gemini 1.5 Pro expanding up to 2M tokens](https://developers.googleblog.com/en/new-features-for-the-gemini-api-and-google-ai-studio/), product teams naturally ask whether retrieval infrastructure has become obsolete. If an entire codebase or documentation library fits directly into the prompt, why bother with chunking, embedding, vector databases, and similarity search?
+With MCP (Open USB-C standard for AI):
+[Any AI Host / Client] ── JSON-RPC 2.0 ──> [Standard MCP Server] ──> [Data Source]
+```
 
-The operational reality is that context capacity does not equal context utilization. As Anthropic's engineering documentation notes, accuracy and recall degrade predictably as token counts expand — a phenomenon known as [context rot](https://platform.claude.com/docs/en/build-with-claude/context-windows). Simply filling a context window with uncurated documents degrades response quality and increases latency.
+MCP standardizes this relationship by turning every external system into a lightweight server that speaks a unified protocol, reducing the ecosystem complexity from $N \times M$ custom integrations to $N + M$ standardized connectors.
 
-## The "Lost in the Middle" Degradation
+## The Architecture: Hosts, Clients, and Servers
 
-The foundational research on long-context retrieval performance by [Liu et al. (2023)](https://arxiv.org/abs/2307.03172) demonstrated that language models exhibit severe position bias. When relevant information is placed in the middle of long input contexts, model accuracy drops by 10 to 20+ percentage points compared to when the same information appears at the beginning or end.
+The [MCP specification](https://modelcontextprotocol.io/specification/2026-07-28) divides responsibilities into three distinct architectural layers:
 
-This U-shaped performance curve (primacy and recency bias) affects both standard and explicitly fine-tuned long-context models. As a result, relying on long-context prompting for precise factual retrieval over multi-megabyte inputs introduces unpredictable failure modes where key facts are silently ignored.
+1. **The Host**: The user-facing application (e.g., Claude Desktop, Zed, Antigravity IDE) that coordinates the LLM, initiates conversations, and enforces user security boundaries.
+2. **The Client**: An internal connector within the host application that maintains a 1:1 communication protocol with an MCP server.
+3. **The Server**: A standalone process (running locally via `stdio` or remotely via `Streamable HTTP / SSE`) that exposes structured capabilities to the client.
 
-## Economic and Latency Trade-offs
+Crucially, **the server never calls the LLM directly**. The server simply declares what it can do; the client negotiates capabilities and passes schemas to the LLM; the LLM chooses which tool to invoke; and the host prompts the human operator before executing sensitive side-effects.
 
-Beyond accuracy, the computational physics of transformer attention imposes steep economic costs. Standard multi-head self-attention scales with quadratic computational complexity $O(n^2)$ relative to sequence length. As analyzed by [Redis AI benchmarks](https://redis.io/blog/rag-vs-large-context-window-ai-apps/), doubling context length roughly quadruples the attention compute overhead, driving up time-to-first-token (TTFT) and per-query API costs.
+## The Three Core Primitives
 
-Under long-context prompting, every single request pays the full input token cost for the entire window on every turn. In contrast, RAG retrieves only a targeted subset of relevant passages (typically 2,000–4,000 tokens), keeping input token consumption flat regardless of how large the underlying knowledge repository grows.
+MCP models all external interactions around three standardized primitives:
 
-## Benchmark Divergence and The Hybrid Architecture
+| Primitive | Nature | Typical Use Case | Example |
+| :--- | :--- | :--- | :--- |
+| **Resources** | Read-only | Files, database records, API logs, system metrics | `file:///var/log/syslog`, `postgres://users/schema` |
+| **Prompts** | Interactive | Slash-command templates, persona definitions, workflows | `/review-pr`, `/debug-incident` |
+| **Tools** | Executable | Functions that perform actions or mutate state | `execute_sql_query`, `send_slack_message`, `git_commit` |
 
-Empirical evaluations across 12 question-answering benchmarks show that RAG and long-context prompting yield identical answers on [roughly 60% of test queries](https://redis.io/blog/rag-vs-large-context-window-ai-apps/). However, performance diverges significantly on the remaining 40%: long-context models excel at synthesizing global narrative relationships across entire documents, while RAG wins on precise factual retrieval, exact numerical queries, and verifiable source attribution.
+Because resources are read-only, hosts can safely stream them into model context without human friction. Tools, by contrast, carry stateful side-effects and are explicitly gated by permission checks.
 
-Modern AI engineering is therefore converging on a hybrid architecture: using RAG and semantic caching to perform fast, sub-second candidate retrieval over massive datasets, followed by targeted long-context reasoning over the retrieved document set.
+## Transport Layers: Local vs Remote
+
+MCP supports two standard transport protocols under JSON-RPC 2.0:
+
+- **Standard I/O (`stdio`)**: The client spawns the server as a local child process and communicates over `stdin` and `stdout`. This provides zero-network-latency local execution and avoids open network ports.
+- **Streamable HTTP / Server-Sent Events (SSE)**: For remote servers, microservices, or shared enterprise infrastructure. The client sends JSON-RPC commands via HTTP POST, and the server streams progress updates and responses over SSE connections.
+
+## Decision Matrix: Direct Tool Calling vs MCP
+
+| Dimension | Direct API Tool Calling | Model Context Protocol (MCP) |
+| :--- | :--- | :--- |
+| **Portability** | Locked to a single agent framework / script | Runs in any MCP-compliant host (Claude, Cursor, Zed) |
+| **Maintenance** | Client breaks on upstream API changes | Server updates independently; client interface stays static |
+| **Security** | Hardcoded API keys in client environment | Server isolates secrets; client only receives JSON-RPC schema |
+| **Discovery** | Hardcoded tool lists | Dynamic runtime discovery (`tools/list`, `resources/list`) |
+
+## Frequently Asked Questions
+
+### What does "supports MCP" actually mean for a tool?
+It means the software runs an MCP server exporting its commands and data as standard JSON-RPC tools and resources. Any MCP-compatible AI application can instantly query it without custom plugins.
+
+### Does MCP send my private codebase to Anthropic?
+No. MCP is an open-source protocol, not a cloud service. When using local `stdio` transports, data flows directly between your local editor and the local server process running on your machine.
+
+### Can MCP tools execute destructive commands without confirmation?
+No. The host application enforces an explicit human-in-the-loop permission boundary. Before any MCP tool call with side effects is executed, the host requires user approval.
 
 ## Sources
 
-- [Primary Source — https://www.anthropic.com/news/model-context-protocol](https://www.anthropic.com/news/model-context-protocol)
-- [Primary Source — https://modelcontextprotocol.io/docs/2026-07-28/learn/architecture](https://modelcontextprotocol.io/docs/2026-07-28/learn/architecture)
-- [Primary Source — https://modelcontextprotocol.io/specification/2026-07-28](https://modelcontextprotocol.io/specification/2026-07-28)
-- [Primary Source — https://www.infoq.com/news/2024/12/anthropic-model-context-protocol/](https://www.infoq.com/news/2024/12/anthropic-model-context-protocol/)
-- [Primary Source — https://github.com/modelcontextprotocol/modelcontextprotocol](https://github.com/modelcontextprotocol/modelcontextprotocol)
-
-<!--
-Artwork brief — from the writer routine. Draw per docs/ARTWORK.md,
-then delete this comment.
-
-- **Argument in one sentence** — Standardized two-way client-server protocol connecting AI context
-- **Geometry** — a central hub node connected via radial hairline rays to four outlying server nodes
-- **Accent** — mizu
-- **The deliberate imperfection** — one ray unattached showing a protocol handshake in flight
--->
+- [Anthropic — Introducing the Model Context Protocol](https://www.anthropic.com/news/model-context-protocol)
+- [Model Context Protocol Specification (2026-07-28)](https://modelcontextprotocol.io/specification/2026-07-28)
+- [Model Context Protocol Architecture Guide](https://modelcontextprotocol.io/docs/2026-07-28/learn/architecture)
+- [InfoQ — Anthropic Publishes Model Context Protocol Specification](https://www.infoq.com/news/2024/12/anthropic-model-context-protocol/)
+- [Model Context Protocol GitHub Reference Implementations](https://github.com/modelcontextprotocol/modelcontextprotocol)

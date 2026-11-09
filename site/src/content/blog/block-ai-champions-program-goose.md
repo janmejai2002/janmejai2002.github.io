@@ -39,7 +39,7 @@ Block's codebase wasn't built for an agent to walk into cold. Some monorepos run
 
 Block's answer was the Engineering AI Champions program, launched in August 2025 under Angie Jones, the company's VP of Engineering for AI Tools & Enablement. Fifty developers were pulled from across Square, Cash App, Afterpay, Tidal, Proto and the Platform org — frontend, backend, mobile, hardware, data engineering, infra — and given 30% of their time for one explicit job: make their repos safe for agents to operate in. Collectively, their repos covered about 60% of Block's code.
 
-The program ran as a four-tier game, "Repo Quest," and each tier had a concrete engineering deliverable rather than a training checkbox. Locked-to-Novice meant writing an [AGENTS.md](http://agents.md/) with real build and test commands, plus a human-facing [HOWTOAI.md](http://howtoai.md/) explaining how the team actually wanted agents used. Novice-to-Adept meant building reusable "agent skills," wiring up automated PR review, and enabling headless agent runs that didn't need a human babysitting every step. Adept-to-Artisan meant PR-tracking labels, CI/CD integration, and contributing patterns back for other teams to reuse. Champions who hit the top tier weren't the ones who'd used an agent the most — they were the ones who'd made a repo other people's agents could succeed in.
+The program ran as a four-tier game, "Repo Quest," and each tier had a concrete engineering deliverable rather than a training checkbox. Locked-to-Novice meant writing an `AGENTS.md` with real build and test commands, plus a human-facing `HOWTOAI.md` explaining how the team actually wanted agents used. Novice-to-Adept meant building reusable "agent skills," wiring up automated PR review, and enabling headless agent runs that didn't need a human babysitting every step. Adept-to-Artisan meant PR-tracking labels, CI/CD integration, and contributing patterns back for other teams to reuse. Champions who hit the top tier weren't the ones who'd used an agent the most — they were the ones who'd made a repo other people's agents could succeed in.
 
 On top of repo readiness, champions standardized on a context-engineering discipline called RPI — Research, then Plan, then Implement, in separate passes — borrowed from a technique popularized by HumanLayer, specifically to stop agents from drifting off a task the longer a session ran. In practice this produces a workflow that looks less like autocomplete and more like delegation: an agent picks up a well-scoped ticket from Linear or Jira, researches the relevant part of the codebase, writes a plan, opens a branch, writes the code, opens the PR, watches CI fail, and fixes its own mistakes before a human ever looks at it. One team reported pulling extra tickets into a sprint mid-cycle because agents had already burned through roughly 15 days' worth of engineering work in the time allotted.
 
@@ -65,7 +65,7 @@ The "40% more production code per engineer" figure, and everything built on top 
 
 The part of this worth stealing has nothing to do with headcount. It's the shape of the pilot.
 
-Pick a small group of senior engineers — Block used 50 out of thousands, but the ratio that matters is that they already owned your highest-traffic repos, not that they were the most enthusiastic volunteers. Give them real dedicated time, on the order of a quarter of their week, for a full quarter, and make the deliverable "can an agent safely operate in this repo" rather than "ship more with AI." That reframing is the whole trick: it turns a vague adoption push into a concrete engineering backlog — write the [AGENTS.md](http://agents.md/), wire up CI feedback an agent can read, document the test commands — that a skeptical senior engineer can actually respect.
+Pick a small group of senior engineers — Block used 50 out of thousands, but the ratio that matters is that they already owned your highest-traffic repos, not that they were the most enthusiastic volunteers. Give them real dedicated time, on the order of a quarter of their week, for a full quarter, and make the deliverable "can an agent safely operate in this repo" rather than "ship more with AI." That reframing is the whole trick: it turns a vague adoption push into a concrete engineering backlog — write the `AGENTS.md`, wire up CI feedback an agent can read, document the test commands — that a skeptical senior engineer can actually respect.
 
 This doesn't require a big team to start. Goose began as one engineer's side project plus a six-to-seven person team; the champions layer that scaled it was roughly 50 people at 30% time, on the order of 15 FTE-equivalents inside a company with thousands of engineers. What it does require, from day one, is instrumentation Block's public account doesn't clearly have: track whether a PR was agent-opened, agent-assisted or human-written, and its CI outcome, before trusting anyone's self-reported hours saved.
 
@@ -87,16 +87,3 @@ The realistic first step: run a Repo Quest-style tiering on three to five of you
 
 - [Block COO Amrita Ahuja on AI, layoffs, and gross profit per employee](https://fortune.com/2026/03/21/block-coo-amrita-ahuja-ai-layoffs-gross-profit-per-employee/) — Fortune, Mar 21, 2026
 - [How Block Deployed AI Agents Company-Wide in 2 Months](https://www.aviator.co/podcast/block--ai-agents-goose) — Aviator
-
-<!--
-Artwork brief — from the writer routine. Draw per docs/ARTWORK.md,
-then delete this comment.
-
-**Argument in one sentence:** A champions program is infrastructure work disguised as adoption work — the payoff is making repos legible to agents, not the agents themselves.
-
-**Geometry:** A wide, dim grid of small square repo-tiles, mostly uniform and untouched, with a scattered cluster of tiles rendered brighter and arranged in a rough diagonal climb (bottom-left to upper-right) suggesting the four-tier Locked→Novice→Adept→Artisan progression — a quest map drawn in code, not fantasy iconography.
-
-**Accent:** moss, used sparingly, only on the brightest, most-advanced tiles — restraint is the point; most of the grid stays dim.
-
-**Deliberate imperfection:** one bright tile near the top of the diagonal sits slightly off the grid alignment, tilted a few degrees from its neighbors — the one repo that got there by a different path than the pattern predicts.
--->

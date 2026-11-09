@@ -4,6 +4,11 @@ description: 'KPMG cut graduate hiring 29%, Deloitte 18%, but Indeed, ISE and Ta
 pubDate: 2026-09-03
 track: business
 question: 'Is AI really behind the Big Four''s graduate hiring cuts, or is the data telling a messier story?'
+keywords:
+  - Big Four graduate hiring
+  - AI graduate jobs
+  - consulting hiring cuts
+  - entry level AI impact
 heroImage: '../../assets/art/the-big-four-blame-ai-for-the-graduate-hiring-cuts-the-wider-light.webp'
 heroImageDark: '../../assets/art/the-big-four-blame-ai-for-the-graduate-hiring-cuts-the-wider-dark.webp'
 heroAlt: 'A stack of 11 thin horizontal rules of equal length, like lines of text. One rule is interrupted mid-way, and its continuation is shifted slightly downward and drawn in a single accent colour.'
@@ -63,26 +68,3 @@ Ask a Big Four partner why the graduate scheme shrank, and AI is the answer that
 - [Jo Whight — AI: Scapegoat or Solution for Graduate Roles? (LinkedIn)](https://www.linkedin.com/posts/jo-whight_ai-was-getting-the-blame-in-the-headlines-activity-7345300190897090560-dPeE)
 - [AIMultiple — Top 20+ Predictions From Experts on AI Job Loss](https://aimultiple.com/ai-job-loss)
 
-## Social Copy
-
-### Twitter Thread
-
-1/ KPMG cut grad hiring 29%. Deloitte cut it 18%. Both blamed AI. But PwC hired 1,300 UK grads and 3,200 US grads last year — while also cutting 5,600 roles worldwide. Same industry, same "AI story," opposite numbers.
-
-2/ Indeed says UK grad postings are down 12%. ISE says 7%. Target Connect says postings are UP 8%. Three job boards, three verdicts, one graduate market. AI didn't write this data — the Big Four's press releases did.
-
-3/ Only 20% of companies using AI report meaningful impact. Only 8% of financial firms have actually scaled it. So why is AI the go-to excuse for graduate cuts? Because it's easier to say than "the five-year hiring plan stopped making sense."
-
-### LinkedIn Post
-
-KPMG and Deloitte both cite AI for double-digit cuts to graduate hiring — but the data tells a messier story. PwC still hired thousands of graduates last year even as it slashed thousands of other roles. Indeed, ISE, and Target Connect can't even agree on whether graduate postings are falling, flat, or rising. And industry-wide, only 20% of AI-adopting companies report meaningful impact from it. AI makes for a clean headline. The numbers say the real story is about hiring plans that stopped making sense, not automation replacing junior talent. Worth a closer look before accepting the easy explanation.
-
-<!--
-Artwork brief — from the writer routine. Draw per docs/ARTWORK.md,
-then delete this comment.
-
-- **Argument in one sentence** — *Argument in one sentence** — Every source measuring the same graduate-hiring collapse returns a different number, and none of them has the authority the headlines gave AI.
-- **Geometry** — *Geometry** — A loose grid of horizontal hairlines at varying heights, like tick marks on several parallel rulers laid side by side, each row a different length.
-- **Accent** — *Accent** — plum, because the piece turns on disagreeing measurements, not on the technology or the money behind it.
-- **The deliberate imperfection** — *The deliberate imperfection** — one hairline in the grid runs upward while every other line runs downward, unlabeled, matching Target Connect's lone +8% against a field of declines.
--->

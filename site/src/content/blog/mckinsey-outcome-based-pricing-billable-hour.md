@@ -28,11 +28,11 @@ notionId: '3c9ced67-050a-81a0-8f82-d6e32e3d873a'
 - Public-sector research on outcomes contracting names three gaming patterns that carry straight into advisory work: cherry-picking, creaming and parking.
 - Indian IT firms are seeing a small uptick in outcome-based deals away from time-and-materials pricing, but even TCS and Infosys call it early. Infosys's CEO says "it is not so much that it has become a large part of our activity."
 
+</div>
+
 You watched a model draft in an hour what used to take a junior analyst most of a week. So why was the invoice the same?
 
 McKinsey's answer is to stop charging for the week and start charging for the result. On its face that is a better deal for the buyer. Then you read the measurement clause.
-
-</div>
 
 ## What was actually disclosed, and what was just rewritten
 
@@ -119,13 +119,3 @@ Put an engagement on outcomes pricing when the result is measurable, attributabl
 - [McKinsey's CEO breaks down how AI is reshaping its workforce — Fortune via Yahoo Finance](https://finance.yahoo.com/news/mckinseys-ceo-breaks-down-ai-100301404.html)
 - [As AI changes pricing, IT firms see uptick in outcome-based deals — Business Standard](https://www.business-standard.com/industry/news/as-ai-changes-pricing-it-firms-see-uptick-in-outcome-based-deals-126082001102_1.html)
 - [Outcomes-based contracting: cherry-picking, creaming and parking — Government Outcomes Lab, University of Oxford](https://golab.bsg.ox.ac.uk/the-basics/outcomes-based-contracting/)
-
-<!--
-Artwork brief — from the writer routine. Draw per docs/ARTWORK.md,
-then delete this comment.
-
-- **Argument in one sentence:** Replacing the billable hour with "pay for results" does not simplify the deal; it moves the whole negotiation into a measurement clause nobody sees.
-- **Geometry:** A left-hand row of clean, evenly spaced vertical bars (billed hours) that gives way to a single tall right-hand rectangle divided into many thin horizontal bands (the contract clauses). One continuous hairline baseline runs under both halves.
-- **Accent:** ochre, for money and incentives. The subject is pricing, fees and gainshare, not research or process.
-- **The deliberate imperfection:** one band inside the right-hand rectangle is drawn noticeably off-parallel and runs past the rectangle's right edge. It is the attribution clause, the term that will not stay inside the lines.
--->

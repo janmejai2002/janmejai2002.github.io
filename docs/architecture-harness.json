@@ -1,0 +1,247 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "wAIbi-sabi Autonomous Publishing Harness",
+    "output": "wAIbi-sabi-harness.html",
+    "quality_profile": "showcase",
+    "views": [
+      {
+        "id": "e2e-pipeline",
+        "label": "End-to-End Pipeline",
+        "focus": ["gemini_tasks", "notebooklm", "sheets_bus", "ci_sync", "notion", "editorial_guard", "artwork_gen", "astro_ssg", "github_pages", "close_loop"],
+        "note": "Autonomous flow from topic discovery to grounding, relay bus, control plane, editorial gates, static build, and closed-loop verify."
+      },
+      {
+        "id": "unattended-ingress",
+        "label": "Autonomous Ingress Loop",
+        "focus": ["gemini_tasks", "notebooklm", "sheets_bus", "ci_sync", "notion"],
+        "note": "Zero-API cost candidate discovery using Google AI Pro, NotebookLM grounding, and Google Sheets relay bus."
+      },
+      {
+        "id": "build-and-verify",
+        "label": "Build & Closed-Loop Verify",
+        "focus": ["notion", "editorial_guard", "artwork_gen", "astro_ssg", "github_pages", "close_loop"],
+        "note": "Strict editorial gate assertions, Sharp dual WebP rasterization, static compilation, and live HTTP 200 verification."
+      }
+    ]
+  },
+  "components": [
+    {
+      "id": "gemini_tasks",
+      "type": "cloud",
+      "label": "Gemini Web Tasks",
+      "sublabel": "Scoring Matrix",
+      "pos": [40, 80],
+      "size": [130, 50],
+      "tag": "Google AI Pro"
+    },
+    {
+      "id": "notebooklm",
+      "type": "cloud",
+      "label": "NotebookLM Engine",
+      "sublabel": "waibi-sabi (5 Sources)",
+      "pos": [280, 80],
+      "size": [130, 50],
+      "tag": "Grounding"
+    },
+    {
+      "id": "sheets_bus",
+      "type": "database",
+      "label": "Google Sheets Relay",
+      "sublabel": "Drafts, Cases, Talks",
+      "pos": [520, 80],
+      "size": [130, 50],
+      "tag": "Zero-API Bus"
+    },
+    {
+      "id": "ci_sync",
+      "type": "backend",
+      "label": "CI Ingress Bridge",
+      "sublabel": "sync-drafts / news",
+      "pos": [760, 80],
+      "size": [130, 50],
+      "tag": "Scheduled"
+    },
+    {
+      "id": "notion",
+      "type": "database",
+      "label": "Notion Control Plane",
+      "sublabel": "Production & Radar DB",
+      "pos": [760, 210],
+      "size": [130, 50],
+      "tag": "Human Gate"
+    },
+    {
+      "id": "editorial_guard",
+      "type": "security",
+      "label": "Editorial Guard",
+      "sublabel": "check-build.mjs",
+      "pos": [520, 210],
+      "size": [130, 50],
+      "tag": "70/160 Caps"
+    },
+    {
+      "id": "artwork_gen",
+      "type": "backend",
+      "label": "Artwork Engine",
+      "sublabel": "make-images.mjs",
+      "pos": [280, 210],
+      "size": [130, 50],
+      "tag": "Dual WebP"
+    },
+    {
+      "id": "astro_ssg",
+      "type": "frontend",
+      "label": "Astro 5 SSG",
+      "sublabel": "52 Static Routes",
+      "pos": [40, 210],
+      "size": [130, 50],
+      "tag": "Zero Runtime JS"
+    },
+    {
+      "id": "github_pages",
+      "type": "cloud",
+      "label": "GitHub Pages Edge",
+      "sublabel": "janmejai2002.github.io",
+      "pos": [40, 340],
+      "size": [130, 50],
+      "tag": "Global CDN"
+    },
+    {
+      "id": "close_loop",
+      "type": "backend",
+      "label": "Close-Loop Guard",
+      "sublabel": "scripts/close-loop.mjs",
+      "pos": [280, 340],
+      "size": [130, 50],
+      "tag": "Verify 200"
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "Ingress Plane",
+      "wraps": ["gemini_tasks", "notebooklm", "sheets_bus", "ci_sync"]
+    },
+    {
+      "kind": "security-group",
+      "label": "Build Pipeline",
+      "wraps": ["notion", "editorial_guard", "artwork_gen", "astro_ssg"]
+    },
+    {
+      "kind": "region",
+      "label": "Delivery Edge",
+      "wraps": ["github_pages", "close_loop"]
+    }
+  ],
+  "connections": [
+    {
+      "id": "tasks-ground-notebooklm",
+      "from": "gemini_tasks",
+      "to": "notebooklm",
+      "label": "grounding",
+      "labelDy": 19
+    },
+    {
+      "id": "notebooklm-to-sheets",
+      "from": "notebooklm",
+      "to": "sheets_bus",
+      "label": "append row",
+      "labelDy": 19
+    },
+    {
+      "id": "sheets-to-cisync",
+      "from": "sheets_bus",
+      "to": "ci_sync",
+      "label": "poll CSV",
+      "labelDy": 19
+    },
+    {
+      "id": "cisync-to-notion",
+      "from": "ci_sync",
+      "to": "notion",
+      "label": "file draft",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "labelAt": [825, 170]
+    },
+    {
+      "id": "notion-to-guard",
+      "from": "notion",
+      "to": "editorial_guard",
+      "label": "Approved gate",
+      "labelDy": 19
+    },
+    {
+      "id": "guard-to-artwork",
+      "from": "editorial_guard",
+      "to": "artwork_gen",
+      "label": "SVG tokens",
+      "labelDy": 19
+    },
+    {
+      "id": "artwork-to-astro",
+      "from": "artwork_gen",
+      "to": "astro_ssg",
+      "label": "raster WebP",
+      "labelDy": 19
+    },
+    {
+      "id": "astro-to-pages",
+      "from": "astro_ssg",
+      "to": "github_pages",
+      "label": "deploy dist/",
+      "variant": "emphasis",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "labelAt": [105, 295]
+    },
+    {
+      "id": "pages-to-closeloop",
+      "from": "github_pages",
+      "to": "close_loop",
+      "label": "HTTP probe",
+      "labelDy": 19
+    },
+    {
+      "id": "closeloop-to-notion",
+      "from": "close_loop",
+      "to": "notion",
+      "label": "mark Published (200 OK)",
+      "variant": "security",
+      "fromSide": "right",
+      "toSide": "right",
+      "via": [[950, 365], [950, 235]]
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Autonomous Ingress",
+      "items": [
+        "Gemini Web Tasks run autonomous 4-metric scoring matrices (Frontier, Friction, Applied, Novelty)",
+        "NotebookLM waibi-sabi anchors claims, eliminates AI tropes, and enforces semantic SVG tokens",
+        "Google Sheets relay bus operates with zero paid API keys across Drafts, Cases, Talks, and News"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "Dual Track Execution",
+      "items": [
+        "Unattended Tracks (Talks, Case Studies, Basics) publish directly to GitHub main",
+        "Reviewed Tracks (Technical, Business) require human approval gate in Notion",
+        "Sharp rasterizes dual Light & Dark WebP heroes from SVG token placeholders"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "Closed-Loop Guarantees",
+      "items": [
+        "check-build.mjs asserts title <= 70, meta <= 160, question <= 120, and heroAlt present",
+        "GitHub Pages serves edge-optimized static HTML with zero client JavaScript runtime",
+        "close-loop.mjs polls live URLs and only marks Notion Published on confirmed HTTP 200"
+      ]
+    }
+  ]
+}

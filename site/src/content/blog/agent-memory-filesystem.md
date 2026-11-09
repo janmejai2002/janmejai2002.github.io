@@ -2,6 +2,8 @@
 title: "Your Agent's Memory Might Just Want to Be a Filesystem"
 description: 'A UCLA benchmark put agent-memory designs head to head. The best pure-retrieval baseline scored 48.5%. A coding agent reading the raw files got 69.3%.'
 pubDate: 2026-08-24
+track: technical
+question: 'Does an AI agent really need a vector database, or are plain files and scripts more accurate?'
 keywords:
   - AI agent memory
   - LongMemEval-V2

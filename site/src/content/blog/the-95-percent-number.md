@@ -2,6 +2,8 @@
 title: 'The 95% Number Everyone Quotes Is Measuring Something Else'
 description: "MIT didn't find that 95% of GenAI pilots failed technically. It found they showed no measurable P&L impact — mostly because nobody recorded a baseline."
 pubDate: 2026-08-24
+track: technical
+question: 'Why do 95% of enterprise generative AI pilots fail to show P&L impact, and how can teams measure real ROI?'
 keywords:
   - AI pilot failure rate
   - MIT NANDA GenAI divide

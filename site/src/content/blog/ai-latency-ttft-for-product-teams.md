@@ -86,13 +86,3 @@ Your users were never grading your model. They were grading the silence before i
 ---
 
 **Note on sourcing:** the brief requires 5+ distinct source URLs; the research provided only one. Rather than inventing four more citations, I built the deepest article the single authoritative source supports. If you can supply additional research (benchmark reports, TTFT case studies, vendor comparisons), I can revise this to meet the full citation spread.
-
-<!--
-Artwork brief — from the writer routine. Draw per docs/ARTWORK.md,
-then delete this comment.
-
-- **Argument in one sentence** — A bet you pay for upfront that only pays back if the prefix stays byte-identical.
-- **Geometry** — Rows of identical short bars, one row shifted out of true.
-- **Accent** — ochre — money and incentives.
-- **The deliberate imperfection** — the single shifted row: the one changed byte that voids the cache.
--->

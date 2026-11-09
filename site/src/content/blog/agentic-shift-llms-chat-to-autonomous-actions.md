@@ -2,6 +2,8 @@
 title: 'The Agentic Shift: Why LLMs are Moving from Chat to Autonomous Actions'
 description: 'LLMs are shifting from answering questions to taking actions. The adoption numbers, the OpenAI/Anthropic/Google SDK race, and the security bill now coming due.'
 pubDate: 2026-08-25
+track: technical
+question: 'Why are LLMs shifting from chat to autonomous action loops, and what security risks emerge?'
 keywords:
   - Autonomous Agents
   - AI Security

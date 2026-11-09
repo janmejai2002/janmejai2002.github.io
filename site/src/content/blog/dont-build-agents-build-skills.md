@@ -4,6 +4,12 @@ description: 'Anthropic creators Barry Zhang and Mahesh Murag argue code is all 
 pubDate: 2026-11-09
 track: talks
 question: 'Why is Anthropic replacing custom agent scaffolding with file-based skills?'
+keywords:
+  - Anthropic agent skills
+  - progressive disclosure AI
+  - Claude Code skill architecture
+  - Model Context Protocol vs skills
+  - agent context window optimization
 heroImage: '../../assets/art/dont-build-agents-build-skills-light.webp'
 heroImageDark: '../../assets/art/dont-build-agents-build-skills-dark.webp'
 heroAlt: 'Geometric schematic showing a central circular model core surrounded by orbital skill nodes and Cartesian coordinate ticks with an offset cinnabar stamp accent.'
@@ -51,12 +57,9 @@ Third, container execution environments impose non-trivial latency floors. Runni
 - **Convert repetitive model generation loops into static scripts:** Identify workflows where your agent repeatedly generates identical data transformation or formatting code. Direct the model or your developers to write that logic into a deterministic Python script inside the skill directory, eliminating generative drift and saving thousands of output tokens per run.
 - **Pin prompt caching breakpoints ahead of file ingestion:** Position dynamic skill file reads and tool outputs strictly after your static system instructions and pinned conversation history. This guarantees that your core instruction prefix remains untouched in the KV cache across multi-turn sessions.
 
-<!--
-Artwork brief — from the writer routine. Draw per docs/ARTWORK.md,
-then delete this comment.
+## Sources
 
-- Argument in one sentence: A central core processing unit sheds rigid monolithic scaffolding to orchestrate composable procedural skills through a unified file-system runtime.
-- Geometry: Concentric circular radar lines, Cartesian calibration axes, fine coordinate grid ticks, and concentric orbit nodes.
-- Accent: hanko
-- Deliberate imperfection: A displaced cinnabar seal stamp offset from the central focal axis, breaking mathematical symmetry to reflect real-world execution friction.
--->
+- [Anthropic — Building Effective Agents and Progressive Disclosure Architecture](https://www.anthropic.com/research/building-effective-agents)
+- [Model Context Protocol Specification](https://modelcontextprotocol.io)
+- [Claude Code — Agent Architecture and Skills System](https://docs.anthropic.com/en/docs/agents-and-tools/claude-code)
+

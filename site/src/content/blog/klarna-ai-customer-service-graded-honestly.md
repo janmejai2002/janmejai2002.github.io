@@ -70,13 +70,3 @@ Klarna's numbers weren't lies. They were a company's best first-month read on it
 
 - [Klarna, "Klarna AI assistant handles two-thirds of customer service chats in its first month," Feb 27, 2024](https://www.klarna.com/international/press/klarna-ai-assistant-handles-two-thirds-of-customer-service-chats-in-its-first-month/)
 - [Customer Experience Dive, "Klarna reinvests in human talent for customer service after AI chatbot pushback," citing Bloomberg, May 2025](https://www.customerexperiencedive.com/news/klarna-reinvests-human-talent-customer-service-AI-chatbot/747586/)
-
-<!--
-Artwork brief — from the writer routine. Draw per docs/ARTWORK.md,
-then delete this comment.
-
-- **Argument in one sentence** — A bet you pay for upfront that only pays back if the prefix stays byte-identical.
-- **Geometry** — Rows of identical short bars, one row shifted out of true.
-- **Accent** — ochre — money and incentives.
-- **The deliberate imperfection** — the single shifted row: the one changed byte that voids the cache.
--->

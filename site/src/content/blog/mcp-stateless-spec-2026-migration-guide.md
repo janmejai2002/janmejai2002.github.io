@@ -3,6 +3,7 @@ title: 'MCP Just Deleted Its Own Session Model. Here''s What Changes.'
 description: 'MCP''s July 2026 spec deleted sessions entirely. What breaks, what "stateless" actually means, and how to migrate a production server.'
 pubDate: 2026-08-25
 track: technical
+question: 'How does the 2026-07-28 stateless MCP spec remove sessions, and what steps are required to migrate servers?'
 keywords:
   - MCP stateless spec
   - Model Context Protocol 2026-07-28

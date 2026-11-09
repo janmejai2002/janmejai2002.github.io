@@ -19,12 +19,12 @@ notionId: '3ceced67-050a-81b4-bdeb-f26fbb7434b0'
 
 ## Executive TL;DR
 
-- Musk says digital superintelligence — something "smarter than any human at anything" — could arrive "this year and if it doesn't happen this year, next year for sure," per his [fireside chat at YC's AI Startup School](https://www.youtube.com/watch?v=cFIlta1GkiE).
-- He puts the odds of AI causing human annihilation at "10 to 20%," aligning himself with Geoffrey Hinton's estimate, which he reframes as "80 to 90% probability of a great outcome" ([same talk](https://www.youtube.com/watch?v=cFIlta1GkiE)).
-- Suppliers told him the Memphis supercomputer would take "18 to 24 months" to stand up 100,000 H100 chips; he says he demanded it in six, inside a disused Electrolux factory ([talk](https://www.youtube.com/watch?v=cFIlta1GkiE)).
-- That site has since scaled to "150,000 H100s, 50K H200s, and 30K GB200s," with another 110,000 GB200s coming online at a second location, according to Musk ([talk](https://www.youtube.com/watch?v=cFIlta1GkiE)).
-- He claims "the sustained output of a human over the course of a day is less than one bit per second" — his own estimate of human bandwidth, not a cited study ([talk](https://www.youtube.com/watch?v=cFIlta1GkiE)).
-- He forecasts Tesla will build "at least five times as many humanoid robots as there are humans, maybe 10 times" ([talk](https://www.youtube.com/watch?v=cFIlta1GkiE)).
+- Musk says digital superintelligence — something "smarter than any human at anything" — could arrive "this year and if it doesn't happen this year, next year for sure," per his fireside chat at YC's AI Startup School.
+- He puts the odds of AI causing human annihilation at "10 to 20%," aligning himself with Geoffrey Hinton's estimate, which he reframes as "80 to 90% probability of a great outcome."
+- Suppliers told him the Memphis supercomputer would take "18 to 24 months" to stand up 100,000 H100 chips; he says he demanded it in six, inside a disused Electrolux factory.
+- That site has since scaled to "150,000 H100s, 50K H200s, and 30K GB200s," with another 110,000 GB200s coming online at a second location, according to Musk.
+- He claims "the sustained output of a human over the course of a day is less than one bit per second" — his own estimate of human bandwidth, not a cited study.
+- He forecasts Tesla will build "at least five times as many humanoid robots as there are humans, maybe 10 times."
 
 </div>
 
@@ -75,13 +75,3 @@ He closes on the Fermi paradox — the puzzle of why, in a universe this vast, w
 ## Sources
 
 - [Elon Musk fireside chat, YC AI Startup School, June 2025 — full talk](https://www.youtube.com/watch?v=cFIlta1GkiE)
-
-<!--
-Artwork brief — from the writer routine. Draw per docs/ARTWORK.md,
-then delete this comment.
-
-- **Argument in one sentence** — A bet you pay for upfront that only pays back if the prefix stays byte-identical.
-- **Geometry** — Rows of identical short bars, one row shifted out of true.
-- **Accent** — ochre — money and incentives.
-- **The deliberate imperfection** — the single shifted row: the one changed byte that voids the cache.
--->

@@ -63,13 +63,3 @@ Think of temperature as a bias toward or away from the obvious answer rather tha
 ## Sources
 
 - [Claude Platform Docs — Glossary: Temperature and Tokens](https://platform.claude.com/docs/en/about-claude/glossary)
-
-<!--
-Artwork brief — from the writer routine. Draw per docs/ARTWORK.md,
-then delete this comment.
-
-- **Argument in one sentence** — A bet you pay for upfront that only pays back if the prefix stays byte-identical.
-- **Geometry** — Rows of identical short bars, one row shifted out of true.
-- **Accent** — ochre — money and incentives.
-- **The deliberate imperfection** — the single shifted row: the one changed byte that voids the cache.
--->
