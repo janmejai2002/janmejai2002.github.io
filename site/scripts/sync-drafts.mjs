@@ -65,10 +65,16 @@ console.log('──────────────────────�
 console.log('wAIbi-sabi Zero-API Drafts Sync (Google Sheets/Docs → Notion)');
 console.log('──────────────────────────────────────────────────────');
 
-const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv&sheet=Drafts`;
-console.log(`Fetching Drafts tab: ${url}`);
+// Fetch existing Notion Production articles to avoid duplicates
+console.log('Fetching existing Notion Production articles...');
+const existingNotionRows = await queryAll(PRODUCTION_DS);
+const existingTitles = new Set(
+  existingNotionRows.map((r) =>
+    (r.properties.Name?.title?.[0]?.plain_text || '').trim().toLowerCase()
+  )
+);
 
-// Also fetch Radar tab to match reader question and SEO keywords
+// Fetch Radar tab to match reader question and SEO keywords
 const radarUrl = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv&sheet=Radar`;
 const radarMap = new Map();
 try {
@@ -96,65 +102,57 @@ try {
   // Non-fatal if radar cannot be read
 }
 
-let csvText = '';
-try {
-  const res = await fetch(url);
-  if (!res.ok) throw new Error(`HTTP ${res.status}`);
-  csvText = await res.text();
-} catch (err) {
-  console.warn(`Could not fetch Drafts tab: ${err.message}`);
-  process.exit(0);
-}
-
-const rows = parseCSV(csvText);
-if (rows.length <= 1) {
-  console.log('No rows found in Drafts tab. (Ensure tab "Drafts" exists with header row).');
-  process.exit(0);
-}
-
-const headers = rows[0].map((h) => h.trim().toLowerCase());
-// Expected columns: Date, Track, Title, DocUrl (or Markdown), Status
-const idx = {
-  date: headers.indexOf('date'),
-  track: headers.indexOf('track'),
-  title: headers.findIndex((h) => h.includes('title') || h.includes('name')),
-  docUrl: headers.findIndex((h) => h.includes('doc') || h.includes('url') || h.includes('link')),
-  body: headers.findIndex((h) => h.includes('draft') || h.includes('markdown') || h.includes('body') || h.includes('content')),
-  status: headers.indexOf('status'),
-};
-
-if (idx.title === -1) {
-  console.log('Tab does not appear to be a Drafts table (missing Title header).');
-  console.log('Headers found:', headers.join(', '));
-  process.exit(0);
-}
-
-// Fetch existing Notion Production articles to avoid duplicates
-console.log('Fetching existing Notion Production articles...');
-const existingNotionRows = await queryAll(PRODUCTION_DS);
-const existingTitles = new Set(
-  existingNotionRows.map((r) =>
-    (r.properties.Name?.title?.[0]?.plain_text || '').trim().toLowerCase()
-  )
-);
+const TABS_TO_CHECK = [
+  { name: 'Drafts', defaultTrack: 'Technical' },
+  { name: 'Case Studies', defaultTrack: 'Case Studies' },
+  { name: 'Talks', defaultTrack: 'Talks' },
+];
 
 const pendingDrafts = [];
 
-for (let i = 1; i < rows.length; i++) {
-  const r = rows[i];
-  const title = (r[idx.title] ?? '').trim();
-  if (!title) continue;
-
-  if (existingTitles.has(title.toLowerCase())) {
-    continue; // Already in Notion
+for (const tab of TABS_TO_CHECK) {
+  const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(tab.name)}`;
+  let csvText = '';
+  try {
+    const res = await fetch(url);
+    if (!res.ok) continue;
+    csvText = await res.text();
+  } catch (err) {
+    continue;
   }
 
-  const track = (r[idx.track] ?? 'Technical').trim() || 'Technical';
-  const docUrl = idx.docUrl !== -1 ? (r[idx.docUrl] ?? '').trim() : '';
-  const bodyText = idx.body !== -1 ? (r[idx.body] ?? '').trim() : '';
-  const status = idx.status !== -1 ? (r[idx.status] ?? 'Ready').trim() : 'Ready';
+  const rows = parseCSV(csvText);
+  if (rows.length <= 1) continue;
 
-  pendingDrafts.push({ title, track, docUrl, bodyText, status });
+  const headers = rows[0].map((h) => h.trim().toLowerCase());
+  const idx = {
+    date: headers.indexOf('date'),
+    track: headers.indexOf('track'),
+    title: headers.findIndex((h) => h.includes('title') || h.includes('name')),
+    docUrl: headers.findIndex((h) => h.includes('doc') || h.includes('url') || h.includes('link')),
+    body: headers.findIndex((h) => h.includes('draft') || h.includes('markdown') || h.includes('body') || h.includes('content')),
+    status: headers.indexOf('status'),
+  };
+
+  if (idx.title === -1) continue;
+
+  for (let i = 1; i < rows.length; i++) {
+    const r = rows[i];
+    const title = (r[idx.title] ?? '').trim();
+    if (!title) continue;
+
+    if (existingTitles.has(title.toLowerCase())) {
+      continue; // Already in Notion
+    }
+
+    const explicitTrack = idx.track !== -1 ? (r[idx.track] ?? '').trim() : '';
+    const track = explicitTrack || tab.defaultTrack;
+    const docUrl = idx.docUrl !== -1 ? (r[idx.docUrl] ?? '').trim() : '';
+    const bodyText = idx.body !== -1 ? (r[idx.body] ?? '').trim() : '';
+    const status = idx.status !== -1 ? (r[idx.status] ?? 'Ready').trim() : 'Ready';
+
+    pendingDrafts.push({ title, track, docUrl, bodyText, status, sourceTab: tab.name });
+  }
 }
 
 console.log(`Found ${pendingDrafts.length} pending draft(s) in Google Sheets.`);
