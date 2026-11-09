@@ -32,3 +32,7 @@ publish-manifest.json
 
 # Archify visual-check sidecars
 *.visual-check.*
+
+# Temporary scratch and staging drafts
+/drafts/
+/scratch/

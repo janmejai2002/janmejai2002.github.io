@@ -86,6 +86,20 @@ jobs:
           GOOGLE_SHEET_ID: ${{ vars.GOOGLE_SHEET_ID }}
         run: node scripts/sync-news.mjs
 
+      - name: Sync Radar ideas from Google Sheets to Notion
+        working-directory: site
+        env:
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+          GOOGLE_SHEET_ID: ${{ vars.GOOGLE_SHEET_ID }}
+        run: node scripts/sync-radar.mjs --commit || true
+
+      - name: Sync Article drafts from Google Sheets to Notion
+        working-directory: site
+        env:
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+          GOOGLE_SHEET_ID: ${{ vars.GOOGLE_SHEET_ID }}
+        run: node scripts/sync-drafts.mjs --commit || true
+
       # The /status/ page reads this.
       - name: Refresh status.json from Notion
         working-directory: site

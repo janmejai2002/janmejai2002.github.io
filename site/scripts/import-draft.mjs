@@ -40,17 +40,22 @@ let question = '';
 let description = '';
 let slug = '';
 let keywords = '';
+let sourceIdea = '';
+
+const unquote = (s) => (s ? s.trim().replace(/^["']|["']$/g, '').trim() : '');
 
 // Check YAML frontmatter if present
 if (raw.startsWith('---')) {
   const parts = raw.split(/^---$/m);
   if (parts.length >= 3) {
     const yaml = parts[1];
-    title = yaml.match(/^title:\s*['"]?(.*?)['"]?$/m)?.[1]?.trim() || '';
-    track = yaml.match(/^track:\s*['"]?(.*?)['"]?$/m)?.[1]?.trim() || 'Technical';
-    question = yaml.match(/^question:\s*['"]?(.*?)['"]?$/m)?.[1]?.trim() || '';
-    description = yaml.match(/^description:\s*['"]?(.*?)['"]?$/m)?.[1]?.trim() || '';
-    keywords = yaml.match(/^keywords:\s*['"]?(.*?)['"]?$/m)?.[1]?.trim() || '';
+    title = unquote(yaml.match(/^title:\s*(.*)$/m)?.[1]);
+    track = unquote(yaml.match(/^track:\s*(.*)$/m)?.[1]) || 'Technical';
+    question = unquote(yaml.match(/^question:\s*(.*)$/m)?.[1]);
+    description = unquote(yaml.match(/^description:\s*(.*)$/m)?.[1]);
+    slug = unquote(yaml.match(/^slug:\s*(.*)$/m)?.[1]);
+    keywords = unquote(yaml.match(/^keywords:\s*(.*)$/m)?.[1]);
+    sourceIdea = unquote(yaml.match(/^(?:source_idea|sourceIdea|idea):\s*(.*)$/m)?.[1]);
   }
 }
 
@@ -61,18 +66,24 @@ if (!title) {
           'Untitled Draft';
 }
 if (!description) {
-  description = raw.match(/Meta description:\s*([^\n]+)/i)?.[1]?.trim() || '';
+  description = raw.match(/(?:\*\*|__)?Meta description:(?:\*\*|__)?\s*([^\n]+)/i)?.[1]?.trim() || '';
 }
 if (!slug) {
-  slug = raw.match(/Slug:\s*([^\n]+)/i)?.[1]?.trim() ||
+  slug = raw.match(/(?:\*\*|__)?Slug:(?:\*\*|__)?\s*([^\n]+)/i)?.[1]?.trim() ||
          title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
 }
 if (!question) {
-  question = raw.match(/Reader Question:\s*([^\n]+)/i)?.[1]?.trim() || '';
+  question = raw.match(/(?:\*\*|__)?Reader Question:(?:\*\*|__)?\s*([^\n]+)/i)?.[1]?.trim() || '';
 }
 if (!keywords) {
-  keywords = raw.match(/SEO Keywords:\s*([^\n]+)/i)?.[1]?.trim() || '';
+  keywords = raw.match(/(?:\*\*|__)?SEO Keywords:(?:\*\*|__)?\s*([^\n]+)/i)?.[1]?.trim() || '';
 }
+
+// Strip any trailing markdown formatting characters from parsed strings
+description = description.replace(/^[*_:\s]+|[*_\s]+$/g, '').trim();
+slug = slug.replace(/^[*_:\s]+|[*_\s]+$/g, '').trim().toLowerCase();
+question = question.replace(/^[*_:\s]+|[*_\s]+$/g, '').trim();
+title = title.replace(/^[*_:\s]+|[*_\s]+$/g, '').trim();
 
 // Ensure track matches valid Notion select options
 const validTracks = ['Technical', 'Business', 'Basics', 'Case Studies', 'Talks'];
@@ -221,6 +232,9 @@ const properties = {
 if (keywords) {
   properties['SEO Keywords'] = { rich_text: [{ type: 'text', text: { content: keywords.slice(0, 2000) } }] };
 }
+if (sourceIdea) {
+  properties['Source Idea'] = { relation: [{ id: sourceIdea }] };
+}
 
 console.log('──────────────────────────────────────────────────────');
 console.log('ARTICLE IMPORT PREVIEW');
@@ -265,6 +279,18 @@ while (remainingBlocks.length > 0) {
     method: 'PATCH',
     body: { children: chunk },
   });
+}
+
+if (sourceIdea) {
+  try {
+    await api(`/pages/${sourceIdea}`, {
+      method: 'PATCH',
+      body: { properties: { Status: { select: { name: 'Drafting' } } } },
+    });
+    console.log(`  Linked and marked radar idea ${sourceIdea} as Drafting.`);
+  } catch (err) {
+    console.warn(`  Could not update radar idea ${sourceIdea}: ${err.message}`);
+  }
 }
 
 console.log('\n✓ Article draft successfully ingested into Notion at Draft Ready!');
