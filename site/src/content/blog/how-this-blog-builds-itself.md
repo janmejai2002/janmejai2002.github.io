@@ -5,7 +5,6 @@ pubDate: 2026-08-24
 updatedDate: 2026-08-26
 track: technical
 question: 'How does an autonomous multi-agent blog pipeline operate using Claude Code, Notion, and Astro?'
-notionId: 'manual-architecture-manifest'
 keywords:
   - Claude Code scheduled tasks
   - Notion as a control plane
