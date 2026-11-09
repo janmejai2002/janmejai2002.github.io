@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" role="img">
+<title>Anthropic Skills Architecture Schematic</title>
+<desc>Minimalist geometric blueprint depicting an agent core surrounded by decoupled skill nodes and an off-axis cinnabar seal.</desc>
+<defs>
+<filter id="grain" x="0" y="0" width="100%" height="100%">
+<feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch"/>
+</filter>
+</defs>
+<rect width="1600" height="900" fill="{{paper}}"/>
+<path d="M80,80h1440v740h-1440zM80,450h1440M800,80v740" fill="none" stroke="{{border}}" stroke-width="1"/>
+<circle cx="800" cy="450" r="320" fill="none" stroke="{{border}}" stroke-width="1" stroke-dasharray="4,8"/>
+<circle cx="800" cy="450" r="240" fill="none" stroke="{{border}}" stroke-width="1.5"/>
+<circle cx="800" cy="450" r="160" fill="none" stroke="{{ink}}" stroke-width="2"/>
+<circle cx="800" cy="450" r="50" fill="none" stroke="{{ink}}" stroke-width="2.5"/>
+<line x1="800" y1="210" x2="800" y2="130" stroke="{{ink}}" stroke-width="1.5"/>
+<line x1="800" y1="690" x2="800" y2="770" stroke="{{ink}}" stroke-width="1.5"/>
+<line x1="560" y1="450" x2="480" y2="450" stroke="{{ink}}" stroke-width="1.5"/>
+<line x1="1040" y1="450" x2="1120" y2="450" stroke="{{ink}}" stroke-width="1.5"/>
+<circle cx="800" cy="130" r="12" fill="{{paper}}" stroke="{{ink}}" stroke-width="2"/>
+<circle cx="800" cy="770" r="12" fill="{{paper}}" stroke="{{ink}}" stroke-width="2"/>
+<circle cx="480" cy="450" r="12" fill="{{paper}}" stroke="{{ink}}" stroke-width="2"/>
+<circle cx="1120" cy="450" r="12" fill="{{paper}}" stroke="{{ink}}" stroke-width="2"/>
+<rect x="850" y="475" width="46" height="46" fill="none" stroke="{{hanko}}" stroke-width="3"/>
+<rect x="858" y="483" width="30" height="30" fill="{{hanko}}" fill-opacity="0.15" stroke="{{hanko}}" stroke-width="1"/>
+<circle cx="873" cy="498" r="6" fill="{{hanko}}"/>
+<rect width="1600" height="900" filter="url(#grain)" opacity="0.05"/>
+</svg>
