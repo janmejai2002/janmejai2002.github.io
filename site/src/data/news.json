@@ -1,5 +1,45 @@
 [
   {
+    "headline": "Brands Shift Ad Spend to GEO as 26% of Buyers Research via AI",
+    "date": "2026-11-09",
+    "category": "Marketing",
+    "summary": "Meltwater and We Are Social's Digital 2027 report shows 26% of adult internet users worldwide—and 70% in high-adoption markets like the Philippines, including 66.8% of 16-to-24-year-olds on ChatGPT monthly—now research brands and purchases through AI assistants. Consumer brands such as Belo Medical Group are shifting budget from paid search keywords to generative engine optimization (GEO) by interviewing customers on their exact prompt phrasing and seeding consistent product data across Reddit threads, creator videos, and news coverage.",
+    "angle": "Marketing panelists will press you on how brand managers measure return on ad spend (ROAS) when discovery moves from clickable Google search ads into zero-click LLM answers across ChatGPT, Claude, and Gemini. If AI models synthesize third-party Reddit discussions and creator reviews over paid brand copy, how do you reallocate a D2C performance marketing budget without losing attribution visibility?",
+    "source": "https://bworldonline.com/corporate/2026/11/08/792185/rising-ai-use-prompts-shift-in-brand-search-strategies/"
+  },
+  {
+    "headline": "Cloudflare Q3 Revenue Jumps 39% to $782.5M on 1,700% AI Agent Rise",
+    "date": "2026-11-09",
+    "category": "Product Management",
+    "summary": "Cloudflare grew Q3 2026 revenue 39% year-on-year to $782.5 million with 122% dollar-based net retention as its Workers platform crossed 10 million active developers (up from 7 million in Q2) and daily AI agent network requests jumped over 1,700%. However, scaling developer compute pushed non-GAAP gross margin down 290 basis points to 72.4%, while a HyperFRAME Q3 2026 study found that although 75% of enterprises support agentic AI, only 11% run multi-workflow agents in production and 64% require human approval for high-stakes actions.",
+    "angle": "Product interviewers will press you on the gross-margin dilution trap when a high-margin SaaS security vendor expands into variable-consumption AI agent execution infrastructure. How should a PM structure pool-of-funds enterprise contracts and security-first agent guardrails (now the top buyer criterion at 32%, ahead of latency at 30%) to convert pilot developer usage into multi-workflow production deployments without eroding unit margins?",
+    "source": "https://hyperframeresearch.com/2026/11/08/cloudflare-q3-2026-is-a-new-class-of-ai-infrastructure-provider-emerging/"
+  },
+  {
+    "headline": "FIIs Pour Rs 38,971 Cr Into India as Sensex Opens Samvat 2083 High",
+    "date": "2026-11-09",
+    "category": "Finance",
+    "summary": "The BSE Sensex climbed 271.32 points to open at 81,299.34 (hitting 81,442.11 intraday) and the Nifty 50 opened at 25,070.45 during Sunday's Samvat 2083 Muhurat Trading session after gaining 8.8% and 8.5% over the prior week. Foreign institutional investors (FIIs) pumped Rs 38,971 crore into Indian equities in early November—including Rs 45,960.02 crore in net cash buying between November 2 and 6 against Rs 24,196.52 crore in domestic institutional profit-booking—as global funds rotated out of capital-heavy US AI stocks and Brent crude fell 13.3% to $98 a barrel.",
+    "angle": "Finance interviewers will ask whether India's FII inflow surge represents a structural valuation re-rating or a tactical refuge from Wall Street's AI capex sell-off. With October CPI expected near the RBI's 6% upper tolerance band at 5.9% and midcaps lagging large-cap index gains (5.8% versus 8.5%), how should a portfolio manager position across rate-sensitive private banks and cyclical metals?",
+    "source": "https://upstox.com/news/market-news/stocks/muhurat-trading-2026-sensex-rises-270-points-nifty-opens-at-25-070-tata-steel-hindalco-ongc-lead-gainers/article-203169/"
+  },
+  {
+    "headline": "IOC Buys Tankers as Hormuz Crisis Pushes Spot Freight to $10/Bbl",
+    "date": "2026-11-09",
+    "category": "Operations",
+    "summary": "Indian Oil Corporation (IOC) approved purchasing its own crude and LPG carriers and expanded crude inventory buffers from 33–35 days to 39 days as West Asia shipping disruptions drove spot crude freight to $8–$10 per barrel (versus $2–$2.50 on IOC's three time-chartered vessels) and spot LPG freight from $40 to $160–$180 per tonne. IOC sourced 55% of its H1 FY27 crude from Russia and increased spot procurement to 87% of total imports (up from 50% in FY26), posting a Rs 21,630 crore September-quarter net profit on an $18.52-per-barrel gross refining margin.",
+    "angle": "Operations panelists will challenge you on the vertical-integration dilemma of a state refiner buying captive ocean tankers during a geopolitical freight spike when vessel delivery lead times span years. How do you balance the working-capital cost of holding 39 days of crude inventory at $120 per barrel and locking into long-term shipping capex against the risk of spot charter rates collapsing once Strait of Hormuz transit normalizes?",
+    "source": "https://m.economictimes.com/industry/energy/oil-gas/indian-oil-corporation-to-buy-crude-lpg-ships-as-west-asia-crisis-exposes-shipping-risks/articleshow/135652440.cms"
+  },
+  {
+    "headline": "KPMG Finds 56% of CEOs Expect Severe Supply and Tech Disruptions",
+    "date": "2026-11-09",
+    "category": "Consulting",
+    "summary": "A KPMG International survey reports that 56% of global business leaders expect geopolitical conflicts, energy shocks, and cyber threats to severely hit operations over the next three to five years, while 70% saw their organization's risk exposure rise over the past two years. Executives ranked AI and technology disruption as their top two-year threat at 64%—ahead of geopolitical conflict (58%) and macro uncertainty (48%)—and identified digital dependencies as the most exposed supply chain stage (46%), prompting 49% to fund AI predictive analytics and 44% to run scenario stress-testing.",
+    "angle": "Strategy interviewers will point out the contradiction in KPMG's findings: 46% of executives name digital and tech dependencies as their single biggest supply chain vulnerability, yet 49% are deploying even more AI and predictive software to manage that risk. When advising a board on enterprise resilience, how do you prevent multi-country supplier diversification from failing when geographically separate Tier-1 vendors still share the same maritime chokepoints like the Strait of Hormuz or the same cloud infrastructure?",
+    "source": "https://m.economictimes.com/news/company/corporate-trends/56-of-global-business-leaders-expect-disruptions-to-severely-hit-operations-kpmg/articleshow/135655830.cms"
+  },
+  {
     "headline": "BARC Faces Cash Crunch as Monthly Burn Hits Rs 25 Cr in TRP Freeze",
     "date": "2026-11-08",
     "category": "Marketing",
