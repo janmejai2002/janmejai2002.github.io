@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" role="img">
+  <title>A row of even bars beside a tall rectangle of stacked bands</title>
+  <desc>On the left, ten identical vertical bars stand evenly spaced on a hairline baseline. On the right, a single tall rectangle is filled with many thin horizontal bands. One band tilts out of parallel and runs past the rectangle's right edge. The baseline continues unbroken beneath both halves.</desc>
+  <filter id="grain" x="0" y="0" width="100%" height="100%">
+    <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch"/>
+  </filter>
+  <rect width="1600" height="900" fill="{{paper}}"/>
+  <g fill="{{ink}}">
+    <rect x="250" y="380" width="26" height="300"/>
+    <rect x="296" y="380" width="26" height="300"/>
+    <rect x="342" y="380" width="26" height="300"/>
+    <rect x="388" y="380" width="26" height="300"/>
+    <rect x="434" y="380" width="26" height="300"/>
+    <rect x="480" y="380" width="26" height="300"/>
+    <rect x="526" y="380" width="26" height="300"/>
+    <rect x="572" y="380" width="26" height="300"/>
+    <rect x="618" y="380" width="26" height="300"/>
+    <rect x="664" y="380" width="26" height="300"/>
+  </g>
+  <rect x="820" y="300" width="360" height="380" fill="{{paper2}}" stroke="{{ink}}" stroke-width="2.5"/>
+  <g stroke="{{ink}}" stroke-width="1.5" opacity="0.5">
+    <line x1="820" y1="324" x2="1180" y2="324"/>
+    <line x1="820" y1="347" x2="1180" y2="347"/>
+    <line x1="820" y1="371" x2="1180" y2="371"/>
+    <line x1="820" y1="395" x2="1180" y2="395"/>
+    <line x1="820" y1="418" x2="1180" y2="418"/>
+    <line x1="820" y1="466" x2="1180" y2="466"/>
+    <line x1="820" y1="490" x2="1180" y2="490"/>
+    <line x1="820" y1="513" x2="1180" y2="513"/>
+    <line x1="820" y1="537" x2="1180" y2="537"/>
+    <line x1="820" y1="561" x2="1180" y2="561"/>
+    <line x1="820" y1="585" x2="1180" y2="585"/>
+    <line x1="820" y1="608" x2="1180" y2="608"/>
+    <line x1="820" y1="632" x2="1180" y2="632"/>
+    <line x1="820" y1="656" x2="1180" y2="656"/>
+  </g>
+  <line x1="820" y1="430" x2="1295" y2="468" stroke="{{ochre}}" stroke-width="11"/>
+  <line x1="220" y1="680" x2="1310" y2="680" stroke="{{ink}}" stroke-width="2"/>
+  <rect width="1600" height="900" filter="url(#grain)" opacity="0.055"/>
+</svg>

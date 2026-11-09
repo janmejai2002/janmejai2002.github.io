@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" role="img">
+  <title>Local Search vs Vector RAG Architecture</title>
+  <desc>Geometric plate illustrating local-first code retrieval mechanics.</desc>
+  <defs>
+    <filter id="grain" x="0" y="0" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch"/>
+    </filter>
+  </defs>
+  <!-- Base Ground -->
+  <rect width="1600" height="900" fill="{{paper}}"/>
+
+  <!-- Structural Grid Lines -->
+  <line x1="160" y1="180" x2="1440" y2="180" stroke="{{border}}" stroke-width="1.5" stroke-dasharray="4 8"/>
+  <line x1="160" y1="450" x2="1440" y2="450" stroke="{{border}}" stroke-width="1.5"/>
+  <line x1="160" y1="720" x2="1440" y2="720" stroke="{{border}}" stroke-width="1.5" stroke-dasharray="4 8"/>
+
+  <!-- Vertical Coordinate Spine -->
+  <line x1="480" y1="100" x2="480" y2="800" stroke="{{border}}" stroke-width="1.5"/>
+  <line x1="1120" y1="100" x2="1120" y2="800" stroke="{{border}}" stroke-width="1.5"/>
+
+  <!-- Central Concentric Radar Rings (Local Search Field) -->
+  <circle cx="800" cy="450" r="320" fill="none" stroke="{{border}}" stroke-width="2"/>
+  <circle cx="800" cy="450" r="220" fill="none" stroke="{{ink}}" stroke-width="1.5" opacity="0.4"/>
+  <circle cx="800" cy="450" r="120" fill="none" stroke="{{ink}}" stroke-width="2"/>
+
+  <!-- Deliberate Imperfection: Severed Outer Arc (Escaping Cloud Boundary) -->
+  <path d="M 460 450 A 340 340 0 1 1 1140 450" fill="none" stroke="{{mizu}}" stroke-width="3" stroke-linecap="round"/>
+
+  <!-- Discrete Hash Markers (AST Nodes) -->
+  <rect x="792" y="322" width="16" height="16" fill="{{ink}}"/>
+  <rect x="792" y="562" width="16" height="16" fill="{{ink}}"/>
+  <rect x="672" y="442" width="16" height="16" fill="{{ink}}"/>
+  <rect x="912" y="442" width="16" height="16" fill="{{ink}}"/>
+
+  <!-- Precision Focal Point (Mizu Accent) -->
+  <circle cx="800" cy="450" r="10" fill="{{mizu}}"/>
+</svg>

@@ -1,0 +1,141 @@
+---
+title: 'Memory Bandwidth Not GPU Compute Limits LLM Token Generation Speed'
+description: 'Autoregressive LLM decoding stalls on HBM bandwidth at ~1 FLOP/byte while H100 Tensor Cores need 295 FLOPs/byte. Learn KV cache math, GQA, and MLA.'
+pubDate: 2026-11-09
+track: basics
+question: 'Why does token generation saturate GPU memory bandwidth while compute units sit idle?'
+keywords:
+  - KV Cache Memory Bandwidth
+  - Arithmetic Intensity
+  - Grouped-Query Attention
+  - Prefill vs Decode Phase
+heroImage: '../../assets/art/kv-cache-explained-light.webp'
+heroImageDark: '../../assets/art/kv-cache-explained-dark.webp'
+heroAlt: 'Minimalist geometric diagram contrasting a moss-accented memory bus of Key-Value tick marks against a mostly empty grid of GPU compute cores beneath a severed Roofline curve.'
+readingTime: '6 min read'
+notionId: '413ced67-050a-8162-a772-f9582771ce0d'
+---
+<div class="tldr">
+
+## Executive TL;DR
+
+- **Autoregressive decoding hits a memory bandwidth wall:** Single-stream decoding achieves ~1 FLOP/byte, while an [NVIDIA H100 SXM5 GPU](https://www.nvidia.com/en-us/data-center/h100/) needs 295.2 FLOPs/byte (989 TFLOPS FP16 / 3.35 TB/s HBM3) to saturate Tensor Cores, leaving >90% of compute idle at batch size 1.
+- **Prefill and decode operate in opposite regimes:** Prefill multiplies prompt tokens in parallel at >2,000 FLOPs/byte (compute-bound), while decode streams gigabytes of weights and Key-Value (KV) states from HBM per output token (memory-bound).
+- **Uncompressed KV caches outgrow weights at long contexts:** Under Multi-Head Attention, a [Llama 3.1 70B](https://arxiv.org/abs/2407.21783) baseline consumes 2.62 MB/token in FP16, taking 85.90 GB of VRAM for one 32,768-token session.
+- **Modern attention primitives shrink memory traffic:** [Grouped-Query Attention (GQA)](https://arxiv.org/abs/2305.13245) cuts Llama 3.1 70B cache size by 8x (10.74 GB at 32K context), while [DeepSeek-V2 Multi-Head Latent Attention (MLA)](https://arxiv.org/abs/2405.04434) compresses KV states into latent vectors to cut cache memory by 93.3% and boost throughput by 5.76x.
+- **Large batching and low-bit quantization flip the bottleneck back to compute:** Pushing batch sizes past 295 requests or running non-fused INT4 KV dequantization kernels drives operational intensity above the ridge point, shifting the bottleneck back to compute.
+
+</div>
+
+## The memory wall: why token generation leaves GPU compute cores starving
+
+Engineers profiling large language model (LLM) serving often expect latency to scale with floating-point compute. When deployments lag, teams shop for higher teraFLOPS ratings. Production telemetry tells a different story: during token generation, GPU Tensor Cores spend up to 90% of their cycles stalled, waiting on High Bandwidth Memory (HBM) transfers.
+
+To see why memory bandwidth vs compute in LLM serving favors bandwidth, picture a factory with 1,000 CNC milling machines (Tensor Cores) linked to a distant warehouse (off-chip HBM) by a two-lane road (the memory bus). For a bulk order of 2,048 aluminum blanks, one truck hauls a master blueprint once, and all 1,000 machines cut metal simultaneously (prompt prefill). Now picture a custom order where each part depends on measurements of every prior part. For every cut, a truck hauls the blueprint plus a growing archive of past measurements across the two-lane road, mills one piece in a microsecond, and waits. The machines sit idle while the road stays jammed.
+
+The [Roofline performance model](https://doi.org/10.1145/1498765.1498785) formalizes this via arithmetic intensity: FLOPs executed per byte transferred across the memory bus. Dividing peak compute by peak bandwidth defines a GPU's ridge point. Per [NVIDIA H100 Tensor Core GPU specs](https://www.nvidia.com/en-us/data-center/h100/), the SXM5 delivers 989 TFLOPS dense FP16 compute and 3.35 TB/s HBM3 bandwidth, setting a ridge point of 295.2 FLOPs/byte. Kernels below 295 FLOPs/byte hit the memory roof before reaching peak compute.
+
+| GPU Accelerator | VRAM | Bandwidth | Dense FP16 | Ridge Point | Batch-1 Decode (8B FP16) |
+
+| :--- | :--- | :--- | :--- | :--- | :--- |
+
+| [NVIDIA RTX 4090](https://images.nvidia.com/aem-dam/Solutions/geforce/ada/nvidia-ada-gpu-architecture.pdf) | 24GB GDDR6X | 1,008GB/s | 165.2 TFLOPS | 163.9 FLOP/B | ~63.0 tok/s |
+
+| [NVIDIA A100 SXM4](https://awesomeagents.ai/hardware/nvidia-a100/) | 80GB HBM2e | 2,039GB/s | 312.0 TFLOPS | 153.0 FLOP/B | ~127.4 tok/s |
+
+| [NVIDIA H100 PCIe](https://www.thundercompute.com/blog/nvidia-h100-specs-full-guide) | 80GB HBM2e | 2,000GB/s | 756.0 TFLOPS | 378.0 FLOP/B | ~125.0 tok/s |
+
+| [NVIDIA H100 SXM5](https://www.nvidia.com/en-us/data-center/h100/) | 80GB HBM3 | 3,350GB/s | 989.0 TFLOPS | 295.2 FLOP/B | ~209.4 tok/s |
+
+Moving from an [A100 SXM4 80GB](https://awesomeagents.ai/hardware/nvidia-a100/) to an [H100 PCIe 80GB](https://www.thundercompute.com/blog/nvidia-h100-specs-full-guide) more than doubles FP16 compute (312 to 756 TFLOPS), yet batch-1 decode speed for a 16GB model stays flat (~127.4 vs. ~125.0 tok/s) because both share ~2.0 TB/s bandwidth. Streaming 16GB at 3,350 GB/s on an H100 SXM5 caps batch-1 speed at 209.4 tok/s.
+
+## Under the hood of attention: what keys and values actually represent
+
+Understanding why is LLM generation memory bound requires inspecting what does KV cache actually store across steps. Inside each transformer layer, token embedding $x_t$ multiplies against weight matrices ($W_Q,W_K,W_V$) to produce three vectors:
+
+- **Query ($Q_t$):** Search vector representing what current token $t$ looks for in prior tokens.
+- **Key ($K_t$):** Index label describing what context token $t$ holds, matched against queries via dot product ($Q_t K^T$).
+- **Value ($V_t$):** Payload vector holding token $t$'s semantic content, weighted by softmax scores to form the output.
+
+Because causal masking blocks future tokens, Key ($K_i$) and Value ($V_i$) vectors for past tokens $i<t$ stay fixed when token $t+1$ arrives. Without caching, generating token 1,000 requires re-multiplying all 999 prior tokens through $W_K$ and $W_V$, creating an $O(S^2)$ penalty. Having the KV cache explained from first principles clarifies the fix: the runtime appends each new $K_t$ and $V_t$ to an HBM buffer and streams that buffer into SRAM on every decode step.
+
+### The KV cache explained: vector flow across generation steps
+
+```
+STEP t=3 (Generating 4th token after prompt ["The", "GPU", "stalls"])
+[Token t=3: "stalls"] --(W_Q)--> [Query q_3] (1x128, stays in SRAM)
+                      --(W_K)--> [Key   k_3] --+--> Append to HBM KV Cache
+                      --(W_V)--> [Value v_3] --+
+                                               v
++--- OFF-CHIP HBM KV CACHE (Streamed across 3.35 TB/s bus every token) ---+
+| Keys   K_1..3: [k_1("The") | k_2("GPU") | k_3("stalls")]                |
+| Values V_1..3: [v_1("The") | v_2("GPU") | v_3("stalls")]                |
++-------------------------------------------------------------------------+
+                                               v
+[ON-CHIP SRAM] s = softmax((q_3 @ K_1..3^T)/sqrt(d_h)); o_3 = s @ V_1..3
+```
+
+In Step $t=3$, query $q_3$ is a $1\times d_{\text{head}}$ vector, making $q_3 K^T$ a vector-matrix multiply (GEMV). Unlike matrix-matrix multiply (GEMM), GEMV reads each cached $k_i$ and $v_i$ from HBM, multiplies it once, and flushes it from SRAM.
+
+## Prefill vs. decode: the tale of two computational regimes
+
+Production LLM inference splits requests into two phases with opposite bottlenecks ([Optimizing Offline Inference with Resource-Aware Batching, arXiv:2411.16102](https://arxiv.org/html/2411.16102v2)). Contrasting the prefill vs decode phase numerically explains why is first token slower than rest in interactive apps.
+
+Consider an 8B model ($P=8\times 10^9$ parameters, `16GB` in FP16) on an [NVIDIA H100 SXM5](https://www.nvidia.com/en-us/data-center/h100/) (ridge point: `295.2 FLOPs/byte`):
+
+1. **Prefill Phase (Time-to-First-Token / TTFT):** At $S=2,048$ prompt tokens ($B=1$), the GPU loads `16GB` of weights once and multiplies them across all 2,048 tokens in parallel via GEMM kernels, executing $2\cdot P\cdot S=32.77\text{ TFLOPs}$ while reading `16GB` of weights and writing `268.4MB` of KV states (`16.27GB` traffic). Arithmetic intensity hits $32.77\text{ TFLOPs}/16.27\text{GB}\approx 2,014\text{ FLOPs/byte}$ ([NeevCloud / Databricks Analysis](https://neevcloud.com/blogs/gpu-memory-bandwidth-vs-compute-what-actually-limits-llm-inf)), nearly 7x above the `295.2 FLOPs/byte` ridge point. Prefill is compute-bound, waiting on Tensor Cores to finish $32.77\text{ TFLOPs}$ before emitting token one.
+1. **Decode Phase (Inter-Token Latency / ITL):** Generating $S_{\text{step}}=1$ token executes $16\text{ GFLOPs}$ of weight math plus $1.07\text{ GFLOPs}$ of attention (`17.07 GFLOPs` total) while streaming `16GB` of weights plus `268.4MB` of KV cache (`16.27GB`). Arithmetic intensity transformer decoding drops to $17.07\text{ GFLOPs}/16.27\text{GB}\approx 1.05\text{ FLOPs/byte}$, sitting 280x below the H100 ridge point. Even at batch size $B=32$, reading `16GB` of shared weights plus $32\times 268.4\text{MB}=8.59\text{GB}$ of KV caches reaches only $\approx 22.2\text{ FLOPs/byte}$.
+
+When does decoding flip back to compute-bound? First, when continuous batching in [vLLM](https://arxiv.org/abs/2309.06180) scales batch size past $B\ge 296$ at short contexts, weight reuse pushes intensity above `295.2 FLOPs/byte` and saturates Tensor Cores ([Spheron Batch Scaling Benchmarks](https://www.spheron.network/blog/myth-doubling-batch-size-doesn-t-double-your-inference-throu/)). Second, when INT4 KV quantization uses non-fused dequantization kernels, bitwise unpacking stalls CUDA cores before HBM saturates.
+
+## Calculating cache footprint and taming the memory bottleneck with modern attention primitives
+
+Knowing how to calculate KV cache VRAM usage prevents Out-of-Memory (OOM) crashes. Storing one Key and one Value vector (factor of `2`) across $n_{\text{layers}}$ layers, $n_{\text{kv\_heads}}$ heads, head dimension $d_{\text{head}}$, sequence length $S$, and batch size $B$ requires:
+
+$$\text{KVBytes}=2\cdot n_{\text{layers}}\cdot n_{\text{kv\_heads}}\cdot d_{\text{head}}\cdot S\cdot B\cdot\text{bytes}$$
+
+Using official [Llama 3.1 70B parameters](https://arxiv.org/abs/2407.21783) ($n_{\text{layers}}=80$, $d_{\text{model}}=8,192$, query heads $n_{\text{heads}}=64$, $d_{\text{head}}=128$) in FP16 (`2 bytes` per element) for one session ($B=1$):
+
+- **Baseline Multi-Head Attention (MHA, $n_{\text{kv\_heads}}=64$):** Consumes $2\cdot 80\cdot 64\cdot 128\cdot 2=2.62\text{ MB/token}$. One session takes `85.90GB` at $S=32,768$ tokens (overflowing an 80GB H100) and `343.60GB` at $S=131,072$ tokens.
+- **Grouped-Query Attention (GQA, $n_{\text{kv\_heads}}=8$):** Generalizing [Multi-Query Attention (arXiv:1911.02150)](https://arxiv.org/abs/1911.02150), [Ainslie et al. (arXiv:2305.13245)](https://arxiv.org/abs/2305.13245) group 64 query heads into 8 clusters sharing 8 KV heads. That cuts grouped query attention memory by 8x to `327.68KB/token` (`10.74GB` at 32K context; `42.95GB` at 128K).
+- **Multi-Head Latent Attention (MLA):** Introduced in [DeepSeek-V2 (arXiv:2405.04434)](https://arxiv.org/abs/2405.04434), MLA projects keys and values into a compressed 576-element latent vector per layer, cutting KV cache memory by `93.3%` versus MHA and raising maximum throughput by `5.76x`. Meanwhile, [FlashAttention (arXiv:2205.14135)](https://arxiv.org/abs/2205.14135) tiles attention in SRAM to avoid $O(S^2)$ HBM writes, and [PagedAttention (arXiv:2309.06180)](https://arxiv.org/abs/2309.06180) stores KV states in non-contiguous pages to cut fragmentation.
+
+```
+def kv_profile(layers: int, q_h: int, kv_h: int, dim: int, params_b: float, seq: int, bw: float = 6700.0):
+    kv_gb = (2*layers*kv_h*dim*seq*2)/1e9
+    tot_gb = (params_b*2)+kv_gb
+    ai = ((2*params_b*1e9)+(4*layers*q_h*dim*seq))/(tot_gb*1e9)
+    return round(kv_gb,2), round(ai,2), round(bw/tot_gb,1)
+
+for s in (4096, 32768, 131072):
+    print(s, "MHA:", kv_profile(80,64,64,128,70.6,s), "GQA:", kv_profile(80,64,8,128,70.6,s))
+```
+
+Across two H100 SXM5 GPUs (`6,700GB/s` bandwidth) at `131,072` tokens, MHA streams `343.60GB` of KV cache plus `141.20GB` of weights per step (`13.8 tok/s`), whereas GQA streams `42.95GB` of KV cache to sustain `36.4 tok/s` at `1.22 FLOPs/byte`.
+
+## Sources
+
+- [NVIDIA H100 Datasheet](https://www.nvidia.com/en-us/data-center/h100/)
+- [NVIDIA A100 Architecture](https://awesomeagents.ai/hardware/nvidia-a100/)
+- [NVIDIA RTX 4090 Whitepaper](https://images.nvidia.com/aem-dam/Solutions/geforce/ada/nvidia-ada-gpu-architecture.pdf)
+- [NVIDIA H100 PCIe vs SXM](https://www.thundercompute.com/blog/nvidia-h100-specs-full-guide)
+- [Roofline Model (2009)](https://doi.org/10.1145/1498765.1498785)
+- [Multi-Query Attention (arXiv:1911.02150)](https://arxiv.org/abs/1911.02150)
+- [FlashAttention (arXiv:2205.14135)](https://arxiv.org/abs/2205.14135)
+- [Grouped-Query Attention (arXiv:2305.13245)](https://arxiv.org/abs/2305.13245)
+- [PagedAttention / vLLM (arXiv:2309.06180)](https://arxiv.org/abs/2309.06180)
+- [DeepSeek-V2 MLA (arXiv:2405.04434)](https://arxiv.org/abs/2405.04434)
+- [Llama 3 Herd (arXiv:2407.21783)](https://arxiv.org/abs/2407.21783)
+- [Resource-Aware Batching (arXiv:2411.16102)](https://arxiv.org/html/2411.16102v2)
+- [Bandwidth vs Compute (NeevCloud)](https://neevcloud.com/blogs/gpu-memory-bandwidth-vs-compute-what-actually-limits-llm-inf)
+- [Batch Scaling (Spheron)](https://www.spheron.network/blog/myth-doubling-batch-size-doesn-t-double-your-inference-throu/)
+
+<!--
+Artwork brief — from the writer routine. Draw per docs/ARTWORK.md,
+then delete this comment.
+
+- Argument in one sentence: A Cartesian grid of compute cores sits 90% unlit on the right while a narrow memory channel on the left is choked with Key-Value cache ticks.
+- Geometry: Hairline Cartesian grid, vertical tick marks representing Key-Value vectors, and a sloped Roofline boundary meeting a horizontal compute ceiling.
+- Accent: moss
+- Deliberate imperfection: A severed Roofline arc that snaps at the 1 FLOP/byte decode bottleneck before the 295 FLOPs/byte ridge point.
+-->
