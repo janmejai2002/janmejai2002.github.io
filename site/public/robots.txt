@@ -3,8 +3,10 @@
 # cited by AI assistants, which is this site's stated ambition. Pure
 # training crawlers are not — they feed a model's weights with no
 # attribution mechanism at all (measured crawl-to-referral ratios run
-# thousands to one). Blocking them costs zero citations: ChatGPT search
-# runs on OAI-SearchBot, which is allowed below, not on GPTBot.
+# thousands to one). ChatGPT search runs on OAI-SearchBot, which is allowed
+# below, not on GPTBot.
+# Google-Extended is allowed on purpose: besides training, Google documents it
+# as covering grounding in Gemini Apps and Vertex AI, which is a citation path.
 # This list needs refreshing roughly quarterly as new agents appear.
 
 # Retrieval, search and user-triggered fetchers — allowed
@@ -32,14 +34,14 @@ Allow: /
 User-agent: Googlebot
 Allow: /
 
+User-agent: Google-Extended
+Allow: /
+
 # Training-only crawlers — disallowed
 User-agent: GPTBot
 Disallow: /
 
 User-agent: ClaudeBot
-Disallow: /
-
-User-agent: Google-Extended
 Disallow: /
 
 User-agent: Applebot-Extended
