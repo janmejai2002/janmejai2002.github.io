@@ -192,9 +192,18 @@ const host = (url: string | null) => {
                     </div>
 
                     <div class="card__stage">
+                      {/* Physics-inspired ceramic glaze shader */}
+                      <div class="card__glaze-shader" aria-hidden="true" />
 
                       {/* FRONT FACE: The Factual Grounding (Story Brief) */}
                       <div class="card__face card__face--front">
+                        {/* Wabi-Sabi Kintsugi Streak connecting adjacent tiles */}
+                        <div class="tile-streak" aria-hidden="true">
+                          <svg viewBox="0 0 100 8" preserveAspectRatio="none">
+                            <polyline points="0,4 25,1 50,7 75,2 100,5" vector-effect="non-scaling-stroke" />
+                          </svg>
+                        </div>
+
                         {/* Card Meta Row */}
                         <div class="card__meta">
                           <span class="card__cat" itemprop="articleSection">
@@ -224,33 +233,32 @@ const host = (url: string | null) => {
                           <p class="card__sum">{i.summary}</p>
                         </div>
 
-                        {/* Front Footer: Source on left, Pixel Shatter Trigger on right */}
+                        {/* Front Footer: Source on left, Debloated Hot Seat Trigger on right */}
                         <footer class="card__front-foot">
                           {i.source ? (
                             <a class="card__src" href={i.source} target="_blank" rel="noopener noreferrer">
                               <span>{host(i.source)}</span>
-                              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                                <path d="M7 17L17 7M17 7H8M17 7v9" />
+                              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <path d="M7 17L17 7H8M17 7v9" />
                               </svg>
                             </a>
                           ) : <span />}
 
                           <button
                             type="button"
-                            class="flip-btn flip-btn--to-back"
+                            class="action-btn action-btn--reveal"
                             aria-label="Shatter card to reveal interviewer's angle"
-                            title="Shatter card to reveal interviewer's angle"
+                            title="Reveal interview angle"
                           >
-                            <span class="flip-btn__pulse" aria-hidden="true" />
-                            <span class="flip-btn__label">Reveal Hot Seat</span>
-                            <svg class="flip-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                              <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
+                            <span class="action-btn__txt">Hot Seat</span>
+                            <svg class="action-btn__icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                              <path d="M6 3l5 5-5 5" />
                             </svg>
                           </button>
                         </footer>
                       </div>
 
-                      {/* BACK FACE: The Interview Hot Seat (The Cross-Examination) */}
+                      {/* BACK FACE: The Interview Hot Seat */}
                       <div class="card__face card__face--back">
                         {/* Domain Mark Watermark */}
                         <div class="back__watermark" aria-hidden="true">
@@ -258,36 +266,29 @@ const host = (url: string | null) => {
                         </div>
 
                         {/* Gold Kintsugi Edge Seam */}
-                        <div class="back__seam" aria-hidden="true">
-                          <svg viewBox="0 0 320 8" preserveAspectRatio="none">
-                            <polyline points="0,4 45,2 95,6 150,1 210,7 265,3 320,5" />
+                        <div class="tile-streak is-gold" aria-hidden="true">
+                          <svg viewBox="0 0 100 8" preserveAspectRatio="none">
+                            <polyline points="0,4 20,1 45,7 70,2 100,5" vector-effect="non-scaling-stroke" />
                           </svg>
                         </div>
 
-                        {/* Back Header: Hot Seat Badge + Flip Back to Story */}
+                        {/* Clean Back Header: Category tag + Return to story */}
                         <div class="back__head">
-                          <div class="back__badge">
+                          <div class="back__tag">
                             <span class="back__dot" aria-hidden="true" />
-                            <span class="back__badge-txt">THE INTERVIEW CHAIR · CROSS-EXAMINATION</span>
+                            <span>{i.category} · Hot Seat</span>
                           </div>
                           <button
                             type="button"
-                            class="flip-btn flip-btn--to-front"
-                            aria-label="Shatter back to story briefing"
+                            class="action-btn action-btn--back"
+                            aria-label="Return to story briefing"
                             title="Return to story"
                           >
-                            <svg class="flip-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                              <path d="M11 22l10-12h-9l1-8-10 12h9l-1 8z" />
+                            <svg class="action-btn__icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                              <path d="M10 13L5 8l5-5" />
                             </svg>
-                            <span class="flip-btn__label">Story</span>
+                            <span class="action-btn__txt">Story</span>
                           </button>
-                        </div>
-
-                        {/* Context line */}
-                        <div class="back__context">
-                          <span class="back__domain-tag">{i.category} Panel</span>
-                          <span class="back__sep" aria-hidden="true">·</span>
-                          <span class="back__prompt">In WAT/GD/PI, they will push on:</span>
                         </div>
 
                         {/* The Angle in Newsreader Serif */}
@@ -295,7 +296,7 @@ const host = (url: string | null) => {
                           <p class="back__angle">{i.angle}</p>
                         </div>
 
-                        {/* Back Footer Actions */}
+                        {/* Back Footer Actions - Debloated & Clean */}
                         <footer class="back__foot">
                           <div class="back__actions">
                             <button
@@ -309,7 +310,7 @@ const host = (url: string | null) => {
                                 <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
                                 <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
                               </svg>
-                              <span class="copy-label">Copy Angle</span>
+                              <span class="copy-label">Copy</span>
                             </button>
 
                             <button
@@ -322,15 +323,15 @@ const host = (url: string | null) => {
                               <svg class="practise-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                                 <path d="M3 8.5l3.5 3.5 6.5-7" />
                               </svg>
-                              <span class="practise-txt">Mark Practised</span>
+                              <span class="practise-txt">Practised</span>
                             </button>
                           </div>
 
                           {i.source && (
                             <a class="card__src" href={i.source} target="_blank" rel="noopener noreferrer">
                               <span>{host(i.source)}</span>
-                              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                                <path d="M7 17L17 7M17 7H8M17 7v9" />
+                              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <path d="M7 17L17 7H8M17 7v9" />
                               </svg>
                             </a>
                           )}
@@ -611,6 +612,7 @@ const host = (url: string | null) => {
   /* ---------- 3. Day Section & Balanced Card Grid ---------- */
   .day-section {
     margin-bottom: 3.5rem;
+    scroll-margin-top: 5rem;
   }
   .day-head {
     margin-bottom: 1.5rem;
@@ -654,30 +656,35 @@ const host = (url: string | null) => {
     background: linear-gradient(90deg, var(--border), transparent 90%);
   }
 
-  /* Balanced 2-Column Responsive Card Grid */
+  /* Balanced 2-Column Seamless Ceramic Tile Grid */
   .briefings-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 1.5rem;
+    gap: 1px;
+    background: var(--border-soft);
+    border: 1px solid var(--border-soft);
+    border-radius: 12px;
+    overflow: hidden;
     align-items: stretch;
+    box-shadow: 0 4px 20px var(--shadow);
   }
   @media (max-width: 58rem) {
     .briefings-grid {
       grid-template-columns: minmax(0, 1fr);
-      gap: 1.25rem;
     }
   }
 
-  /* ---------- 4. Pixel-Glitch Shatter Mechanics ---------- */
+  /* ---------- 4. Ceramic Tile & Pixel-Glitch Shatter Mechanics ---------- */
   .card-scene {
-    min-height: 25.5rem;
+    min-height: 22.5rem;
     display: flex;
     flex-direction: column;
     position: relative;
+    background: var(--card);
   }
   .card-scene--lead {
     grid-column: 1 / -1;
-    min-height: 23rem;
+    min-height: 20rem;
   }
 
   .card {
@@ -688,7 +695,7 @@ const host = (url: string | null) => {
     flex-direction: column;
     cursor: pointer;
     user-select: none;
-    background: transparent;
+    background: var(--card);
     border: none;
     padding: 0;
     margin: 0;
@@ -696,19 +703,20 @@ const host = (url: string | null) => {
     text-align: left;
     font: inherit;
     color: inherit;
-    border-radius: 14px;
+    border-radius: 0;
     overflow: hidden;
-    transition: transform var(--dur-fast) var(--ease),
+    transition: background-color var(--dur-fast) var(--ease),
                 box-shadow var(--dur-fast) var(--ease);
   }
 
   .card:hover {
-    box-shadow: 0 4px 16px var(--shadow);
+    background-color: color-mix(in srgb, var(--tint) 20%, var(--card));
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 35%, transparent);
   }
 
   .card:focus-visible {
     outline: 2px solid var(--ochre);
-    outline-offset: 4px;
+    outline-offset: -2px;
   }
 
   .card__stage {
@@ -717,8 +725,61 @@ const host = (url: string | null) => {
     flex: 1;
     display: flex;
     flex-direction: column;
-    border-radius: 14px;
+    border-radius: 0;
     overflow: hidden;
+  }
+
+  /* Physics-inspired specular glaze reflection shader */
+  .card__glaze-shader {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(
+      circle 320px at var(--mouse-x, 30%) var(--mouse-y, 20%),
+      color-mix(in srgb, var(--accent) 14%, transparent) 0%,
+      transparent 70%
+    );
+    opacity: 0;
+    transition: opacity var(--dur-fast) var(--ease);
+    mix-blend-mode: soft-light;
+    z-index: 6;
+  }
+  .card:hover .card__glaze-shader {
+    opacity: 1;
+  }
+
+  /* Wabi-Sabi Kintsugi Streak connecting adjacent tiles */
+  .tile-streak {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 5px;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 4;
+    opacity: 0.35;
+    transition: opacity var(--dur-med) var(--ease), filter var(--dur-med) var(--ease);
+  }
+  .tile-streak svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+  .tile-streak polyline {
+    fill: none;
+    stroke: var(--border);
+    stroke-width: 1.5;
+    stroke-linejoin: round;
+  }
+  .card:hover .tile-streak,
+  .tile-streak.is-gold {
+    opacity: 1;
+  }
+  .card:hover .tile-streak polyline,
+  .tile-streak.is-gold polyline {
+    stroke: var(--ochre);
+    filter: drop-shadow(0 0 3px color-mix(in srgb, var(--ochre) 60%, transparent));
   }
 
   /* Both Faces */
@@ -727,11 +788,11 @@ const host = (url: string | null) => {
     inset: 0;
     width: 100%;
     height: 100%;
-    border-radius: 14px;
+    border-radius: 0;
+    border: none;
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    box-shadow: 0 8px 26px var(--shadow);
     transition: opacity 0.32s cubic-bezier(0.16, 1, 0.3, 1),
                 transform 0.32s cubic-bezier(0.16, 1, 0.3, 1),
                 filter 0.32s ease;
@@ -740,8 +801,6 @@ const host = (url: string | null) => {
   /* FRONT FACE */
   .card__face--front {
     background: var(--card);
-    border: 1px solid var(--border-soft);
-    border-left: 3.5px solid var(--accent);
     padding: 1.45rem 1.65rem 1.35rem;
     z-index: 2;
     opacity: 1;
@@ -753,19 +812,17 @@ const host = (url: string | null) => {
     position: absolute;
     inset: 0;
     background: radial-gradient(120% 90% at 0% 0%, var(--tint), transparent 60%);
-    opacity: .65;
+    opacity: .5;
     pointer-events: none;
     transition: opacity var(--dur-fast) var(--ease);
   }
   .card:hover .card__face--front::before {
-    opacity: 1;
+    opacity: .85;
   }
 
   /* BACK FACE */
   .card__face--back {
     background: color-mix(in srgb, var(--tint) 25%, var(--card));
-    border: 1px solid color-mix(in srgb, var(--accent) 45%, var(--border));
-    border-left: 3.5px solid var(--accent);
     padding: 1.45rem 1.65rem 1.35rem;
     z-index: 1;
     opacity: 0;
@@ -911,7 +968,6 @@ const host = (url: string | null) => {
     padding: .15rem .45rem;
     border-radius: 4px;
     border: 1px solid var(--border-soft);
-    margin-right: 5.5rem; /* leave space for the peek tab */
   }
 
   .card__h {
@@ -958,69 +1014,42 @@ const host = (url: string | null) => {
     border-top: 1px solid var(--border-soft);
   }
 
-  /* Flip Button on Front */
-  .flip-btn {
+  /* Debloated Action Buttons */
+  .action-btn {
     font: inherit;
-    font-size: .6875rem;
+    font-size: .75rem;
     font-weight: 700;
-    letter-spacing: .04em;
+    letter-spacing: .02em;
     display: inline-flex;
     align-items: center;
-    gap: .45rem;
+    gap: .35rem;
     padding: .35rem .75rem;
-    border-radius: 999px;
+    border-radius: 6px;
     cursor: pointer;
     transition: all var(--dur-fast) var(--ease);
     border: 1px solid color-mix(in srgb, var(--accent) 35%, var(--border));
-    background: color-mix(in srgb, var(--accent) 10%, var(--card));
+    background: color-mix(in srgb, var(--accent) 8%, var(--card));
     color: var(--ink);
     margin-left: auto;
   }
-  .flip-btn:hover {
+  .action-btn:hover {
     border-color: var(--accent);
     background: var(--accent);
     color: var(--on-solid, var(--paper));
-    transform: scale(1.03);
   }
-  .flip-btn__icon {
-    width: 13px;
-    height: 13px;
-    transition: transform 0.4s var(--ease);
+  .action-btn__icon {
+    width: 12px;
+    height: 12px;
+    transition: transform var(--dur-fast) var(--ease);
   }
-  .flip-btn:hover .flip-btn__icon {
-    transform: rotate(180deg);
+  .action-btn--reveal:hover .action-btn__icon {
+    transform: translateX(2px);
   }
-  .flip-btn__pulse {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: var(--accent);
-    animation: pulse-ring 2s infinite ease-out;
-  }
-  @keyframes pulse-ring {
-    0% { transform: scale(0.9); opacity: 0.9; }
-    50% { transform: scale(1.3); opacity: 0.4; }
-    100% { transform: scale(0.9); opacity: 0.9; }
+  .action-btn--back:hover .action-btn__icon {
+    transform: translateX(-2px);
   }
 
-  /* BACK FACE: The Interview Hot Seat (The Cross-Examination) */
-  .card__face--back {
-    background: color-mix(in srgb, var(--tint) 25%, var(--card));
-    border: 1px solid color-mix(in srgb, var(--accent) 45%, var(--border));
-    border-left: 3.5px solid var(--accent);
-    padding: 1.45rem 1.65rem 1.35rem;
-    transform: rotateY(180deg);
-    z-index: 1;
-  }
-  .card__face--back::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(130% 100% at 90% 10%, color-mix(in srgb, var(--accent) 22%, transparent), transparent 70%),
-                radial-gradient(100% 80% at 10% 90%, color-mix(in srgb, var(--ochre) 14%, transparent), transparent 70%);
-    pointer-events: none;
-  }
-
+  /* Back Face Details */
   .back__watermark {
     position: absolute;
     right: -1rem;
@@ -1031,71 +1060,30 @@ const host = (url: string | null) => {
     pointer-events: none;
     filter: blur(0.5px);
   }
-  .back__seam {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 8px;
-    pointer-events: none;
-  }
-  .back__seam polyline {
-    fill: none;
-    stroke: var(--ochre);
-    stroke-width: 1.5;
-    stroke-linejoin: round;
-  }
 
   .back__head {
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: .75rem;
-    margin-bottom: 1rem;
+    margin-bottom: 1.25rem;
     position: relative;
     z-index: 1;
   }
-  .back__badge {
+  .back__tag {
     display: inline-flex;
     align-items: center;
     gap: .45rem;
-    font-size: .625rem;
+    font-size: .75rem;
     font-weight: 800;
-    letter-spacing: .1em;
-    text-transform: uppercase;
+    letter-spacing: .02em;
     color: var(--accent);
-    background: color-mix(in srgb, var(--accent) 14%, var(--card));
-    padding: .25rem .6rem;
-    border-radius: 6px;
-    border: 1px solid color-mix(in srgb, var(--accent) 30%, var(--border));
   }
   .back__dot {
     width: 6px;
     height: 6px;
     border-radius: 50%;
     background: var(--accent);
-  }
-
-  .back__context {
-    display: flex;
-    align-items: center;
-    gap: .45rem;
-    font-size: .8125rem;
-    font-weight: 700;
-    color: var(--ink-soft);
-    margin-bottom: .85rem;
-    position: relative;
-    z-index: 1;
-  }
-  .back__domain-tag {
-    color: var(--ink);
-  }
-  .back__sep {
-    color: var(--ink-faint);
-  }
-  .back__prompt {
-    color: var(--ochre);
-    font-style: italic;
   }
 
   .back__body {
@@ -1524,6 +1512,15 @@ const host = (url: string | null) => {
   };
 
   cards.forEach((card) => {
+    // Physical specular reflection tracking
+    card.addEventListener('pointermove', (e) => {
+      const rect = card.getBoundingClientRect();
+      const x = ((e.clientX - rect.left) / rect.width) * 100;
+      const y = ((e.clientY - rect.top) / rect.height) * 100;
+      card.style.setProperty('--mouse-x', `${x.toFixed(1)}%`);
+      card.style.setProperty('--mouse-y', `${y.toFixed(1)}%`);
+    });
+
     card.addEventListener('click', (e) => {
       const target = e.target as HTMLElement;
       // If user clicked inside a link, copy button, or practise button, don't trigger shatter
