@@ -139,9 +139,9 @@ const toSlug = (str: string) =>
       </div>
 
       <div class="toolbar__actions">
-        <button type="button" class="test-toggle" id="flip-all-btn" title="Shatter cards into interview hot seat mode">
+        <button type="button" class="test-toggle" id="flip-all-btn" title="Flip cards into interview hot seat mode">
           <span class="test-toggle__dot" aria-hidden="true"></span>
-          <span class="test-toggle__text">Shatter all: Hot Seat mode</span>
+          <span class="test-toggle__text">Flip all: Hot Seat mode</span>
         </button>
         <span class="practised-tally" id="practised-tally" hidden></span>
       </div>
@@ -185,20 +185,11 @@ const toSlug = (str: string) =>
                     tabindex="0"
                     role="button"
                     aria-expanded="false"
-                    aria-label={`${i.headline}. Click to shatter card and reveal the interviewer's cross-examination angle.`}
+                    aria-label={`${i.headline}. Click tile to reveal interviewer's cross-examination angle.`}
                     style={`--accent:var(--${meta.accent});--tint:var(--wash-${meta.accent})`}
                     itemscope
                     itemtype="https://schema.org/NewsArticle"
                   >
-                    {/* The Pixel Shatter Glitch Matrix (16 Fracturing Kintsugi Shards) */}
-                    <div class="card__shatter-matrix" aria-hidden="true">
-                      {Array.from({ length: 16 }).map((_, idx) => {
-                        const row = Math.floor(idx / 4);
-                        const col = idx % 4;
-                        return <span class="shatter-pixel" style={`--r:${row};--c:${col};--idx:${idx}`} />;
-                      })}
-                    </div>
-
                     <div class="card__stage">
                       {/* Physics-inspired ceramic glaze shader */}
                       <div class="card__glaze-shader" aria-hidden="true" />
@@ -212,7 +203,7 @@ const toSlug = (str: string) =>
                           </svg>
                         </div>
 
-                        {/* Card Meta Row */}
+                        {/* Card Meta Row with Intuitive Hot Seat Cue */}
                         <div class="card__meta">
                           <span class="card__cat" itemprop="articleSection">
                             <span class="card__dot" aria-hidden="true" />
@@ -231,6 +222,13 @@ const toSlug = (str: string) =>
                               {host(i.source)}
                             </span>
                           )}
+
+                          {/* Persistent Invitation Affordance */}
+                          <span class="card__cue" aria-hidden="true" title="Click tile to reveal Hot Seat angle">
+                            <span class="card__cue-dot" />
+                            <span class="card__cue-txt">Hot Seat</span>
+                            <span class="card__cue-arrow">→</span>
+                          </span>
                         </div>
 
                         {/* Headline */}
@@ -241,7 +239,7 @@ const toSlug = (str: string) =>
                           <p class="card__sum">{i.summary}</p>
                         </div>
 
-                        {/* Front Footer: Source on left, Debloated Hot Seat Trigger on right */}
+                        {/* Front Footer: Source on left, Distinct Hot Seat Trigger on right */}
                         <footer class="card__front-foot">
                           {i.source ? (
                             <a class="card__src" href={i.source} target="_blank" rel="noopener noreferrer">
@@ -255,18 +253,17 @@ const toSlug = (str: string) =>
                           <button
                             type="button"
                             class="action-btn action-btn--reveal"
-                            aria-label="Shatter card to reveal interviewer's angle"
-                            title="Reveal interview angle"
+                            aria-label="Reveal interviewer's cross-examination angle"
+                            title="Reveal Hot Seat angle"
                           >
+                            <span class="action-btn__pulse" aria-hidden="true"></span>
                             <span class="action-btn__txt">Hot Seat</span>
-                            <svg class="action-btn__icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                              <path d="M6 3l5 5-5 5" />
-                            </svg>
+                            <span class="action-btn__arrow" aria-hidden="true">→</span>
                           </button>
                         </footer>
                       </div>
 
-                      {/* BACK FACE: The Interview Hot Seat */}
+                      {/* BACK FACE: The Interview Hot Seat Chamber */}
                       <div class="card__face card__face--back">
                         {/* Domain Mark Watermark */}
                         <div class="back__watermark" aria-hidden="true">
@@ -280,11 +277,13 @@ const toSlug = (str: string) =>
                           </svg>
                         </div>
 
-                        {/* Clean Back Header: Category tag + Return to story */}
+                        {/* Hot Seat Header: Category + Return to story */}
                         <div class="back__head">
                           <div class="back__tag">
                             <span class="back__dot" aria-hidden="true" />
-                            <span>{i.category} · Hot Seat</span>
+                            <span>{i.category}</span>
+                            <span class="back__sep" aria-hidden="true">·</span>
+                            <span class="back__mode">Hot Seat</span>
                           </div>
                           <button
                             type="button"
@@ -292,16 +291,16 @@ const toSlug = (str: string) =>
                             aria-label="Return to story briefing"
                             title="Return to story"
                           >
-                            <svg class="action-btn__icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                              <path d="M10 13L5 8l5-5" />
-                            </svg>
+                            <span class="action-btn__icon" aria-hidden="true">←</span>
                             <span class="action-btn__txt">Story</span>
                           </button>
                         </div>
 
-                        {/* The Angle in Newsreader Serif */}
+                        {/* The Interviewer Angle Block in Newsreader Serif */}
                         <div class="back__body">
-                          <p class="back__angle">{i.angle}</p>
+                          <blockquote class="back__quote">
+                            <p class="back__angle">{i.angle}</p>
+                          </blockquote>
                         </div>
 
                         {/* Back Footer Actions - Debloated & Clean */}
@@ -726,12 +725,15 @@ const toSlug = (str: string) =>
     border-radius: 0;
     overflow: hidden;
     transition: background-color var(--dur-fast) var(--ease),
-                box-shadow var(--dur-fast) var(--ease);
+                box-shadow var(--dur-med) var(--ease),
+                transform var(--dur-fast) var(--ease);
   }
 
   .card:hover {
-    background-color: color-mix(in srgb, var(--tint) 20%, var(--card));
-    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 35%, transparent);
+    background-color: color-mix(in srgb, var(--tint) 18%, var(--card));
+    box-shadow: 0 8px 24px -6px rgba(0, 0, 0, 0.32),
+                inset 0 0 0 1px color-mix(in srgb, var(--accent) 32%, transparent);
+    transform: translateY(-2px);
   }
 
   .card:focus-visible {
@@ -746,7 +748,7 @@ const toSlug = (str: string) =>
     display: flex;
     flex-direction: column;
     border-radius: 0;
-    overflow: hidden;
+    min-height: 100%;
   }
 
   /* Physics-inspired specular glaze reflection shader */
@@ -755,8 +757,8 @@ const toSlug = (str: string) =>
     inset: 0;
     pointer-events: none;
     background: radial-gradient(
-      circle 320px at var(--mouse-x, 30%) var(--mouse-y, 20%),
-      color-mix(in srgb, var(--accent) 14%, transparent) 0%,
+      circle 340px at var(--mouse-x, 50%) var(--mouse-y, 30%),
+      color-mix(in srgb, var(--accent) 16%, transparent) 0%,
       transparent 70%
     );
     opacity: 0;
@@ -791,18 +793,21 @@ const toSlug = (str: string) =>
     stroke: var(--border);
     stroke-width: 1.5;
     stroke-linejoin: round;
+    transition: stroke var(--dur-med) var(--ease), filter var(--dur-med) var(--ease);
   }
   .card:hover .tile-streak,
-  .tile-streak.is-gold {
+  .tile-streak.is-gold,
+  .card.is-flipped .tile-streak {
     opacity: 1;
   }
   .card:hover .tile-streak polyline,
-  .tile-streak.is-gold polyline {
+  .tile-streak.is-gold polyline,
+  .card.is-flipped .tile-streak polyline {
     stroke: var(--ochre);
-    filter: drop-shadow(0 0 3px color-mix(in srgb, var(--ochre) 60%, transparent));
+    filter: drop-shadow(0 0 4px color-mix(in srgb, var(--ochre) 65%, transparent));
   }
 
-  /* Both Faces */
+  /* Both Faces: Tactile 2D Ceramic Tile Transition */
   .card__face {
     position: absolute;
     inset: 0;
@@ -813,19 +818,18 @@ const toSlug = (str: string) =>
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    transition: opacity 0.32s cubic-bezier(0.16, 1, 0.3, 1),
-                transform 0.32s cubic-bezier(0.16, 1, 0.3, 1),
-                filter 0.32s ease;
+    padding: 1.45rem 1.65rem 1.35rem;
   }
 
   /* FRONT FACE */
   .card__face--front {
     background: var(--card);
-    padding: 1.45rem 1.65rem 1.35rem;
     z-index: 2;
     opacity: 1;
     pointer-events: auto;
-    transform: scale(1);
+    transform: translateY(0);
+    transition: opacity 0.28s cubic-bezier(0.2, 0.8, 0.25, 1),
+                transform 0.28s cubic-bezier(0.2, 0.8, 0.25, 1);
   }
   .card__face--front::before {
     content: '';
@@ -843,11 +847,12 @@ const toSlug = (str: string) =>
   /* BACK FACE */
   .card__face--back {
     background: color-mix(in srgb, var(--tint) 25%, var(--card));
-    padding: 1.45rem 1.65rem 1.35rem;
     z-index: 1;
     opacity: 0;
     pointer-events: none;
-    transform: scale(0.97);
+    transform: translateY(6px);
+    transition: opacity 0.3s cubic-bezier(0.2, 0.8, 0.25, 1),
+                transform 0.3s cubic-bezier(0.2, 0.8, 0.25, 1);
   }
   .card__face--back::before {
     content: '';
@@ -858,90 +863,23 @@ const toSlug = (str: string) =>
     pointer-events: none;
   }
 
-  /* Active Revealed State */
+  /* Active Revealed State (Hot Seat Mode) */
   .card.is-flipped .card__face--front {
     opacity: 0;
     pointer-events: none;
-    transform: scale(0.97);
+    transform: translateY(-6px);
     z-index: 1;
   }
   .card.is-flipped .card__face--back {
     opacity: 1;
     pointer-events: auto;
-    transform: scale(1);
+    transform: translateY(0);
     z-index: 2;
   }
-
-  /* THE PIXEL SHATTER MATRIX (16 Fracturing Kintsugi Shards) */
-  .card__shatter-matrix {
-    position: absolute;
-    inset: 0;
-    z-index: 20;
-    pointer-events: none;
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    grid-template-rows: repeat(4, 1fr);
-    border-radius: 14px;
-    overflow: hidden;
-    opacity: 0;
-  }
-
-  .shatter-pixel {
-    position: relative;
-    background: color-mix(in srgb, var(--accent) 30%, var(--card));
-    opacity: 0;
-    transform-origin: center;
-  }
-
-  /* Active during the shatter glitch transition */
-  .card.is-shattering .card__shatter-matrix {
-    opacity: 1;
-  }
-
-  .card.is-shattering .shatter-pixel {
-    animation: pixel-shatter-burst 0.38s cubic-bezier(0.2, 0.9, 0.3, 1) calc((var(--r) * 0.035s) + (var(--c) * 0.025s)) both;
-  }
-
-  @keyframes pixel-shatter-burst {
-    0% {
-      opacity: 0.95;
-      transform: scale(1) translate(0, 0);
-      box-shadow: inset 0 0 0 1px var(--ochre);
-      filter: brightness(1.2);
-    }
-    30% {
-      opacity: 0.9;
-      transform: scale(0.88) translate(calc((var(--c) - 1.5) * 8px), calc((var(--r) - 1.5) * 7px));
-      box-shadow: inset 0 0 0 1.5px var(--accent), 0 0 10px var(--ochre);
-      filter: hue-rotate(45deg) brightness(1.4);
-    }
-    60% {
-      opacity: 0.6;
-      transform: scale(0.7) translate(calc((var(--c) - 1.5) * 18px), calc((var(--r) - 1.5) * 15px));
-      filter: drop-shadow(2px 0 var(--hanko)) drop-shadow(-2px 0 var(--mizu));
-    }
-    85% {
-      opacity: 0.25;
-      transform: scale(0.35) translate(calc((var(--c) - 1.5) * 26px), calc((var(--r) - 1.5) * 22px));
-    }
-    100% {
-      opacity: 0;
-      transform: scale(0) translate(calc((var(--c) - 1.5) * 32px), calc((var(--r) - 1.5) * 28px));
-    }
-  }
-
-  /* Glitch Jitter on the Card Faces during Shatter */
-  .card.is-shattering .card__face {
-    animation: face-glitch-jitter 0.38s ease-out both;
-  }
-
-  @keyframes face-glitch-jitter {
-    0% { transform: scale(1) translate(0, 0); filter: none; }
-    20% { transform: scale(1.008) translate(-3px, 2px); filter: contrast(1.3) brightness(1.2); }
-    40% { transform: scale(0.992) translate(3px, -1px); filter: drop-shadow(2px 0 var(--hanko)); }
-    60% { transform: scale(1.004) translate(-2px, 0); filter: drop-shadow(-2px 0 var(--mizu)); }
-    80% { transform: scale(0.998) translate(1px, 0); filter: none; }
-    100% { transform: scale(1) translate(0, 0); filter: none; }
+  .card.is-flipped {
+    background-color: color-mix(in srgb, var(--tint) 25%, var(--card));
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 38%, transparent),
+                0 8px 24px -4px rgba(0, 0, 0, 0.25);
   }
 
   /* Front Content */
@@ -1034,6 +972,48 @@ const toSlug = (str: string) =>
     border-top: 1px solid var(--border-soft);
   }
 
+  /* Invitation Affordance Pill in Card Meta */
+  .card__cue {
+    margin-left: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: .35rem;
+    font-size: .6875rem;
+    font-weight: 700;
+    letter-spacing: .03em;
+    color: var(--ochre);
+    background: color-mix(in srgb, var(--ochre) 8%, transparent);
+    border: 1px solid color-mix(in srgb, var(--ochre) 28%, transparent);
+    padding: .15rem .5rem;
+    border-radius: 999px;
+    transition: all var(--dur-fast) var(--ease);
+  }
+  .card__cue-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--ochre);
+    box-shadow: 0 0 5px var(--ochre);
+    animation: cueBreathe 2.4s ease-in-out infinite;
+  }
+  .card__cue-arrow {
+    font-size: .75rem;
+    transition: transform var(--dur-fast) var(--ease);
+  }
+  .card:hover .card__cue {
+    background: color-mix(in srgb, var(--ochre) 18%, transparent);
+    border-color: var(--ochre);
+    color: var(--ink);
+  }
+  .card:hover .card__cue-arrow {
+    transform: translateX(2px);
+  }
+
+  @keyframes cueBreathe {
+    0%, 100% { opacity: 0.55; transform: scale(0.9); }
+    50% { opacity: 1; transform: scale(1.15); box-shadow: 0 0 8px var(--ochre); }
+  }
+
   /* Debloated Action Buttons */
   .action-btn {
     font: inherit;
@@ -1042,7 +1022,7 @@ const toSlug = (str: string) =>
     letter-spacing: .02em;
     display: inline-flex;
     align-items: center;
-    gap: .35rem;
+    gap: .4rem;
     padding: .35rem .75rem;
     border-radius: 6px;
     cursor: pointer;
@@ -1062,8 +1042,33 @@ const toSlug = (str: string) =>
     height: 12px;
     transition: transform var(--dur-fast) var(--ease);
   }
-  .action-btn--reveal:hover .action-btn__icon {
-    transform: translateX(2px);
+  .action-btn--reveal {
+    border-color: color-mix(in srgb, var(--ochre) 35%, var(--border));
+    background: color-mix(in srgb, var(--ochre) 10%, var(--card));
+  }
+  .action-btn--reveal:hover {
+    border-color: var(--ochre);
+    background: var(--ochre);
+    color: var(--on-solid, var(--paper));
+  }
+  .action-btn__pulse {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--ochre);
+    box-shadow: 0 0 6px var(--ochre);
+    animation: cueBreathe 2.4s ease-in-out infinite;
+  }
+  .action-btn--reveal:hover .action-btn__pulse {
+    background: var(--on-solid, var(--paper));
+    box-shadow: 0 0 6px var(--on-solid, var(--paper));
+  }
+  .action-btn__arrow {
+    font-size: .8125rem;
+    transition: transform var(--dur-fast) var(--ease);
+  }
+  .action-btn--reveal:hover .action-btn__arrow {
+    transform: translateX(3px);
   }
   .action-btn--back:hover .action-btn__icon {
     transform: translateX(-2px);
@@ -1095,9 +1100,16 @@ const toSlug = (str: string) =>
     align-items: center;
     gap: .45rem;
     font-size: .75rem;
-    font-weight: 800;
+    font-weight: 700;
     letter-spacing: .02em;
+    color: var(--ink-soft);
+  }
+  .back__mode {
     color: var(--accent);
+    font-weight: 800;
+  }
+  .back__sep {
+    color: var(--ink-faint);
   }
   .back__dot {
     width: 6px;
@@ -1111,11 +1123,19 @@ const toSlug = (str: string) =>
     z-index: 1;
     margin-bottom: 1.5rem;
     flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .back__quote {
+    margin: 0;
+    padding: 0;
+    border: none;
   }
   .back__angle {
     margin: 0;
     font-family: var(--serif);
-    font-size: clamp(1.05rem, 1.4vw, 1.18rem);
+    font-size: clamp(1.08rem, 1.45vw, 1.25rem);
     line-height: 1.58;
     letter-spacing: -.01em;
     color: var(--ink);
@@ -1336,14 +1356,17 @@ const toSlug = (str: string) =>
       font-size: 1.125rem;
     }
     .card-scene {
-      min-height: 26rem;
+      min-height: 28.5rem;
     }
     .card-scene--lead {
-      min-height: 26rem;
+      min-height: 28.5rem;
     }
     .card__face {
-      padding: 1.25rem 1.15rem 1.15rem;
-      border-radius: 12px;
+      padding: 1.25rem 1.15rem 1rem;
+      border-radius: 0;
+    }
+    .back__body {
+      margin-bottom: 1rem;
     }
     .card__h {
       font-size: 1.125rem;
@@ -1520,19 +1543,14 @@ const toSlug = (str: string) =>
     archive.prepend(firstDay);
   };
 
-  // Pixel Shatter Glitch Handler
-  const triggerCardShatter = (card: HTMLElement) => {
-    if (card.classList.contains('is-shattering')) return;
-    card.classList.add('is-shattering');
+  // Tactile Tile Toggle Handler (Clean 2D Mode Switch)
+  const triggerCardToggle = (card: HTMLElement) => {
     const isFlipped = card.classList.toggle('is-flipped');
     card.setAttribute('aria-expanded', isFlipped ? 'true' : 'false');
-    setTimeout(() => {
-      card.classList.remove('is-shattering');
-    }, 390);
   };
 
   cards.forEach((card) => {
-    // Physical specular reflection tracking
+    // Physical specular glaze reflection tracking
     card.addEventListener('pointermove', (e) => {
       const rect = card.getBoundingClientRect();
       const x = ((e.clientX - rect.left) / rect.width) * 100;
@@ -1543,40 +1561,36 @@ const toSlug = (str: string) =>
 
     card.addEventListener('click', (e) => {
       const target = e.target as HTMLElement;
-      // If user clicked inside a link, copy button, or practise button, don't trigger shatter
+      // If user clicked inside an external link, copy button, or practise button, don't trigger flip
       if (target.closest('a') || target.closest('.copy-angle-btn') || target.closest('.practise-btn')) {
         return;
       }
-      triggerCardShatter(card);
+      triggerCardToggle(card);
     });
 
-    // Keyboard accessibility: Space or Enter triggers shatter
+    // Keyboard accessibility: Space or Enter triggers toggle
     card.addEventListener('keydown', (e) => {
       if (e.key === ' ' || e.key === 'Enter') {
         const target = e.target as HTMLElement;
         if (target.closest('a') || target.closest('button')) return;
         e.preventDefault();
-        triggerCardShatter(card);
+        triggerCardToggle(card);
       }
     });
   });
 
-  // Flip All Button in Toolbar with Staggered Shatter Cascade
+  // Flip All Button in Toolbar
   flipAllBtn?.addEventListener('click', () => {
     allFlipped = !allFlipped;
     flipAllBtn.classList.toggle('is-active', allFlipped);
     const label = flipAllBtn.querySelector('.test-toggle__text');
-    if (label) label.textContent = allFlipped ? 'Shatter all: Story mode' : 'Shatter all: Hot Seat mode';
+    if (label) label.textContent = allFlipped ? 'Flip all: Story mode' : 'Flip all: Hot Seat mode';
 
     cards.forEach((card, idx) => {
       setTimeout(() => {
-        card.classList.add('is-shattering');
         card.classList.toggle('is-flipped', allFlipped);
         card.setAttribute('aria-expanded', allFlipped ? 'true' : 'false');
-        setTimeout(() => {
-          card.classList.remove('is-shattering');
-        }, 390);
-      }, (idx % 6) * 40);
+      }, (idx % 6) * 35);
     });
   });
 

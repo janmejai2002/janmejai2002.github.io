@@ -40,21 +40,36 @@ const CAT_ACCENTS: Record<string, string> = {
   'Product Management': 'plum',
 };
 
-// Generate clean topic labels for the hotlist
+// Robust dynamic topic label extractor for today's drill hotlist (zero hardcoded strings)
 function getPillLabel(headline: string): string {
-  if (headline.includes('BCG Finds AI Spend')) return 'AI Spend & ROI';
-  if (headline.includes('Blinkit Hits')) return 'Blinkit Dark Stores';
-  if (headline.includes('D2C Pre-Diwali')) return 'D2C Festive GMV';
-  if (headline.includes('OpenSea Mobile')) return 'OpenSea Mobile';
-  if (headline.includes('Public Cash Rises') || headline.includes('Currency-to-GDP')) return 'Currency-to-GDP';
+  const clean = headline.replace(/^["'‘“]+|["'’”]+$/g, '').trim();
 
-  const verbMatch = headline.match(
-    /^(.*?)\s+(?:Hits|Finds|Jumps|Launches|Rises|Falls|Seeks|Eyes|Cuts|Adds|Buys|Wins|Reports|Bags|Faces)\b/i
-  );
-  if (verbMatch && verbMatch[1].length <= 24) return verbMatch[1];
+  // 1. Colon or dash prefix (e.g. "RBI Policy: Repo Rate...")
+  if (clean.includes(':')) {
+    const part = clean.split(':')[0].trim();
+    if (part.length >= 3 && part.length <= 22) return part;
+  }
+  if (clean.includes(' — ')) {
+    const part = clean.split(' — ')[0].trim();
+    if (part.length >= 3 && part.length <= 22) return part;
+  }
 
-  const words = headline.split(' ').slice(0, 3).join(' ');
-  return words.length > 22 ? words.slice(0, 22) + '…' : words;
+  // 2. Tokenize and filter out currency symbols/words, raw numbers/percentages, and transient verbs
+  const words = clean
+    .split(/\s+/)
+    .filter((w) => !/^(?:Rs\.?|INR|USD|\$|₹|Cr\.?|Crore|Crores|Lakh|Lakhs|Bbl|Pct|%|Percent)$/i.test(w))
+    .filter((w) => !/^[$₹€£]?\d+[\d,.]*(?:[kKmMbBtTL%]|Cr|Lakh)?$/i.test(w))
+    .filter((w) => !/^(?:Hits|Finds|Jumps|Launches|Rises|Falls|Seeks|Eyes|Cuts|Hikes|Drops|Adds|Buys|Wins|Reports|Bags|Faces|Halts|Acquires|Inks|Signs|Raises|Scales|Posts|Plans|Files|Leaves|Holds|Logs|Spikes|Nears|Surges|Backs|Taps|Weighs|Closes|Pours|Flags)$/i.test(w));
+
+  let phrase = '';
+  for (const w of words) {
+    if ((phrase + ' ' + w).trim().length > 22) break;
+    phrase = (phrase + ' ' + w).trim();
+    if (phrase.split(' ').length >= 3) break;
+  }
+  phrase = phrase.replace(/\s+(?:as|with|on|in|for|to|at|and|or|by|of|from|into|across|ahead)$/i, '').trim();
+
+  return phrase || words.slice(0, 3).join(' ') || headline.slice(0, 20);
 }
 
 // Slug generator matching NewsBrowser
