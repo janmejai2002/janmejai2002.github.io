@@ -14,10 +14,16 @@
  *   node site/scripts/sync-drafts.mjs [--commit]
  */
 
-import { writeFileSync } from 'node:fs';
-import { resolve } from 'node:path';
+import { writeFileSync, mkdirSync } from 'node:fs';
+import { resolve, dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { spawnSync } from 'node:child_process';
 import { api, PRODUCTION_DS, queryAll } from './lib/notion.mjs';
+
+const here = dirname(fileURLToPath(import.meta.url));
+const repoRoot = join(here, '..', '..');
+const draftsDir = join(repoRoot, 'drafts');
+const importDraftScript = join(here, 'import-draft.mjs');
 
 const DEFAULT_SHEET_ID = '1-UcD-C4My_Zp4aH3n-5dB3JQNtDN_MSAK6vTCPt8LY0';
 const sheetId = process.env.GOOGLE_SHEET_ID || DEFAULT_SHEET_ID;
@@ -212,15 +218,16 @@ for (const draft of pendingDrafts) {
 
   // Save to temporary scratch draft file
   const safeSlug = draft.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 50);
-  const tempPath = resolve('drafts', `temp-${safeSlug}.md`);
+  mkdirSync(draftsDir, { recursive: true });
+  const tempPath = join(draftsDir, `temp-${safeSlug}.md`);
   writeFileSync(tempPath, frontmatter + markdown, 'utf8');
 
   // Use import-draft.mjs to ingest into Notion
   console.log(`  Ingesting draft via import-draft.mjs...`);
-  const args = ['site/scripts/import-draft.mjs', tempPath];
+  const args = [importDraftScript, tempPath];
   if (commit) args.push('--commit');
 
-  const proc = spawnSync('node', args, { encoding: 'utf8' });
+  const proc = spawnSync(process.execPath, args, { encoding: 'utf8' });
   console.log(proc.stdout);
   if (proc.status !== 0) {
     console.error(proc.stderr);
