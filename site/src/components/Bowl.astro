@@ -114,6 +114,8 @@ const ghosts = Array.from({ length: capacity - n }, (_, k) => toPath(cells[n + k
   </svg>
   <figcaption>
     <p class="bowl__now" data-bowl-now></p>
+    {/* Who is on the piece being previewed. Filled by the page. */}
+    <slot />
     <p class="bowl__key">
       Each piece is one article. The oldest sits at the centre, and the outer ring is
       still unwritten.
