@@ -2,10 +2,14 @@
 import { Image, getImage } from 'astro:assets';
 import { getCollection } from 'astro:content';
 import Base from './Base.astro';
+import MiniBowl from '../components/MiniBowl.astro';
 import { trackById } from '../data/tracks';
 import { topicsFor } from '../data/topics';
+import { plateEdge, EDGE_DEPTH } from '../lib/bowl';
+import { liveArt } from '../lib/art';
+import '../styles/article.css';
 
-const { post } = Astro.props;
+const { post, headings = [] } = Astro.props;
 const {
   title,
   description,
@@ -14,7 +18,6 @@ const {
   keywords,
   readingTime,
   heroImage,
-  heroImageDark,
   heroAlt,
   heroCaption,
   ogImage,
@@ -22,11 +25,8 @@ const {
   question,
 } = post.data;
 
-const dateLabel = pubDate.toLocaleDateString('en-IN', {
-  day: 'numeric',
-  month: 'long',
-  year: 'numeric',
-});
+const dateOf = (d: Date) =>
+  d.toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' });
 
 // One source of truth for theme labels and accents (src/data/tracks.ts).
 const TRACK = trackById[track];
@@ -44,6 +44,58 @@ const next =
   older[0] ??
   all.find((p) => p.id !== post.id);
 const nextTrack = next ? trackById[next.data.track] : undefined;
+
+const slugOf = (id: string) => id.replace(/\.md$/, '');
+const slug = slugOf(post.id);
+const chrono = [...all].reverse().map((p) => slugOf(p.id));
+const chronoAccents = [...all].reverse().map((p) => trackById[p.data.track].accent);
+
+// Keeps names like GPT-4 on one line at display sizes.
+const VERSIONED = /(\S*\w-\d\S*)/;
+const unbroken = (text: string) => text.replace(new RegExp(VERSIONED, 'g'), '<span class="nb">$1</span>');
+const escapeHtml = (text: string) =>
+  text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+const place = chrono.indexOf(slug) + 1;
+
+// Top-level sections only. The TL;DR is read first anyway, so it is not listed.
+const sections = headings.filter(
+  (h: { depth: number; text: string }) => h.depth === 2 && !/tl;?dr/i.test(h.text)
+);
+const hasContents = sections.length >= 3;
+
+// The contents seam is the wordmark's crack, stretched to the height of the
+// list. A fixed zigzag, so it is the same on every visit.
+const SEAM = Array.from({ length: 41 }, (_, i) => {
+  const wob = Math.sin(i * 1.9) * 2.6 + Math.sin(i * 4.3 + 1) * 1.7 + Math.sin(i * 0.7) * 1.1;
+  return `${(7 + wob).toFixed(1)},${(i * 2.5).toFixed(1)}`;
+}).join(' ');
+
+// The article's TL;DR moves up into the header plate, so the page opens with one
+// dark object and then the writing. Markdown and pipeline stay as they are: this
+// is only a change to where the rendered block is printed. If a block ever fails
+// to match, it stays in the body, which still reads correctly.
+const rendered = await Astro.slots.render('default');
+const TLDR = /<div class="tldr">[\s\S]*?<\/div>/;
+const tldr = rendered.match(TLDR)?.[0].replace(/(<h2\b[^>]*>)[\s\S]*?(<\/h2>)/, '$1The short version$2');
+const prose = tldr ? rendered.replace(TLDR, '') : rendered;
+
+// The article's drawing as separate marks, so they can fly together on the plate.
+const art = liveArt(slug);
+
+// Each plate breaks in its own place, and the same place on every build.
+const headEdge = plateEdge(slug);
+const footEdge = plateEdge(`${slug}/end`);
+const headClip = `polygon(0 0,100% 0,${[...headEdge].reverse().map(([x, d]) => `${x.toFixed(1)}% calc(100% - ${d.toFixed(1)}px)`).join(',')})`;
+const footClip = `polygon(${footEdge.map(([x, d]) => `${x.toFixed(1)}% ${d.toFixed(1)}px`).join(',')},100% 100%,0 100%)`;
+const headLine = headEdge.map(([x, d]) => `${(x * 10).toFixed(0)},${(EDGE_DEPTH - d).toFixed(1)}`).join(' ');
+const footLine = footEdge.map(([x, d]) => `${(x * 10).toFixed(0)},${d.toFixed(1)}`).join(' ');
+
+// The bowl's copy of the art, at the size the header already asked for.
+const bowlArt = heroImage ? (await getImage({ src: heroImage, width: 640, format: 'webp' })).src : undefined;
+
+// On a phone the brief shows two points and offers the rest, so the writing
+// starts sooner. Counted here so the button is in the page from the first paint.
+const hiddenPoints = Math.max(0, (tldr?.match(/<li\b/g)?.length ?? 0) - 2);
 
 // Each article gets a generated headline card (src/pages/og/[slug].png.ts). A
 // hand-made ogImage in the frontmatter still wins.
@@ -90,132 +142,727 @@ const related = [...candidates.slice(offset), ...candidates.slice(0, offset)].sl
     { name: title },
   ]}
   progress={true}
+  immersive
+  grain={false}
 >
-  <article class="article fade-up d2" style={`--accent:var(--${TRACK.accent});--tint:var(--wash-${TRACK.accent})`}>
-    <header>
-      <div class="postlist__head" style="margin-bottom:1.5rem">
-        {/* The theme badge now leads to the theme's own page, not the index
-            filter — a permanent, linkable home beats an in-page state. */}
-        <a class="hanko hanko--link" href={`/${track}/`}>{TRACK.label}</a>
-        {readingTime && <span class="meta">{readingTime}</span>}
-        <time class="meta" datetime={pubDate.toISOString()}>{dateLabel}</time>
-      </div>
+  <div
+    class="apage"
+    data-slug={slug}
+    data-minutes={parseInt(readingTime ?? '', 10) || 0}
+    style={`--accent:var(--${TRACK.accent});--tint:var(--wash-${TRACK.accent})`}
+  >
+    <header class:list={['ahead', !heroImage && 'ahead--plain']} style={`--edge:${headClip}`}>
+      <div class="wrap">
+        <div class="ahead__top">
+          <div class="ahead__text">
+            <p class="ahead__meta">
+              {/* The theme link leads to the theme's own page, not the index filter. */}
+              <a class="ahead__track" href={`/${track}/`}><span aria-hidden="true"></span>{TRACK.label}</a>
+              {readingTime && <span>{readingTime}</span>}
+              <time datetime={pubDate.toISOString()}>{dateOf(pubDate)}</time>
+              {updatedDate && (
+                <span>Updated <time datetime={updatedDate.toISOString()}>{dateOf(updatedDate)}</time></span>
+              )}
+            </p>
 
-      {
-        /* The question the piece exists to answer. Printed above the title
-           because it is the reader's entry point, not a subtitle. */
-        question && <p class="article__q">{question}</p>
-      }
+            {/* The question the piece exists to answer: the reader's entry point. */}
+            {question && <p class="ahead__q" set:html={unbroken(escapeHtml(question))} />}
 
-      <h1 set:html={title} />
+            <h1 set:html={unbroken(title)} />
+          </div>
 
-      <div class="byline">
-        <div class="byline__avatar" aria-hidden="true">JM</div>
-        <div>
-          <div class="byline__name"><a href="/about/" rel="author">Janmejai Singh Minhas</a></div>
-          <div class="byline__line">XLRI, second year. Risk modelling intern at American Express, two peer-reviewed ML papers.</div>
+          {
+            heroImage && (
+              <figure class="plateart">
+                {
+                  art ? (
+                    <svg
+                      class="liveart"
+                      data-liveart
+                      viewBox="0 0 1600 900"
+                      role="img"
+                      aria-label={heroAlt}
+                      set:html={art.markup}
+                    />
+                  ) : (
+                    /* A piece with no vector source, such as a photograph. */
+                    <Image class="plateart__pic" src={heroImage} alt={heroAlt!} widths={[640, 960]} sizes="38rem" loading="eager" />
+                  )
+                }
+                {art && <button class="plateart__break" type="button" data-art-break>Break it apart</button>}
+                {heroCaption && <figcaption>{heroCaption}</figcaption>}
+              </figure>
+            )
+          }
         </div>
-      </div>
 
-      {
-        heroImage && (
-          <figure class="hero-figure">
-            <Image
-              class={heroImageDark ? 'art art--light' : 'art'}
-              src={heroImage}
-              alt={heroAlt!}
-              widths={[640, 960, 1280]}
-              sizes="(max-width: 46rem) 100vw, 44rem"
-              loading="eager"
-              fetchpriority="high"
-            />
-            {
-              /* Both variants ship, and CSS picks one. <picture> would only
-                 answer prefers-color-scheme, and this site's theme has three
-                 states — the manual toggle has to win too. */
-              heroImageDark && (
-                <Image
-                  class="art art--dark"
-                  src={heroImageDark}
-                  alt={heroAlt!}
-                  widths={[640, 960, 1280]}
-                  sizes="(max-width: 46rem) 100vw, 44rem"
-                  loading="eager"
-                  fetchpriority="high"
-                />
-              )
-            }
-            {heroCaption && <figcaption>{heroCaption}</figcaption>}
-          </figure>
-        )
-      }
+        {
+          tldr && (
+            <div class="ahead__brief" data-brief>
+              <a class="ahead__by" href="/blog/how-this-blog-builds-itself/">
+                <strong>The wAIbi-sabi agentic team</strong>
+                <span>Beautifully unfinished. Occasionally supervised.</span>
+              </a>
+              <Fragment set:html={tldr} />
+              {hiddenPoints > 0 && (
+                <button class="brief__more" type="button" data-brief-more>
+                  Show {hiddenPoints === 1 ? 'the other point' : `the other ${hiddenPoints} points`}
+                </button>
+              )}
+            </div>
+          )
+        }
+      </div>
+      <svg class="edge" viewBox={`0 0 1000 ${EDGE_DEPTH}`} preserveAspectRatio="none" aria-hidden="true">
+        <polyline points={headLine} vector-effect="non-scaling-stroke" />
+      </svg>
     </header>
 
-    <div class="body">
-      <slot />
-    </div>
-
-    {
-      related.length > 0 && (
-        <nav class="related" aria-label="Related articles">
-          <h2 class="related__h">Related questions</h2>
-          <ul>
-            {related.map((p) => (
-              <li>
-                <a href={`/blog/${p.id}/`}>{p.data.question ?? p.data.title}</a>
-              </li>
-            ))}
-          </ul>
-          {topics.length > 0 && (
-            <p class="related__topics">
-              More on{' '}
-              {topics.map((t, i) => (
-                <>
-                  {i > 0 && ', '}
-                  <a href={`/topics/${t.id}/`}>{t.label}</a>
-                </>
-              ))}
-            </p>
-          )}
-        </nav>
-      )
-    }
-
-    <footer class="endnote">
-      <svg class="endnote__crack" viewBox="0 0 12 44" preserveAspectRatio="none" aria-hidden="true">
-        <polyline points="7,0 4,12 8,22 3,32 6,44" />
-      </svg>
+    <div class="wrap reading">
       {
-        next && nextTrack && (
-          <a
-            class="endnote__next"
-            href={`/blog/${next.id.replace(/\.md$/, '')}/`}
-            style={`--accent:var(--${nextTrack.accent})`}
-          >
-            <span class="endnote__k">Next question · {nextTrack.label}</span>
-            <span class="endnote__t">{next.data.title}</span>
-            {next.data.question && <span class="endnote__q">{next.data.question}</span>}
-          </a>
+        hasContents && (
+          <nav class="toc" aria-label="In this piece" data-toc>
+            <p class="toc__k">In this piece</p>
+            <div class="toc__body">
+              {/* The crack, and the same crack in gold, revealed as you read. */}
+              <svg class="toc__seam" viewBox="0 0 14 100" preserveAspectRatio="none" aria-hidden="true">
+                <polyline points={SEAM} vector-effect="non-scaling-stroke" />
+              </svg>
+              <svg class="toc__seam toc__seam--gold" viewBox="0 0 14 100" preserveAspectRatio="none" aria-hidden="true">
+                <polyline points={SEAM} vector-effect="non-scaling-stroke" />
+              </svg>
+              <ol>
+                {sections.map((s: { slug: string; text: string }) => (
+                  <li><a href={`#${s.slug}`} data-toc-link={s.slug}>{s.text}</a></li>
+                ))}
+              </ol>
+            </div>
+          </nav>
         )
       }
-    </footer>
-  </article>
+
+      <article class="article">
+        {
+          hasContents && (
+            <details class="tocm">
+              <summary>In this piece</summary>
+              <ol>
+                {sections.map((s: { slug: string; text: string }) => (
+                  <li><a href={`#${s.slug}`}>{s.text}</a></li>
+                ))}
+              </ol>
+            </details>
+          )
+        }
+
+        <div class="body"><Fragment set:html={prose} /></div>
+
+        {
+          related.length > 0 && (
+            <nav class="related" aria-label="Related articles">
+              <h2 class="related__h">Related questions</h2>
+              <ul>
+                {related.map((p) => (
+                  <li><a href={`/blog/${p.id}/`}>{p.data.question ?? p.data.title}</a></li>
+                ))}
+              </ul>
+              {topics.length > 0 && (
+                <p class="related__topics">
+                  More on{' '}
+                  {topics.map((t, i) => (
+                    <>
+                      {i > 0 && ', '}
+                      <a href={`/topics/${t.id}/`}>{t.label}</a>
+                    </>
+                  ))}
+                </p>
+              )}
+            </nav>
+          )
+        }
+      </article>
+
+      {/* Filled in from the article's own links. Nothing here is authored. */}
+      <div class="margins" data-margins aria-hidden="true"></div>
+    </div>
+
+    <section class="aend" data-end style={`--edge:${footClip}`} aria-label="Where to go next">
+      <svg class="edge" viewBox={`0 0 1000 ${EDGE_DEPTH}`} preserveAspectRatio="none" aria-hidden="true">
+        <polyline points={footLine} vector-effect="non-scaling-stroke" />
+      </svg>
+      <div class="wrap aend__in">
+        <div>
+          {
+            next && nextTrack && (
+              <a class="aend__next" href={`/blog/${slugOf(next.id)}/`}>
+                <span class="aend__k">Next question · {nextTrack.label}</span>
+                <span class="aend__ask" set:html={unbroken(escapeHtml(next.data.question ?? next.data.title))} />
+                <span class="aend__t">{next.data.title}</span>
+              </a>
+            )
+          }
+          <button class="aend__share" type="button" data-share aria-live="polite">Copy link to this piece</button>
+        </div>
+        <a class="aend__bowl" href="/#writing">
+          <MiniBowl slugs={chrono} accents={chronoAccents} current={slug} art={bowlArt} />
+          <span>Piece {place} of {chrono.length}, and the bowl is not finished. <b>See every question →</b></span>
+        </a>
+      </div>
+    </section>
+
+    {
+      hasContents && (
+        <>
+          <div class="dock" data-dock>
+            <button class="dock__open" type="button" data-dock-open aria-haspopup="dialog">
+              <span data-dock-art></span>
+              <span>
+                <span class="dock__where" data-dock-where>In this piece</span>
+                <span class="dock__left" data-dock-left></span>
+              </span>
+              <svg class="dock__chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                <path d="M3 10.5 8 5.5l5 5" />
+              </svg>
+            </button>
+          </div>
+          <dialog class="sheet" data-sheet aria-label="In this piece">
+            <div class="sheet__top">
+              <p class="sheet__k">In this piece</p>
+              <form method="dialog"><button class="sheet__close">Close</button></form>
+            </div>
+            <ol>
+              {sections.map((s: { slug: string; text: string }) => (
+                <li><a href={`#${s.slug}`} data-sheet-link={s.slug}>{s.text}</a></li>
+              ))}
+            </ol>
+          </dialog>
+        </>
+      )
+    }
+  </div>
 </Base>
 
-<style>
-  .byline__name a { color: inherit; text-decoration: none; }
-  .byline__name a:hover { text-decoration: underline; }
-  .related {
-    margin-top: 3rem; padding-top: 1.5rem;
-    border-top: 1px solid var(--border);
+<script>
+  const body = document.querySelector<HTMLElement>('.reading .body');
+  const toc = document.querySelector<HTMLElement>('[data-toc]');
+  const margins = document.querySelector<HTMLElement>('[data-margins]');
+  const end = document.querySelector<HTMLElement>('[data-end]');
+
+  document.querySelector('[data-brief-more]')?.addEventListener('click', (e) => {
+    const brief = document.querySelector('[data-brief]');
+    brief?.classList.add('is-open');
+    // The button is about to vanish, so keyboard focus moves to what it revealed.
+    const first = brief?.querySelectorAll<HTMLElement>('.tldr li')[2];
+    if (first) {
+      first.tabIndex = -1;
+      first.focus({ preventScroll: true });
+    }
+    (e.currentTarget as HTMLElement).remove();
+  });
+
+  // ---- break the drawing apart, and let it come back together
+  const live = document.querySelector<SVGSVGElement>('[data-liveart]');
+  const motionOK = matchMedia('(prefers-reduced-motion: no-preference)');
+  const plateArt = live?.closest<HTMLElement>('.plateart');
+  const finePointer = matchMedia('(hover: hover) and (pointer: fine)');
+  const SETTLE_AFTER = 3300;
+  let breaking = 0;
+  let settling = 0;
+
+  // ---- at rest, the marks shift away from the cursor. Where each one sits is
+  // measured once it has landed. A split ring's pieces are the same element, so
+  // each is placed by the middle of the stretch of line it draws.
+  type Mark = { el: SVGGElement; x: number; y: number; moved: boolean };
+  let marks: Mark[] = [];
+  const measureMarks = () => {
+    if (!live || !finePointer.matches || !motionOK.matches) return;
+    const toRoot = live.getScreenCTM()?.inverse();
+    if (!toRoot) return;
+    marks = [...live.querySelectorAll<SVGGElement>('.p')].flatMap((el) => {
+      const shape = el.firstElementChild as SVGGeometryElement | null;
+      const toScreen = shape?.getScreenCTM();
+      if (!shape || !toScreen) return [];
+      let at: { x: number; y: number };
+      const dash = shape.getAttribute('stroke-dasharray');
+      if (dash && shape.getAttribute('pathLength') === '1') {
+        const stretch = parseFloat(dash);
+        const from = -parseFloat(shape.getAttribute('stroke-dashoffset') ?? '0');
+        at = shape.getPointAtLength(shape.getTotalLength() * (from + stretch / 2));
+      } else {
+        const b = shape.getBBox();
+        at = { x: b.x + b.width / 2, y: b.y + b.height / 2 };
+      }
+      const p = new DOMPoint(at.x, at.y).matrixTransform(toScreen).matrixTransform(toRoot);
+      return [{ el, x: p.x, y: p.y, moved: false }];
+    });
+  };
+  const releaseMarks = () => {
+    for (const m of marks) {
+      if (m.moved) m.el.style.transform = '';
+      m.moved = false;
+    }
+  };
+  const REACH = 250;
+  const PUSH = 52;
+  let pointer: DOMPoint | null = null;
+  let frame = 0;
+  const pushMarks = () => {
+    frame = 0;
+    if (!pointer) return;
+    for (const m of marks) {
+      const dx = m.x - pointer.x;
+      const dy = m.y - pointer.y;
+      const d = Math.hypot(dx, dy) || 1;
+      if (d > REACH) {
+        if (m.moved) m.el.style.transform = '';
+        m.moved = false;
+        continue;
+      }
+      const k = (1 - d / REACH) ** 2 * PUSH;
+      m.el.style.transform = `translate(${((dx / d) * k).toFixed(1)}px,${((dy / d) * k).toFixed(1)}px) rotate(${(k * 0.12 * (dx < 0 ? -1 : 1)).toFixed(1)}deg)`;
+      m.moved = true;
+    }
+  };
+  plateArt?.addEventListener('pointermove', (e) => {
+    if (!live?.classList.contains('is-settled') || !marks.length) return;
+    const toRoot = live.getScreenCTM()?.inverse();
+    if (!toRoot) return;
+    pointer = new DOMPoint(e.clientX, e.clientY).matrixTransform(toRoot);
+    if (!frame) frame = requestAnimationFrame(pushMarks);
+  });
+  plateArt?.addEventListener('pointerleave', () => {
+    pointer = null;
+    releaseMarks();
+  });
+
+  const settleSoon = () => {
+    clearTimeout(settling);
+    settling = window.setTimeout(() => {
+      live?.classList.add('is-settled');
+      measureMarks();
+    }, SETTLE_AFTER);
+  };
+
+  const breakApart = () => {
+    if (!live || !motionOK.matches || breaking) return;
+    clearTimeout(settling);
+    pointer = null;
+    releaseMarks();
+    live.classList.remove('is-settled');
+    live.classList.add('is-breaking');
+    breaking = window.setTimeout(() => {
+      // Dropping the class restarts the assemble animation from scattered.
+      live.classList.remove('is-breaking');
+      breaking = 0;
+      settleSoon();
+    }, 520);
+  };
+  plateArt?.addEventListener('click', breakApart);
+
+  // Starts when it comes on screen, and the glow stops when it leaves.
+  if (live) {
+    let started = false;
+    const start = () => {
+      if (started) return;
+      started = true;
+      live.classList.add('is-inview');
+      if (motionOK.matches) settleSoon();
+    };
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(
+        (entries) => {
+          const on = entries.some((e) => e.isIntersecting);
+          live.classList.toggle('is-away', !on);
+          if (on) start();
+        },
+        { threshold: 0.25 }
+      ).observe(live);
+    } else {
+      start();
+    }
   }
-  .related__h {
-    font-size: .625rem; font-weight: 800; letter-spacing: .15em;
-    text-transform: uppercase; color: var(--ink-faint); margin: 0 0 .9rem;
+
+  // ---- pass it on: the phone's own share sheet where there is one
+  const share = document.querySelector<HTMLButtonElement>('[data-share]');
+  if (share) {
+    const url = location.origin + location.pathname;
+    const native = typeof navigator.share === 'function';
+    if (native) share.textContent = 'Share this piece';
+    share.addEventListener('click', async () => {
+      try {
+        if (native) await navigator.share({ title: document.title, url });
+        else {
+          await navigator.clipboard.writeText(url);
+          share.textContent = 'Link copied';
+          window.setTimeout(() => (share.textContent = 'Copy link to this piece'), 2200);
+        }
+      } catch {
+        // Cancelling the share sheet lands here, and needs no message.
+      }
+    });
   }
-  .related ul { list-style: none; margin: 0; padding: 0; }
-  .related li { margin: 0 0 .7rem; line-height: 1.4; font-weight: 600; }
-  .related a { color: var(--ink); }
-  .related a:hover { color: var(--accent); }
-  .related__topics { margin: 1.1rem 0 0; font-size: .8125rem; color: var(--ink-soft); }
-</style>
+
+  // The bowl's shard lands once, when the bowl is on screen.
+  if (end) {
+    const bowl = end.querySelector('.minibowl');
+    if (bowl && 'IntersectionObserver' in window) {
+      const io = new IntersectionObserver(
+        (entries) => {
+          if (entries.some((e) => e.isIntersecting)) {
+            end.classList.add('is-home');
+            io.disconnect();
+          }
+        },
+        { threshold: 0.55 }
+      );
+      io.observe(bowl);
+    } else {
+      end.classList.add('is-home');
+    }
+  }
+
+  if (body) {
+    const heads = [...body.querySelectorAll<HTMLElement>(':scope > h2')];
+
+    // ---- a margin note level with the first link to each outside source, once
+    // per section. They repeat links already in the text, so they stay out of
+    // the tab order and away from screen readers.
+    const notes: { link: HTMLAnchorElement; note: HTMLAnchorElement }[] = [];
+    if (margins) {
+      let seen = new Set<string>();
+      for (const el of [...body.children] as HTMLElement[]) {
+        if (el.id === 'sources') break;
+        if (el.tagName === 'H2') {
+          seen = new Set();
+          continue;
+        }
+        for (const link of el.querySelectorAll<HTMLAnchorElement>('a[href^="http"]')) {
+          if (link.hostname === location.hostname) continue;
+          const host = link.hostname.replace(/^www\./, '');
+          if (seen.has(host)) continue;
+          seen.add(host);
+          const note = document.createElement('a');
+          note.className = 'mnote';
+          note.href = link.href;
+          note.tabIndex = -1;
+          note.textContent = host;
+          margins.append(note);
+          notes.push({ link, note });
+        }
+      }
+    }
+    const diagrams = [...body.querySelectorAll<HTMLElement>('.diagram')];
+    const placeNotes = () => {
+      if (!margins || !margins.offsetParent) return;
+      const origin = margins.getBoundingClientRect().top;
+      const blocked = diagrams.map((d) => {
+        const r = d.getBoundingClientRect();
+        return [r.top - origin - 6, r.bottom - origin + 6];
+      });
+      let free = 0;
+      for (const { link, note } of notes) {
+        const h = note.offsetHeight;
+        let y = Math.max(free, link.getBoundingClientRect().top - origin);
+        for (const [a, b] of blocked) if (y < b && y + h > a) y = b;
+        note.style.top = `${Math.round(y)}px`;
+        free = y + h + 6;
+      }
+    };
+
+    // ---- rough minutes still to read, from the article's own reading time
+    const minutes = Number(document.querySelector<HTMLElement>('.apage')?.dataset.minutes ?? 0);
+    const minutesLeft = () => (minutes ? Math.max(1, Math.ceil(minutes * (1 - readShare))) : 0);
+    const timeLeft = () => {
+      if (!minutes || readShare >= 0.97) return '';
+      return ` · ${minutesLeft()} min left`;
+    };
+
+    // ---- a second copy of the drawing, built by reading. Each mark has its own
+    // moment in the piece, and comes in from where it is scattered.
+    const tocBody = toc?.querySelector('.toc__body');
+    let buildArt: (() => void) | undefined;
+    let fitArt: (() => void) | undefined;
+    const apage = document.querySelector<HTMLElement>('.apage');
+    const narrow = matchMedia('(max-width: 64rem)');
+    const dockArt = document.querySelector<HTMLElement>('[data-dock-art]');
+    let readShare = 0;
+    if (toc && tocBody && live) {
+      const holder = document.createElement('div');
+      holder.className = 'toc__art';
+      holder.setAttribute('aria-hidden', 'true');
+      const copy = live.cloneNode(true) as SVGSVGElement;
+      copy.removeAttribute('data-liveart');
+      copy.removeAttribute('role');
+      copy.removeAttribute('aria-label');
+      copy.setAttribute('class', 'buildart');
+      const label = document.createElement('p');
+      label.className = 'toc__count';
+      holder.append(copy, label);
+
+      // Crop to the drawing itself, so a small copy isn't mostly margin. It has
+      // to be rendered to be measured, and the contents column can be hidden.
+      holder.style.cssText = 'position:fixed;left:0;top:0;width:200px;visibility:hidden';
+      document.body.append(holder);
+      const box = copy.getBBox();
+      holder.style.cssText = '';
+      if (box.width && box.height) {
+        const pad = Math.max(box.width, box.height) * 0.04;
+        copy.setAttribute('viewBox', `${box.x - pad} ${box.y - pad} ${box.width + 2 * pad} ${box.height + 2 * pad}`);
+        copy.style.aspectRatio = `${box.width + 2 * pad} / ${box.height + 2 * pad}`;
+      }
+
+      // The finished drawing, faint underneath, so the empty places read as waiting.
+      const ghost = copy.cloneNode(true) as SVGSVGElement;
+      ghost.setAttribute('class', 'buildart buildart--ghost');
+      const stage = document.createElement('div');
+      stage.className = 'toc__stage';
+      copy.before(stage);
+      stage.append(ghost, copy);
+
+      // The contents column on wide screens, the dock everywhere else.
+      const seat = () => {
+        if (narrow.matches && dockArt) dockArt.append(holder);
+        else tocBody.after(holder);
+      };
+      seat();
+      narrow.addEventListener('change', () => {
+        seat();
+        refresh();
+      });
+
+      const parts = [...copy.querySelectorAll<SVGGElement>('.p')].map((el) => {
+        const css = el.style;
+        return {
+          el,
+          dx: parseFloat(css.getPropertyValue('--dx')) * 0.45,
+          dy: parseFloat(css.getPropertyValue('--dy')) * 0.45,
+          r: parseFloat(css.getPropertyValue('--r')),
+          s: parseFloat(css.getPropertyValue('--s')),
+          t: -1,
+        };
+      });
+      const WINDOW = Math.min(0.22, 2.5 / Math.max(parts.length, 1) + 0.06);
+      const ease = (x: number) => 1 - (1 - x) ** 3;
+
+      buildArt = () => {
+        const finish = bodyTop + body.offsetHeight;
+        const y = scrollY + innerHeight * 0.55;
+        const read = Math.max(0, Math.min(1, (y - bodyTop) / Math.max(1, finish - bodyTop)));
+        readShare = read;
+        let placed = 0;
+        parts.forEach((p, i) => {
+          const start = (i / parts.length) * (1 - WINDOW);
+          const raw = Math.max(0, Math.min(1, (read - start) / WINDOW));
+          if (raw === 1) placed++;
+          const t = Math.round(ease(raw) * 200) / 200;
+          if (t === p.t) return;
+          p.t = t;
+          p.el.classList.toggle('is-hot', t > 0 && t < 1);
+          p.el.style.opacity = String(t);
+          if (!motionOK.matches || t === 1) {
+            p.el.style.transform = 'none';
+            return;
+          }
+          const k = 1 - t;
+          p.el.style.transform = `translate(${(p.dx * k).toFixed(1)}px,${(p.dy * k).toFixed(1)}px) rotate(${(p.r * k).toFixed(1)}deg) scale(${(1 + (p.s - 1) * k).toFixed(3)})`;
+        });
+        const whole = placed === parts.length;
+        holder.classList.toggle('is-whole', whole);
+        label.textContent = (whole ? `All ${parts.length} pieces placed` : `${placed} of ${parts.length} pieces placed`) + timeLeft();
+      };
+
+      // On a short screen the contents list comes first.
+      fitArt = () => {
+        holder.hidden = false;
+        if (narrow.matches) return;
+        const top = parseFloat(getComputedStyle(toc).top) || 0;
+        holder.hidden = top + toc.offsetHeight > innerHeight - 16;
+      };
+    }
+
+    // ---- the dock, and the contents sheet behind it
+    const dock = document.querySelector<HTMLElement>('[data-dock]');
+    const sheet = document.querySelector<HTMLDialogElement>('[data-sheet]');
+    const whereEl = document.querySelector<HTMLElement>('[data-dock-where]');
+    const leftEl = document.querySelector<HTMLElement>('[data-dock-left]');
+    const sheetLinks = [...document.querySelectorAll<HTMLAnchorElement>('[data-sheet-link]')];
+    document.querySelector('[data-dock-open]')?.addEventListener('click', () => sheet?.showModal());
+    sheet?.addEventListener('click', (e) => {
+      // A click on the backdrop lands on the dialog itself.
+      if (e.target === sheet) sheet.close();
+    });
+    for (const l of sheetLinks) l.addEventListener('click', () => sheet?.close());
+
+    let lastY = scrollY;
+    let introduced = false;
+    let tuck = 0;
+    const updateDock = () => {
+      if (leftEl) leftEl.textContent = minutes ? (readShare >= 0.97 ? 'Nearly done' : `${minutesLeft()} min left`) : '';
+      if (!dock) return;
+      const y = scrollY;
+      const inReading = y + innerHeight * 0.4 > bodyTop && y + innerHeight * 0.6 < bodyTop + body.offsetHeight;
+      const delta = y - lastY;
+      if (!inReading) {
+        dock.classList.remove('is-up');
+      } else if (!introduced) {
+        // Shown once when reading starts, so it can be found later.
+        introduced = true;
+        dock.classList.add('is-up');
+        tuck = window.setTimeout(() => dock.classList.remove('is-up'), 2800);
+      } else if (delta < -6) {
+        clearTimeout(tuck);
+        dock.classList.add('is-up');
+      } else if (delta > 6) {
+        clearTimeout(tuck);
+        dock.classList.remove('is-up');
+      }
+      if (Math.abs(delta) > 6 || !inReading) lastY = y;
+    };
+
+    // ---- a phone call, a closed tab: keep the reader's place for next time. It
+    // stays on this device.
+    const slug = apage?.dataset.slug ?? '';
+    const placeKey = `waibi:place:${slug}`;
+    const savePlace = (head: HTMLElement | null) => {
+      try {
+        if (readShare > 0.92) localStorage.removeItem(placeKey);
+        else if (head && readShare > 0.06) {
+          const ask = document.querySelector('.ahead__q')?.textContent ?? document.querySelector('h1')?.textContent ?? '';
+          localStorage.setItem(placeKey, JSON.stringify({ id: head.id, at: Date.now(), ask: ask.trim(), section: head.textContent?.trim() }));
+        }
+      } catch {
+        // Private windows can refuse storage. Nothing depends on it.
+      }
+    };
+    // Finished pieces turn gold in the reader's own bowl on the homepage.
+    let finished = false;
+    const markFinished = () => {
+      if (finished || readShare < 0.9) return;
+      finished = true;
+      try {
+        const done = new Set<string>(JSON.parse(localStorage.getItem('waibi:read') ?? '[]'));
+        done.add(slug);
+        localStorage.setItem('waibi:read', JSON.stringify([...done]));
+        localStorage.removeItem(placeKey);
+      } catch {
+        // Storage refused. The reader just loses the gold.
+      }
+    };
+    const offerResume = () => {
+      if (scrollY > innerHeight || location.hash) return;
+      try {
+        const saved = JSON.parse(localStorage.getItem(placeKey) ?? 'null');
+        if (!saved || Date.now() - saved.at > 45 * 864e5) return;
+        const head = heads.find((h) => h.id === saved.id);
+        const brief = document.querySelector('[data-brief]');
+        if (!head || !brief) return;
+        const a = document.createElement('a');
+        a.className = 'resume';
+        a.href = `#${head.id}`;
+        a.textContent = `Pick up where you left off: ${head.textContent?.trim()} →`;
+        brief.append(a);
+      } catch {
+        // Unreadable or missing, so there is simply nothing to offer.
+      }
+    };
+
+    // ---- a wide table or diagram scrolls sideways, and should say so
+    const wide = [...body.querySelectorAll<HTMLElement>('table, .diagram')].map((el) => {
+      const hint = document.createElement('p');
+      hint.className = 'swipe';
+      hint.setAttribute('aria-hidden', 'true');
+      hint.textContent = 'Swipe sideways to see all of it →';
+      hint.hidden = true;
+      // Above it, so the reader knows before they scroll past a tall one.
+      el.before(hint);
+      return { el, hint };
+    });
+    const hintWide = () => {
+      for (const { el, hint } of wide) hint.hidden = el.scrollWidth <= el.clientWidth + 2;
+    };
+
+    // ---- where the reader is
+    const links = [...document.querySelectorAll<HTMLAnchorElement>('[data-toc-link]')];
+    let tops: number[] = [];
+    let marks: number[] = [];
+    let bodyTop = 0;
+    const measure = () => {
+      tops = heads.map((h) => h.getBoundingClientRect().top + scrollY);
+      bodyTop = body.getBoundingClientRect().top + scrollY;
+      const box = toc?.querySelector('.toc__body')?.getBoundingClientRect();
+      marks = links.map((l) => {
+        const r = l.getBoundingClientRect();
+        return box ? r.top + r.height / 2 - box.top : 0;
+      });
+    };
+
+    let shown: HTMLElement | null | undefined;
+    const update = () => {
+      const y = scrollY + innerHeight * 0.3;
+      let i = -1;
+      for (let k = 0; k < tops.length; k++) if (tops[k] <= y) i = k;
+      const head = i >= 0 ? heads[i] : null;
+
+      buildArt?.();
+      updateDock();
+      markFinished();
+
+      if (head !== shown) {
+        shown = head;
+        for (const l of [...links, ...sheetLinks]) {
+          const id = l.dataset.tocLink ?? l.dataset.sheetLink;
+          if (id === head?.id) l.setAttribute('aria-current', 'location');
+          else l.removeAttribute('aria-current');
+        }
+        if (whereEl) whereEl.textContent = head?.textContent?.trim() || 'The opening';
+        savePlace(head);
+      }
+
+      if (toc && marks.length) {
+        // The seam reaches each entry exactly as its section comes up, so the
+        // gold says where you are, not just how far down the page.
+        const pos = links.findIndex((l) => l.dataset.tocLink === head?.id);
+        let h = 0;
+        if (pos < 0) {
+          // Before the first listed section.
+          const firstTop = tops[heads.findIndex((x) => x.id === links[0].dataset.tocLink)] ?? bodyTop + 1;
+          h = Math.max(0, Math.min(1, (y - bodyTop) / Math.max(1, firstTop - bodyTop))) * marks[0];
+        } else if (pos < marks.length - 1) {
+          const t0 = tops[heads.indexOf(head!)];
+          const nextHead = heads.find((x) => x.id === links[pos + 1].dataset.tocLink);
+          const t1 = nextHead ? tops[heads.indexOf(nextHead)] : t0 + 1;
+          h = marks[pos] + (marks[pos + 1] - marks[pos]) * Math.min(1, (y - t0) / Math.max(1, t1 - t0));
+        } else {
+          const finish = bodyTop + body.offsetHeight;
+          const total = toc.querySelector<HTMLElement>('.toc__body')!.offsetHeight;
+          const t0 = tops[heads.indexOf(head!)];
+          h = marks[pos] + (total - marks[pos]) * Math.min(1, (y - t0) / Math.max(1, finish - t0));
+        }
+        toc.style.setProperty('--seam', `${h.toFixed(1)}px`);
+      }
+    };
+
+    let queued = false;
+    const onScroll = () => {
+      if (queued) return;
+      queued = true;
+      requestAnimationFrame(() => {
+        queued = false;
+        update();
+      });
+    };
+    const refresh = () => {
+      fitArt?.();
+      hintWide();
+      measure();
+      placeNotes();
+      update();
+    };
+    addEventListener('scroll', onScroll, { passive: true });
+    addEventListener('resize', refresh, { passive: true });
+    if ('ResizeObserver' in window) new ResizeObserver(refresh).observe(body);
+    document.fonts?.ready.then(refresh);
+    refresh();
+    offerResume();
+  }
+</script>

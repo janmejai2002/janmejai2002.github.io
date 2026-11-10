@@ -1,0 +1,80 @@
+---
+/**
+ * The bowl at the foot of an article. Every other piece is a plain shard; this
+ * one carries the article's own art and lands in its place when the reader
+ * arrives (see .aend in styles/article.css). Whole-number coordinates, because
+ * it ships on every page.
+ */
+import { bowlGeometry, toPath, SIZE, C, R } from '../lib/bowl';
+
+interface Props {
+  /** Oldest first. */
+  slugs: string[];
+  current: string;
+  /** Each piece's theme accent, in the same order as slugs. */
+  accents: string[];
+  /** Always the light variant, so this piece is the lit one in either theme. */
+  art?: string;
+}
+const { slugs, current, accents, art } = Astro.props;
+const { capacity, cells } = bowlGeometry(slugs.length);
+const at = slugs.indexOf(current);
+const others = cells
+  .slice(0, slugs.length)
+  .flatMap((c, i) => (i === at ? [] : [{ d: toPath(c, 0), accent: accents[i] }]));
+const ghosts = cells.slice(slugs.length, capacity).map((c) => toPath(c, 0));
+const cell = cells[at];
+const mine = cell ? toPath(cell, 0) : undefined;
+const box = cell
+  ? (() => {
+      const xs = cell.map((p) => p[0]);
+      const ys = cell.map((p) => p[1]);
+      const [x, y] = [Math.floor(Math.min(...xs)), Math.floor(Math.min(...ys))];
+      return { x, y, width: Math.ceil(Math.max(...xs)) - x, height: Math.ceil(Math.max(...ys)) - y };
+    })()
+  : undefined;
+---
+
+<svg class="minibowl" viewBox={`0 0 ${SIZE} ${SIZE}`} aria-hidden="true">
+  <defs>
+    <clipPath id="minibowl-disc"><circle cx={C} cy={C} r={R} /></clipPath>
+    {mine && <clipPath id="minibowl-cell"><path d={mine} /></clipPath>}
+  </defs>
+  <circle class="minibowl__base" cx={C} cy={C} r={R} />
+  <g clip-path="url(#minibowl-disc)">
+    {ghosts.map((d) => <path class="minibowl__ghost" d={d} />)}
+    {others.map((s) => <path class={`minibowl__shard minibowl__shard--${s.accent}`} d={s.d} />)}
+    {mine && <path class="minibowl__slot" d={mine} />}
+  </g>
+  {
+    mine && box && (
+      <g class="minibowl__mine">
+        <g clip-path="url(#minibowl-disc)">
+          <g clip-path="url(#minibowl-cell)">
+            <rect class="minibowl__fill" {...box} />
+            {art && <image href={art} {...box} preserveAspectRatio="xMidYMid slice" />}
+          </g>
+          <path class="minibowl__seam" d={mine} pathLength="1" />
+        </g>
+      </g>
+    )
+  }
+  <circle class="minibowl__rim" cx={C} cy={C} r={R} />
+</svg>
+
+<style is:global>
+  .minibowl { display: block; width: 100%; height: auto; overflow: visible; }
+  .minibowl__base { fill: var(--stone); }
+  .minibowl__rim { fill: none; stroke: var(--border); stroke-width: 4; }
+  .minibowl__ghost { fill: none; stroke: var(--ochre); stroke-width: 3; stroke-dasharray: .5 15; stroke-linecap: round; }
+  .minibowl__shard { fill: var(--card); stroke: color-mix(in srgb, var(--ochre) 60%, var(--stone)); stroke-width: 4; stroke-linejoin: round; }
+  .minibowl__shard--mizu { fill: color-mix(in srgb, var(--mizu) 30%, var(--card)); }
+  .minibowl__shard--ochre { fill: color-mix(in srgb, var(--ochre) 30%, var(--card)); }
+  .minibowl__shard--plum { fill: color-mix(in srgb, var(--plum) 30%, var(--card)); }
+  .minibowl__shard--moss { fill: color-mix(in srgb, var(--moss) 30%, var(--card)); }
+  .minibowl__shard--hanko { fill: color-mix(in srgb, var(--hanko) 30%, var(--card)); }
+  .minibowl__shard--indigo { fill: color-mix(in srgb, var(--indigo) 30%, var(--card)); }
+  .minibowl__slot { fill: var(--paper-2); stroke: var(--ochre); stroke-width: 3; stroke-dasharray: 2 12; stroke-linecap: round; }
+  .minibowl__fill { fill: var(--card); }
+  .minibowl__seam { fill: none; stroke: var(--ochre); stroke-width: 15; stroke-linejoin: round; stroke-dasharray: 1; }
+</style>

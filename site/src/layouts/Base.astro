@@ -28,8 +28,11 @@ export interface Props {
   noindex?: boolean;
   pageType?: string;
   schema?: Record<string, unknown>;
+  /** The drifting WebGL field. Articles turn it off: behind long text it reads
+   *  as smudges, and a page meant for ten minutes of reading should not spin a GPU. */
+  grain?: boolean;
 }
-const { progress = false, section, wide = false, immersive = false, ...seo } = Astro.props;
+const { progress = false, section, wide = false, immersive = false, grain = true, ...seo } = Astro.props;
 const path = Astro.url.pathname;
 // Labels only — the routes stay put so nothing already published breaks.
 const nav = [
@@ -61,7 +64,7 @@ const year = new Date().getFullYear();
     </script>
   </head>
   <body>
-    <GrainField />
+    {grain && <GrainField />}
     <a class="skip" href="#main">Skip to content</a>
     {progress && <div id="reading-progress"></div>}
 

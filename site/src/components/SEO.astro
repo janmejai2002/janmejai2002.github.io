@@ -191,10 +191,10 @@ const schema = { '@context': 'https://schema.org', '@graph': graph };
 
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-{/* Newsreader carries exactly one glyph per article — the drop cap — plus
-    nothing else yet, so only the 500 weight ships. */}
+{/* Newsreader sets all article prose, so it needs its italic and the range of
+    weights from body text up to bold. */}
 <link
-  href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Newsreader:opsz,wght@6..72,500&display=swap"
+  href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Newsreader:ital,opsz,wght@0,6..72,400..700;1,6..72,400..700&display=swap"
   rel="stylesheet"
 />
 

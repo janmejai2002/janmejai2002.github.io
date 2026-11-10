@@ -1,0 +1,429 @@
+/* ============================================================
+   The article page. A plate at the top, a sheet of paper for the reading, a
+   plate at the end. The one flourish is the shard: the art is cut to this
+   article's own piece of the homepage bowl, and lands back in the bowl at the
+   foot of the page. Everything else stays quiet so the type can do the work.
+
+   Scoped under .apage, .ahead, .reading or .aend, so it wins over the base
+   article rules in global.css without touching them.
+   ============================================================ */
+
+.apage {
+  /* Contents, reading, margin. Reading is centred on the page; the header brief
+     and the page below share these columns, so their left edges line up. */
+  --cols: minmax(13.5rem, 1fr) minmax(0, 40rem) minmax(13.5rem, 1fr);
+  --col-gap: clamp(2rem, 4vw, 4.5rem);
+  --shard: clamp(15rem, 25vw, 23rem); /* the bowl's column in the closing plate */
+  overflow-x: clip; /* marks start well outside the plate */
+  --nav-h: 0px; /* the nav scrolls away here, so nothing needs to clear it */
+}
+/* The whole height of a laptop screen goes to the writing. */
+.main--immersive:has(.apage) .topnav { position: static; }
+
+/* ---------- the broken edge, shared by both plates ---------- */
+.edge { position: absolute; left: 0; width: 100%; height: 22px; overflow: visible; pointer-events: none; }
+.edge polyline { fill: none; stroke: var(--ochre); stroke-width: 1.75; stroke-linejoin: miter; }
+.ahead > .edge { bottom: 0; }
+.aend > .edge { top: 0; }
+
+.apage .nb { white-space: nowrap; }
+
+/* ---------- the opening plate ---------- */
+.ahead { position: relative; color: var(--tldr-ink); }
+/* A separate layer, because a clip-path on the header would also cut the shard. */
+.ahead::before, .aend::before {
+  content: ''; position: absolute; inset: 0;
+  background:
+    radial-gradient(60rem 30rem at 86% -10%, color-mix(in srgb, var(--accent) 16%, transparent), transparent 70%),
+    radial-gradient(50rem 28rem at 2% 110%, color-mix(in srgb, var(--plum) 15%, transparent), transparent 70%),
+    var(--tldr-bg);
+  clip-path: var(--edge);
+}
+.ahead > .wrap, .aend > .wrap { position: relative; }
+.ahead > .wrap { padding-block: clamp(1.75rem, 3vw, 2.75rem) calc(22px + clamp(1.75rem, 2.5vw, 2.5rem)); }
+
+.ahead__top { --top-gap: clamp(2rem, 5vw, 5rem); display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: var(--top-gap); align-items: center; }
+.ahead--plain .ahead__top { grid-template-columns: minmax(0, 56rem); }
+
+.ahead__meta {
+  display: flex; flex-wrap: wrap; align-items: center; gap: .3rem 1.1rem; margin: 0;
+  font-size: .9375rem; font-weight: 500; color: var(--tldr-dim);
+}
+.ahead__track {
+  display: inline-flex; align-items: center; gap: .5rem; font-weight: 700;
+  color: var(--tldr-ink); text-decoration: none; border-bottom: 1px solid var(--tldr-hair);
+}
+.ahead__track:hover { border-color: var(--tldr-ink); }
+.ahead__track span { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
+
+.ahead__q {
+  margin: clamp(1rem, 1.8vw, 1.5rem) 0 0;
+  font-family: var(--serif); font-weight: 500;
+  font-size: clamp(1.25rem, 1.8vw, 1.5625rem); line-height: 1.28; letter-spacing: -.006em;
+  color: var(--ochre); text-wrap: pretty; max-width: 42rem;
+}
+.ahead h1 {
+  margin: .55rem 0 0;
+  font-size: clamp(2.125rem, 3.75vw, 3.375rem); font-weight: 800;
+  line-height: 1.04; letter-spacing: -.035em; text-wrap: balance;
+}
+/* The credit sits in the left column of the brief, level with the summary. */
+.ahead__by { grid-column: 1; align-self: start; display: block; text-decoration: none; font-size: .9375rem; line-height: 1.45; color: var(--tldr-dim); }
+.ahead__by strong { display: block; color: var(--ochre); font-size: 1rem; font-weight: 600; }
+.ahead__by:hover strong { text-decoration: underline; text-underline-offset: 3px; }
+
+/* ---------- the drawing, loose on the plate ----------
+   No frame and no ground: each mark is its own element, and they fly together
+   when the page opens. Without motion, or without CSS animation, it simply sits
+   there finished. The plate is dark in both themes, so the art always takes the
+   dark palette here. */
+/* Reaches into the gap and the page gutter, but stops short of the text column,
+   so a wide drawing can never sit under the headline once it has settled. */
+.plateart { min-width: 0; position: relative; margin: 0 -2.5rem 0 calc(.5rem - var(--top-gap)); cursor: pointer; }
+.liveart {
+  display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; overflow: visible; cursor: pointer;
+  --paper: var(--tldr-bg); --paper-2: #1B1F26; --card: #1C2129; --ink: var(--tldr-ink); --border: #3A4350;
+  --mizu: #4ECDD8; --hanko: #E87A64; --moss: #9BBA8E; --ochre: #DDB667; --plum: #B694BC; --indigo: #85A5D0;
+}
+.plateart__pic { display: block; width: 100%; height: auto; border-radius: 10px; }
+.plateart figcaption { margin-top: .6rem; font-size: .8125rem; line-height: 1.45; color: var(--tldr-dim); }
+.plateart__break { display: none; }
+
+.p { transform-box: fill-box; transform-origin: center; }
+@keyframes art-assemble {
+  from { opacity: 0; transform: translate(var(--dx), var(--dy)) rotate(var(--r)) scale(var(--s)); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes art-shatter {
+  from { opacity: 1; transform: none; }
+  to { opacity: 0; transform: translate(var(--dx), var(--dy)) rotate(var(--r)) scale(var(--s)); }
+}
+/* Molten on the way in, cooling to its own colour once it has landed. The end
+   state is left unset, so each mark settles back to whatever it was drawn in. */
+@keyframes art-cool { from { stroke: var(--ochre); } }
+@keyframes art-cool-fill { from { stroke: var(--ochre); fill: var(--ochre); } }
+@keyframes art-heat { to { stroke: var(--ochre); } }
+/* Only the mark that carries the argument breathes. */
+@keyframes art-breathe {
+  0%, 100% { filter: drop-shadow(0 0 3px var(--glow)); }
+  50% { filter: drop-shadow(0 0 30px var(--glow)); }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .liveart .p { animation: art-assemble 1.05s var(--ease) calc(var(--d) + .12s) both; }
+  .liveart .p > * { animation: art-cool .95s ease-out calc(var(--d) + .85s) both; }
+  .liveart .p > [fill]:not([fill='none']):not([fill*='paper']):not([fill^='url']) { animation-name: art-cool-fill; }
+  /* Held until it is on screen: on a phone the drawing starts below the fold. */
+  html.js .liveart:not(.is-inview) .p, html.js .liveart:not(.is-inview) .p > * { animation-play-state: paused; }
+  .liveart.is-breaking .p { animation: art-shatter .46s cubic-bezier(.5, 0, .9, .4) calc(var(--d) * .05) both; }
+  .liveart.is-breaking .p > * { animation: art-heat .28s ease-in both; }
+  /* At rest: animations off, so the cursor can move the marks. */
+  .liveart.is-settled .p, .liveart.is-settled .p > * { animation: none; }
+  .liveart.is-settled .p { transition: transform .55s var(--ease); }
+  .liveart.is-settled .p--key { animation: art-breathe 4.8s ease-in-out infinite; }
+  .liveart.is-away .p--key { animation-play-state: paused; }
+  .buildart .p > * { transition: stroke .7s ease-out; }
+  .buildart .p.is-hot > * { stroke: var(--ochre); transition: none; }
+  .toc__art.is-whole .buildart:not(.buildart--ghost) .p--key { animation: art-breathe 2.6s ease-in-out 2; }
+  html.js .plateart__break {
+    display: block; position: absolute; right: 2.5rem; bottom: -.35rem; min-height: 44px; padding: 0 .1rem;
+    background: none; border: 0; cursor: pointer; font: inherit; font-size: .875rem; font-weight: 600; color: var(--tldr-dim);
+    text-decoration: underline; text-decoration-color: var(--ochre); text-underline-offset: 4px;
+  }
+  html.js .plateart__break:hover { color: var(--tldr-ink); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .liveart { cursor: default; }
+}
+
+/* The short version, in the plate rather than as a second dark block under it. */
+.ahead__brief {
+  display: grid; grid-template-columns: var(--cols); column-gap: var(--col-gap);
+  margin-top: clamp(1.25rem, 2vw, 1.75rem); padding-top: clamp(1.25rem, 2vw, 1.75rem); border-top: 1px solid var(--tldr-hair);
+}
+.ahead .tldr {
+  grid-column: 2 / -1; display: block;
+  margin: 0; padding: 0; overflow: visible; background: none; border: 0; border-radius: 0; box-shadow: none;
+}
+.brief__more, .resume { grid-column: 2 / -1; justify-self: start; }
+.ahead .tldr::after { display: none; }
+/* No visible label: the bullets speak for themselves. Kept for screen readers. */
+.ahead .tldr h2 {
+  position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap;
+  margin: 0 !important;
+}
+.ahead .tldr h2::after { display: none; }
+.ahead .tldr ul {
+  columns: 2; column-gap: clamp(1.75rem, 3vw, 3rem);
+  font-size: .9375rem; line-height: 1.58; color: color-mix(in srgb, var(--tldr-ink) 76%, transparent);
+}
+.ahead .tldr li { break-inside: avoid; margin-bottom: .8rem; }
+.ahead .tldr li::before { background: var(--ochre); }
+.brief__more { display: none; }
+.resume {
+  display: inline-block; margin-top: .4rem; padding-block: .6rem; font-size: .9375rem; font-weight: 600; color: var(--tldr-ink);
+  text-decoration: underline; text-decoration-color: var(--ochre); text-underline-offset: 4px;
+}
+
+/* ---------- the page you read ---------- */
+.reading {
+  position: relative;
+  display: grid; grid-template-columns: var(--cols); column-gap: var(--col-gap); align-items: start;
+  padding-top: clamp(2.25rem, 3.5vw, 3.25rem);
+}
+.reading .article { padding: 0; max-width: none; grid-column: 2; min-width: 0; }
+
+/* ---------- contents, with the crack that fills in gold ---------- */
+.toc { position: sticky; top: calc(var(--nav-h, 4.5rem) + 1.5rem); grid-column: 1; max-width: 16rem; font-size: .875rem; }
+.toc__k { margin: 0 0 .85rem; font-weight: 700; color: var(--ink); }
+.toc__body { position: relative; padding-left: 1.5rem; }
+.toc__seam { position: absolute; left: 0; top: 0; width: 14px; height: 100%; overflow: visible; }
+.toc__seam polyline { fill: none; stroke: var(--border); stroke-width: 2; stroke-linejoin: miter; }
+.toc__seam--gold { clip-path: inset(-2px -8px calc(100% - var(--seam, 0px)) -8px); }
+.toc__seam--gold polyline { stroke: var(--ochre); stroke-width: 2.5; }
+.toc ol { list-style: none; margin: 0; padding: 0; display: grid; gap: .1rem; }
+.toc a {
+  display: block; padding: .32rem 0; text-decoration: none; line-height: 1.32;
+  color: var(--ink-soft); transition: color var(--dur-fast) var(--ease);
+}
+.toc a:hover { color: var(--ink); }
+.toc a[aria-current] { color: var(--ink); font-weight: 700; }
+.tocm { display: none; }
+
+/* The same drawing, assembled by reading. Page tokens here, so it follows the theme. */
+.toc__art { margin-top: 1.5rem; padding-top: 1.1rem; border-top: 1px solid var(--border); }
+.toc__art[hidden] { display: none; }
+.toc__stage { position: relative; }
+.buildart { display: block; width: 100%; max-height: 9.5rem; height: auto; overflow: visible; }
+.buildart .p { animation: none; opacity: 0; }
+.buildart--ghost { position: absolute; inset: 0; height: 100%; opacity: .16; filter: grayscale(1); }
+.buildart--ghost .p { opacity: 1; }
+.toc__art.is-whole .buildart--ghost { opacity: 0; }
+.toc__count { margin: .7rem 0 0; font-size: .8125rem; line-height: 1.4; font-variant-numeric: tabular-nums; color: var(--ink-soft); }
+.toc__art.is-whole .toc__count { color: var(--ink); font-weight: 600; }
+
+/* ---------- where each claim comes from, level with the link ---------- */
+.margins { grid-column: 3; position: relative; align-self: stretch; min-width: 0; }
+.mnote {
+  position: absolute; left: 0; max-width: 100%; padding-left: .85rem;
+  overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
+  font-size: .8125rem; font-weight: 500; line-height: 1.5; text-decoration: none; color: var(--ink-soft);
+  transition: color var(--dur-fast) var(--ease);
+}
+.mnote::before {
+  content: ''; position: absolute; left: 0; top: .52em; width: 5px; height: 5px;
+  background: var(--ochre); transform: rotate(45deg);
+}
+.mnote:hover { color: var(--ink); text-decoration: underline; text-underline-offset: 3px; }
+
+/* ---------- prose: the serif, set to be read ---------- */
+.reading .body {
+  font-family: var(--serif); font-size: 1.3125rem; line-height: 1.56; font-weight: 400;
+  font-optical-sizing: auto; hanging-punctuation: first; text-wrap: pretty;
+  color: color-mix(in srgb, var(--ink) 92%, transparent);
+}
+.reading .body > p { margin: 0 0 1.3rem; }
+.reading .body > p:first-of-type {
+  font-size: 1.5rem; line-height: 1.4; font-weight: 400; letter-spacing: -.005em;
+  margin-bottom: 1.6rem; color: var(--ink);
+}
+.reading .body > p:first-of-type::first-letter {
+  float: none; padding: 0; font: inherit; color: inherit;
+}
+.reading .body strong { font-weight: 650; color: var(--ink); }
+.reading .body em { font-style: italic; }
+
+.reading .body h2 {
+  font-family: var(--font); font-size: clamp(1.625rem, 2.4vw, 2.125rem); font-weight: 800;
+  letter-spacing: -.03em; line-height: 1.14;
+  margin: clamp(3rem, 5vw, 4.25rem) 0 1rem; scroll-margin-top: calc(var(--nav-h, 4.5rem) + 1.25rem);
+}
+.reading .body h3 {
+  font-family: var(--font); font-size: 1.1875rem; font-weight: 700; letter-spacing: -.012em; line-height: 1.3;
+  margin: 2.25rem 0 .6rem; scroll-margin-top: calc(var(--nav-h, 4.5rem) + 1.25rem);
+}
+.reading .body ul, .reading .body ol { padding-left: 1.4rem; margin-bottom: 1.3rem; }
+.reading .body li { margin-bottom: .5rem; padding-left: .15rem; }
+.reading .body li::marker { color: var(--ochre); font-family: var(--font); font-size: .85em; font-weight: 700; }
+.reading .body code { font-size: .8em; }
+.reading .body pre { font-size: .875rem; hanging-punctuation: none; }
+
+/* Pasted URLs and long identifiers must break rather than widen a phone's page. */
+.reading .body p, .reading .body li { overflow-wrap: anywhere; }
+
+/* Underlined in the theme's colour, and it stays readable on hover. */
+.reading .body a {
+  font-weight: inherit;
+  background-image: linear-gradient(var(--accent), var(--accent)); background-size: 100% 1.5px;
+  transition: background-size var(--dur-fast) var(--ease);
+}
+.reading .body a:hover { background-size: 100% 3px; color: var(--ink); }
+
+.reading .body blockquote {
+  border-left: 2px solid var(--ochre); padding: .1rem 0 .1rem 1.5rem; margin: 2.25rem 0;
+  font-weight: 400; font-style: italic; font-size: 1.3em; line-height: 1.34; color: var(--ink);
+}
+.reading .body blockquote em { font-style: normal; }
+
+/* Data and captions go back to the sans. Diagrams were drawn for its metrics. */
+.reading .body .diagram { font-family: var(--font); line-height: 1.5; hanging-punctuation: none; }
+.reading .body figcaption { font-family: var(--font); color: var(--ink-soft); }
+.reading .body table { font-family: var(--font); line-height: 1.5; border: 0; border-radius: 0; font-size: .9688rem; font-variant-numeric: tabular-nums; }
+.reading .body th, .reading .body td { border: 0; border-bottom: 1px solid var(--border); padding: .7rem 1.1rem .7rem 0; vertical-align: top; }
+.reading .body th { background: none; font-size: .875rem; color: var(--ink); border-bottom: 2px solid var(--ink); }
+.reading .body tr:nth-child(even) td { background: none; }
+.reading .body td code { white-space: nowrap; }
+@media (min-width: 40.01rem) {
+  /* The column is wide enough here, so a diagram needs no scrollbar of its own. */
+  .reading .diagram svg { min-width: 0; }
+}
+.swipe { margin: 1.75rem 0 -1.75rem; font-family: var(--font); font-size: .8125rem; font-weight: 600; color: var(--ink-soft); }
+.swipe[hidden] { display: none; }
+@media (min-width: 84.01rem) {
+  /* Diagrams run out into the margin, so their labels render at full size. */
+  .reading .body .diagram { margin-right: calc(-1 * min(13.5rem, 16vw)); }
+}
+
+/* The Sources section reads as an apparatus at the end, not as more prose. */
+.reading .body #sources { margin-top: 3.5rem; font-size: 1.25rem; letter-spacing: -.015em; }
+.reading .body #sources ~ * { font-family: var(--font); }
+.reading .body #sources + ul { list-style: none; padding: 0; font-size: .9375rem; line-height: 1.5; }
+.reading .body #sources + ul li { padding: .6rem 0; margin: 0; border-bottom: 1px solid var(--border); }
+.reading .body #sources ~ p { font-size: .9375rem; line-height: 1.55; margin-bottom: .75rem; }
+
+/* ---------- related questions: the serif's voice, the sans's job ---------- */
+.related { margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border); }
+.related__h { margin: 0 0 .85rem; font-size: 1rem; font-weight: 700; color: var(--ink); }
+.related ul { list-style: none; margin: 0; padding: 0; display: grid; gap: .15rem; }
+.related li a {
+  display: block; padding: .45rem 0; font-family: var(--serif); font-size: 1.25rem; line-height: 1.3;
+  color: var(--ink); text-decoration: none;
+}
+.related li a:hover { text-decoration: underline; text-decoration-color: var(--ochre); text-underline-offset: .16em; }
+.related__topics { margin: .9rem 0 0; font-size: .9375rem; color: var(--ink-soft); }
+.related__topics a { color: var(--ink); }
+
+/* ---------- the closing plate: the shard goes home ---------- */
+.aend { position: relative; margin-top: clamp(3.5rem, 6vw, 5.5rem); color: var(--tldr-ink); }
+.aend__in {
+  display: grid; grid-template-columns: minmax(0, 1fr) var(--shard); gap: clamp(2rem, 5vw, 5rem); align-items: center;
+  padding-block: calc(22px + clamp(2.5rem, 5vw, 4.5rem)) clamp(2.5rem, 5vw, 4.5rem);
+}
+.aend__next { display: block; text-decoration: none; max-width: 46rem; }
+.aend__k { display: block; font-size: 1rem; font-weight: 600; color: var(--ochre); }
+.aend__ask {
+  display: block; margin-top: .6rem;
+  font-family: var(--serif); font-weight: 500; font-size: clamp(1.75rem, 3.4vw, 2.875rem);
+  line-height: 1.14; letter-spacing: -.012em; text-wrap: pretty; color: var(--tldr-ink);
+}
+.aend__next:hover .aend__ask { text-decoration: underline; text-decoration-color: var(--ochre); text-decoration-thickness: 2px; text-underline-offset: .14em; }
+.aend__t { display: block; margin-top: .9rem; font-size: 1rem; font-weight: 600; color: var(--tldr-dim); }
+.aend__share { display: none; }
+html.js .aend__share {
+  display: inline-block; min-height: 44px; margin-top: 1rem; padding: 0; background: none; border: 0; cursor: pointer;
+  font: inherit; font-size: 1rem; font-weight: 600; color: var(--tldr-ink);
+  text-decoration: underline; text-decoration-color: var(--ochre); text-underline-offset: 4px;
+}
+.aend__bowl { display: grid; gap: .9rem; text-decoration: none; font-size: .9375rem; line-height: 1.45; color: var(--tldr-dim); }
+.aend__bowl b { display: block; margin-top: .15rem; color: var(--tldr-ink); }
+.aend__bowl:hover b { text-decoration: underline; text-underline-offset: 3px; }
+
+.minibowl__mine { transform-box: fill-box; transform-origin: center; transition: transform 1.15s var(--ease), opacity .35s ease; }
+.minibowl__seam { stroke-dashoffset: 0; transition: stroke-dashoffset 1s var(--ease) .85s; }
+@media (prefers-reduced-motion: no-preference) {
+  html.js .aend:not(.is-home) .minibowl__mine { opacity: 0; transform: translate(90px, -520px) rotate(-18deg) scale(2.8); }
+  html.js .aend:not(.is-home) .minibowl__seam { stroke-dashoffset: 1; }
+}
+
+/* ---------- the dock: orientation for screens with no contents column ----------
+   Out of the way while the reader moves forward, back when they scroll up, which
+   is the moment someone is looking for their place. */
+.dock { display: none; }
+.sheet {
+  width: 100%; max-width: 34rem; max-height: 82dvh; margin: auto auto 0; padding: .5rem 1.25rem calc(1.25rem + env(safe-area-inset-bottom, 0px));
+  border: 0; border-radius: 18px 18px 0 0; background: var(--paper); color: var(--ink);
+}
+.sheet::backdrop { background: rgb(0 0 0 / .5); }
+.sheet__top { display: flex; align-items: center; justify-content: space-between; }
+.sheet__k { margin: 0; font-weight: 700; font-size: 1.0625rem; }
+.sheet__close { min-height: 44px; padding: 0 .25rem; background: none; border: 0; cursor: pointer; font: inherit; font-weight: 600; color: var(--ink-soft); }
+.sheet ol { list-style: none; margin: .25rem 0 0; padding: 0; }
+.sheet a { display: flex; align-items: center; min-height: 48px; padding: .4rem 0 .4rem .9rem; border-left: 2px solid var(--border); line-height: 1.3; text-decoration: none; color: var(--ink-soft); }
+.sheet a[aria-current] { border-left-color: var(--ochre); color: var(--ink); font-weight: 700; }
+
+@media (max-width: 64rem) {
+  html.js .dock {
+    display: block; position: fixed; z-index: 45; left: 50%; bottom: calc(.75rem + env(safe-area-inset-bottom, 0px));
+    width: min(calc(100% - 1.5rem), 30rem); translate: -50% calc(100% + 1.5rem); transition: translate var(--dur-fast) var(--ease); visibility: hidden;
+  }
+  html.js .dock.is-up { translate: -50% 0; visibility: visible; }
+  .dock__open {
+    display: grid; grid-template-columns: 2.75rem minmax(0, 1fr) auto; align-items: center; gap: .7rem; width: 100%; min-height: 56px; padding: .35rem .85rem .35rem .55rem;
+    background: var(--tldr-bg); color: var(--tldr-ink); border: 1px solid color-mix(in srgb, var(--ochre) 45%, transparent); border-radius: 14px 14px 14px 4px;
+    box-shadow: 0 10px 28px -10px rgb(0 0 0 / .55); cursor: pointer; font: inherit; text-align: left;
+  }
+  .dock__where { display: block; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font-size: .9375rem; font-weight: 700; line-height: 1.25; }
+  .dock__left { display: block; font-size: .8125rem; line-height: 1.3; color: var(--tldr-dim); }
+  .dock__chev { width: 16px; height: 16px; color: var(--tldr-dim); }
+  /* The reading copy of the drawing lives here, on the dark dock. */
+  .dock .toc__art { margin: 0; padding: 0; border: 0; }
+  .dock .toc__count { display: none; }
+  .dock .buildart { max-height: 2.5rem; }
+  .dock .liveart-tokens, .dock .toc__art {
+    --paper: var(--tldr-bg); --paper-2: #1B1F26; --card: #1C2129; --ink: var(--tldr-ink); --border: #3A4350;
+    --mizu: #4ECDD8; --hanko: #E87A64; --moss: #9BBA8E; --ochre: #DDB667; --plum: #B694BC; --indigo: #85A5D0;
+  }
+}
+
+/* ---------- reading progress: only where the contents seam is not on screen ---------- */
+#reading-progress { background: var(--ochre); }
+@media (min-width: 64.01rem) { #reading-progress { display: none; } }
+
+/* ---------- narrower screens ---------- */
+@media (max-width: 84rem) {
+  .apage { --cols: 13.5rem minmax(0, 40rem); }
+  .margins { display: none; }
+  .reading, .ahead__brief { justify-content: start; }
+}
+@media (max-width: 64rem) {
+  .apage { --cols: minmax(0, 40rem); }
+  .plateart { margin-right: -1rem; }
+  html.js .plateart__break { right: 1rem; bottom: -.75rem; }
+  .ahead__brief { justify-content: start; row-gap: .85rem; }
+  .ahead__by, .ahead .tldr, .brief__more, .resume { grid-column: 1; }
+  .reading { justify-content: center; }
+  .reading .article { grid-column: 1; }
+  .toc { display: none; }
+  .tocm { display: block; margin-bottom: 1.75rem; border-block: 1px solid var(--border); font-size: .9375rem; }
+  .tocm summary { cursor: pointer; font-weight: 700; padding: .8rem 0; min-height: 2.75rem; }
+  .tocm ol { margin: 0 0 .85rem; padding-left: 1.25rem; display: grid; gap: .1rem; }
+  .tocm a { display: block; padding: .4rem 0; text-decoration: none; color: var(--ink-soft); }
+  .aend__in { --shard: 15rem; }
+}
+@media (max-width: 48rem) {
+  /* Phone order follows the reader's question: what is this, is it worth it, then
+     the drawing as the doorway into the writing. */
+  .ahead > .wrap { display: flex; flex-direction: column; }
+  .ahead__top { display: contents; }
+  .ahead__text { order: 1; }
+  .ahead__brief { order: 2; }
+  .plateart { order: 3; align-self: center; width: min(100%, 26rem); margin: 1.1rem 0 .75rem; }
+  .liveart { max-height: 11.5rem; }
+  html.js .plateart__break { right: 0; bottom: -1.5rem; }
+  .ahead .tldr ul { columns: 1; }
+}
+@media (max-width: 40rem) {
+  html.js .ahead__brief:not(.is-open) .tldr li:nth-child(n+3) { display: none; }
+  html.js .brief__more {
+    display: block; min-height: 44px; padding: 0; margin-top: -.15rem; background: none; border: 0;
+    font: inherit; font-size: .9375rem; font-weight: 600; color: var(--tldr-ink); cursor: pointer;
+    text-decoration: underline; text-decoration-color: var(--ochre); text-underline-offset: 4px;
+  }
+  .reading .body { font-size: 1.125rem; line-height: 1.54; }
+  .reading .body > p:first-of-type { font-size: 1.3125rem; line-height: 1.4; }
+  .reading .body table { font-size: .9375rem; }
+  .aend__in { grid-template-columns: minmax(0, 1fr); }
+  .aend__bowl { grid-template-columns: 7rem minmax(0, 1fr); align-items: center; gap: 1rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .toc a { transition: none; }
+}
