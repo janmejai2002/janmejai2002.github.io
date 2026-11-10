@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" role="img">
+  <title>Agent Cancellation Gate</title>
+  <desc>Four workflow arcs meet a CFO audit gate; over 40% fracture at a hanko seal.</desc>
+  <defs><filter id="grain" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch"/></filter></defs>
+  <rect width="1600" height="900" fill="{{paper}}"/>
+  <path d="M160,140V760M460,140V760M760,140V760M1200,140V760M1440,140V760M160,220H1440M160,380H1440M160,540H1440M160,700H1440" stroke="{{border}}" stroke-width="1" fill="none"/>
+  <path d="M980,100V800M260,540C480,540,680,220,962,220M260,540C500,540,720,380,968,380M260,540H1440M260,540C520,540,740,700,1320,700" stroke="{{ink}}" stroke-width="2" fill="none"/>
+  <path d="M996,202L1110,178M994,394L1075,412M100,540A160,160,0,1,0,420,540A160,160,0,1,0,100,540" stroke="{{ink}}" stroke-width="1.5" stroke-dasharray="6,6" fill="none"/>
+  <path d="M180,540A80,80,0,1,0,340,540A80,80,0,1,0,180,540" stroke="{{ink}}" stroke-width="1.5" fill="none"/>
+  <path d="M256,536H264V544H256ZM1435,535H1445V545H1435ZM1316,696H1324V704H1316Z" fill="{{ink}}"/>
+  <path d="M956,220A24,24,0,1,0,1004,220A24,24,0,1,0,956,220M962,380A18,18,0,1,0,998,380A18,18,0,1,0,962,380M971,371L989,389M989,371L971,389" stroke="{{hanko}}" stroke-width="2.5" stroke-dasharray="95,14" fill="none"/>
+  <rect x="969" y="209" width="22" height="22" fill="{{hanko}}"/>
+  <rect width="1600" height="900" filter="url(#grain)" opacity="0.055"/>
+</svg>

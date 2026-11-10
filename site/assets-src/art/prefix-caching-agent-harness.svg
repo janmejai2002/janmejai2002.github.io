@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" role="img">
+  <title>Prefix Cache Hash Fracture</title>
+  <desc>Concentric rings feed a vector across KV blocks; an offset mizu bar breaks block four.</desc>
+  <defs><filter id="grain" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch"/></filter></defs>
+  <rect width="1600" height="900" fill="{{paper}}"/>
+  <path d="M80,80h1440v740h-1440zM80,450h1440M420,80v740M250,80v16M680,80v16M1000,80v16M1320,80v16M599,450v15M855,450v15M1111,450v15M1367,450v15" fill="none" stroke="{{border}}" stroke-width="1"/>
+  <path d="M80,265h1440M80,635h1440" fill="none" stroke="{{border}}" stroke-width="0.75" stroke-dasharray="4,8"/>
+  <circle cx="250" cy="450" r="32" fill="none" stroke="{{mizu}}" stroke-width="2"/>
+  <circle cx="250" cy="450" r="68" fill="none" stroke="{{ink}}" stroke-width="1.25"/>
+  <circle cx="250" cy="450" r="104" fill="none" stroke="{{ink}}" stroke-width="1.25"/>
+  <path d="M250,310A140,140,0,1,0,385,486M567,330L599,555M588,555H1474M588,465h22v180h-22zM684,465h22v180h-22zM780,465h22v180h-22zM876,465h22v180h-22zM972,465h22v180h-22zM1068,465h22v180h-22zM1164,465h22v180h-22zM1260,465h22v180h-22zM1356,465h22v180h-22zM1452,465h22v180h-22z" fill="none" stroke="{{ink}}" stroke-width="1.35"/>
+  <path d="M385,414A140,140,0,0,0,286,314M546,450L567,330M567,140V760M578,450H1474" fill="none" stroke="{{mizu}}" stroke-width="1.5" stroke-dasharray="5,6"/>
+  <path d="M250,450H546M460,330h22v240h-22zM492,330h22v240h-22zM524,330h22v240h-22z" fill="none" stroke="{{mizu}}" stroke-width="2.25"/>
+  <rect x="556" y="210" width="22" height="240" fill="{{mizu}}" fill-opacity="0.18" stroke="{{mizu}}" stroke-width="2.5"/>
+  <circle cx="250" cy="450" r="4" fill="{{ink}}"/>
+  <circle cx="567" cy="330" r="5" fill="{{mizu}}"/>
+  <rect width="1600" height="900" filter="url(#grain)" opacity="0.055"/>
+</svg>
