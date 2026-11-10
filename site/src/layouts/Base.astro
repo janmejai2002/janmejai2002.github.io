@@ -18,6 +18,14 @@ export interface Props {
   /** Composition pages (the index) drop the reading-column cap and use the
    *  full shell. Article pages must not set this — prose needs --measure. */
   wide?: boolean;
+  headline?: string;
+  articleSection?: string;
+  wordCount?: number;
+  alternativeHeadline?: string;
+  breadcrumbs?: { name: string; path?: string }[];
+  noindex?: boolean;
+  pageType?: string;
+  schema?: Record<string, unknown>;
 }
 const { progress = false, section, wide = false, ...seo } = Astro.props;
 const path = Astro.url.pathname;
@@ -103,6 +111,13 @@ const year = new Date().getFullYear();
             <a href="https://linkedin.com/in/janmejai" rel="me noopener">LinkedIn</a>
             &nbsp;·&nbsp;
             <a href="/rss.xml">RSS</a>
+          </span>
+          <span>
+            <a href="/blog/">All articles</a>
+            &nbsp;·&nbsp;
+            <a href="/tracker/">AI claims tracker</a>
+            &nbsp;·&nbsp;
+            <a href="/tools/prompt-caching-calculator/">Caching calculator</a>
           </span>
           <span class="colophon">
             Written by a human and an automated system, working in the open.

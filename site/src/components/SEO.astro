@@ -11,6 +11,16 @@ export interface Props {
   /** Path or already-absolute URL of the social card. Falls back site-wide. */
   image?: string;
   imageAlt?: string;
+  /** The article's own title, without the site suffix that <title> may carry. */
+  headline?: string;
+  articleSection?: string;
+  wordCount?: number;
+  alternativeHeadline?: string;
+  breadcrumbs?: { name: string; path?: string }[];
+  noindex?: boolean;
+  pageType?: string;
+  /** Extra schema.org properties merged into the page's WebPage node. */
+  schema?: Record<string, unknown>;
 }
 const {
   title,
@@ -21,6 +31,14 @@ const {
   keywords = [],
   image,
   imageAlt,
+  headline,
+  articleSection,
+  wordCount,
+  alternativeHeadline,
+  breadcrumbs,
+  noindex = false,
+  pageType = 'WebPage',
+  schema: pageSchema = {},
 } = Astro.props;
 
 const canonical = new URL(Astro.url.pathname, Astro.site).href;
@@ -31,23 +49,59 @@ const ogImage = new URL(image ?? '/og-default.png', Astro.site).href;
 const ogImageAlt = imageAlt ?? 'wAIbi-sabi — applied AI notes by Janmejai Singh Minhas';
 const siteName = 'wAIbi-sabi';
 const personId = new URL('/#person', Astro.site).href;
+const websiteId = new URL('/#website', Astro.site).href;
+const isHome = Astro.url.pathname === '/';
+const socialTitle = headline ?? title;
 
 const person = {
   '@type': 'Person',
   '@id': personId,
   name: 'Janmejai Singh Minhas',
-  url: Astro.site?.href,
-  knowsAbout: ['Machine Learning', 'Computer Vision', 'Deep Learning', 'Applied AI', 'MLOps'],
+  url: new URL('/about/', Astro.site).href,
+  description:
+    'Applied AI practitioner working on computer vision, frontier-model red teaming and credit risk modelling.',
+  alumniOf: { '@type': 'CollegeOrUniversity', name: 'Panjab University' },
+  affiliation: { '@type': 'CollegeOrUniversity', name: 'XLRI' },
+  knowsAbout: [
+    'Machine Learning',
+    'Computer Vision',
+    'Deep Learning',
+    'Applied AI',
+    'MLOps',
+    'AI Red Teaming',
+    'Credit Risk Modelling',
+  ],
   sameAs: ['https://linkedin.com/in/janmejai', 'https://github.com/janmejai2002'],
 };
+
+const breadcrumbNode = breadcrumbs?.length
+  ? [
+      {
+        '@type': 'BreadcrumbList',
+        itemListElement: breadcrumbs.map((b, i) => ({
+          '@type': 'ListItem',
+          position: i + 1,
+          name: b.name,
+          ...(b.path ? { item: new URL(b.path, Astro.site).href } : {}),
+        })),
+      },
+    ]
+  : [];
 
 const graph =
   type === 'article'
     ? [
         person,
+        ...breadcrumbNode,
         {
           '@type': 'BlogPosting',
-          headline: title,
+          headline: socialTitle,
+          ...(alternativeHeadline ? { alternativeHeadline } : {}),
+          ...(articleSection ? { articleSection } : {}),
+          ...(wordCount ? { wordCount } : {}),
+          inLanguage: 'en-IN',
+          isPartOf: { '@id': websiteId },
+          url: canonical,
           description,
           datePublished: pubDate?.toISOString(),
           dateModified: (updatedDate ?? pubDate)?.toISOString(),
@@ -58,16 +112,32 @@ const graph =
           ...(keywords.length ? { keywords: keywords.join(', ') } : {}),
         },
       ]
-    : [
-        person,
-        {
-          '@type': 'WebSite',
-          name: siteName,
-          alternateName: 'Wabi Sabi',
-          url: Astro.site?.href,
-          author: { '@id': personId },
-        },
-      ];
+    : isHome
+      ? [
+          person,
+          {
+            '@type': 'WebSite',
+            '@id': websiteId,
+            name: siteName,
+            url: Astro.site?.href,
+            inLanguage: 'en-IN',
+            author: { '@id': personId },
+            publisher: { '@id': personId },
+          },
+        ]
+      : [
+          person,
+          ...breadcrumbNode,
+          {
+            '@type': pageType,
+            '@id': canonical,
+            url: canonical,
+            name: socialTitle,
+            description,
+            isPartOf: { '@id': websiteId },
+            ...pageSchema,
+          },
+        ];
 
 const schema = { '@context': 'https://schema.org', '@graph': graph };
 ---
@@ -78,7 +148,7 @@ const schema = { '@context': 'https://schema.org', '@graph': graph };
 <meta name="description" content={description} />
 <link rel="canonical" href={canonical} />
 <meta name="author" content="Janmejai Singh Minhas" />
-<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
+<meta name="robots" content={noindex ? 'noindex, follow' : 'index, follow, max-image-preview:large, max-snippet:-1'} />
 {keywords.length > 0 && <meta name="keywords" content={keywords.join(', ')} />}
 
 {/* Search-engine ownership verification. Set the token in site/src/seo.ts.
@@ -91,7 +161,7 @@ const schema = { '@context': 'https://schema.org', '@graph': graph };
 {BING_SITE_VERIFICATION && <meta name="msvalidate.01" content={BING_SITE_VERIFICATION} />}
 
 <meta property="og:type" content={type} />
-<meta property="og:title" content={title} />
+<meta property="og:title" content={socialTitle} />
 <meta property="og:description" content={description} />
 <meta property="og:url" content={canonical} />
 <meta property="og:site_name" content={siteName} />
@@ -105,7 +175,7 @@ const schema = { '@context': 'https://schema.org', '@graph': graph };
 <meta property="og:image:height" content="630" />
 
 <meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:title" content={title} />
+<meta name="twitter:title" content={socialTitle} />
 <meta name="twitter:description" content={description} />
 <meta name="twitter:image" content={ogImage} />
 <meta name="twitter:image:alt" content={ogImageAlt} />
