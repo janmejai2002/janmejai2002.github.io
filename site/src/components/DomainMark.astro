@@ -1,0 +1,168 @@
+---
+/**
+ * Wabi-Sabi Geometric Marks for the 5 B-School Functional Domains + All Tracks.
+ * Follows the TrackMark philosophy: pure SVG geometry with broken symmetry.
+ * Each mark has an unclosed break (an offset node, an open arc, or an unbalanced scale)
+ * that closes/heals into equilibrium on hover or selection.
+ * Zero emojis, 100% theme-token SVGs.
+ */
+interface Props {
+  domain: 'all' | 'Consulting' | 'Finance' | 'Marketing' | 'Operations' | 'Product Management';
+  class?: string;
+}
+
+const { domain, class: className } = Astro.props;
+---
+
+<span class:list={['domain-mark', `domain-mark--${domain.toLowerCase().replace(/\s+/g, '-')}`, className]} aria-hidden="true">
+  {domain === 'all' && (
+    <svg viewBox="0 0 120 120" fill="none" class="mark-svg">
+      {/* Dual Enso Rings with Golden Kintsugi Shard */}
+      <circle class="enso ring" cx="60" cy="60" r="38" stroke="currentColor" stroke-width="3" pathLength="100" />
+      <circle cx="60" cy="60" r="18" stroke="currentColor" stroke-width="2.5" opacity="0.4" />
+      <path class="kintsugi-shard stray" d="M46 52l10 12l14-18l10 14" stroke="var(--ochre)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" />
+      <circle class="core-dot stray" cx="70" cy="46" r="4.5" fill="var(--ochre)" />
+    </svg>
+  )}
+
+  {domain === 'Finance' && (
+    <svg viewBox="0 0 120 120" fill="none" class="mark-svg">
+      {/* Valuation Balance Scale: Starts tilted, balances into golden equilibrium */}
+      <line x1="20" y1="96" x2="100" y2="96" stroke="currentColor" stroke-width="3" stroke-linecap="round" opacity="0.4" />
+      <line x1="60" y1="28" x2="60" y2="96" stroke="currentColor" stroke-width="3" />
+      <g class="scale-beam">
+        <line x1="28" y1="52" x2="92" y2="40" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" />
+        <circle cx="28" cy="52" r="6" fill="currentColor" />
+        <circle class="gold-pan stray" cx="92" cy="40" r="8" fill="var(--ochre)" />
+      </g>
+      <path class="stray" d="M72 20l18-5v14" stroke="var(--ochre)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+    </svg>
+  )}
+
+  {domain === 'Consulting' && (
+    <svg viewBox="0 0 120 120" fill="none" class="mark-svg">
+      {/* 2x2 Strategy Matrix with Breakout Vector */}
+      <g stroke="currentColor" stroke-width="2.5" opacity="0.35">
+        <line x1="24" y1="60" x2="96" y2="60" stroke-dasharray="3 4" />
+        <line x1="60" y1="24" x2="60" y2="96" stroke-dasharray="3 4" />
+      </g>
+      <rect x="28" y="28" width="64" height="64" rx="4" stroke="currentColor" stroke-width="3" />
+      {/* High-Impact Breakout Arrow */}
+      <g class="breakout-vector stray">
+        <path d="M60 60L86 34M86 34H68M86 34V52" stroke="var(--hanko)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+        <circle cx="86" cy="34" r="5" fill="var(--hanko)" />
+      </g>
+    </svg>
+  )}
+
+  {domain === 'Marketing' && (
+    <svg viewBox="0 0 120 120" fill="none" class="mark-svg">
+      {/* Perception Diffusion Waves: Concentric arcs that complete their transmission */}
+      <g stroke="currentColor" stroke-width="3" stroke-linecap="round">
+        <path class="arc a1" d="M36 92a40 40 0 0 1 60 0" pathLength="100" />
+        <path class="arc a2" d="M24 76a58 58 0 0 1 84 0" pathLength="100" />
+        <path class="arc a3" d="M12 60a76 76 0 0 1 108 0" pathLength="100" />
+      </g>
+      <circle cx="60" cy="100" r="5" fill="currentColor" />
+      <g class="stray">
+        <path d="M72 44l20-16M92 28h-14M92 28v14" stroke="var(--mizu)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" />
+        <circle cx="92" cy="28" r="4.5" fill="var(--mizu)" />
+      </g>
+    </svg>
+  )}
+
+  {domain === 'Operations' && (
+    <svg viewBox="0 0 120 120" fill="none" class="mark-svg">
+      {/* Supply Chain Network & Fulfillment Flow: Broken link connects on hover */}
+      <path class="supply-path" d="M26 38h28l16 44h24" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+      <circle cx="26" cy="38" r="5.5" fill="currentColor" />
+      <circle cx="70" cy="82" r="5.5" fill="currentColor" />
+      <g class="stray">
+        <path d="M54 38l16 22" stroke="var(--moss)" stroke-width="3.5" stroke-linecap="round" />
+        <circle cx="94" cy="82" r="7" fill="var(--moss)" />
+      </g>
+    </svg>
+  )}
+
+  {domain === 'Product Management' && (
+    <svg viewBox="0 0 120 120" fill="none" class="mark-svg">
+      {/* Dual Sprint Iteration Loop & User Metric Switch */}
+      <path class="arc loop" d="M30 60c0-10 8-18 18-18s18 18 24 18 18-8 18-18-8-18-18-18" stroke="currentColor" stroke-width="3" stroke-linecap="round" pathLength="100" />
+      <circle cx="48" cy="60" r="6" stroke="currentColor" stroke-width="2.5" />
+      <g class="stray">
+        <circle cx="72" cy="60" r="6.5" fill="var(--plum)" />
+        <path d="M42 86h36M72 80l8 6-8 6" stroke="var(--plum)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+      </g>
+    </svg>
+  )}
+</span>
+
+<style>
+  .domain-mark {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    flex-shrink: 0;
+  }
+  .mark-svg {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+
+  /* Wabi-Sabi Broken Symmetry: The default resting state has a deliberate break */
+  .mark-svg .ring {
+    stroke-dasharray: 100;
+    stroke-dashoffset: 24;
+    transition: stroke-dashoffset .65s var(--ease);
+  }
+  .mark-svg .arc {
+    stroke-dasharray: 100;
+    stroke-dashoffset: 32;
+    transition: stroke-dashoffset .65s var(--ease);
+  }
+  .mark-svg .arc.a2 { transition-delay: .06s; }
+  .mark-svg .arc.a3 { transition-delay: .12s; }
+
+  .mark-svg .stray {
+    transform: translate(-6px, 6px);
+    transition: transform .6s var(--ease);
+  }
+
+  .mark-svg .scale-beam {
+    transform-origin: 60px 46px;
+    transform: rotate(6deg);
+    transition: transform .6s var(--ease);
+  }
+
+  /* Hover & Active Closure: The break closes, the scale levels, the vector strikes */
+  :global(.door:hover) .mark-svg .ring,
+  :global(.door[aria-pressed='true']) .mark-svg .ring,
+  :global(.door:hover) .mark-svg .arc,
+  :global(.door[aria-pressed='true']) .mark-svg .arc {
+    stroke-dashoffset: 0;
+  }
+
+  :global(.door:hover) .mark-svg .stray,
+  :global(.door[aria-pressed='true']) .mark-svg .stray {
+    transform: none;
+  }
+
+  :global(.door:hover) .mark-svg .scale-beam,
+  :global(.door[aria-pressed='true']) .mark-svg .scale-beam {
+    transform: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .mark-svg .ring,
+    .mark-svg .arc,
+    .mark-svg .stray,
+    .mark-svg .scale-beam {
+      transition: none;
+      transform: none;
+      stroke-dashoffset: 0;
+    }
+  }
+</style>

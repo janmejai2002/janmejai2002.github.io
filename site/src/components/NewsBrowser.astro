@@ -1,6 +1,8 @@
 ---
+import Crew from './Crew.astro';
+import DomainMark from './DomainMark.astro';
 
-type Item = {
+export type NewsItem = {
   headline: string;
   date: string;
   category: string;
@@ -9,34 +11,47 @@ type Item = {
   source: string | null;
 };
 
-const items = (Astro.props.items as Item[]).slice().sort((a, b) => b.date.localeCompare(a.date));
-const categories = [...new Set(items.map((i) => i.category))].sort();
+interface Props {
+  items: NewsItem[];
+  totalCount?: number;
+  isLeadDay?: boolean;
+  initialCat?: string;
+}
+
+const { items, totalCount, isLeadDay = true, initialCat = 'all' } = Astro.props;
+
+const CATEGORY_META: Record<string, { accent: string; blurb: string }> = {
+  Consulting: { accent: 'hanko', blurb: 'Frameworks and client problems' },
+  Finance: { accent: 'ochre', blurb: 'Markets, deals and numbers' },
+  Marketing: { accent: 'mizu', blurb: 'Brands, pricing and consumers' },
+  Operations: { accent: 'moss', blurb: 'Supply chains and unit economics' },
+  'Product Management': { accent: 'plum', blurb: 'Users, metrics and trade-offs' },
+};
+
+const categories = Object.keys(CATEGORY_META);
 const counts = Object.fromEntries(
   categories.map((c) => [c, items.filter((i) => i.category === c).length])
 );
 
-// Each function gets one of the six earths.
-const accentOf: Record<string, string> = {
-  Finance: 'moss',
-  Marketing: 'indigo',
-  Operations: 'ochre',
-  'Product Management': 'plum',
-  Consulting: 'hanko',
-};
-const accent = (c: string) => accentOf[c] ?? 'mizu';
+const byDate = items.reduce<Record<string, NewsItem[]>>((acc, i) => {
+  (acc[i.date] ??= []).push(i);
+  return acc;
+}, {});
+const dates = Object.keys(byDate).sort((a, b) => b.localeCompare(a));
 
-const latest = items[0]?.date;
-const oldest = items.at(-1)?.date;
+const fmtDate = (iso: string) =>
+  new Date(iso + 'T00:00:00Z').toLocaleDateString('en-IN', {
+    day: 'numeric',
+    month: 'short',
+    timeZone: 'UTC',
+  });
 
-const fmt = (iso: string) =>
-  new Date(iso + 'T00:00:00').toLocaleDateString('en-IN', { day: 'numeric', month: 'short' });
-
-const fmtLong = (iso: string) =>
-  new Date(iso + 'T00:00:00').toLocaleDateString('en-IN', {
+const fmtDay = (iso: string) =>
+  new Date(iso + 'T00:00:00Z').toLocaleDateString('en-IN', {
     weekday: 'long',
     day: 'numeric',
     month: 'long',
-    year: 'numeric',
+    timeZone: 'UTC',
   });
 
 const host = (url: string | null) => {
@@ -47,412 +62,1255 @@ const host = (url: string | null) => {
     return null;
   }
 };
-
-const byDate = items.reduce<Record<string, Item[]>>((acc, i) => {
-  (acc[i.date] ??= []).push(i);
-  return acc;
-}, {});
-const dates = Object.keys(byDate).sort((a, b) => b.localeCompare(a));
-const slug = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-');
 ---
 
-  <div class="controls fade-up d2" role="region" aria-label="Filter and sort">
-    <div class="chips" role="group" aria-label="Filter by function">
-      <button class="chip is-on" data-cat="all" aria-pressed="true">
-        All <span class="chip__n">{items.length}</span>
-      </button>
-      {
-        categories.map((c) => (
+<div class="news-browser" data-browser data-initial-cat={initialCat}>
+  {/* 1. Function Doors with Bespoke Animated Geometric Domain Marks */}
+  <div class="doors" role="group" aria-label="Filter by functional domain">
+    <button
+      type="button"
+      class="door door--all"
+      data-door="all"
+      aria-pressed={initialCat === 'all' ? 'true' : 'false'}
+      style="--accent:var(--ink);--tint:var(--paper-2)"
+    >
+      <div class="door__top">
+        <DomainMark domain="all" class="door__mark" />
+        <div class="door__titles">
+          <span class="door__label">All Tracks</span>
+          <span class="door__n">{items.length}</span>
+        </div>
+      </div>
+      <span class="door__ask">Everything, chronological stream</span>
+    </button>
+
+    {
+      categories.map((c) => {
+        const meta = CATEGORY_META[c];
+        const isSelected = initialCat === c;
+        return (
           <button
-            class="chip"
-            data-cat={c}
-            aria-pressed="false"
-            style={`--accent:var(--${accent(c)});--tint:var(--wash-${accent(c)})`}
+            type="button"
+            class="door"
+            data-door={c}
+            aria-pressed={isSelected ? 'true' : 'false'}
+            style={`--accent:var(--${meta.accent});--tint:var(--wash-${meta.accent})`}
           >
-            {c} <span class="chip__n">{counts[c]}</span>
+            <div class="door__top">
+              <DomainMark domain={c as any} class="door__mark" />
+              <div class="door__titles">
+                <span class="door__label">{c}</span>
+                <span class="door__n">{counts[c] ?? 0}</span>
+              </div>
+            </div>
+            <span class="door__ask">{meta.blurb}</span>
           </button>
-        ))
-      }
-    </div>
-
-    <div class="controls__row">
-      <label class="field">
-        <span class="sr-only">Search headlines, summaries and angles</span>
-        <svg class="field__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-          stroke-width="2" stroke-linecap="round" aria-hidden="true">
-          <circle cx="11" cy="11" r="7" /><path d="M20 20l-3.5-3.5" />
-        </svg>
-        <input type="search" id="q" placeholder="Search the archive…" autocomplete="off" />
-      </label>
-
-      <label class="field field--sort">
-        <span class="sr-only">Sort by</span>
-        <select id="sort">
-          <option value="new">Newest first</option>
-          <option value="old">Oldest first</option>
-          <option value="cat">Group by function</option>
-          <option value="az">Headline A–Z</option>
-        </select>
-      </label>
-    </div>
-
-    <p class="tally" id="tally" aria-live="polite"></p>
+        );
+      })
+    }
   </div>
 
-  <div id="archive">
+  {/* 2. Modern Sticky Toolbar with 3D Flip All & Practice Mode */}
+  <div class="toolbar" role="region" aria-label="Filter and search briefings">
+    <div class="toolbar__row">
+      <div class="toolbar__search">
+        <label for="news-q" class="sr-only">Search stories</label>
+        <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="11" cy="11" r="7" /><path d="M20 20l-3.5-3.5" />
+        </svg>
+        <input
+          type="search"
+          id="news-q"
+          placeholder="Search 618+ briefings by company, metric, or question…"
+          autocomplete="off"
+          spellcheck="false"
+        />
+        <kbd class="search-kbd" aria-hidden="true">/</kbd>
+      </div>
+
+      <div class="toolbar__sort">
+        <label for="news-sort" class="sr-only">Sort by</label>
+        <select id="news-sort">
+          <option value="new">Newest first</option>
+          <option value="old">Oldest first</option>
+          <option value="az">Headline A–Z</option>
+        </select>
+      </div>
+
+      <div class="toolbar__actions">
+        <button type="button" class="test-toggle" id="flip-all-btn" title="Flip all cards into interview hot seat mode">
+          <span class="test-toggle__dot" aria-hidden="true"></span>
+          <span class="test-toggle__text">Flip all: Hot Seat mode</span>
+        </button>
+        <span class="practised-tally" id="practised-tally" hidden></span>
+      </div>
+    </div>
+  </div>
+
+  {/* 3. Balanced Editorial Days & 3D Interactive Card Grid */}
+  <div class="days-stream" id="news-archive">
     {
-      dates.map((d) => (
-        <section class="day" data-date={d} style={`--n:${byDate[d].length}`}>
-          <h2 class="day__label">
-            <span class="day__dot" aria-hidden="true" />
-            <time datetime={d}>{fmtLong(d)}</time>
-            <span class="day__rule" aria-hidden="true" />
-            <span class="day__n">{byDate[d].length}</span>
-          </h2>
+      dates.map((d, dayIdx) => (
+        <section class="day-section" data-date={d}>
+          {/* Natural Editorial Dateline Header */}
+          <header class="day-head">
+            <div class="day-head__dateline">
+              <span class="day-head__dot" aria-hidden="true"></span>
+              <h2 class="day-head__title">
+                <time datetime={d}>{fmtDay(d)}</time>
+              </h2>
+              <span class="day-head__count">{byDate[d].length} {byDate[d].length === 1 ? 'briefing' : 'briefings'}</span>
+            </div>
+            <div class="day-head__seam" aria-hidden="true"></div>
+          </header>
 
-          <div class="cards">
-            {byDate[d].map((i) => (
-              <article
-                class="card"
-                data-cat={i.category}
-                data-date={i.date}
-                data-headline={i.headline.toLowerCase()}
-                style={`--accent:var(--${accent(i.category)});--tint:var(--wash-${accent(i.category)})`}
-              >
-                <div class="card__top">
-                  <span class="tag">
-                    <span class="tag__dot" aria-hidden="true" />
-                    {i.category}
-                  </span>
-                  <time class="card__date" datetime={i.date}>{fmt(i.date)}</time>
+          {/* Balanced 2-Column Responsive 3D Card Grid */}
+          <div class="briefings-grid">
+            {byDate[d].map((i, cardIdx) => {
+              const isLead = isLeadDay && dayIdx === 0 && cardIdx === 0;
+              const meta = CATEGORY_META[i.category] ?? { accent: 'ink', blurb: '' };
+              const storyId = `${i.date}:${i.headline}`;
+              return (
+                <div
+                  class:list={['card-scene', isLead && 'card-scene--lead']}
+                  data-cat={i.category}
+                  data-date={i.date}
+                  data-headline={i.headline.toLowerCase()}
+                  data-id={storyId}
+                >
+                  <article
+                    class="card"
+                    tabindex="0"
+                    role="button"
+                    aria-expanded="false"
+                    aria-label={`${i.headline}. Click to flip card and reveal the interviewer's cross-examination angle.`}
+                    style={`--accent:var(--${meta.accent});--tint:var(--wash-${meta.accent})`}
+                    itemscope
+                    itemtype="https://schema.org/NewsArticle"
+                  >
+                    <div class="card__flipper">
+
+                      {/* FRONT FACE: The Factual Grounding (Story Brief) */}
+                      <div class="card__face card__face--front">
+                        {/* Tactile Peeking Backside Edge: Hints at the Hot Seat underneath */}
+                        <div class="card__edge-peek" aria-hidden="true">
+                          <span class="peek-dot" />
+                          <span class="peek-label">HOT SEAT ↷</span>
+                        </div>
+
+                        {/* Card Meta Row */}
+                        <div class="card__meta">
+                          <span class="card__cat" itemprop="articleSection">
+                            <span class="card__dot" aria-hidden="true" />
+                            {i.category}
+                          </span>
+                          <span class="card__sep" aria-hidden="true">·</span>
+                          <time class="card__date" datetime={i.date} itemprop="datePublished">{fmtDate(i.date)}</time>
+                          <span class="q__flag" data-flag hidden>
+                            <svg class="flag-check" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                              <path d="M3 8.5l3.5 3.5 6.5-7" />
+                            </svg>
+                            Practised
+                          </span>
+                          {i.source && host(i.source) && (
+                            <span class="card__host" title={`Reported via ${host(i.source)}`}>
+                              {host(i.source)}
+                            </span>
+                          )}
+                        </div>
+
+                        {/* Headline */}
+                        <h3 class="card__h" itemprop="headline">{i.headline}</h3>
+
+                        {/* Complete Factual Development (No Truncation) */}
+                        <div class="card__brief" itemprop="articleBody">
+                          <p class="card__sum">{i.summary}</p>
+                        </div>
+
+                        {/* Front Footer: Source on left, 3D Flip Invitation on right */}
+                        <footer class="card__front-foot">
+                          {i.source ? (
+                            <a class="card__src" href={i.source} target="_blank" rel="noopener noreferrer">
+                              <span>{host(i.source)}</span>
+                              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <path d="M7 17L17 7M17 7H8M17 7v9" />
+                              </svg>
+                            </a>
+                          ) : <span />}
+
+                          <button
+                            type="button"
+                            class="flip-btn flip-btn--to-back"
+                            aria-label="Flip card to reveal interviewer's angle"
+                            title="Flip to see interviewer's angle"
+                          >
+                            <span class="flip-btn__pulse" aria-hidden="true" />
+                            <span class="flip-btn__label">Interview Angle</span>
+                            <svg class="flip-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                              <path d="M4 12v-2a6 6 0 0 1 10.3-4.2L17 8M17 8V3M17 8h-5M20 12v2a6 6 0 0 1-10.3 4.2L7 16M7 16v5M7 16h5" />
+                            </svg>
+                          </button>
+                        </footer>
+                      </div>
+
+                      {/* BACK FACE: The Interview Hot Seat (The Cross-Examination) */}
+                      <div class="card__face card__face--back">
+                        {/* Domain Mark Watermark */}
+                        <div class="back__watermark" aria-hidden="true">
+                          <DomainMark domain={i.category as any} />
+                        </div>
+
+                        {/* Gold Kintsugi Edge Seam */}
+                        <div class="back__seam" aria-hidden="true">
+                          <svg viewBox="0 0 320 8" preserveAspectRatio="none">
+                            <polyline points="0,4 45,2 95,6 150,1 210,7 265,3 320,5" />
+                          </svg>
+                        </div>
+
+                        {/* Back Header: Hot Seat Badge + Flip Back to Story */}
+                        <div class="back__head">
+                          <div class="back__badge">
+                            <span class="back__dot" aria-hidden="true" />
+                            <span class="back__badge-txt">THE INTERVIEW CHAIR · CROSS-EXAMINATION</span>
+                          </div>
+                          <button
+                            type="button"
+                            class="flip-btn flip-btn--to-front"
+                            aria-label="Flip back to story briefing"
+                            title="Return to story"
+                          >
+                            <svg class="flip-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                              <path d="M20 12v-2a6 6 0 0 0-10.3-4.2L7 8M7 8V3M7 8h5M4 12v2a6 6 0 0 0 10.3 4.2L17 16M17 16v5M17 16h-5" />
+                            </svg>
+                            <span class="flip-btn__label">Story</span>
+                          </button>
+                        </div>
+
+                        {/* Context line */}
+                        <div class="back__context">
+                          <span class="back__domain-tag">{i.category} Panel</span>
+                          <span class="back__sep" aria-hidden="true">·</span>
+                          <span class="back__prompt">In WAT/GD/PI, they will push on:</span>
+                        </div>
+
+                        {/* The Angle in Newsreader Serif */}
+                        <div class="back__body">
+                          <p class="back__angle">{i.angle}</p>
+                        </div>
+
+                        {/* Back Footer Actions */}
+                        <footer class="back__foot">
+                          <div class="back__actions">
+                            <button
+                              type="button"
+                              class="copy-angle-btn"
+                              data-copy={i.angle}
+                              title="Copy question for prep notes"
+                              aria-label="Copy interview question"
+                            >
+                              <svg class="copy-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                              </svg>
+                              <span class="copy-label">Copy Angle</span>
+                            </button>
+
+                            <button
+                              type="button"
+                              class="practise-btn"
+                              data-id={storyId}
+                              title="Toggle practised status"
+                              aria-label="Mark story as practised"
+                            >
+                              <svg class="practise-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <path d="M3 8.5l3.5 3.5 6.5-7" />
+                              </svg>
+                              <span class="practise-txt">Mark Practised</span>
+                            </button>
+                          </div>
+
+                          {i.source && (
+                            <a class="card__src" href={i.source} target="_blank" rel="noopener noreferrer">
+                              <span>{host(i.source)}</span>
+                              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <path d="M7 17L17 7M17 7H8M17 7v9" />
+                              </svg>
+                            </a>
+                          )}
+                        </footer>
+                      </div>
+
+                    </div>
+                  </article>
                 </div>
-
-                <h3 class="card__h">{i.headline}</h3>
-                <p class="card__sum">{i.summary}</p>
-
-                <div class="card__angle">
-                  <span class="card__angle-k">Interview angle</span>
-                  <p>{i.angle}</p>
-                </div>
-
-                {i.source && (
-                  <a class="card__src" href={i.source} target="_blank" rel="noopener noreferrer">
-                    <span>{host(i.source)}</span>
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-                      stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                      <path d="M7 17L17 7M17 7H8M17 7v9" />
-                    </svg>
-                  </a>
-                )}
-              </article>
-            ))}
+              );
+            })}
           </div>
         </section>
       ))
     }
   </div>
 
-  <p class="noresults" id="noresults" hidden>
-    Nothing matches that. <button type="button" id="reset">Clear filters</button>
-  </p>
+  {/* 4. Thoughtful Wabi-Sabi Empty State */}
+  <div class="empty-news" id="noresults" hidden>
+    <Crew who="oops" mood="shrug" class="empty-news__crew" />
+    <div class="empty-news__text">
+      <h3>No briefings match that search</h3>
+      <p>Try searching for specific firms like <em>Tata</em>, <em>Blinkit</em>, <em>RBI</em>, or <button type="button" class="linkish" id="reset">clear the search</button>.</p>
+    </div>
+  </div>
+</div>
 
 <style>
-  /* ---------- Controls ---------- */
-  .controls {
-    position: sticky; top: var(--nav-h, 3.35rem); z-index: 30;
-    background: color-mix(in srgb, var(--paper) 94%, transparent);
-    backdrop-filter: blur(12px);
-    border-bottom: 1px solid var(--border);
-    padding: .9rem 0 .8rem; margin-bottom: 2.5rem;
+  .news-browser {
+    width: 100%;
+    margin-bottom: 3.5rem;
   }
 
-  .chips { display: flex; flex-wrap: wrap; gap: .4rem; margin-bottom: .8rem; }
-
-  .chip {
-    font: inherit; font-size: .625rem; font-weight: 800; letter-spacing: .09em;
-    text-transform: uppercase; padding: .38rem .75rem; border-radius: 999px;
-    border: 1.5px solid var(--border); background: transparent; color: var(--ink-soft);
-    cursor: pointer;
-    /* Was `all`, which animated layout properties too and made a 221-chip
-       filter feel mushy. Name the three that actually change. */
-    transition: color var(--dur-fast) var(--ease),
-                border-color var(--dur-fast) var(--ease),
-                background var(--dur-fast) var(--ease);
-    display: inline-flex; align-items: center; gap: .4rem;
-  }
-  .chip:hover {
-    border-color: var(--accent, var(--ink)); color: var(--ink);
-    background: color-mix(in srgb, var(--accent, var(--ink)) 8%, transparent);
-  }
-  .chip__n { font-variant-numeric: tabular-nums; opacity: .5; }
-  .chip.is-on {
-    background: var(--accent, var(--ink)); border-color: var(--accent, var(--ink));
-    color: var(--paper);
-  }
-  .chip.is-on .chip__n { opacity: .7; }
-  .chip[data-cat='all'].is-on { background: var(--solid); border-color: var(--solid); color: var(--on-solid); }
-
-  .controls__row { display: flex; gap: .5rem; flex-wrap: wrap; }
-  .field { flex: 1 1 12rem; display: block; position: relative; }
-  .field--sort { flex: 0 0 auto; }
-  .field__icon {
-    position: absolute; left: .7rem; top: 50%; transform: translateY(-50%);
-    width: 14px; height: 14px; color: var(--ink-faint); pointer-events: none;
-  }
-  .field input, .field select {
-    font: inherit; font-size: .875rem; width: 100%;
-    padding: .55rem .8rem; border: 1px solid var(--border); border-radius: 10px;
-    background: var(--card); color: var(--ink);
-    transition: border-color var(--dur-fast) var(--ease),
-                box-shadow var(--dur-fast) var(--ease);
-  }
-  .field input { padding-left: 2rem; }
-  .field input:hover, .field select:hover { border-color: var(--ink-faint); }
-  .field input:focus-visible, .field select:focus-visible {
-    outline: none; border-color: var(--mizu);
-    box-shadow: 0 0 0 3px color-mix(in srgb, var(--mizu) 18%, transparent);
-  }
-
-  .tally {
-    margin: .65rem 0 0; font-size: .625rem; font-weight: 700;
-    letter-spacing: .15em; text-transform: uppercase; color: var(--ink-faint);
-  }
-
-  .sr-only {
-    position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
-    overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
-  }
-
-  /* ---------- Day groups ---------- */
-  .day {
-    margin-bottom: 2.75rem;
-    /* 33 groups / 221 cards — skip layout+paint for offscreen days.
-       The placeholder MUST scale with the card count: a flat estimate made a
-       21-card day claim the same height as a 2-card day, so the scroll position
-       lurched every time a group actually rendered. --n is the card count;
-       --card-h is the per-card height at this breakpoint. */
-    --card-h: 16.5rem;
-    content-visibility: auto;
-    contain-intrinsic-size: auto calc(var(--n, 4) * var(--card-h) + 3.5rem);
-  }
-  @media (min-width: 768px) { .day { --card-h: 9rem; } }
-  @media (min-width: 1100px) { .day { --card-h: 6.5rem; } }
-  .day__label {
-    display: flex; align-items: center; gap: .75rem;
-    font-size: .625rem; font-weight: 800; letter-spacing: .15em;
-    text-transform: uppercase; color: var(--ink-faint); margin: 0 0 1.1rem;
-  }
-  .day__dot { width: 5px; height: 5px; border-radius: 999px; background: var(--mizu); flex-shrink: 0; }
-  .day__rule { flex: 1; height: 1px; background: var(--border); }
-  .day__n { font-variant-numeric: tabular-nums; opacity: .7; }
-
-  /* The UA's `[hidden]{display:none}` loses to any author `display` rule of
-     equal specificity, so every element we hide via the hidden attribute has
-     to opt out explicitly. Without this the filter sets hidden and nothing
-     visibly changes. */
-  .card[hidden],
-  .day[hidden],
-  .day__label[hidden] { display: none !important; }
-
-  /* ---------- Cards ---------- */
-  .cards {
+  /* ---------- 1. Function Doors ---------- */
+  .doors {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
-    gap: .9rem;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: .5rem;
+    margin-bottom: 2.5rem;
   }
-
-  .card {
-    position: relative; display: flex; flex-direction: column; overflow: hidden;
-    background: var(--card); border: 1px solid var(--border);
-    border-radius: 16px; padding: 1.2rem 1.3rem 1.1rem;
+  .door {
+    font: inherit;
+    color: inherit;
+    text-align: left;
+    cursor: pointer;
+    background: color-mix(in srgb, var(--card) 65%, transparent);
+    border: 1px solid var(--border-soft);
+    border-radius: 12px;
+    padding: .95rem .95rem .85rem;
+    display: flex;
+    flex-direction: column;
+    gap: .45rem;
+    position: relative;
+    overflow: hidden;
     transition: transform var(--dur-fast) var(--ease),
-                box-shadow var(--dur-fast) var(--ease),
-                border-color var(--dur-fast) var(--ease);
+                border-color var(--dur-fast) var(--ease),
+                background-color var(--dur-fast) var(--ease);
   }
-  /* the tint bleeds in from the top-left corner, like ink on paper */
-  .card::before {
-    content: ''; position: absolute; inset: 0;
-    background: radial-gradient(120% 90% at 0% 0%, var(--tint), transparent 62%);
-    opacity: .85; pointer-events: none;
-    transition: opacity var(--dur-fast) var(--ease);
+  .door:hover {
+    transform: translateY(-2px);
+    border-color: var(--accent);
+    background: var(--tint);
   }
-  /* accent spine, grows on hover */
-  .card::after {
-    content: ''; position: absolute; left: 0; top: 1.2rem; bottom: 1.2rem;
-    width: 3px; border-radius: 0 3px 3px 0; background: var(--accent);
-    transform: scaleY(.32); transform-origin: top;
-    transition: transform .55s var(--ease);
+  .door[aria-pressed='true'] {
+    background: var(--tint);
+    border-color: var(--accent);
+    box-shadow: 0 4px 16px var(--shadow);
   }
-  .card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 16px 34px var(--shadow);
-    border-color: color-mix(in srgb, var(--accent) 45%, var(--border));
+  .door[aria-pressed='true']::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 3px;
+    background: var(--accent);
   }
-  .card:hover::after { transform: scaleY(1); }
-  .card:hover::before { opacity: 1; }
-  .card > * { position: relative; z-index: 1; }
 
-  .card__top {
-    display: flex; align-items: center; justify-content: space-between;
-    gap: .75rem; margin-bottom: .75rem;
+  .door__top {
+    display: flex;
+    align-items: center;
+    gap: .65rem;
   }
-  .tag {
-    display: inline-flex; align-items: center; gap: .4rem;
-    font-size: .5625rem; font-weight: 800; letter-spacing: .12em;
-    text-transform: uppercase; color: var(--accent);
+  .door__titles {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
   }
-  .tag__dot { width: 5px; height: 5px; border-radius: 999px; background: var(--accent); }
-  .card__date {
-    font-size: .5625rem; font-weight: 800; letter-spacing: .1em;
-    text-transform: uppercase; color: var(--ink-faint);
+  .door__label {
+    font-size: .9375rem;
+    font-weight: 800;
+    letter-spacing: -.02em;
+    line-height: 1.15;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .door__n {
+    font-size: .6875rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    color: var(--accent);
+    opacity: .9;
+  }
+  .door__ask {
+    font-size: .6875rem;
+    line-height: 1.35;
+    color: var(--ink-soft);
+  }
+
+  @media (max-width: 72rem) {
+    .doors {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+  @media (max-width: 44rem) {
+    .doors {
+      display: flex;
+      flex-wrap: nowrap;
+      overflow-x: auto;
+      scroll-snap-type: x proximity;
+      scrollbar-width: none;
+      margin-inline: calc(var(--gutter) * -0.5);
+      padding-inline: calc(var(--gutter) * 0.5);
+    }
+    .doors::-webkit-scrollbar { display: none; }
+    .door {
+      flex: 0 0 min(16rem, 72vw);
+      scroll-snap-align: start;
+    }
+  }
+
+  /* ---------- 2. Modern Sticky Toolbar ---------- */
+  .toolbar {
+    position: sticky;
+    top: var(--nav-h, 3.35rem);
+    z-index: 25;
+    background: color-mix(in srgb, var(--paper) 92%, transparent);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid var(--border-soft);
+    border-radius: 12px;
+    padding: .75rem 1rem;
+    margin-bottom: 2.75rem;
+    box-shadow: 0 4px 20px var(--shadow);
+  }
+  .toolbar__row {
+    display: flex;
+    align-items: center;
+    gap: .85rem;
+    flex-wrap: wrap;
+  }
+  .toolbar__search {
+    flex: 1 1 16rem;
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+  .search-icon {
+    position: absolute;
+    left: .85rem;
+    width: 15px;
+    height: 15px;
+    color: var(--ink-faint);
+    pointer-events: none;
+  }
+  .toolbar__search input {
+    font: inherit;
+    font-size: .875rem;
+    width: 100%;
+    min-height: 2.5rem;
+    padding: 0 2.25rem 0 2.35rem;
+    color: var(--ink);
+    background: var(--card);
+    border: 1px solid var(--border-soft);
+    border-radius: 8px;
+    transition: border-color var(--dur-fast) var(--ease);
+  }
+  .toolbar__search input:focus-visible {
+    outline: none;
+    border-color: var(--ochre);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--ochre) 18%, transparent);
+  }
+  .search-kbd {
+    position: absolute;
+    right: .85rem;
+    font-size: .625rem;
+    font-weight: 700;
+    font-family: inherit;
+    padding: .15rem .4rem;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+    background: var(--paper-2);
+    color: var(--ink-faint);
+    pointer-events: none;
+    line-height: 1;
+  }
+
+  .toolbar__sort select {
+    font: inherit;
+    font-size: .8125rem;
+    font-weight: 600;
+    min-height: 2.5rem;
+    padding: 0 1rem;
+    color: var(--ink);
+    background: var(--card);
+    border: 1px solid var(--border-soft);
+    border-radius: 8px;
+    cursor: pointer;
+  }
+  .toolbar__sort select:focus-visible {
+    outline: none;
+    border-color: var(--ochre);
+  }
+
+  .toolbar__actions {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    margin-left: auto;
+  }
+  .test-toggle {
+    font: inherit;
+    font-size: .75rem;
+    font-weight: 700;
+    letter-spacing: .04em;
+    display: inline-flex;
+    align-items: center;
+    gap: .45rem;
+    padding: .45rem .85rem;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--card);
+    color: var(--ink);
+    cursor: pointer;
+    transition: all var(--dur-fast) var(--ease);
+  }
+  .test-toggle:hover {
+    border-color: var(--ochre);
+    background: color-mix(in srgb, var(--ochre) 8%, var(--card));
+  }
+  .test-toggle.is-active {
+    background: var(--ochre);
+    border-color: var(--ochre);
+    color: var(--on-solid, var(--paper));
+  }
+  .test-toggle__dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--ochre);
+  }
+  .test-toggle.is-active .test-toggle__dot {
+    background: currentColor;
+  }
+  .practised-tally {
+    font-size: .75rem;
+    font-weight: 700;
+    color: var(--moss);
     font-variant-numeric: tabular-nums;
   }
 
+  /* ---------- 3. Day Section & Balanced Card Grid ---------- */
+  .day-section {
+    margin-bottom: 3.5rem;
+  }
+  .day-head {
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+  }
+  .day-head__dateline {
+    display: inline-flex;
+    align-items: center;
+    gap: .75rem;
+    flex-shrink: 0;
+  }
+  .day-head__dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--ochre);
+  }
+  .day-head__title {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 800;
+    letter-spacing: -.02em;
+    color: var(--ink);
+  }
+  .day-head__count {
+    font-size: .75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    color: var(--ink-faint);
+    background: color-mix(in srgb, var(--paper-2) 80%, transparent);
+    padding: .2rem .55rem;
+    border-radius: 999px;
+    border: 1px solid var(--border-soft);
+  }
+  .day-head__seam {
+    height: 1px;
+    flex: 1;
+    background: linear-gradient(90deg, var(--border), transparent 90%);
+  }
+
+  /* Balanced 2-Column Responsive Card Grid */
+  .briefings-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.5rem;
+    align-items: stretch;
+  }
+  @media (max-width: 58rem) {
+    .briefings-grid {
+      grid-template-columns: minmax(0, 1fr);
+      gap: 1.25rem;
+    }
+  }
+
+  /* ---------- 4. 3D Card Scene & Flip Mechanics ---------- */
+  .card-scene {
+    perspective: 1600px;
+    min-height: 25.5rem;
+    display: flex;
+    flex-direction: column;
+  }
+  .card-scene--lead {
+    grid-column: 1 / -1;
+    min-height: 23rem;
+  }
+
+  .card {
+    position: relative;
+    width: 100%;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+    user-select: none;
+    background: transparent;
+    border: none;
+    padding: 0;
+    margin: 0;
+    outline: none;
+    text-align: left;
+    font: inherit;
+    color: inherit;
+  }
+
+  .card__flipper {
+    position: relative;
+    width: 100%;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    transform-style: preserve-3d;
+    transition: transform 0.68s cubic-bezier(0.2, 0.85, 0.25, 1);
+    /* Subtle 3D perspective angle revealing the card's thickness and rich earth backside */
+    transform: rotateY(-1.8deg) rotateX(1.2deg) translateZ(0);
+  }
+
+  .card:hover .card__flipper {
+    /* Gentle physical invitation: lifts slightly and tilts to reveal the underside */
+    transform: translateY(-5px) rotateY(-5.5deg) rotateX(2.2deg) translateZ(10px);
+  }
+
+  .card:focus-visible .card__flipper {
+    outline: 2px solid var(--ochre);
+    outline-offset: 4px;
+    border-radius: 14px;
+  }
+
+  .card.is-flipped .card__flipper {
+    transform: rotateY(180deg) translateZ(0);
+  }
+
+  .card.is-flipped:hover .card__flipper {
+    transform: translateY(-5px) rotateY(183.5deg) rotateX(2deg) translateZ(10px);
+  }
+
+  /* Front and Back Face Shared Architecture */
+  .card__face {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    border-radius: 14px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: 0 8px 26px var(--shadow);
+    transition: border-color var(--dur-fast) var(--ease),
+                box-shadow var(--dur-fast) var(--ease);
+  }
+
+  /* FRONT FACE: Clean Factual Wabi-Sabi Paper Grounding */
+  .card__face--front {
+    background: var(--card);
+    border: 1px solid var(--border-soft);
+    border-left: 3.5px solid var(--accent);
+    padding: 1.45rem 1.65rem 1.35rem;
+    z-index: 2;
+    transform: rotateY(0deg);
+  }
+  .card__face--front::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(120% 90% at 0% 0%, var(--tint), transparent 60%);
+    opacity: .65;
+    pointer-events: none;
+    transition: opacity var(--dur-fast) var(--ease);
+  }
+  .card:hover .card__face--front::before {
+    opacity: 1;
+  }
+
+  /* Tactile Peeking Backside Edge (Hints at the Hot Seat) */
+  .card__edge-peek {
+    position: absolute;
+    top: 14px;
+    right: -1px;
+    background: color-mix(in srgb, var(--accent) 18%, var(--paper-2));
+    border: 1px solid color-mix(in srgb, var(--accent) 50%, var(--border));
+    border-right: none;
+    border-radius: 6px 0 0 6px;
+    padding: .2rem .55rem .2rem .45rem;
+    display: inline-flex;
+    align-items: center;
+    gap: .3rem;
+    font-size: .5625rem;
+    font-weight: 800;
+    letter-spacing: .1em;
+    color: var(--accent);
+    box-shadow: -2px 2px 8px rgba(0, 0, 0, 0.12);
+    transition: transform var(--dur-fast) var(--ease),
+                background var(--dur-fast) var(--ease);
+    pointer-events: none;
+    z-index: 5;
+  }
+  .peek-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+  .card:hover .card__edge-peek {
+    transform: translateX(-4px);
+    background: color-mix(in srgb, var(--accent) 30%, var(--paper-2));
+  }
+
+  /* Front Content */
+  .card__meta {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    font-size: .8125rem;
+    font-weight: 600;
+    color: var(--ink-soft);
+    margin-bottom: .75rem;
+    flex-wrap: wrap;
+    position: relative;
+    z-index: 1;
+  }
+  .card__cat {
+    display: inline-flex;
+    align-items: center;
+    gap: .4rem;
+    color: var(--ink);
+    font-weight: 700;
+  }
+  .card__dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--accent);
+    flex-shrink: 0;
+  }
+  .card__sep {
+    color: var(--ink-faint);
+  }
+  .card__date {
+    font-variant-numeric: tabular-nums;
+  }
+  .card__host {
+    margin-left: auto;
+    font-size: .625rem;
+    font-weight: 700;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    background: color-mix(in srgb, var(--paper) 75%, transparent);
+    padding: .15rem .45rem;
+    border-radius: 4px;
+    border: 1px solid var(--border-soft);
+    margin-right: 5.5rem; /* leave space for the peek tab */
+  }
+
   .card__h {
-    font-size: 1.02rem; font-weight: 800; line-height: 1.32;
-    letter-spacing: -.012em; margin: 0 0 .55rem; color: var(--ink);
+    margin: 0 0 .75rem;
+    font-size: 1.15rem;
+    font-weight: 700;
+    line-height: 1.32;
+    letter-spacing: -.016em;
+    color: var(--ink);
     text-wrap: balance;
+    position: relative;
+    z-index: 1;
+  }
+
+  .card-scene--lead .card__h {
+    font-family: var(--serif);
+    font-size: clamp(1.4rem, 2.5vw, 1.95rem);
+    font-weight: 600;
+    line-height: 1.22;
+  }
+
+  .card__brief {
+    margin-bottom: 1.25rem;
+    flex: 1;
+    position: relative;
+    z-index: 1;
   }
   .card__sum {
-    font-size: .8125rem; line-height: 1.62; color: var(--ink-soft); margin: 0 0 1rem;
+    font-size: .9375rem;
+    line-height: 1.62;
+    color: var(--ink-soft);
+    margin: 0;
   }
 
-  /* the angle is the product — give it a seal-stamp treatment */
-  .card__angle {
-    margin-top: auto; padding: .75rem .85rem;
-    background: color-mix(in srgb, var(--paper) 62%, transparent);
-    border: 1px solid var(--border-soft);
-    border-left: 2px solid var(--accent);
-    border-radius: 0 10px 10px 0;
-  }
-  .card__angle-k {
-    display: block; font-size: .5rem; font-weight: 800; letter-spacing: .18em;
-    text-transform: uppercase; color: var(--accent); margin-bottom: .35rem;
-  }
-  .card__angle p {
-    margin: 0; font-size: .8125rem; line-height: 1.55;
-    font-weight: 500; color: var(--ink);
+  .card__front-foot {
+    position: relative;
+    z-index: 1;
+    margin-top: auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: .75rem;
+    padding-top: .95rem;
+    border-top: 1px solid var(--border-soft);
   }
 
+  /* Flip Button on Front */
+  .flip-btn {
+    font: inherit;
+    font-size: .6875rem;
+    font-weight: 700;
+    letter-spacing: .04em;
+    display: inline-flex;
+    align-items: center;
+    gap: .45rem;
+    padding: .35rem .75rem;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: all var(--dur-fast) var(--ease);
+    border: 1px solid color-mix(in srgb, var(--accent) 35%, var(--border));
+    background: color-mix(in srgb, var(--accent) 10%, var(--card));
+    color: var(--ink);
+    margin-left: auto;
+  }
+  .flip-btn:hover {
+    border-color: var(--accent);
+    background: var(--accent);
+    color: var(--on-solid, var(--paper));
+    transform: scale(1.03);
+  }
+  .flip-btn__icon {
+    width: 13px;
+    height: 13px;
+    transition: transform 0.4s var(--ease);
+  }
+  .flip-btn:hover .flip-btn__icon {
+    transform: rotate(180deg);
+  }
+  .flip-btn__pulse {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    animation: pulse-ring 2s infinite ease-out;
+  }
+  @keyframes pulse-ring {
+    0% { transform: scale(0.9); opacity: 0.9; }
+    50% { transform: scale(1.3); opacity: 0.4; }
+    100% { transform: scale(0.9); opacity: 0.9; }
+  }
+
+  /* BACK FACE: The Interview Hot Seat (The Cross-Examination) */
+  .card__face--back {
+    background: color-mix(in srgb, var(--tint) 25%, var(--card));
+    border: 1px solid color-mix(in srgb, var(--accent) 45%, var(--border));
+    border-left: 3.5px solid var(--accent);
+    padding: 1.45rem 1.65rem 1.35rem;
+    transform: rotateY(180deg);
+    z-index: 1;
+  }
+  .card__face--back::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(130% 100% at 90% 10%, color-mix(in srgb, var(--accent) 22%, transparent), transparent 70%),
+                radial-gradient(100% 80% at 10% 90%, color-mix(in srgb, var(--ochre) 14%, transparent), transparent 70%);
+    pointer-events: none;
+  }
+
+  .back__watermark {
+    position: absolute;
+    right: -1rem;
+    bottom: -1rem;
+    width: 10.5rem;
+    height: 10.5rem;
+    opacity: 0.07;
+    pointer-events: none;
+    filter: blur(0.5px);
+  }
+  .back__seam {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 8px;
+    pointer-events: none;
+  }
+  .back__seam polyline {
+    fill: none;
+    stroke: var(--ochre);
+    stroke-width: 1.5;
+    stroke-linejoin: round;
+  }
+
+  .back__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: .75rem;
+    margin-bottom: 1rem;
+    position: relative;
+    z-index: 1;
+  }
+  .back__badge {
+    display: inline-flex;
+    align-items: center;
+    gap: .45rem;
+    font-size: .625rem;
+    font-weight: 800;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--accent);
+    background: color-mix(in srgb, var(--accent) 14%, var(--card));
+    padding: .25rem .6rem;
+    border-radius: 6px;
+    border: 1px solid color-mix(in srgb, var(--accent) 30%, var(--border));
+  }
+  .back__dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+
+  .back__context {
+    display: flex;
+    align-items: center;
+    gap: .45rem;
+    font-size: .8125rem;
+    font-weight: 700;
+    color: var(--ink-soft);
+    margin-bottom: .85rem;
+    position: relative;
+    z-index: 1;
+  }
+  .back__domain-tag {
+    color: var(--ink);
+  }
+  .back__sep {
+    color: var(--ink-faint);
+  }
+  .back__prompt {
+    color: var(--ochre);
+    font-style: italic;
+  }
+
+  .back__body {
+    position: relative;
+    z-index: 1;
+    margin-bottom: 1.5rem;
+    flex: 1;
+  }
+  .back__angle {
+    margin: 0;
+    font-family: var(--serif);
+    font-size: clamp(1.05rem, 1.4vw, 1.18rem);
+    line-height: 1.58;
+    letter-spacing: -.01em;
+    color: var(--ink);
+    text-wrap: pretty;
+  }
+
+  .back__foot {
+    position: relative;
+    z-index: 1;
+    margin-top: auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: .75rem;
+    flex-wrap: wrap;
+    padding-top: .95rem;
+    border-top: 1px solid var(--border-soft);
+  }
+  .back__actions {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+  }
+
+  .copy-angle-btn,
+  .practise-btn {
+    font: inherit;
+    font-size: .5625rem;
+    font-weight: 700;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    background: color-mix(in srgb, var(--paper) 70%, transparent);
+    border: 1px solid var(--border);
+    color: var(--ink-faint);
+    padding: .25rem .5rem;
+    border-radius: 4px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: .3rem;
+    transition: all var(--dur-fast) var(--ease);
+  }
+  .copy-icon,
+  .practise-icon {
+    width: 10px;
+    height: 10px;
+  }
+  .copy-angle-btn:hover {
+    color: var(--ink);
+    border-color: var(--accent);
+    background: var(--paper);
+  }
+  .copy-angle-btn.is-copied {
+    background: var(--moss);
+    border-color: var(--moss);
+    color: #fff;
+  }
+
+  .practise-btn:hover {
+    color: var(--moss);
+    border-color: var(--moss);
+  }
+  .practise-btn.is-practised {
+    background: var(--moss);
+    border-color: var(--moss);
+    color: #fff;
+  }
+
+  /* Card Source Link */
   .card__src {
-    display: inline-flex; align-items: center; gap: .3rem; margin-top: .85rem;
-    font-size: .5625rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase;
-    color: var(--ink-faint); text-decoration: none; align-self: flex-start;
-    transition: color .25s; max-width: 100%;
+    display: inline-flex;
+    align-items: center;
+    gap: .35rem;
+    font-size: .6875rem;
+    font-weight: 700;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    text-decoration: none;
+    transition: color var(--dur-fast) var(--ease);
   }
-  .card__src span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .card__src svg { width: 10px; height: 10px; flex-shrink: 0; transition: transform .25s; }
-  .card__src:hover { color: var(--accent); }
-  .card__src:hover svg { transform: translate(2px, -2px); }
-
-  .noresults { padding: 3rem 0; color: var(--ink-soft); font-size: .9375rem; }
-  .noresults button {
-    font: inherit; background: none; border: 0;
-    border-bottom: 1.5px solid var(--mizu); color: var(--ink); cursor: pointer; padding: 0;
+  .card__src svg {
+    width: 11px;
+    height: 11px;
+    transition: transform var(--dur-fast) var(--ease);
+  }
+  .card__src:hover {
+    color: var(--accent);
+  }
+  .card__src:hover svg {
+    transform: translate(2px, -2px);
   }
 
-  @media (max-width: 640px) {
-    .controls { top: var(--nav-h, 3.2rem); padding-top: .75rem; }
-    .cards { grid-template-columns: 1fr; }
-    .day__label { gap: .5rem; }
-    .field--sort { flex: 1 1 100%; }
+  .q__flag {
+    margin-left: .35rem;
+    font-size: .75rem;
+    font-weight: 700;
+    color: var(--moss);
+    display: inline-flex;
+    align-items: center;
+    gap: .25rem;
+  }
+  .flag-check {
+    width: 12px;
+    height: 12px;
+  }
 
-    /* touch targets: 25px chips fail the 44px minimum on a phone */
-    .chips {
-      gap: .4rem;
-      display: flex; flex-wrap: nowrap; overflow-x: auto;
-      scroll-snap-type: x proximity;
-      -webkit-overflow-scrolling: touch;
-      scrollbar-width: none;
-      margin-inline: calc(var(--gutter) * -1); padding-inline: var(--gutter);
-      /* The scrollbar is hidden, so nothing signalled that six categories
-         continue past the edge. Fade the trailing edge instead — and let the
-         mask fall away once you reach the end, so it reads as an affordance
-         rather than as decoration. */
-      -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - 2.5rem), transparent);
-      mask-image: linear-gradient(90deg, #000 calc(100% - 2.5rem), transparent);
-      transition: -webkit-mask-image var(--dur-fast) var(--ease),
-                  mask-image var(--dur-fast) var(--ease);
-    }
-    .chips[data-scroll-end] {
-      -webkit-mask-image: none;
-      mask-image: none;
-    }
-    .chips::-webkit-scrollbar { display: none; }
-    .chip {
-      min-height: 44px; padding: .5rem .9rem;
-      flex: 0 0 auto; scroll-snap-align: start;
-    }
-    .field input, .field select { min-height: 44px; }
+  /* ---------- 5. Empty State ---------- */
+  .empty-news {
+    margin: 4rem 0;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 2.5rem;
+    max-width: 36rem;
+    margin-inline: auto;
+  }
+  .empty-news__crew {
+    width: 5rem;
+    height: 5rem;
+    flex-shrink: 0;
+  }
+  .empty-news__text h3 {
+    margin: 0 0 .35rem;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--ink);
+  }
+  .empty-news__text p {
+    margin: 0;
+    font-size: .875rem;
+    color: var(--ink-soft);
+    line-height: 1.55;
+  }
+
+  .linkish {
+    font: inherit;
+    font-size: .875rem;
+    font-weight: 700;
+    color: var(--ink);
+    background: none;
+    border: 0;
+    border-bottom: 1.5px solid var(--ochre);
+    padding: 0;
+    cursor: pointer;
+  }
+
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  [hidden] {
+    display: none !important;
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .card::after { transform: scaleY(1); }
+    .card__flipper {
+      transition: none !important;
+      transform: none !important;
+    }
+    .card.is-flipped .card__face--front {
+      display: none;
+    }
+    .card.is-flipped .card__face--back {
+      display: flex;
+      transform: none;
+    }
+    .card__face--back {
+      transform: none;
+    }
   }
 </style>
 
 <script>
-  const archive = document.getElementById('archive')!;
-  const q = document.getElementById('q') as HTMLInputElement;
-  const sort = document.getElementById('sort') as HTMLSelectElement;
-  const tally = document.getElementById('tally')!;
-  const noresults = document.getElementById('noresults')!;
-  const chips = [...document.querySelectorAll<HTMLButtonElement>('.chip')];
-  const days = [...archive.querySelectorAll<HTMLElement>('.day')];
-  const cards = [...archive.querySelectorAll<HTMLElement>('.card')];
+  const browserEl = document.querySelector<HTMLElement>('[data-browser]');
+  const q = document.getElementById('news-q') as HTMLInputElement | null;
+  const sort = document.getElementById('news-sort') as HTMLSelectElement | null;
+  const flipAllBtn = document.getElementById('flip-all-btn') as HTMLButtonElement | null;
+  const tallyEl = document.getElementById('practised-tally');
+  const noresults = document.getElementById('noresults');
+  const resetBtn = document.getElementById('reset');
+  const doors = [...document.querySelectorAll<HTMLButtonElement>('.door')];
+  const archive = document.getElementById('news-archive');
+  const days = [...document.querySelectorAll<HTMLElement>('.day-section')];
+  const cardScenes = [...document.querySelectorAll<HTMLElement>('.card-scene')];
+  const cards = [...document.querySelectorAll<HTMLElement>('.card')];
 
-  // Drop the trailing fade on the chip strip once it is scrolled to the end,
-  // so the hint disappears when there is nothing left to hint at. Mobile only —
-  // above 640px the strip wraps and never scrolls.
-  const chipStrip = document.querySelector<HTMLElement>('.chips');
-  if (chipStrip) {
-    const syncFade = () => {
-      const atEnd = chipStrip.scrollLeft + chipStrip.clientWidth >= chipStrip.scrollWidth - 2;
-      chipStrip.toggleAttribute('data-scroll-end', atEnd);
-    };
-    chipStrip.addEventListener('scroll', syncFade, { passive: true });
-    window.addEventListener('resize', syncFade);
-    syncFade();
-  }
+  let currentCategory = browserEl?.dataset.initialCat ?? 'all';
+  let allFlipped = false;
 
-  let cat = 'all';
-
-  const apply = () => {
-    const term = q.value.trim().toLowerCase();
-    let shown = 0;
-
-    for (const card of cards) {
-      const okCat = cat === 'all' || card.dataset.cat === cat;
-      const okTerm = !term || (card.textContent ?? '').toLowerCase().includes(term);
-      const show = okCat && okTerm;
-      card.hidden = !show;
-      if (show) shown++;
-    }
-
-    for (const day of days) {
-      const any = [...day.querySelectorAll<HTMLElement>('.card')].some((c) => !c.hidden);
-      day.hidden = !any;
-    }
-
-    const grouped = sort.value === 'cat' || sort.value === 'az';
-    for (const day of days) {
-      day.querySelector('.day__label')!.toggleAttribute('hidden', grouped);
-    }
-
-    tally.textContent = `Showing ${shown} of ${cards.length}`;
-    noresults.hidden = shown > 0;
+  const store = {
+    get<T>(key: string, fallback: T): T {
+      try {
+        return (JSON.parse(localStorage.getItem(key) ?? 'null') as T) ?? fallback;
+      } catch {
+        return fallback;
+      }
+    },
+    set(key: string, value: unknown) {
+      try {
+        localStorage.setItem(key, JSON.stringify(value));
+      } catch {}
+    },
   };
 
-  const reorder = () => {
+  const getPractised = (): string[] => store.get<string[]>('waibi:news:practised', []);
+
+  const updatePractisedUI = () => {
+    const practised = getPractised();
+    if (tallyEl) {
+      if (practised.length > 0) {
+        tallyEl.textContent = `${practised.length} practised`;
+        tallyEl.hidden = false;
+      } else {
+        tallyEl.hidden = true;
+      }
+    }
+
+    for (const card of cards) {
+      const id = card.dataset.id ?? '';
+      const isPractised = practised.includes(id);
+      const flag = card.querySelector<HTMLElement>('[data-flag]');
+      if (flag) flag.hidden = !isPractised;
+
+      const pBtn = card.querySelector<HTMLButtonElement>('.practise-btn');
+      if (pBtn) {
+        pBtn.classList.toggle('is-practised', isPractised);
+        const pTxt = pBtn.querySelector('.practise-txt');
+        if (pTxt) pTxt.textContent = isPractised ? 'Practised' : 'Mark Practised';
+      }
+    }
+  };
+
+  const applyFilters = () => {
+    const term = (q?.value ?? '').trim().toLowerCase();
+    let visibleCount = 0;
+
+    for (const scene of cardScenes) {
+      const cat = scene.dataset.cat ?? '';
+      const matchesCat = currentCategory === 'all' || cat === currentCategory;
+      const text = scene.textContent?.toLowerCase() ?? '';
+      const matchesSearch = !term || text.includes(term);
+
+      const isVisible = matchesCat && matchesSearch;
+      scene.hidden = !isVisible;
+      if (isVisible) visibleCount++;
+    }
+
+    for (const day of days) {
+      const dayScenes = [...day.querySelectorAll<HTMLElement>('.card-scene')];
+      const hasVisible = dayScenes.some((s) => !s.hidden);
+      day.hidden = !hasVisible;
+    }
+
+    if (noresults) noresults.hidden = visibleCount > 0;
+  };
+
+  const reorderCards = () => {
+    if (!sort || !archive) return;
     const mode = sort.value;
 
     if (mode === 'new' || mode === 'old') {
-      // put every card back in its own day, then order the days
       for (const day of days) {
-        const grid = day.querySelector('.cards')!;
-        cards
-          .filter((c) => c.dataset.date === day.dataset.date)
-          .forEach((c) => grid.appendChild(c));
+        const grid = day.querySelector('.briefings-grid');
+        if (grid) {
+          cardScenes
+            .filter((s) => s.dataset.date === day.dataset.date)
+            .forEach((s) => grid.appendChild(s));
+        }
       }
       [...days]
         .sort((a, b) =>
@@ -464,41 +1322,131 @@ const slug = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-');
       return;
     }
 
-    // flatten into the first day's grid for a continuous sorted run
-    const first = days[0];
-    const grid = first.querySelector('.cards')!;
-    [...cards]
-      .sort((a, b) =>
-        mode === 'cat'
-          ? a.dataset.cat!.localeCompare(b.dataset.cat!) ||
-            b.dataset.date!.localeCompare(a.dataset.date!)
-          : a.dataset.headline!.localeCompare(b.dataset.headline!)
-      )
-      .forEach((c) => grid.appendChild(c));
-    archive.prepend(first);
+    // Headline A-Z
+    const firstDay = days[0];
+    if (!firstDay) return;
+    const grid = firstDay.querySelector('.briefings-grid');
+    if (!grid) return;
+
+    [...cardScenes]
+      .sort((a, b) => (a.dataset.headline ?? '').localeCompare(b.dataset.headline ?? ''))
+      .forEach((s) => grid.appendChild(s));
+
+    archive.prepend(firstDay);
   };
 
-  chips.forEach((chip) =>
-    chip.addEventListener('click', () => {
-      cat = chip.dataset.cat!;
-      chips.forEach((c) => {
-        const on = c === chip;
-        c.classList.toggle('is-on', on);
-        c.setAttribute('aria-pressed', String(on));
-      });
-      apply();
-    })
-  );
+  // 3D Card Flip Handler
+  const toggleFlip = (card: HTMLElement) => {
+    const isFlipped = card.classList.toggle('is-flipped');
+    card.setAttribute('aria-expanded', isFlipped ? 'true' : 'false');
+  };
 
-  q.addEventListener('input', apply);
-  sort.addEventListener('change', () => {
-    reorder();
-    apply();
-  });
-  document.getElementById('reset')!.addEventListener('click', () => {
-    q.value = '';
-    chips[0].click();
+  cards.forEach((card) => {
+    card.addEventListener('click', (e) => {
+      const target = e.target as HTMLElement;
+      // If user clicked inside a link, copy button, or practise button, don't flip
+      if (target.closest('a') || target.closest('.copy-angle-btn') || target.closest('.practise-btn')) {
+        return;
+      }
+      toggleFlip(card);
+    });
+
+    // Keyboard accessibility: Space or Enter flips
+    card.addEventListener('keydown', (e) => {
+      if (e.key === ' ' || e.key === 'Enter') {
+        const target = e.target as HTMLElement;
+        if (target.closest('a') || target.closest('button')) return;
+        e.preventDefault();
+        toggleFlip(card);
+      }
+    });
   });
 
-  apply();
+  // Flip All Button in Toolbar
+  flipAllBtn?.addEventListener('click', () => {
+    allFlipped = !allFlipped;
+    flipAllBtn.classList.toggle('is-active', allFlipped);
+    const label = flipAllBtn.querySelector('.test-toggle__text');
+    if (label) label.textContent = allFlipped ? 'Flip all: Story mode' : 'Flip all: Hot Seat mode';
+
+    cards.forEach((card) => {
+      card.classList.toggle('is-flipped', allFlipped);
+      card.setAttribute('aria-expanded', allFlipped ? 'true' : 'false');
+    });
+  });
+
+  // Practise Button Click
+  document.addEventListener('click', (e) => {
+    const target = e.target as HTMLElement;
+    const pBtn = target.closest<HTMLButtonElement>('.practise-btn');
+    if (pBtn) {
+      e.stopPropagation();
+      const id = pBtn.dataset.id;
+      if (!id) return;
+      const list = getPractised();
+      const idx = list.indexOf(id);
+      if (idx === -1) {
+        list.push(id);
+      } else {
+        list.splice(idx, 1);
+      }
+      store.set('waibi:news:practised', list);
+      updatePractisedUI();
+    }
+  });
+
+  // Copy interview angle handler
+  document.addEventListener('click', (e) => {
+    const target = e.target as HTMLElement;
+    const btn = target.closest<HTMLButtonElement>('.copy-angle-btn');
+    if (!btn) return;
+    e.stopPropagation();
+    const textToCopy = btn.dataset.copy;
+    if (!textToCopy) return;
+
+    navigator.clipboard.writeText(textToCopy).then(() => {
+      btn.classList.add('is-copied');
+      const label = btn.querySelector('.copy-label');
+      if (label) label.textContent = 'Copied!';
+      setTimeout(() => {
+        btn.classList.remove('is-copied');
+        if (label) label.textContent = 'Copy Angle';
+      }, 1800);
+    });
+  });
+
+  doors.forEach((door) => {
+    door.addEventListener('click', () => {
+      currentCategory = door.dataset.door ?? 'all';
+      doors.forEach((d) => d.setAttribute('aria-pressed', d === door ? 'true' : 'false'));
+      applyFilters();
+    });
+  });
+
+  q?.addEventListener('input', applyFilters);
+  sort?.addEventListener('change', () => {
+    reorderCards();
+    applyFilters();
+  });
+
+  resetBtn?.addEventListener('click', () => {
+    if (q) q.value = '';
+    currentCategory = 'all';
+    doors.forEach((d) => d.setAttribute('aria-pressed', d.dataset.door === 'all' ? 'true' : 'false'));
+    applyFilters();
+  });
+
+  // Keyboard shortcut '/'
+  window.addEventListener('keydown', (e) => {
+    if (e.key === '/' && document.activeElement !== q && !(document.activeElement instanceof HTMLInputElement || document.activeElement instanceof HTMLTextAreaElement)) {
+      e.preventDefault();
+      q?.focus();
+      q?.select();
+    } else if (e.key === 'Escape' && document.activeElement === q) {
+      q?.blur();
+    }
+  });
+
+  applyFilters();
+  updatePractisedUI();
 </script>

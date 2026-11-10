@@ -2,22 +2,28 @@
 import Base from '../../layouts/Base.astro';
 import NewsBrowser from '../../components/NewsBrowser.astro';
 import NewsNav from '../../components/NewsNav.astro';
+import DomainMark from '../../components/DomainMark.astro';
 import { allNews, categories, catSlug, months, monthLabel } from '../../data/news-archive';
+import { plateEdge, EDGE_DEPTH } from '../../lib/bowl';
 
 export function getStaticPaths() {
   return [
     ...categories.map((c) => ({
       params: { archive: catSlug(c) },
       props: {
-        heading: `${c} news`,
+        isCategory: true,
+        categoryName: c,
+        heading: `${c} Intelligence`,
         title: `${c} News for B-School Interviews — wAIbi-sabi`,
-        description: `${c} stories for Indian B-school interview prep, each with the angle an interviewer is likely to push on.`,
+        description: `${c} stories curated for Indian B-school interview prep, each with the strategic angle an interviewer is primed to push on.`,
         items: allNews.filter((i) => i.category === c),
       },
     })),
     ...months.map((m) => ({
       params: { archive: m },
       props: {
+        isCategory: false,
+        categoryName: null,
         heading: monthLabel(m),
         title: `B-School Business News, ${monthLabel(m)} — wAIbi-sabi`,
         description: `Business news from ${monthLabel(m)} for Indian B-school interviews, with the angle an interviewer is likely to push on.`,
@@ -27,25 +33,268 @@ export function getStaticPaths() {
   ];
 }
 
-const { heading, title, description, items } = Astro.props;
+const { heading, title, description, items, isCategory, categoryName } = Astro.props;
+
+const accentOf: Record<string, string> = {
+  Finance: 'ochre',
+  Marketing: 'mizu',
+  Operations: 'moss',
+  'Product Management': 'plum',
+  Consulting: 'hanko',
+};
+const currentAccent = categoryName ? accentOf[categoryName] ?? 'ochre' : 'ochre';
+const uniqueDates = new Set(items.map((i: any) => i.date)).size;
+
+const edge = plateEdge(categoryName ? `news-${catSlug(categoryName)}` : `news-${heading}`);
+const clip = `polygon(0 0, 100% 0, ${[...edge].reverse().map(([x, d]) => `${x.toFixed(1)}% calc(100% - ${d.toFixed(1)}px)`).join(',')})`;
+const line = edge.map(([x, d]) => `${(x * 10).toFixed(0)},${(EDGE_DEPTH - d).toFixed(1)}`).join(' ');
+
+// AEO / GEO Structured Q&A entities for AI Search Engines
+const faqEntities = items.slice(0, 15).map((i: any) => ({
+  '@type': 'Question',
+  name: `${i.headline}: What will B-school interviewers ask?`,
+  acceptedAnswer: {
+    '@type': 'Answer',
+    text: `${i.angle} (Development summary: ${i.summary})`,
+  },
+}));
+
+const pageSchema = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'CollectionPage',
+      '@id': `https://janmejai2002.github.io/news/${isCategory ? catSlug(categoryName!) : ''}/`,
+      url: `https://janmejai2002.github.io/news/${isCategory ? catSlug(categoryName!) : ''}/`,
+      name: title,
+      description: description,
+      isPartOf: { '@id': 'https://janmejai2002.github.io/#website' },
+      about: [
+        'MBA interview preparation India',
+        `${categoryName ?? heading} business news`,
+        'B-School GD WAT PI topics',
+      ],
+    },
+    {
+      '@type': 'FAQPage',
+      '@id': `https://janmejai2002.github.io/news/${isCategory ? catSlug(categoryName!) : ''}/#faq`,
+      mainEntity: faqEntities,
+    },
+  ],
+};
 ---
 
 <Base
   title={title}
   description={description}
   section="BSchool"
+  wide
   pageType="CollectionPage"
+  immersive
+  grain={true}
+  schema={pageSchema}
   breadcrumbs={[
     { name: 'Home', path: '/' },
     { name: 'BSchool news', path: '/news/' },
     { name: heading },
   ]}
 >
-  <section class="hero fade-up d1" style="padding-bottom:1.75rem">
-    <span class="hanko">Archive</span>
-    <h1>{heading}</h1>
-    <p>{items.length} stories, each with the angle an interviewer is likely to push on.</p>
+  {/* Atmospheric Wabi-Sabi Kintsugi Plate Hero */}
+  <section class="pg-plate" style={`clip-path:${clip}`} aria-labelledby="archive-heading">
+    <div class="wrap pg-plate__in">
+      <div class="pg-plate__main">
+        <div class="pg-plate__meta">
+          <span class="plate-badge" style={`--badge-color:var(--${currentAccent})`}>
+            {isCategory ? 'Functional Intelligence' : 'Archive Stream'}
+          </span>
+          <span class="plate-count">{items.length} {items.length === 1 ? 'briefing' : 'briefings'}</span>
+          <span class="plate-dates">{uniqueDates} publishing days</span>
+        </div>
+
+        <h1 id="archive-heading" class="pg-plate__title">
+          {isCategory ? (
+            <>
+              {categoryName} <span class={`hl hl--${currentAccent}`}>Intelligence</span>
+            </>
+          ) : (
+            <>
+              Archive: <span class="hl hl--ochre">{heading}</span>
+            </>
+          )}
+        </h1>
+
+        <p class="pg-plate__desc">
+          {description} Every briefing pairs corporate moves with the exact trade-off, valuation, or organizational question tested in WAT, GD, and PI rounds.
+        </p>
+
+        <div class="pg-plate__nav">
+          <a href="/news/" class="plate-back">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M19 12H5M12 19l-7-7 7-7" />
+            </svg>
+            <span>All 618 Briefings</span>
+          </a>
+        </div>
+      </div>
+
+      {isCategory && (
+        <div class="pg-plate__mark-lockup" aria-hidden="true">
+          <DomainMark domain={categoryName as any} class="archive-domain-mark" />
+          <span class="mark-label">{categoryName} Dossier</span>
+        </div>
+      )}
+    </div>
   </section>
-  <NewsNav />
-  <NewsBrowser items={items} />
+
+  {/* Kintsugi Gold Fracture Seam */}
+  <svg class="pg-edge" viewBox={`0 0 1000 ${EDGE_DEPTH}`} preserveAspectRatio="none" aria-hidden="true">
+    <polyline points={line} vector-effect="non-scaling-stroke" />
+  </svg>
+
+  <div class="wrap pg-body">
+    <NewsBrowser items={items} initialCat={isCategory ? categoryName! : 'all'} isLeadDay={false} />
+    <NewsNav />
+  </div>
 </Base>
+
+<style>
+  /* ---------- Atmospheric Kintsugi Plate ---------- */
+  .pg-plate {
+    position: relative;
+    color: var(--tldr-ink);
+    background:
+      radial-gradient(60rem 30rem at 86% -10%, color-mix(in srgb, var(--accent, var(--ochre)) 18%, transparent), transparent 70%),
+      radial-gradient(50rem 28rem at 2% 110%, color-mix(in srgb, var(--plum) 14%, transparent), transparent 70%),
+      var(--tldr-bg);
+  }
+  .pg-plate__in {
+    padding-block: clamp(2.25rem, 4.5vw, 3.75rem) calc(22px + clamp(1.75rem, 3vw, 2.75rem));
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 2rem;
+  }
+  .pg-plate__main {
+    max-width: 48rem;
+  }
+  .pg-plate__meta {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+  }
+  .plate-badge {
+    font-size: .6875rem;
+    font-weight: 800;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--badge-color, var(--ochre));
+    background: color-mix(in srgb, var(--badge-color, var(--ochre)) 14%, var(--card));
+    padding: .25rem .65rem;
+    border-radius: 999px;
+    border: 1px solid color-mix(in srgb, var(--badge-color, var(--ochre)) 30%, var(--border));
+  }
+  .plate-count,
+  .plate-dates {
+    font-size: .75rem;
+    font-weight: 600;
+    color: var(--tldr-dim);
+  }
+  .pg-plate__title {
+    margin: 0;
+    font-size: clamp(2rem, 4.2vw, 3.25rem);
+    font-weight: 800;
+    line-height: 1.08;
+    letter-spacing: -.035em;
+    text-wrap: balance;
+  }
+  .hl--hanko { color: var(--hanko); }
+  .hl--ochre { color: var(--ochre); }
+  .hl--mizu { color: var(--mizu); }
+  .hl--moss { color: var(--moss); }
+  .hl--plum { color: var(--plum); }
+
+  .pg-plate__desc {
+    margin: .85rem 0 1.25rem;
+    max-width: 42rem;
+    font-size: 1.0625rem;
+    line-height: 1.55;
+    color: var(--tldr-dim);
+    text-wrap: pretty;
+  }
+
+  .pg-plate__nav {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .plate-back {
+    display: inline-flex;
+    align-items: center;
+    gap: .4rem;
+    font-size: .8125rem;
+    font-weight: 700;
+    color: var(--tldr-ink);
+    text-decoration: underline;
+    text-decoration-color: var(--ochre);
+    text-underline-offset: 3px;
+    transition: color var(--dur-fast) var(--ease);
+  }
+  .plate-back svg {
+    width: 14px;
+    height: 14px;
+  }
+  .plate-back:hover {
+    color: var(--ochre);
+  }
+
+  /* Domain Mark Lockup */
+  .pg-plate__mark-lockup {
+    display: none;
+  }
+  @media (min-width: 48rem) {
+    .pg-plate__mark-lockup {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: .65rem;
+      flex-shrink: 0;
+      opacity: .85;
+      padding-bottom: .5rem;
+    }
+  }
+  .archive-domain-mark {
+    width: 4.5rem !important;
+    height: 4.5rem !important;
+  }
+  .mark-label {
+    font-size: .625rem;
+    font-weight: 800;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--tldr-dim);
+  }
+
+  /* Kintsugi Gold Line */
+  .pg-edge {
+    display: block;
+    position: relative;
+    width: 100%;
+    height: 22px;
+    margin-top: -22px;
+    overflow: visible;
+    pointer-events: none;
+  }
+  .pg-edge polyline {
+    fill: none;
+    stroke: var(--ochre);
+    stroke-width: 1.75;
+    stroke-linejoin: miter;
+  }
+
+  .pg-body {
+    padding-top: clamp(2rem, 4vw, 3.5rem);
+    padding-bottom: 4rem;
+  }
+</style>

@@ -2,12 +2,70 @@
 import Base from '../../layouts/Base.astro';
 import NewsBrowser from '../../components/NewsBrowser.astro';
 import NewsNav from '../../components/NewsNav.astro';
+import Crew from '../../components/Crew.astro';
 import { allNews } from '../../data/news-archive';
+import { plateEdge, EDGE_DEPTH } from '../../lib/bowl';
 
-// The front page carries the last two weeks of publishing days. The full run
-// lives in the function and month archives, so no single page has to be 1.4 MB.
-const recentDates = new Set([...new Set(allNews.map((i) => i.date))].slice(0, 14));
-const items = allNews.filter((i) => recentDates.has(i.date));
+// Full run of all briefings across the archive
+const items = allNews;
+
+const edge = plateEdge('news');
+const clip = `polygon(0 0, 100% 0, ${[...edge].reverse().map(([x, d]) => `${x.toFixed(1)}% calc(100% - ${d.toFixed(1)}px)`).join(',')})`;
+const line = edge.map(([x, d]) => `${(x * 10).toFixed(0)},${(EDGE_DEPTH - d).toFixed(1)}`).join(' ');
+
+const todayIso = new Date().toISOString().slice(0, 10);
+const todayItems = allNews.filter((i) => i.date === todayIso);
+const latestDate = allNews[0]?.date;
+const latestItems = allNews.filter((i) => i.date === latestDate);
+const latestFmt = latestDate
+  ? new Date(latestDate + 'T00:00:00Z').toLocaleDateString('en-IN', {
+      day: 'numeric',
+      month: 'short',
+      year: 'numeric',
+      timeZone: 'UTC',
+    })
+  : '';
+
+const statText =
+  todayItems.length > 0
+    ? `${todayItems.length} stories today · ${allNews.length} in the archive`
+    : `${latestItems.length} stories on ${latestFmt} · ${allNews.length} in the archive`;
+
+// AEO / GEO Structured Q&A entities for AI Search Engines (Perplexity, Gemini, ChatGPT Search)
+const faqEntities = allNews.slice(0, 15).map((i) => ({
+  '@type': 'Question',
+  name: `${i.headline}: What will B-school interviewers ask?`,
+  acceptedAnswer: {
+    '@type': 'Answer',
+    text: `${i.angle} (Development summary: ${i.summary})`,
+  },
+}));
+
+const pageSchema = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    {
+      '@type': 'CollectionPage',
+      '@id': 'https://janmejai2002.github.io/news/',
+      url: 'https://janmejai2002.github.io/news/',
+      name: 'BSchool Placement News & Interview Angles — wAIbi-sabi',
+      description: 'Daily business news curated for Indian B-school interviews (IIM, XLRI, FMS, SPJIMR). Every briefing pairs verified commercial developments across Finance, Consulting, Ops, Marketing, and Product with the exact counter-question interview panels ask.',
+      isPartOf: { '@id': 'https://janmejai2002.github.io/#website' },
+      about: [
+        'MBA interview preparation India',
+        'Business news for MBA placements',
+        'Consulting case interview questions',
+        'Finance interview questions India',
+        'WAT GD PI topics',
+      ],
+    },
+    {
+      '@type': 'FAQPage',
+      '@id': 'https://janmejai2002.github.io/news/#faq',
+      mainEntity: faqEntities,
+    },
+  ],
+};
 ---
 
 <Base
@@ -19,20 +77,136 @@ const items = allNews.filter((i) => recentDates.has(i.date));
     'business news for B-school interviews',
     'current affairs for MBA placements',
     'WAT GD PI topics India',
+    'IIM interview questions',
+    'XLRI interview business news',
+    'consulting interview prep India',
+    'finance interview questions India',
   ]}
   pageType="CollectionPage"
+  immersive
+  grain={true}
+  schema={pageSchema}
 >
-  <section class="hero fade-up d1" style="padding-bottom:1.75rem">
-    <span class="hanko">Latest</span>
-    <h1>BSchool <span class="hl hl--ochre">News Archive</span></h1>
-    <p>
-      A daily business-news digest for Indian B-school placement prep. Every card carries the
-      story and the angle an interviewer is likely to push on.
-    </p>
-    <p class="meta" style="margin-top:1.25rem">
-      Latest {items.length} of {allNews.length} stories. Older stories are in the archives below.
-    </p>
+  {/* Atmospheric Wabi-Sabi Kintsugi Plate Hero */}
+  <section class="pg-plate" style={`clip-path:${clip}`} aria-labelledby="news-hero-heading">
+    <div class="wrap pg-plate__in">
+      <div class="pg-plate__main">
+        <h1 id="news-hero-heading">What will they ask you about today?</h1>
+        <p class="pg-plate__desc">
+          A daily business-news digest for Indian B-school interviews. Every story comes with the angle an interviewer is likely to push on.
+        </p>
+        <p class="pg-plate__stat">
+          <span class="stat-dot" aria-hidden="true"></span>
+          {statText}
+        </p>
+      </div>
+      <div class="pg-plate__crew on-plate" aria-hidden="true">
+        <span class="crew-say">I read the business pages so you can pretend you did.</span>
+        <Crew who="kiki" mood="listen" class="kiki-pic" />
+      </div>
+    </div>
   </section>
-  <NewsNav />
-  <NewsBrowser items={items} />
+
+  {/* Kintsugi Gold Fracture Seam */}
+  <svg class="pg-edge" viewBox={`0 0 1000 ${EDGE_DEPTH}`} preserveAspectRatio="none" aria-hidden="true">
+    <polyline points={line} vector-effect="non-scaling-stroke" />
+  </svg>
+
+  <div class="wrap pg-body">
+    <NewsBrowser items={items} totalCount={allNews.length} isLeadDay={true} />
+    <NewsNav />
+  </div>
 </Base>
+
+<style>
+  /* ---------- Atmospheric Kintsugi Plate ---------- */
+  .pg-plate {
+    position: relative;
+    color: var(--tldr-ink);
+    background:
+      radial-gradient(60rem 30rem at 86% -10%, color-mix(in srgb, var(--ochre) 18%, transparent), transparent 70%),
+      radial-gradient(50rem 28rem at 2% 110%, color-mix(in srgb, var(--plum) 16%, transparent), transparent 70%),
+      var(--tldr-bg);
+  }
+  .pg-plate__in {
+    padding-block: clamp(2.25rem, 4.5vw, 3.75rem) calc(22px + clamp(1.75rem, 3vw, 2.75rem));
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 2rem;
+  }
+  .pg-plate__main {
+    max-width: 48rem;
+  }
+  .pg-plate h1 {
+    margin: 0;
+    font-size: clamp(2rem, 4.2vw, 3.25rem);
+    font-weight: 800;
+    line-height: 1.08;
+    letter-spacing: -.035em;
+    text-wrap: balance;
+  }
+  .pg-plate__desc {
+    margin: .85rem 0 0;
+    max-width: 40rem;
+    font-size: 1.0625rem;
+    line-height: 1.55;
+    color: var(--tldr-dim);
+    text-wrap: pretty;
+  }
+  .pg-plate__stat {
+    margin: .85rem 0 0;
+    font-size: .9375rem;
+    color: var(--tldr-dim);
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+  }
+  .stat-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--ochre);
+    display: inline-block;
+  }
+
+  /* Ceramic Character Lockup */
+  .pg-plate__crew {
+    display: none;
+  }
+  @media (min-width: 48rem) {
+    .pg-plate__crew {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: .75rem;
+      flex-shrink: 0;
+    }
+  }
+  .kiki-pic {
+    width: 7rem;
+    height: 7rem;
+  }
+
+  /* Kintsugi Gold Line */
+  .pg-edge {
+    display: block;
+    position: relative;
+    width: 100%;
+    height: 22px;
+    margin-top: -22px;
+    overflow: visible;
+    pointer-events: none;
+  }
+  .pg-edge polyline {
+    fill: none;
+    stroke: var(--ochre);
+    stroke-width: 1.75;
+    stroke-linejoin: miter;
+  }
+
+  .pg-body {
+    padding-top: clamp(2rem, 4vw, 3.5rem);
+    padding-bottom: 4rem;
+  }
+</style>
