@@ -1,0 +1,48 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import PostList from '../../components/PostList.astro';
+import { TOPICS } from '../../data/topics';
+
+export function getStaticPaths() {
+  return TOPICS.map((t) => ({ params: { topic: t.id }, props: { t } }));
+}
+
+const { t } = Astro.props;
+const all = await getCollection('blog', ({ data }) => !data.draft);
+const posts = (t.slugs as readonly string[])
+  .map((slug) => all.find((p) => p.id === slug))
+  .filter(Boolean);
+---
+
+<Base
+  title={`${t.label} — wAIbi-sabi`}
+  description={t.intro.slice(0, t.intro.indexOf('.') + 1)}
+  section="Topics"
+  pageType="CollectionPage"
+  breadcrumbs={[
+    { name: 'Home', path: '/' },
+    { name: 'All articles', path: '/blog/' },
+    { name: t.label },
+  ]}
+  schema={{
+    mainEntity: {
+      '@type': 'ItemList',
+      numberOfItems: posts.length,
+      itemListElement: posts.map((p: any, i: number) => ({
+        '@type': 'ListItem',
+        position: i + 1,
+        url: new URL(`/blog/${p.id}/`, Astro.site).href,
+        name: p.data.title,
+      })),
+    },
+  }}
+>
+  <section class="hero fade-up d1">
+    <span class="hanko">Topic</span>
+    <h1>{t.label}</h1>
+    <p><strong>{t.question}</strong></p>
+    <p>{t.intro}</p>
+  </section>
+  <PostList posts={posts} />
+</Base>

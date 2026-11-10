@@ -3,6 +3,7 @@ import { Image, getImage } from 'astro:assets';
 import { getCollection } from 'astro:content';
 import Base from './Base.astro';
 import { trackById } from '../data/tracks';
+import { topicsFor } from '../data/topics';
 
 const { post } = Astro.props;
 const {
@@ -44,25 +45,50 @@ const next =
   all.find((p) => p.id !== post.id);
 const nextTrack = next ? trackById[next.data.track] : undefined;
 
-// Social cards are a fixed 1200x630 crop. Deriving it from the hero at build
-// time means an author never has to hand-make a second image, and the card is
-// still a real file on disk rather than a resize hint to the crawler.
-const card = ogImage ?? heroImage;
-const social = card
-  ? await getImage({ src: card, width: 1200, height: 630, fit: 'cover', format: 'png' })
+// Each article gets a generated headline card (src/pages/og/[slug].png.ts). A
+// hand-made ogImage in the frontmatter still wins.
+const social = ogImage
+  ? await getImage({ src: ogImage, width: 1200, height: 630, fit: 'cover', format: 'png' })
   : undefined;
+
+// Search truncates long titles, so the site suffix only appears when it fits.
+const suffixed = `${title} — wAIbi-sabi`;
+const pageTitle = suffixed.length <= 60 ? suffixed : title;
+
+const wordCount = (post.body ?? '')
+  .replace(/<!--[\s\S]*?-->|<svg[\s\S]*?<\/svg>/g, ' ')
+  .trim()
+  .split(/\s+/).length;
+
+const topics = topicsFor(post.id);
+const candidates = [
+  ...all.filter((p) => topics.some((t) => (t.slugs as readonly string[]).includes(p.id))),
+  ...all.filter((p) => p.data.track === track),
+].filter((p, i, list) => p.id !== post.id && p.id !== next?.id && list.indexOf(p) === i);
+// Rotating by position spreads links to older posts instead of always the newest.
+const offset = candidates.length ? Math.max(meIdx, 0) % candidates.length : 0;
+const related = [...candidates.slice(offset), ...candidates.slice(0, offset)].slice(0, 3);
 ---
 
 <Base
-  title={`${title} — wAIbi-sabi`}
+  title={pageTitle}
+  headline={title}
   description={description}
   type="article"
   pubDate={pubDate}
   updatedDate={updatedDate}
   keywords={keywords}
-  image={social?.src}
-  imageAlt={heroAlt}
+  image={social?.src ?? `/og/${post.id}.png`}
+  imageAlt={title}
   section={TRACK.label}
+  articleSection={TRACK.label}
+  wordCount={wordCount}
+  alternativeHeadline={question}
+  breadcrumbs={[
+    { name: 'Home', path: '/' },
+    { name: TRACK.label, path: `/${track}/` },
+    { name: title },
+  ]}
   progress={true}
 >
   <article class="article fade-up d2" style={`--accent:var(--${TRACK.accent});--tint:var(--wash-${TRACK.accent})`}>
@@ -86,8 +112,8 @@ const social = card
       <div class="byline">
         <div class="byline__avatar" aria-hidden="true">JM</div>
         <div>
-          <div class="byline__name">Janmejai Singh Minhas</div>
-          <div class="byline__line">Second year, XLRI.</div>
+          <div class="byline__name"><a href="/about/" rel="author">Janmejai Singh Minhas</a></div>
+          <div class="byline__line">XLRI, second year. Risk modelling intern at American Express, two peer-reviewed ML papers.</div>
         </div>
       </div>
 
@@ -129,6 +155,32 @@ const social = card
       <slot />
     </div>
 
+    {
+      related.length > 0 && (
+        <nav class="related" aria-label="Related articles">
+          <h2 class="related__h">Related questions</h2>
+          <ul>
+            {related.map((p) => (
+              <li>
+                <a href={`/blog/${p.id}/`}>{p.data.question ?? p.data.title}</a>
+              </li>
+            ))}
+          </ul>
+          {topics.length > 0 && (
+            <p class="related__topics">
+              More on{' '}
+              {topics.map((t, i) => (
+                <>
+                  {i > 0 && ', '}
+                  <a href={`/topics/${t.id}/`}>{t.label}</a>
+                </>
+              ))}
+            </p>
+          )}
+        </nav>
+      )
+    }
+
     <footer class="endnote">
       <svg class="endnote__crack" viewBox="0 0 12 44" preserveAspectRatio="none" aria-hidden="true">
         <polyline points="7,0 4,12 8,22 3,32 6,44" />
@@ -149,3 +201,21 @@ const social = card
     </footer>
   </article>
 </Base>
+
+<style>
+  .byline__name a { color: inherit; text-decoration: none; }
+  .byline__name a:hover { text-decoration: underline; }
+  .related {
+    margin-top: 3rem; padding-top: 1.5rem;
+    border-top: 1px solid var(--border);
+  }
+  .related__h {
+    font-size: .625rem; font-weight: 800; letter-spacing: .15em;
+    text-transform: uppercase; color: var(--ink-faint); margin: 0 0 .9rem;
+  }
+  .related ul { list-style: none; margin: 0; padding: 0; }
+  .related li { margin: 0 0 .7rem; line-height: 1.4; font-weight: 600; }
+  .related a { color: var(--ink); }
+  .related a:hover { color: var(--accent); }
+  .related__topics { margin: 1.1rem 0 0; font-size: .8125rem; color: var(--ink-soft); }
+</style>

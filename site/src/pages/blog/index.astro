@@ -1,0 +1,50 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import PostList from '../../components/PostList.astro';
+import { TOPICS } from '../../data/topics';
+import { TRACKS } from '../../data/tracks';
+
+const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+);
+---
+
+<Base
+  title="All Articles — wAIbi-sabi"
+  description={`All ${posts.length} wAIbi-sabi articles on applied AI: how models work, what they cost, and what happened when companies deployed them.`}
+  section="Archive"
+  pageType="CollectionPage"
+  breadcrumbs={[{ name: 'Home', path: '/' }, { name: 'All articles' }]}
+  schema={{
+    mainEntity: {
+      '@type': 'ItemList',
+      numberOfItems: posts.length,
+      itemListElement: posts.map((p, i) => ({
+        '@type': 'ListItem',
+        position: i + 1,
+        url: new URL(`/blog/${p.id}/`, Astro.site).href,
+        name: p.data.title,
+      })),
+    },
+  }}
+>
+  <section class="hero fade-up d1">
+    <span class="hanko">Archive</span>
+    <h1>All articles</h1>
+    <p>Every piece starts from a question someone asked, and cites where its numbers came from.</p>
+    <p class="browse">
+      Topics:
+      {TOPICS.map((t, i) => (<>{i > 0 && ' · '}<a href={`/topics/${t.id}/`}>{t.label}</a></>))}
+    </p>
+    <p class="browse">
+      Themes:
+      {TRACKS.map((t, i) => (<>{i > 0 && ' · '}<a href={`/${t.id}/`}>{t.label}</a></>))}
+    </p>
+  </section>
+  <PostList posts={posts} />
+</Base>
+
+<style>
+  .browse { font-size: .875rem; margin: .6rem 0 0; }
+</style>
