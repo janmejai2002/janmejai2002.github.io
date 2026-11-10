@@ -70,10 +70,7 @@
 /* The credit sits in the left column of the brief, level with the summary. */
 .ahead__crew { flex: none; width: 4.5rem; height: 4.5rem; margin-top: -.25rem; }
 .ahead__who { display: flex; flex-direction: column; gap: .2rem; min-width: 0; }
-.ahead__lens-badge {
-  display: inline-block; font-family: var(--font-mono, monospace); font-size: .6875rem; font-weight: 600;
-  letter-spacing: .05em; text-transform: uppercase; color: var(--ochre); line-height: 1.2;
-}
+.ahead__lens-badge { display: block; font-size: .8125rem; font-weight: 600; color: var(--tldr-dim); line-height: 1.2; }
 .ahead__lens-role {
   display: block; font-size: .9375rem; font-weight: 600; color: var(--tldr-ink); line-height: 1.25;
 }
@@ -193,6 +190,15 @@
 .toc__seam polyline { fill: none; stroke: var(--border); stroke-width: 2; stroke-linejoin: miter; }
 .toc__seam--gold { clip-path: inset(-2px -8px calc(100% - var(--seam, 0px)) -8px); }
 .toc__seam--gold polyline { stroke: var(--ochre); stroke-width: 2.5; }
+/* The piece's character stands on the tip of the gold. --seam is the same value
+   that draws the gold, so they can never drift off the line. */
+.keeper { position: absolute; left: 1px; top: 0; width: 0; height: 0; z-index: 1; pointer-events: none; }
+.keeper .actor { --size: 2.6rem; transform: translate(-56%, calc(var(--seam, 0px) - 86%)); }
+.keeper .crew-ink { stroke-width: 2.6; }
+.keeper__line { margin: .9rem 0 0; max-width: 15rem; color: var(--ink); font-size: .9375rem; }
+.toc.is-speaking .keeper__line { display: block; }
+.keeper__line .crew-line__who { color: var(--ink-soft); }
+html:not(.js) .keeper { display: none; }
 .toc ol { list-style: none; margin: 0; padding: 0; display: grid; gap: .1rem; }
 .toc a {
   display: block; padding: .32rem 0; text-decoration: none; line-height: 1.32;
@@ -323,6 +329,10 @@
 }
 .aend__next { display: block; text-decoration: none; max-width: 46rem; }
 .aend__k { display: block; font-size: 1rem; font-weight: 600; color: var(--ochre); }
+/* The next piece's character waits by its link: the reader is handed on. */
+.aend__with { display: inline-flex; align-items: center; gap: .3rem; margin-left: .35rem; color: var(--tldr-dim); }
+.aend__with::before { content: '·'; margin-right: .1rem; }
+.aend__withcrew { width: 2.1rem; height: 2.1rem; margin-block: -.6rem -.5rem; }
 .aend__ask {
   display: block; margin-top: .6rem;
   font-family: var(--serif); font-weight: 500; font-size: clamp(1.75rem, 3.4vw, 2.875rem);
@@ -336,6 +346,11 @@ html.js .aend__share {
   font: inherit; font-size: 1rem; font-weight: 600; color: var(--tldr-ink);
   text-decoration: underline; text-decoration-color: var(--ochre); text-underline-offset: 4px;
 }
+/* The goodbye: the piece's character, and one line with the real count. */
+.aend__crew { --seat: 3rem; display: flex; align-items: center; gap: .6rem; min-height: 3rem; margin: 1.1rem 0 0; color: var(--tldr-ink); }
+.aend__crew .crew-line { font-size: 1.0625rem; }
+.aend__crew .crew-line__who { color: var(--ochre); }
+html:not(.js) .aend__crew { display: none; }
 .aend__bowl { display: grid; gap: .9rem; text-decoration: none; font-size: .9375rem; line-height: 1.45; color: var(--tldr-dim); }
 .aend__bowl b { display: block; margin-top: .15rem; color: var(--tldr-ink); }
 .aend__bowl:hover b { text-decoration: underline; text-underline-offset: 3px; }

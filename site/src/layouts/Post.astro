@@ -8,7 +8,9 @@ import { topicsFor } from '../data/topics';
 import { plateEdge, EDGE_DEPTH } from '../lib/bowl';
 import { liveArt } from '../lib/art';
 import Crew from '../components/Crew.astro';
-import { pickCrew, CREW } from '../lib/crew';
+import CrewActor from '../components/CrewActor.astro';
+import { pickCrew, CREW, type Mood } from '../lib/crew';
+import { JOB } from '../lib/crew-lines';
 import '../styles/article.css';
 
 const { post, headings = [] } = Astro.props;
@@ -84,8 +86,15 @@ const prose = tldr ? rendered.replace(TLDR, '') : rendered;
 // The article's drawing as separate marks, so they can fly together on the plate.
 const art = liveArt(slug);
 
-// Who turns up on this piece, and what they make of it.
+// Who turns up on this piece, and what they make of it. The same character
+// keeps the reader company down the contents seam and says goodbye at the end.
 const casting = pickCrew({ slug, title, question, keywords, track });
+// Who is on the next piece, so the end plate hands the reader from one
+// character to the next.
+const nextCast = next
+  ? pickCrew({ slug: slugOf(next.id), title: next.data.title, question: next.data.question, keywords: next.data.keywords, track: next.data.track })
+  : undefined;
+const keeperMoods = [...new Set<Mood>([casting.mood, 'panic', 'sip', 'doubt', 'sleep'])];
 
 // Each plate breaks in its own place, and the same place on every build.
 const headEdge = plateEdge(slug);
@@ -204,11 +213,11 @@ const related = [...candidates.slice(offset), ...candidates.slice(0, offset)].sl
         {
           tldr && (
             <div class="ahead__brief" data-brief>
-              <a class="ahead__by on-plate" href="/blog/how-this-blog-builds-itself/" title="The wAIbi-sabi critical editorial lenses">
+              <a class="ahead__by on-plate" href="/crew/">
                 <Crew who={casting.who} mood={casting.mood} class="ahead__crew" />
                 <span class="ahead__who">
-                  <span class="ahead__lens-badge">{casting.badge}</span>
-                  <strong class="ahead__lens-role">{casting.role}</strong>
+                  <span class="ahead__lens-badge">On this piece</span>
+                  <strong class="ahead__lens-role">{CREW[casting.who].name} {JOB[casting.who]}</strong>
                   <em>“{casting.line}”</em>
                 </span>
               </a>
@@ -230,9 +239,11 @@ const related = [...candidates.slice(offset), ...candidates.slice(0, offset)].sl
     <div class="wrap reading">
       {
         hasContents && (
-          <nav class="toc" aria-label="In this piece" data-toc>
+          <nav class="toc" aria-label="In this piece" data-toc data-who={casting.who} data-mood={casting.mood}>
             <p class="toc__k">In this piece</p>
             <div class="toc__body">
+              {/* The piece's character rides the tip of the gold as it fills. */}
+              <div class="keeper" aria-hidden="true"><CrewActor who={casting.who} moods={keeperMoods} /></div>
               {/* The crack, and the same crack in gold, revealed as you read. */}
               <svg class="toc__seam" viewBox="0 0 14 100" preserveAspectRatio="none" aria-hidden="true">
                 <polyline points={SEAM} vector-effect="non-scaling-stroke" />
@@ -246,6 +257,7 @@ const related = [...candidates.slice(offset), ...candidates.slice(0, offset)].sl
                 ))}
               </ol>
             </div>
+            <p class="keeper__line crew-line" data-say aria-hidden="true"></p>
           </nav>
         )
       }
@@ -304,13 +316,25 @@ const related = [...candidates.slice(offset), ...candidates.slice(0, offset)].sl
           {
             next && nextTrack && (
               <a class="aend__next" href={`/blog/${slugOf(next.id)}/`}>
-                <span class="aend__k">Next question · {nextTrack.label}</span>
+                <span class="aend__k">
+                  Next question · {nextTrack.label}
+                  {nextCast && (
+                    <span class="aend__with">
+                      <Crew who={nextCast.who} mood={nextCast.mood} class="aend__withcrew on-plate" />
+                      with {CREW[nextCast.who].name}
+                    </span>
+                  )}
+                </span>
                 <span class="aend__ask" set:html={unbroken(escapeHtml(next.data.question ?? next.data.title))} />
                 <span class="aend__t">{next.data.title}</span>
               </a>
             )
           }
           <button class="aend__share" type="button" data-share aria-live="polite">Copy link to this piece</button>
+          <div class="aend__crew on-plate" data-endcrew data-who={casting.who} data-slugs={chrono.join(' ')} aria-live="polite">
+            <div class="seat__who"><CrewActor who={casting.who} moods={['happy', 'proud']} /></div>
+            <span class="crew-line" data-say></span>
+          </div>
         </div>
         <a class="aend__bowl" href="/#writing">
           <MiniBowl slugs={chrono} accents={chronoAccents} current={slug} art={bowlArt} />
@@ -352,7 +376,12 @@ const related = [...candidates.slice(offset), ...candidates.slice(0, offset)].sl
 </Base>
 
 <script>
+  import { createCast } from '../lib/crew-actor';
+  import { createDirector, fill, choose } from '../lib/crew-director';
+  import { linesFor, type Moment } from '../lib/crew-lines';
+
   const body = document.querySelector<HTMLElement>('.reading .body');
+  let onBowl: (() => void) | undefined;
   const toc = document.querySelector<HTMLElement>('[data-toc]');
   const margins = document.querySelector<HTMLElement>('[data-margins]');
   const end = document.querySelector<HTMLElement>('[data-end]');
@@ -520,6 +549,7 @@ const related = [...candidates.slice(offset), ...candidates.slice(0, offset)].sl
           if (entries.some((e) => e.isIntersecting)) {
             end.classList.add('is-home');
             io.disconnect();
+            onBowl?.();
           }
         },
         { threshold: 0.55 }
@@ -873,5 +903,145 @@ const related = [...candidates.slice(offset), ...candidates.slice(0, offset)].sl
     document.fonts?.ready.then(refresh);
     refresh();
     offerResume();
+  }
+
+  /* ---------- the crew on this piece ----------
+     The piece's character rides the gold seam in the contents column, and says
+     at most a few things, each about something the reader actually did. */
+  {
+    const calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const director = createDirector({
+      gapMs: 20000,
+      budget: 3,
+      rules: {
+        skim: { once: true },
+        sources: { once: true },
+        back: { cooldownMs: 180000 },
+        resume: { once: true, priority: true },
+        finished: { once: true, priority: true },
+        quick: { once: true, priority: true },
+      },
+    });
+    const pick = (moment: Moment, who: string, vars: Record<string, number> = {}) => {
+      const options = linesFor(moment, who as never);
+      return options.length ? fill(choose(options, `${moment}:${location.pathname}`), vars) : '';
+    };
+
+    const tocNav = document.querySelector<HTMLElement>('[data-toc]');
+    const keeperCast = tocNav?.querySelector('[data-actor]') ? createCast(tocNav, { reduced: calm }) : null;
+    const who = tocNav?.dataset.who ?? '';
+    const base = tocNav?.dataset.mood ?? 'idle';
+    const keeper = keeperCast?.get(who);
+    // Only where the contents column is actually on screen.
+    const keeperOn = () => !!keeper && !!tocNav && tocNav.offsetParent !== null;
+
+    let moodTimer = 0;
+    const moment = (m: Moment, mood: string, ms = 4200) => {
+      if (!keeper || !keeperCast || !keeperOn()) return;
+      if (!director.take(m, performance.now())) return;
+      const line = pick(m, who);
+      clearTimeout(moodTimer);
+      keeper.mood(mood);
+      keeper.hop();
+      if (line) keeperCast.say(keeper, line, ms);
+      moodTimer = window.setTimeout(() => keeper.mood(base), ms);
+    };
+
+    if (keeper) {
+      keeper.show();
+      // Each step of the seam is a small step for them.
+      let still = 0;
+      let lingerTimer = 0;
+      let samples: { y: number; t: number }[] = [];
+      const linger = () => {
+        clearTimeout(lingerTimer);
+        // A long, quiet stay in one place: they sit down with tea. No line.
+        lingerTimer = window.setTimeout(() => {
+          if (!document.hidden && keeperOn()) keeper.mood('sip');
+        }, 75000);
+      };
+      linger();
+      addEventListener('scroll', () => {
+        const now = performance.now();
+        if (keeper.el.dataset.mood === 'sip') keeper.mood(base);
+        linger();
+        if (!calm) {
+          keeper.el.classList.add('walking');
+          clearTimeout(still);
+          still = window.setTimeout(() => keeper.el.classList.remove('walking'), 220);
+        }
+        // Racing through: more than about three screens a second, for most of a second.
+        samples.push({ y: scrollY, t: now });
+        samples = samples.filter((p) => now - p.t < 800);
+        const first = samples[0];
+        if (samples.length > 5 && now - first.t > 600) {
+          const speed = Math.abs(scrollY - first.y) / ((now - first.t) / 1000);
+          if (speed > innerHeight * 3) moment('skim', 'panic', 3600);
+        }
+      }, { passive: true });
+
+      // The sources: whoever is on the piece holds them up to the light.
+      const sources = document.getElementById('sources');
+      if (sources && 'IntersectionObserver' in window) {
+        new IntersectionObserver((entries, io) => {
+          if (!entries.some((e) => e.isIntersecting)) return;
+          io.disconnect();
+          moment('sources', 'doubt', 4400);
+        }, { rootMargin: '0px 0px -35% 0px' }).observe(sources);
+      }
+
+      // They followed "pick up where you left off": the keeper kept the place.
+      document.addEventListener('click', (e) => {
+        if (!(e.target as HTMLElement).closest('.resume')) return;
+        window.setTimeout(() => moment('resume', base, 3200), 700);
+      });
+
+      // Gone a while, then back.
+      let leftAt = 0;
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden) {
+          leftAt = performance.now();
+          return;
+        }
+        if (!leftAt || performance.now() - leftAt < 90000 || !keeperOn()) return;
+        keeper.mood('sleep');
+        window.setTimeout(() => moment('back', base, 3600), 900);
+      });
+    }
+
+    // The goodbye, once the shard is home in the bowl. The count is real.
+    const endCrew = document.querySelector<HTMLElement>('[data-endcrew]');
+    const endCast = endCrew ? createCast(endCrew, { reduced: calm }) : null;
+    const endWho = endCrew?.dataset.who ?? '';
+    const slugHere = document.querySelector<HTMLElement>('.apage')?.dataset.slug ?? '';
+    const minutesHere = Number(document.querySelector<HTMLElement>('.apage')?.dataset.minutes ?? 0);
+    let retried = false;
+    onBowl = () => {
+      const a = endCast?.get(endWho);
+      if (!a || !endCast) return;
+      let read: string[] = [];
+      try {
+        // Only pieces that still exist, the same count the homepage bowl shows.
+        const live = new Set((endCrew?.dataset.slugs ?? '').split(' '));
+        read = (JSON.parse(localStorage.getItem('waibi:read') ?? '[]') as string[]).filter((x) => live.has(x));
+      } catch {
+        return; // no storage, no count, so nothing to say
+      }
+      if (!read.includes(slugHere)) {
+        // The bowl can land a frame before the page counts the piece as read.
+        if (!retried) {
+          retried = true;
+          window.setTimeout(() => onBowl?.(), 500);
+        }
+        return;
+      }
+      const quick = performance.now() < Math.max(40000, minutesHere * 60000 * 0.25);
+      const m: Moment = quick ? 'quick' : 'finished';
+      if (!director.take(m, performance.now())) return;
+      a.mood(quick ? 'proud' : 'happy');
+      a.show();
+      a.hop();
+      endCast.say(a, pick(m, endWho, { n: read.length, total: (endCrew?.dataset.slugs ?? '').split(' ').length }), 600000);
+    };
   }
 </script>

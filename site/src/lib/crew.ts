@@ -37,7 +37,7 @@ interface Body {
 
 export const CREW: Record<Who, Body> = {
   tsugi: {
-    name: 'Tsugi', role: 'The Builder · Mends invariants into durable systems.', wash: 'mizu',
+    name: 'Tsugi', role: "Mends things. Every gold seam on this site is Tsugi's.", wash: 'mizu',
     shape: 'M31 56C32 49 98 49 99 56C102 83 88 106 65 106C42 106 28 83 31 56Z',
     pool: 'M37 86C50 104 80 104 93 86C86 101 76 106 65 106C54 106 44 101 37 86Z',
     rim: 'M31 56C46 65 84 65 99 56',
@@ -46,14 +46,14 @@ export const CREW: Record<Who, Body> = {
     face: [62, 80], armL: [33, 80], armR: [97, 80], legs: [[55, 110], [75, 110]], foot: 126,
   },
   oops: {
-    name: 'Oops', role: 'The Reality Check · Logs root-cause collisions with reality.', wash: 'hanko',
+    name: 'Oops', role: 'Breaks things, mostly claims. Has never once said sorry.', wash: 'hanko',
     shape: 'M40 50L52 50L57 60L63 50L92 50C95 72 92 96 85 108L45 108C38 96 37 72 40 50Z',
     pool: 'M42 92C52 106 78 106 88 92C87 100 86 104 85 108L45 108C44 104 43 100 42 92Z',
     seam: 'M57 60L54 66L58 71',
     face: [65, 80], armL: [40, 80], armR: [91, 80], legs: [[54, 108], [76, 108]], foot: 126,
   },
   kiki: {
-    name: 'Kiki', role: 'The Radar · Listens across the frontier so you can skim.', wash: 'moss',
+    name: 'Kiki', role: 'Listens. Hears about new pieces before anyone else does.', wash: 'moss',
     shape: 'M56 22C56 18 74 18 74 22L72 44C97 56 99 92 83 110L47 110C31 92 33 56 58 44Z',
     pool: 'M38 92C50 108 80 108 92 92C90 100 87 106 83 110L47 110C43 106 40 100 38 92Z',
     rim: 'M57 32C62 35 68 35 73 32',
@@ -61,7 +61,7 @@ export const CREW: Record<Who, Body> = {
     face: [65, 78], armL: [37, 80], armR: [93, 80], legs: [[55, 110], [75, 110]], foot: 126,
   },
   fude: {
-    name: 'Fude', role: 'The Scribe · Chronicles protocols and durable specifications.', wash: 'indigo',
+    name: 'Fude', role: 'Writes everything down, including what you have read.', wash: 'indigo',
     shape: 'M38 56C38 49 92 49 92 56L97 104C97 112 33 112 33 104Z',
     pool: 'M35 90C50 104 80 104 95 90L97 104C97 112 33 112 33 104Z',
     rim: 'M38 56C50 63 80 63 92 56',
@@ -70,7 +70,7 @@ export const CREW: Record<Who, Body> = {
     face: [65, 82], armL: [36, 84], armR: [95, 84], legs: [[55, 110], [75, 110]], foot: 126,
   },
   uso: {
-    name: 'Uso', role: 'The Skeptic · Can smell a made-up number from three tabs away.', wash: 'plum',
+    name: 'Uso', role: 'Doubts. Can smell a made-up number from three tabs away.', wash: 'plum',
     shape: 'M36 80C36 52 96 52 96 80C96 110 36 110 36 80Z',
     pool: 'M40 94C52 110 80 110 92 94C84 104 76 108 66 108C56 108 48 104 40 94Z',
     rim: 'M50 57C56 45 76 45 82 57',
@@ -199,8 +199,6 @@ export interface Casting {
   who: Who;
   mood: Mood;
   line: string;
-  badge: string;
-  role: string;
 }
 
 interface Rule extends Omit<Casting, 'line'> {
@@ -211,67 +209,51 @@ interface Rule extends Omit<Casting, 'line'> {
 /** First words are the signal. A topic that hits several rules goes to the one it hits hardest. */
 const RULES: Rule[] = [
   {
-    match: /\b(fail\w*|wrong|broke\w*|bug\w*|incident|rogue|delet\w*|deprecat\w*|trap|doom|walkback|rehir\w*|cancel\w*|crash\w*|outage|postmortem)\b/gi,
+    match: /\b(fail\w*|wrong|broke\w*|breaking|bug\w*|flaws?|incident|rogue|delet\w*|deprecat\w*|trap|doom|walkback|rehir\w*|cancel\w*|crash\w*|outage|postmortem|autops\w*|drain\w*|attack\w*|exploit\w*|vulnerab\w*|abandon\w*|ditch\w*|leak\w*|backfir\w*|collaps\w*)\b/gi,
     who: 'oops',
     mood: 'panic',
-    badge: 'Collisions logged by Oops · Retrospective Lens',
-    role: 'Root-Cause Retrospective · Blameless Audit',
     lines: ['In my defence, it was like that when I got here.', 'That one was load-bearing, apparently.', 'Blameless postmortem: what actually broke.'],
   },
   {
-    match: /\b(claim\w*|hype|verif\w*|graded|autopsy|honest\w*|actually|really|measur\w*|percent|washing|95%|audit)\b/gi,
+    match: /\b(claim\w*|hype|verif\w*|graded|honest\w*|actually|really|measur\w*|percent|washing|95%|audit|guess\w*|myths?|repackag\w*)\b/gi,
     who: 'uso',
     mood: 'doubt',
-    badge: 'Audited by Uso · Business & Audit Lens',
-    role: 'The Skeptic · Verification & Due Diligence',
     lines: ['Can smell a made-up number from three tabs away.', 'Source? Check the denominator.', 'Let me just hold this up to the light.'],
   },
   {
     match: /\b(cost\w*|pric\w*|token\w*|billing|budget|margin\w*|econom\w*|roi|money|sav\w+|spend|invoice)\b/gi,
     who: 'kiki',
     mood: 'count',
-    badge: 'Audited by Kiki · Unit Economics Lens',
-    role: 'Financial Radar · Token & Cloud Ledger',
     lines: ['Who approved this invoice?', 'I counted twice. It got worse.', 'Somebody left the meter running.'],
   },
   {
     match: /\b(secur\w*|jailbreak|injection|complian\w*|regulat\w*|law|act|rules|legal|takedown|cert-in|guardrail\w*)\b/gi,
     who: 'uso',
     mood: 'sideeye',
-    badge: 'Audited by Uso · Compliance Lens',
-    role: 'The Skeptic · Regulatory & Security Guardrails',
     lines: ['Legal is typing…', 'I saw nothing. In writing.', 'This is fine, said no auditor.'],
   },
   {
     match: /\b(memor\w*|context|cach\w*|forget\w*|window|prefix|kv-cache|compaction)\b/gi,
     who: 'kiki',
     mood: 'sleep',
-    badge: 'Tracked by Kiki · Systems Radar',
-    role: 'The Radar · Context Window Telemetry',
     lines: ['Measuring the context degradation.', 'Cache hit ratio dropped past page four.', 'Telemetry from the long-decode loop.'],
   },
   {
     match: /\b(agent\w*|autonom\w*|harness|skills?|routine\w*|scheduled|protocol|mcp|a2a|orchestrat\w*)\b/gi,
     who: 'fude',
     mood: 'scribble',
-    badge: 'Chronicled by Fude · Architecture Lens',
-    role: 'The Scribe · Protocols & Agent Specifications',
     lines: ['Recorded in the permanent ledger.', 'Nobody told me to stop.', 'Specifications written to survive the session.'],
   },
   {
     match: /\b(model\w*|benchmark\w*|gpu|latency|bandwidth|fine-tun\w*|vision|inference|eeg|attention|quantiz\w*|weights?)\b/gi,
     who: 'tsugi',
     mood: 'paint',
-    badge: 'Deconstructed by Tsugi · Technical Lens',
-    role: 'The Builder · Benchmark Telemetry & Invariants',
     lines: ['Small words. Big cracks.', 'Under the hood, nothing is magic.', 'Benchmark telemetry grounded in code.'],
   },
   {
     match: /\b(what is|what a|explain\w*|basics?|why does|why ai|temperature|how to|intuition|primer)\b/gi,
     who: 'tsugi',
     mood: 'happy',
-    badge: 'Grounded by Tsugi · Basics Lens',
-    role: 'Plain Language · Zero Tech-Bro Hype',
     lines: ['Small words. Big cracks.', 'Sit down, this one is gentle. No homework.', 'Start with the simplest invariant.'],
   },
 ];
@@ -280,15 +262,11 @@ const TRACK_DEFAULTS: Record<string, (slug: string) => Casting> = {
   technical: () => ({
     who: 'tsugi',
     mood: 'paint',
-    badge: 'Mended by Tsugi · Technical Lens',
-    role: 'The Builder · Systems & Invariants',
     line: 'Small words. Big cracks.',
   }),
   business: () => ({
     who: 'uso',
     mood: 'doubt',
-    badge: 'Audited by Uso · Business Lens',
-    role: 'The Skeptic · Unit Economics & P&L',
     line: 'Can smell a made-up number from three tabs away.',
   }),
   'case-studies': (slug: string) => {
@@ -297,15 +275,11 @@ const TRACK_DEFAULTS: Record<string, (slug: string) => Casting> = {
       ? {
           who: 'uso',
           mood: 'doubt',
-          badge: 'Audited by Uso · Case Studies Lens',
-          role: 'The Precedent & Audit · Enterprise Realities',
           line: 'Let me just hold this up to the light.',
         }
       : {
           who: 'kiki',
           mood: 'listen',
-          badge: 'Investigated by Kiki · Case Studies Lens',
-          role: 'Enterprise Radar · Field Verification',
           line: 'Field notes from the production deployment.',
         };
   },
@@ -315,15 +289,11 @@ const TRACK_DEFAULTS: Record<string, (slug: string) => Casting> = {
       ? {
           who: 'tsugi',
           mood: 'happy',
-          badge: 'Grounded by Tsugi · Basics Lens',
-          role: 'Plain Language · Zero Tech-Bro Hype',
           line: 'Small words. Big cracks.',
         }
       : {
           who: 'uso',
           mood: 'shrug',
-          badge: 'Demystified by Uso · Basics Lens',
-          role: 'First Principles · Clear Intuition',
           line: 'No buzzwords required.',
         };
   },
@@ -333,15 +303,11 @@ const TRACK_DEFAULTS: Record<string, (slug: string) => Casting> = {
       ? {
           who: 'kiki',
           mood: 'listen',
-          badge: 'Filtered by Kiki · Talks Lens',
-          role: 'The Filter & Radar · Frontier Keynotes',
           line: 'I listened so you can skim.',
         }
       : {
           who: 'oops',
           mood: 'sideeye',
-          badge: 'Collisions logged by Oops · Talks Lens',
-          role: 'Reality Check · Frontier Collisions',
           line: 'Keynote promises meet thermodynamic reality.',
         };
   },
@@ -351,11 +317,14 @@ const hash = (s: string) => [...s].reduce((h, c) => (Math.imul(h, 31) + c.charCo
 
 export function pickCrew(page: { slug: string; title: string; question?: string; keywords?: string[]; track: string }): Casting {
   // The title and question say what a piece is about; keywords only back them up.
-  const lead = `${page.title} ${page.question ?? ''}`;
+  // The title says most about what a piece is; the question backs it up, and
+  // keywords only break ties.
+  const title = page.title;
+  const asked = page.question ?? '';
   const tags = (page.keywords ?? []).join(' ');
   const scored = RULES.map((rule) => ({
     rule,
-    score: (lead.match(rule.match)?.length ?? 0) * 3 + (tags.match(rule.match)?.length ?? 0),
+    score: (title.match(rule.match)?.length ?? 0) * 4 + (asked.match(rule.match)?.length ?? 0) * 2 + (tags.match(rule.match)?.length ?? 0),
   }))
     .filter((r) => r.score > 0)
     .sort((a, b) => b.score - a.score);
@@ -369,8 +338,6 @@ export function pickCrew(page: { slug: string; title: string; question?: string;
   return {
     who: rule.who,
     mood: rule.mood,
-    badge: rule.badge,
-    role: rule.role,
     line: rule.lines[hash(`${page.slug}!`) % rule.lines.length],
   };
 }
