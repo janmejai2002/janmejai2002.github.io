@@ -68,13 +68,22 @@
   line-height: 1.04; letter-spacing: -.035em; text-wrap: balance;
 }
 /* The credit sits in the left column of the brief, level with the summary. */
-.ahead__crew { flex: none; width: 4.75rem; height: 4.75rem; margin-top: -.2rem; }
-.ahead__who { display: block; min-width: 0; }
-.ahead__who span { display: block; }
-.ahead__who em { display: block; margin-top: .35rem; font-family: var(--serif); font-size: 1rem; line-height: 1.25; color: var(--tldr-ink); }
-.ahead__by { grid-column: 1; align-self: start; display: flex; gap: .6rem; text-decoration: none; font-size: .9375rem; line-height: 1.45; color: var(--tldr-dim); }
-.ahead__by strong { display: block; color: var(--ochre); font-size: 1rem; font-weight: 600; }
-.ahead__by:hover strong { text-decoration: underline; text-underline-offset: 3px; }
+.ahead__crew { flex: none; width: 4.5rem; height: 4.5rem; margin-top: -.25rem; }
+.ahead__who { display: flex; flex-direction: column; gap: .2rem; min-width: 0; }
+.ahead__lens-badge {
+  display: inline-block; font-family: var(--font-mono, monospace); font-size: .6875rem; font-weight: 600;
+  letter-spacing: .05em; text-transform: uppercase; color: var(--ochre); line-height: 1.2;
+}
+.ahead__lens-role {
+  display: block; font-size: .9375rem; font-weight: 600; color: var(--tldr-ink); line-height: 1.25;
+}
+.ahead__who em {
+  display: block; margin-top: .15rem; font-family: var(--serif); font-size: .9375rem; font-style: italic; line-height: 1.35; color: var(--tldr-dim);
+}
+.ahead__by {
+  grid-column: 1; align-self: start; display: flex; gap: .75rem; text-decoration: none; font-size: .875rem; line-height: 1.4; color: var(--tldr-dim);
+}
+.ahead__by:hover .ahead__lens-role { text-decoration: underline; text-underline-offset: 3px; }
 
 /* ---------- the drawing, loose on the plate ----------
    No frame and no ground: each mark is its own element, and they fly together

@@ -180,11 +180,22 @@ void main(){
   float crown = 1. - t * t;
   vec3 N = normalize(vec3(n.xy * .7 + normalize(d + 1e-4) * t * .55, .55 + crown * .5));
   vec3 HG = normalize(normalize(vec3(toL, .3)) + vec3(0, 0, 1));
-  float g1 = pow(max(dot(N, HG), 0.), 26.) * (fall * .7 + .3);
+
+  // Anisotropic brushed 24k gold powder (kinpun maki-e) along crack seam tangent
+  vec2 seamTan = normalize(vec2(-dir.y, dir.x) + (h.xy - .5) * .3);
+  vec3 tangent = normalize(vec3(seamTan, .12));
+  float dotTH = dot(tangent, HG);
+  float sinTH = sqrt(max(0., 1. - dotTH * dotTH));
+  float anisoGlint = pow(sinTH, 28.) * (fall * .8 + .2);
+
   float flow = sin(fr * 62. - uTime * 7. + wVar * 5.) * .5 + .5;
   float molten = smoothstep(.2, 0., uGold - fr) * goldIn;
-  vec3 gold = uAu * (.55 + .62 * crown) + vec3(1., .86, .55) * g1 * 1.7;
-  gold += vec3(1., .78, .42) * molten * (.7 + 1.1 * flow);
+
+  // Layered 24k gold palette: deep urushi gold base + lustrous brushed specular glint
+  vec3 goldBase = uAu * (.58 + .58 * crown);
+  vec3 goldGlint = vec3(1., .92, .64) * anisoGlint * 1.85;
+  vec3 gold = goldBase + goldGlint;
+  gold += vec3(1., .82, .46) * molten * (.7 + 1.1 * flow);
   col = mix(col, mix(gap, gold, goldIn), seam);
 
   // Plate edge sinks slightly, so the band reads as an object.
@@ -297,7 +308,7 @@ export interface Plate {
   /** Maximum radius in shader units */
   getMaxRadius(): number;
   /** Rest to settled state */
-  settle(): void;
+  settle(n?: number): void;
 }
 
 interface Options {
@@ -665,7 +676,11 @@ export function createPlate({ plate, claims, reduced }: Options): Plate | null {
     requestAnimationFrame(pulseWave);
   };
   const getMaxRadius = () => maxR;
-  const settle = () => {
+  const settle = (n = current) => {
+    current = n;
+    seed = 1.3 + n * 4.17;
+    placeImpact(n);
+    inscribe(n);
     manualGoldRadius = -1;
     settled();
     sharpen();

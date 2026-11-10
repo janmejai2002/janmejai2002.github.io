@@ -23,6 +23,7 @@
 .wash-mizu { fill: var(--mizu); }
 .wash-hanko { fill: var(--hanko); }
 .wash-moss { fill: var(--moss); }
+.wash-ochre { fill: var(--ochre); }
 .wash-indigo { fill: var(--indigo); }
 .wash-plum { fill: var(--plum); }
 
@@ -31,9 +32,11 @@
 .on-plate .crew-wash { opacity: .78; }
 .on-plate .crew-pool { opacity: .5; }
 
-/* What a character says. */
+/* Restrained docket byline (replaces cartoon speech bubbles). */
 .crew-say {
-  display: inline-block; max-width: 15rem; padding: .4rem .7rem; position: relative;
-  font-family: var(--serif); font-style: italic; font-size: 1.0625rem; line-height: 1.25;
-  background: var(--paper); color: var(--ink); border: 1.25px solid var(--ink); border-radius: 12px 12px 12px 3px;
+  display: inline-block; max-width: 16rem; padding: .3rem .65rem; position: relative;
+  font-family: var(--font-mono, monospace); font-size: .75rem; font-style: normal; line-height: 1.35;
+  letter-spacing: .02em;
+  background: var(--paper); color: var(--ink); border: 1px solid var(--border); border-radius: 2px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }

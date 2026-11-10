@@ -204,12 +204,12 @@ const related = [...candidates.slice(offset), ...candidates.slice(0, offset)].sl
         {
           tldr && (
             <div class="ahead__brief" data-brief>
-              <a class="ahead__by on-plate" href="/blog/how-this-blog-builds-itself/">
+              <a class="ahead__by on-plate" href="/blog/how-this-blog-builds-itself/" title="The wAIbi-sabi critical editorial lenses">
                 <Crew who={casting.who} mood={casting.mood} class="ahead__crew" />
                 <span class="ahead__who">
-                  <strong>The wAIbi-sabi agentic team</strong>
-                  <span>Beautifully unfinished. Occasionally supervised.</span>
-                  <em>“{casting.line}” {CREW[casting.who].name}</em>
+                  <span class="ahead__lens-badge">{casting.badge}</span>
+                  <strong class="ahead__lens-role">{casting.role}</strong>
+                  <em>“{casting.line}”</em>
                 </span>
               </a>
               <Fragment set:html={tldr} />

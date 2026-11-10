@@ -121,163 +121,23 @@ const edgeLine = edge.map(([x, d]) => `${(x * 10).toFixed(0)},${(EDGE_DEPTH - d)
       </div>
     </div>
 
-    {/* The Living Ceramic Terrarium: all 5 pottery figures */}
+    {/* The crew. Oops breaks the plate, Tsugi mends it, the other two have opinions. */}
     <div class="crew-stage on-plate" data-crew aria-hidden="true">
-      <div class="crew-actor" data-actor="oops" data-state="swing" tabindex="0" role="button" aria-label="Interact with Oops">
+      <div class="crew-actor" data-actor="oops" data-state="swing">
         <Crew who="oops" mood="swing" class="is-swing" />
         <Crew who="oops" mood="panic" class="is-panic" />
         <Crew who="oops" mood="sideeye" class="is-sideeye" />
-        <Crew who="oops" mood="happy" class="is-happy" />
-        <Crew who="oops" mood="sip" class="is-sip" />
-        <span class="crew-tag" data-tag="oops"></span>
       </div>
-
-      <div class="crew-actor" data-actor="tsugi" data-state="idle" tabindex="0" role="button" aria-label="Interact with Tsugi">
+      <div class="crew-actor" data-actor="tsugi" data-state="idle">
         <Crew who="tsugi" mood="idle" class="is-idle" />
         <Crew who="tsugi" mood="paint" class="is-paint" />
         <Crew who="tsugi" mood="proud" class="is-proud" />
-        <Crew who="tsugi" mood="happy" class="is-happy" />
-        <span class="crew-tag" data-tag="tsugi"></span>
       </div>
-
-      <div class="crew-actor" data-actor="kiki" data-state="listen" tabindex="0" role="button" aria-label="Interact with Kiki">
-        <Crew who="kiki" mood="listen" class="is-listen" />
-        <Crew who="kiki" mood="mindblown" class="is-mindblown" />
-        <Crew who="kiki" mood="sleep" class="is-sleep" />
-        <Crew who="kiki" mood="happy" class="is-happy" />
-        <span class="crew-tag" data-tag="kiki"></span>
+      <div class="crew-side">
+        <Crew who="uso" mood="doubt" />
+        <Crew who="fude" mood="scribble" />
       </div>
-
-      <div class="crew-actor" data-actor="fude" data-state="scribble" tabindex="0" role="button" aria-label="Interact with Fude">
-        <Crew who="fude" mood="scribble" class="is-scribble" />
-        <Crew who="fude" mood="count" class="is-count" />
-        <Crew who="fude" mood="idle" class="is-idle" />
-        <span class="crew-tag" data-tag="fude"></span>
-      </div>
-
-      <div class="crew-actor" data-actor="uso" data-state="doubt" tabindex="0" role="button" aria-label="Interact with Uso">
-        <Crew who="uso" mood="doubt" class="is-doubt" />
-        <Crew who="uso" mood="sip" class="is-sip" />
-        <Crew who="uso" mood="proud" class="is-proud" />
-        <Crew who="uso" mood="sideeye" class="is-sideeye" />
-        <span class="crew-tag" data-tag="uso"></span>
-      </div>
-
       <span class="crew-say" data-say></span>
-
-      {/* Dev Telemetry HUD Overlay (Toggle via '~' or ?debug=crew) */}
-      <div class="crew-telemetry" data-telemetry hidden aria-hidden="true">
-        <div class="crew-telemetry__card">
-          <div class="crew-telemetry__top">
-            <span class="crew-telemetry__pill">TERRARIUM TELEMETRY</span>
-            <span class="crew-telemetry__intent" data-hud-intent>STILLNESS</span>
-            <span class="crew-telemetry__time" data-hud-conf>100%</span>
-          </div>
-          <div class="crew-telemetry__row">
-            <div class="crew-telemetry__col">
-              <span class="crew-telemetry__label">Speed</span>
-              <span class="crew-telemetry__val"><b data-hud-speed>0.00</b> px/ms</span>
-            </div>
-            <div class="crew-telemetry__col">
-              <span class="crew-telemetry__label">Accel</span>
-              <span class="crew-telemetry__val"><b data-hud-accel>0.00</b> px/ms²</span>
-            </div>
-            <div class="crew-telemetry__col">
-              <span class="crew-telemetry__label">Jerk</span>
-              <span class="crew-telemetry__val"><b data-hud-jerk>0.00</b> px/ms³</span>
-            </div>
-          </div>
-          <div class="crew-telemetry__row">
-            <div class="crew-telemetry__col">
-              <span class="crew-telemetry__label">Curvature</span>
-              <span class="crew-telemetry__val"><b data-hud-curve>0.00</b> rad/px</span>
-            </div>
-            <div class="crew-telemetry__col">
-              <span class="crew-telemetry__label">Dwell</span>
-              <span class="crew-telemetry__val"><b data-hud-dwell>1.00</b></span>
-            </div>
-            <div class="crew-telemetry__col">
-              <span class="crew-telemetry__label">Efficiency</span>
-              <span class="crew-telemetry__val"><b data-hud-eff>0.00</b></span>
-            </div>
-          </div>
-          <div class="crew-telemetry__sec">
-            <div class="crew-telemetry__label">Micro-Brain Softmax (12→16→5) · <span data-hud-latency>0.00ms</span></div>
-            <div class="crew-telemetry__meter" data-hud-bars>
-              <div class="crew-telemetry__bar-row"><span>STRIKE</span><div class="crew-telemetry__bar-track"><div class="crew-telemetry__bar-fill" data-bar="0"></div></div><span data-bar-val="0">0%</span></div>
-              <div class="crew-telemetry__bar-row"><span>SHAKE</span><div class="crew-telemetry__bar-track"><div class="crew-telemetry__bar-fill" data-bar="1"></div></div><span data-bar-val="1">0%</span></div>
-              <div class="crew-telemetry__bar-row"><span>CARESS</span><div class="crew-telemetry__bar-track"><div class="crew-telemetry__bar-fill" data-bar="2"></div></div><span data-bar-val="2">0%</span></div>
-              <div class="crew-telemetry__bar-row"><span>ORBIT</span><div class="crew-telemetry__bar-track"><div class="crew-telemetry__bar-fill" data-bar="3"></div></div><span data-bar-val="3">0%</span></div>
-              <div class="crew-telemetry__bar-row"><span>STILL</span><div class="crew-telemetry__bar-track"><div class="crew-telemetry__bar-fill" data-bar="4"></div></div><span data-bar-val="4">100%</span></div>
-            </div>
-          </div>
-          <div class="crew-telemetry__sec">
-            <div class="crew-telemetry__label">Physics & Mascots</div>
-            <div class="crew-telemetry__status" data-hud-status>Negative space bounds locked · Press ~ to dismiss</div>
-          </div>
-        </div>
-        <div class="crew-telemetry__debug-boxes" data-hud-boxes></div>
-      </div>
-    </div>
-
-    {/* SVG Gold Lacquer Seam Veins */}
-    <svg class="kintsugi-veins" data-veins aria-hidden="true"></svg>
-
-    {/* The Red Hanko Seal (金継) stamped on 100% cure */}
-    <div class="kintsugi-hanko" data-hanko hidden aria-label="Kintsugi sealed mark">
-      <span class="hanko-seal">金継</span>
-    </div>
-
-    {/* Diegetic Content Bridge Toast */}
-    <div class="kintsugi-bridge" data-bridge hidden aria-live="polite">
-      <span class="bridge__hanko">金継</span>
-      <div class="bridge__content">
-        <span class="bridge__status" data-bridge-status>Fracture Healed</span>
-        <a class="bridge__link" data-bridge-link href="/blog/agent-framework-20-year-old-bugs/">
-          <span class="bridge__title" data-bridge-title>Why AI Systems Fail at Organizational Boundaries</span>
-          <span class="bridge__arrow" aria-hidden="true">&rarr;</span>
-        </a>
-      </div>
-      <button type="button" class="bridge__close" data-bridge-close aria-label="Dismiss">&times;</button>
-    </div>
-
-    {/* Fude's Repair Chronicle Modal */}
-    <div class="kintsugi-ledger" data-ledger hidden aria-hidden="true">
-      <div class="ledger__backdrop" data-ledger-backdrop></div>
-      <div class="ledger__card" role="dialog" aria-modal="true" aria-labelledby="ledger-title">
-        <div class="ledger__header">
-          <div class="ledger__title-wrap">
-            <span class="ledger__seal">金継</span>
-            <h2 id="ledger-title" class="ledger__title">Fude's Repair Chronicle</h2>
-          </div>
-          <button type="button" class="ledger__close" data-ledger-close aria-label="Close chronicle">&times;</button>
-        </div>
-        <div class="ledger__grid">
-          <div class="ledger__stat">
-            <span class="ledger__val" data-ledger-healed>0</span>
-            <span class="ledger__lbl">Fractures Cured</span>
-          </div>
-          <div class="ledger__stat">
-            <span class="ledger__val" data-ledger-streak>0</span>
-            <span class="ledger__lbl">Current Streak</span>
-          </div>
-          <div class="ledger__stat">
-            <span class="ledger__val"><span data-ledger-acc>98.4</span>%</span>
-            <span class="ledger__lbl">Precision</span>
-          </div>
-        </div>
-        <div class="ledger__section">
-          <span class="ledger__sub">Diegetic Reading Bridge</span>
-          <p class="ledger__desc">Each healed vessel unlocks an applied-AI deep dive on systems failures and resilient architecture.</p>
-          <a class="ledger__bridge-link" data-ledger-bridge-link href="/blog/agent-framework-20-year-old-bugs/">
-            <span class="ledger__bridge-title" data-ledger-bridge-title>Why AI Systems Fail at Organizational Boundaries</span>
-            <span class="ledger__bridge-ask" data-ledger-bridge-ask>Why do multi-agent systems crash in corporate production?</span>
-          </a>
-        </div>
-        <div class="ledger__footer">
-          <span class="ledger__hint">Press <kbd>Space</kbd> for Tsugi assist &middot; <kbd>R</kbd> to close</span>
-        </div>
-      </div>
     </div>
   </section>
   <svg class="plate-edge" viewBox={`0 0 1000 ${EDGE_DEPTH}`} preserveAspectRatio="none" aria-hidden="true">
@@ -420,11 +280,7 @@ const edgeLine = edge.map(([x, d]) => `${(x * 10).toFixed(0)},${(EDGE_DEPTH - d)
 </Base>
 
 <script>
-  import { createPlate, type Plate, type SeamPoint } from '../scripts/kintsugi';
-  import { createCrewBrain, type GestureClass, type MautAction } from '../lib/crew-brain';
-  import { createCrewPhysics, type ActorPhysicsState, type Rect } from '../lib/crew-physics';
-  import { createKintsugiGame, type GameLedger, type ContentBridgeEssay } from '../lib/kintsugi-game';
-  import { createCrewDialogue, type WorkshopArc, type CrewActorId } from '../lib/crew-dialogue';
+  import { createPlate } from '../scripts/kintsugi';
 
   const CAP = 8;
   const DWELL_END = 'cue-fill';
@@ -439,7 +295,7 @@ const edgeLine = edge.map(([x, d]) => `${(x * 10).toFixed(0)},${(EDGE_DEPTH - d)
   const plateEl = document.querySelector<HTMLElement>('.plate');
   const hint = document.querySelector<HTMLElement>('[data-hint]');
   let current = 0;
-  let auto = !reduced;
+  let auto = false;
 
   // Null without WebGL2, in which case the CSS crack below it stays in charge.
   const plate = plateEl ? createPlate({ plate: plateEl, claims: claimEls, reduced }) : null;
@@ -453,754 +309,146 @@ const edgeLine = edge.map(([x, d]) => `${(x * 10).toFixed(0)},${(EDGE_DEPTH - d)
     }
   };
 
-  /* ---------- The Living Ceramic Terrarium: 5-Crew Engine ---------- */
+  /* ---------- the crew: timed to the shader's own schedule ----------
+     The fracture starts about 560ms after a strike and the gold about 1.5s after. */
   const stageEl = document.querySelector<HTMLElement>('[data-crew]');
-  const actors = {
-    oops: stageEl?.querySelector<HTMLElement>('[data-actor="oops"]') ?? null,
-    tsugi: stageEl?.querySelector<HTMLElement>('[data-actor="tsugi"]') ?? null,
-    kiki: stageEl?.querySelector<HTMLElement>('[data-actor="kiki"]') ?? null,
-    fude: stageEl?.querySelector<HTMLElement>('[data-actor="fude"]') ?? null,
-    uso: stageEl?.querySelector<HTMLElement>('[data-actor="uso"]') ?? null,
-  };
+  const actor = (name: string) => stageEl?.querySelector<HTMLElement>(`[data-actor="${name}"]`) ?? null;
+  const oops = actor('oops');
+  const tsugi = actor('tsugi');
   const bubble = stageEl?.querySelector<HTMLElement>('[data-say]') ?? null;
-
-  /* ---------- Kintsugi Game, Dialogue & Intelligence Engines ---------- */
-  const brain = createCrewBrain();
-  const physics = createCrewPhysics();
-  const game = createKintsugiGame();
-  const dialogue = createCrewDialogue();
-
-  /* Kintsugi Terrarium Interactive DOM Elements */
-  const veinsSvg = document.querySelector<SVGSVGElement>('[data-veins]');
-  const hankoEl = document.querySelector<HTMLElement>('[data-hanko]');
-  const bridgeEl = document.querySelector<HTMLElement>('[data-bridge]');
-  const bridgeTitle = bridgeEl?.querySelector<HTMLElement>('[data-bridge-title]');
-  const bridgeLink = bridgeEl?.querySelector<HTMLAnchorElement>('[data-bridge-link]');
-  const bridgeClose = bridgeEl?.querySelector<HTMLButtonElement>('[data-bridge-close]');
-  const ledgerModal = document.querySelector<HTMLElement>('[data-ledger]');
-  const ledgerClose = ledgerModal?.querySelector<HTMLButtonElement>('[data-ledger-close]');
-  const ledgerBackdrop = ledgerModal?.querySelector<HTMLElement>('[data-ledger-backdrop]');
-  const ledgerHealed = ledgerModal?.querySelector<HTMLElement>('[data-ledger-healed]');
-  const ledgerStreak = ledgerModal?.querySelector<HTMLElement>('[data-ledger-streak]');
-  const ledgerAcc = ledgerModal?.querySelector<HTMLElement>('[data-ledger-acc]');
-  const ledgerBridgeTitle = ledgerModal?.querySelector<HTMLElement>('[data-ledger-bridge-title]');
-  const ledgerBridgeAsk = ledgerModal?.querySelector<HTMLElement>('[data-ledger-bridge-ask]');
-  const ledgerBridgeLink = ledgerModal?.querySelector<HTMLAnchorElement>('[data-ledger-bridge-link]');
-
-  const ACTOR_SPECS: Record<string, { stiffness: number; damping: number; mass: number; breathingFreq?: number; breathingPhase?: number }> = {
-    oops:  { stiffness: 210, damping: 18, mass: 1.0, breathingFreq: 1.35, breathingPhase: 0.42 },
-    tsugi: { stiffness: 180, damping: 20, mass: 1.1, breathingFreq: 0.82, breathingPhase: 2.15 },
-    kiki:  { stiffness: 230, damping: 22, mass: 0.9, breathingFreq: 1.85, breathingPhase: 1.25 },
-    fude:  { stiffness: 190, damping: 21, mass: 1.0, breathingFreq: 1.12, breathingPhase: 3.75 },
-    uso:   { stiffness: 195, damping: 20, mass: 1.0, breathingFreq: 0.94, breathingPhase: 4.80 },
-  };
-
-  const getRestTargets = (w: number, h: number) => {
-    const isNarrow = window.matchMedia('(max-width: 48rem)').matches;
-    if (isNarrow) {
-      // Mobile Thumb-Zone Calibration (<768px): Mascots on periphery away from central text
-      return {
-        kiki:  { x: w * 0.50, y: 32 },
-        tsugi: { x: w * 0.28, y: h - 85 },
-        oops:  { x: w * 0.72, y: h - 85 },
-        fude:  { x: w * 0.88, y: h - 80 },
-        uso:   { x: w * 0.12, y: h - 80 },
-      };
-    }
-    // Desktop Precision Architecture (>=768px)
-    return {
-      kiki:  { x: w * 0.50, y: 36 },
-      tsugi: { x: w * 0.72, y: h * 0.65 },
-      oops:  { x: w * 0.90, y: h * 0.62 },
-      fude:  { x: w * 0.91, y: h * 0.86 },
-      uso:   { x: w * 0.14, y: h * 0.88 },
-    };
-  };
-
-  const initialStageBox = stageEl ? stageEl.getBoundingClientRect() : { width: 800, height: 400 };
-  const initialTargets = getRestTargets(initialStageBox.width || 800, initialStageBox.height || 400);
-
-  for (const [id, el] of Object.entries(actors)) {
-    if (el) {
-      const w = el.offsetWidth || 80;
-      const h = el.offsetHeight || 80;
-      const pt = initialTargets[id as keyof typeof initialTargets] || { x: 100, y: 300 };
-      physics.addActor(id, { x: pt.x, y: pt.y, width: w, height: h }, ACTOR_SPECS[id]);
-      physics.setTarget(id, pt.x, pt.y);
-      el.style.setProperty('--x', `${Math.round(pt.x)}px`);
-      el.style.setProperty('--y', `${Math.round(pt.y)}px`);
-    }
-  }
-
+  const OOPS_SAYS = ['Load-bearing, apparently.', 'Like that when I got here.', 'Checking the seam telemetry.'];
+  const TSUGI_SAYS = ['Small words. Big cracks.', 'Sealing the invariant.', 'The gold is wet. Come in.'];
   let crewTimers: number[] = [];
-  let tagTimers = new Map<string, number>();
   let beat = 0;
-  let activeSeamWalk: { trajectory: SeamPoint[]; startTime: number; duration: number } | null = null;
-  const pointer = { x: 0, y: 0, screenX: 0, screenY: 0 };
-  let lastIntent: GestureClass = 'CONTEMPLATIVE_STILLNESS';
-  let intentDebounceTimer = 0;
-  let mautDebounceTimer = 0;
-  let isPointerDragging = false;
-  let touchNearCrack = false;
-
-  /* Dev Telemetry HUD overlay controllers */
-  const telemetryEl = document.querySelector<HTMLElement>('[data-telemetry]');
-  const hudIntent = telemetryEl?.querySelector<HTMLElement>('[data-hud-intent]');
-  const hudConf = telemetryEl?.querySelector<HTMLElement>('[data-hud-conf]');
-  const hudLatency = telemetryEl?.querySelector<HTMLElement>('[data-hud-latency]');
-  const hudSpeed = telemetryEl?.querySelector<HTMLElement>('[data-hud-speed]');
-  const hudAccel = telemetryEl?.querySelector<HTMLElement>('[data-hud-accel]');
-  const hudJerk = telemetryEl?.querySelector<HTMLElement>('[data-hud-jerk]');
-  const hudCurve = telemetryEl?.querySelector<HTMLElement>('[data-hud-curve]');
-  const hudDwell = telemetryEl?.querySelector<HTMLElement>('[data-hud-dwell]');
-  const hudEff = telemetryEl?.querySelector<HTMLElement>('[data-hud-eff]');
-  const hudBoxes = telemetryEl?.querySelector<HTMLElement>('[data-hud-boxes]');
-  const hudBarFills = telemetryEl?.querySelectorAll<HTMLElement>('[data-bar]');
-  const hudBarVals = telemetryEl?.querySelectorAll<HTMLElement>('[data-bar-val]');
-
-  let currentObstacles: Rect[] = [];
-  const urlParams = new URLSearchParams(window.location.search);
-  let isTelemetryActive = urlParams.get('debug') === 'crew';
-  if (telemetryEl && isTelemetryActive) {
-    telemetryEl.hidden = false;
-  }
-
-  const renderTelemetryBoxes = () => {
-    if (!hudBoxes || !isTelemetryActive || !stageEl) return;
-    hudBoxes.innerHTML = '';
-    const b = stageEl.getBoundingClientRect();
-    for (const obs of currentObstacles) {
-      const boxDiv = document.createElement('div');
-      boxDiv.className = 'crew-telemetry__obs-box';
-      boxDiv.style.left = `${Math.round(obs.left)}px`;
-      boxDiv.style.top = `${Math.round(obs.top)}px`;
-      boxDiv.style.width = `${Math.round(obs.right - obs.left)}px`;
-      boxDiv.style.height = `${Math.round(obs.bottom - obs.top)}px`;
-      hudBoxes.appendChild(boxDiv);
-    }
-    const targets = getRestTargets(b.width, b.height);
-    for (const [id, pt] of Object.entries(targets)) {
-      const dot = document.createElement('div');
-      dot.className = 'crew-telemetry__anchor-box';
-      dot.style.left = `${Math.round(pt.x)}px`;
-      dot.style.top = `${Math.round(pt.y)}px`;
-      dot.title = `Anchor: ${id}`;
-      hudBoxes.appendChild(dot);
-    }
-  };
-
-  const renderSvgVeins = () => {
-    if (!veinsSvg || !stageEl) return;
-    const b = stageEl.getBoundingClientRect();
-    veinsSvg.setAttribute('viewBox', `0 0 ${Math.round(b.width)} ${Math.round(b.height)}`);
-    const paths = game.getSvgPaths();
-    let html = '';
-    if (paths.crackPath) {
-      html += `<path class="vein-crack" d="${paths.crackPath}" />`;
-    }
-    for (const seg of paths.goldSegments) {
-      if (seg.progress > 0) {
-        const strokeLen = 100;
-        const dashOffset = (1.0 - seg.progress) * strokeLen;
-        html += `<path class="vein-gold" d="${seg.d}" pathLength="${strokeLen}" stroke-dasharray="${strokeLen}" stroke-dashoffset="${dashOffset.toFixed(2)}" />`;
-      }
-    }
-    veinsSvg.innerHTML = html;
-  };
-
-  const updateLedgerUI = (ledger: GameLedger) => {
-    if (ledgerHealed) ledgerHealed.textContent = String(ledger.totalHealed);
-    if (ledgerStreak) ledgerStreak.textContent = String(ledger.currentStreak);
-    if (ledgerAcc) ledgerAcc.textContent = ledger.meanAccuracyPct.toFixed(1);
-    if (ledger.lastBridgedPost) {
-      if (ledgerBridgeTitle) ledgerBridgeTitle.textContent = ledger.lastBridgedPost.title;
-      if (ledgerBridgeAsk) ledgerBridgeAsk.textContent = ledger.lastBridgedPost.ask;
-      if (ledgerBridgeLink) ledgerBridgeLink.href = '/' + ledger.lastBridgedPost.slug + '/';
-    }
-  };
-  updateLedgerUI(game.getLedger());
-
-  const toggleLedger = (show?: boolean) => {
-    if (!ledgerModal) return;
-    const target = show !== undefined ? show : ledgerModal.hidden;
-    ledgerModal.hidden = !target;
-    if (target) {
-      updateLedgerUI(game.getLedger());
-    }
-  };
-  ledgerClose?.addEventListener('click', () => toggleLedger(false));
-  ledgerBackdrop?.addEventListener('click', () => toggleLedger(false));
-  bridgeClose?.addEventListener('click', () => { if (bridgeEl) bridgeEl.hidden = true; });
-
-  game.onGoldProgress((p) => {
-    plate?.setGoldProgress(p);
-    renderSvgVeins();
-  });
-
-  game.onSeamCured((ledger, bridge) => {
-    plate?.triggerGoldLusterWave();
-    if (hankoEl) hankoEl.hidden = false;
-    dialogue.setArc('RESPLENDENT_VESSEL');
-
-    if (bridgeEl && bridgeTitle && bridgeLink) {
-      bridgeTitle.textContent = bridge.title;
-      bridgeLink.href = '/' + bridge.slug + '/';
-      bridgeEl.hidden = false;
-    }
-    updateLedgerUI(ledger);
-
-    if (actors.tsugi) actors.tsugi.dataset.state = 'proud';
-    if (actors.kiki) actors.kiki.dataset.state = 'happy';
-    if (actors.oops) {
-      actors.oops.dataset.state = 'happy';
-      physics.applyImpulse('oops', 0, -180, 0.85, 1.25);
-    }
-    if (actors.uso) actors.uso.dataset.state = 'sip';
-    if (actors.fude) actors.fude.dataset.state = 'count';
-
-    const now = performance.now();
-    const line = dialogue.requestDialogue('tsugi', 'RESPLENDENT_VESSEL', { now, streak: ledger.currentStreak }, true);
-    if (line) {
-      showTag('tsugi', line.text, line.durationMs, true);
-      say(actors.tsugi, line.text);
-      brain.recordAction('SPEECH_TAG', now);
-    }
-  });
-
-  game.onTsugiStep((pt, angle) => {
-    physics.setTarget('tsugi', pt.x, pt.y);
-    if (actors.tsugi) actors.tsugi.dataset.state = 'paint';
-  });
-
-  window.addEventListener('keydown', (e) => {
-    if (e.key === '`' || e.key === '~') {
-      if (!telemetryEl) return;
-      isTelemetryActive = !isTelemetryActive;
-      telemetryEl.hidden = !isTelemetryActive;
-      if (isTelemetryActive) {
-        renderTelemetryBoxes();
-        startSimulation();
-      }
-    } else if (e.code === 'Space' && !e.repeat) {
-      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
-      e.preventDefault();
-      game.triggerTsugiAssist();
-      dialogue.setArc('GOLDEN_WAY');
-      startSimulation();
-    } else if ((e.key === 'r' || e.key === 'R') && !e.repeat) {
-      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
-      toggleLedger();
-    }
-  });
-
-  const later = (ms: number, fn: () => void) => {
-    const tid = window.setTimeout(fn, ms);
-    crewTimers.push(tid);
-    return tid;
-  };
-
-  let lastGlobalTagTime = 0;
-  let activeTagWho: string | null = null;
-  const MIN_TAG_COOLDOWN_MS = 3500;
-
-  const showTag = (who: keyof typeof actors, text: string, dur = 2400, force = false): boolean => {
-    const now = performance.now();
-    if (!force) {
-      if (now - lastGlobalTagTime < MIN_TAG_COOLDOWN_MS) return false;
-      if (activeTagWho && activeTagWho !== who) return false;
-    }
-    const actorEl = actors[who];
-    const tag = actorEl?.querySelector<HTMLElement>('.crew-tag');
-    if (!tag) return false;
-
-    lastGlobalTagTime = now;
-    activeTagWho = who;
-    tag.textContent = text;
-    tag.classList.add('on');
-    const existing = tagTimers.get(who);
-    if (existing) clearTimeout(existing);
-    tagTimers.set(
-      who,
-      window.setTimeout(() => {
-        tag.classList.remove('on');
-        if (activeTagWho === who) activeTagWho = null;
-        dialogue.releaseSpeaker(who as CrewActorId, performance.now());
-      }, dur)
-    );
-    return true;
-  };
-
-  const say = (who: HTMLElement | null, text: string) => {
-    if (!bubble || !who || !stageEl) return;
-    bubble.textContent = text;
-    const b = stageEl.getBoundingClientRect();
-    const half = Math.min(bubble.offsetWidth / 2 + 8, b.width / 2);
-    const whoX = parseFloat(who.style.getPropertyValue('--x') || '0');
-    const whoY = parseFloat(who.style.getPropertyValue('--y') || '0');
-    const x = Math.max(half, Math.min(b.width - half, whoX));
-    bubble.style.setProperty('--x', `${Math.round(x)}px`);
-    let bubbleY = whoY - who.offsetHeight + 4;
-    if (window.matchMedia('(max-width: 48rem)').matches) {
+  const later = (ms: number, fn: () => void) => crewTimers.push(window.setTimeout(fn, ms));
+  const inStage = (x: number, y: number) => {
+    const b = stageEl!.getBoundingClientRect();
+    const size = oops?.offsetWidth ?? 90;
+    let minY = size + 10;
+    if (window.matchMedia('(max-width: 40rem)').matches) {
       const idEl = document.querySelector<HTMLElement>('.plate__id');
       if (idEl) {
         const idBottom = idEl.getBoundingClientRect().bottom - b.top;
-        if (bubbleY - bubble.offsetHeight < idBottom + 4) {
-          bubbleY = idBottom + 4 + bubble.offsetHeight;
-        }
+        minY = Math.max(minY, idBottom + size + 44);
+      }
+    }
+    return {
+      x: Math.max(size / 2, Math.min(b.width - size / 2, x)),
+      y: Math.max(minY, Math.min(b.height - 30, y)),
+    };
+  };
+  const stand = (el: HTMLElement | null, x: number, y: number) => {
+    if (!el) return { x, y };
+    const p = inStage(x, y);
+    el.style.setProperty('--x', `${Math.round(p.x)}px`);
+    el.style.setProperty('--y', `${Math.round(p.y)}px`);
+    return p;
+  };
+  let sayTimer: number | null = null;
+  const say = (who: HTMLElement | null, text: string, duration = 2400) => {
+    if (!bubble || !who || !stageEl) return;
+    if (sayTimer) clearTimeout(sayTimer);
+    bubble.textContent = text;
+    const b = stageEl.getBoundingClientRect();
+    const half = Math.min(bubble.offsetWidth / 2 + 8, b.width / 2);
+    const x = Math.max(half, Math.min(b.width - half, parseFloat(who.style.getPropertyValue('--x'))));
+    bubble.style.setProperty('--x', `${Math.round(x)}px`);
+    let bubbleY = parseFloat(who.style.getPropertyValue('--y')) - who.offsetHeight + 4;
+    const idEl = document.querySelector<HTMLElement>('.plate__id');
+    if (idEl) {
+      const idBottom = idEl.getBoundingClientRect().bottom - b.top;
+      if (bubbleY - bubble.offsetHeight < idBottom + 12) {
+        bubbleY = idBottom + 16 + bubble.offsetHeight;
       }
     }
     bubble.style.setProperty('--y', `${Math.round(bubbleY)}px`);
     bubble.classList.add('on');
-    later(3200, () => bubble.classList.remove('on'));
-  };
-
-  const updateObstacles = () => {
-    if (!stageEl) return;
-    const stageBox = stageEl.getBoundingClientRect();
-    const obstacles: Rect[] = [];
-
-    const idEl = document.querySelector<HTMLElement>('.plate__id');
-    if (idEl) {
-      const b = idEl.getBoundingClientRect();
-      obstacles.push({
-        left: b.left - stageBox.left,
-        top: b.top - stageBox.top,
-        right: b.right - stageBox.left,
-        bottom: b.bottom - stageBox.top + 8,
-      });
-    }
-
-    const activeClaim = document.querySelector<HTMLElement>('.claim.on .claim__said');
-    if (activeClaim) {
-      const b = activeClaim.getBoundingClientRect();
-      obstacles.push({
-        left: b.left - stageBox.left,
-        top: b.top - stageBox.top,
-        right: b.right - stageBox.left,
-        bottom: b.bottom - stageBox.top + 6,
-      });
-    }
-
-    const cuesEl = document.querySelector<HTMLElement>('.cues');
-    if (cuesEl) {
-      const b = cuesEl.getBoundingClientRect();
-      obstacles.push({
-        left: b.left - stageBox.left,
-        top: b.top - stageBox.top,
-        right: b.right - stageBox.left,
-        bottom: b.bottom - stageBox.top + 4,
-      });
-    }
-
-    currentObstacles = obstacles;
-    physics.setObstacles(obstacles);
-    if (isTelemetryActive) renderTelemetryBoxes();
-  };
-
-  const setCrewRestPositions = () => {
-    if (!stageEl) return;
-    const b = stageEl.getBoundingClientRect();
-    const targets = getRestTargets(b.width, b.height);
-    for (const [id, pt] of Object.entries(targets)) {
-      physics.setTarget(id, pt.x, pt.y);
+    if (duration > 0) {
+      sayTimer = window.setTimeout(() => {
+        bubble.classList.remove('on');
+      }, duration);
     }
   };
-
-  const restCrew = () => {
-    setCrewRestPositions();
-    if (actors.oops) actors.oops.dataset.state = 'sideeye';
-    if (actors.tsugi) actors.tsugi.dataset.state = 'proud';
-    if (actors.kiki) actors.kiki.dataset.state = 'listen';
-    if (actors.fude) actors.fude.dataset.state = 'idle';
-    if (actors.uso) actors.uso.dataset.state = 'sip';
-    const line = dialogue.generateLine('tsugi', 'TRANQUIL_KILN');
-    say(actors.tsugi, line);
-  };
-
-  /* The 5-Crew Choreography on Fracture Strike */
   const playCrew = () => {
-    if (!plate || !actors.oops || !actors.tsugi || !stageEl) return;
+    if (!plate || !oops || !tsugi) return;
     crewTimers.forEach(clearTimeout);
     crewTimers = [];
     bubble?.classList.remove('on');
-    activeSeamWalk = null;
-
-    dialogue.setArc('FRACTURE_STRIKE');
-    if (hankoEl) hankoEl.hidden = true;
-    if (bridgeEl) bridgeEl.hidden = true;
-
-    const hit = plate.impactPx();
+    const n = beat++;
+    oops.classList.remove('gone');
+    later(270, () => {
+      const hit = plate.impactPx();
+      const size = oops.offsetWidth;
+      oops.classList.add('no-move');
+      stand(oops, hit.x + size * 0.42, hit.y + size * 0.62);
+      void oops.offsetWidth;
+      oops.classList.remove('no-move', 'away');
+      oops.dataset.state = 'swing';
+      oops.classList.remove('hit');
+      void oops.offsetWidth;
+      oops.classList.add('hit');
+      tsugi.classList.add('no-move');
+      const tsugiGround = inStage(0, hit.y + size * 0.72);
+      tsugi.style.setProperty('--x', `${Math.round(-size * 1.5)}px`);
+      tsugi.style.setProperty('--y', `${Math.round(tsugiGround.y)}px`);
+      void tsugi.offsetWidth;
+      tsugi.classList.remove('no-move');
+      tsugi.dataset.state = 'idle';
+      later(330, () => {
+        oops.dataset.state = 'panic';
+      });
+      later(1150, () => {
+        const b = stageEl.getBoundingClientRect();
+        oops.classList.add('walking');
+        stand(oops, Math.min(b.width - size * 1.2, Math.max(hit.x + size * 2.4, b.width * 0.72)), Math.max(size * 1.3, hit.y * 0.85));
+        tsugi.classList.add('walking');
+        tsugi.dataset.state = 'paint';
+        stand(tsugi, hit.x - size * 0.4, hit.y + size * 0.35);
+      });
+      later(1950, () => {
+        oops.classList.remove('walking');
+        tsugi.classList.remove('walking');
+        bubble?.classList.remove('on');
+        oops.dataset.state = 'sideeye';
+      });
+      later(2750, () => {
+        // Post-repair settle: Tsugi steps back into the right margin, clearing the text
+        const b = stageEl.getBoundingClientRect();
+        tsugi.classList.add('walking');
+        stand(tsugi, b.width * 0.76, b.height * 0.58);
+        later(450, () => {
+          tsugi.classList.remove('walking');
+          tsugi.dataset.state = 'proud';
+        });
+      });
+    });
+  };
+  const restCrew = () => {
+    if (!oops || !tsugi || !stageEl) return;
     const b = stageEl.getBoundingClientRect();
-
-    // Generate analytical crack network in the game engine
-    const crackSeed = 1.3 + current * 4.17 + (hit.x % 17) * 0.43;
-    game.generateFracture(hit, { width: b.width, height: b.height }, crackSeed, 1.2);
-    renderSvgVeins();
-
-    const trajectory = plate.getSeamTrajectory(35);
-
-    // 1. Oops positions at fracture impact point and winds up mallet
-    const safeHit = physics.clampToNegativeSpace(hit.x + 32, hit.y + 40, 80, 80, { width: b.width, height: b.height });
-    physics.setPosition('oops', safeHit.x, safeHit.y);
-    actors.oops.dataset.state = 'swing';
-    actors.oops.classList.remove('hit');
-    void actors.oops.offsetWidth;
-    actors.oops.classList.add('hit');
-
-    if (actors.kiki) actors.kiki.dataset.state = 'listen';
-
-    // 2. Shockwave jolt: Oops tumbles back with recoil squash & stretch
-    later(240, () => {
-      physics.applyImpulse('oops', 380, 70, 1.45, 0.62);
-      actors.oops!.dataset.state = 'panic';
-      const oopsLine = dialogue.generateLine('oops', 'FRACTURE_STRIKE');
-      showTag('oops', oopsLine, 2400, true);
-
-      // Kiki spiral-eyed shockwave reaction on top rim
-      if (actors.kiki) {
-        physics.applyImpulse('kiki', 0, -120, 1.25, 0.75);
-        actors.kiki.dataset.state = 'mindblown';
-        showTag('kiki', 'Acoustic shockwave!', 1800, true);
-      }
-
-      // Fude grabs bamboo quill to record incident
-      if (actors.fude) {
-        actors.fude.dataset.state = 'scribble';
-        const fudeLine = dialogue.generateLine('fude', 'FRACTURE_STRIKE');
-        showTag('fude', fudeLine, 2200, true);
-      }
-
-      // Uso leans forward with magnifying loupe
-      if (actors.uso) {
-        actors.uso.dataset.state = 'doubt';
-      }
-    });
-
-    // 3. Oops scrambles behind plate rim; Tsugi prepares gold brush at seam origin
-    later(750, () => {
-      const rest = getRestTargets(b.width, b.height);
-      physics.setTarget('oops', rest.oops.x, rest.oops.y);
-      actors.oops!.dataset.state = 'sideeye';
-
-      if (actors.kiki) actors.kiki.dataset.state = 'listen';
-
-      actors.tsugi!.dataset.state = 'paint';
-      if (trajectory.length > 0) {
-        physics.setTarget('tsugi', trajectory[0].x, trajectory[0].y);
-      }
-    });
-
-    // 4. Seam Walk: Tsugi walks along Voronoi crack, synchronizing shader gold and SVG lacquer
-    later(950, () => {
-      dialogue.setArc('GOLDEN_WAY');
-      activeSeamWalk = {
-        trajectory,
-        startTime: performance.now(),
-        duration: 1650,
-      };
-    });
-
-    // 5. Seam complete: Tsugi proud; Uso sips tea
-    later(2750, () => {
-      activeSeamWalk = null;
-      plate.setGoldRadius(plate.getMaxRadius());
-
-      actors.tsugi!.dataset.state = 'proud';
-      const tsugiLine = dialogue.generateLine('tsugi', 'GOLDEN_WAY');
-      showTag('tsugi', tsugiLine, 2800, true);
-      say(actors.tsugi, tsugiLine);
-
-      if (actors.uso) {
-        actors.uso.dataset.state = 'sip';
-        showTag('uso', 'Approved.', 2000, true);
-      }
-      if (actors.fude) actors.fude.dataset.state = 'count';
-    });
+    const size = oops.offsetWidth;
+    oops.classList.add('no-move');
+    tsugi.classList.add('no-move');
+    stand(tsugi, b.width * 0.76, b.height * 0.62);
+    stand(oops, b.width * 0.76 + size * 1.4, b.height * 0.62 + size * 0.2);
+    oops.dataset.state = 'sideeye';
+    tsugi.dataset.state = 'proud';
+    // Rest in dignified silence — no popup speech bubble covering introductory text
   };
 
-  /* Intent state reactions from the micro neural net */
-  const onIntentChanged = (intent: GestureClass) => {
-    if (activeSeamWalk) return;
-    const b = stageEl?.getBoundingClientRect();
-    if (!b) return;
-
-    if (intent === 'FRANTIC_SHAKE') {
-      if (actors.oops) {
-        actors.oops.dataset.state = 'panic';
-        physics.applyImpulse('oops', (Math.random() - 0.5) * 60, -35, 1.15, 0.88);
-        showTag('oops', 'Earthquake drill!', 1800);
-      }
-      if (actors.tsugi) actors.tsugi.dataset.state = 'paint';
-      if (actors.kiki) actors.kiki.dataset.state = 'mindblown';
-      if (actors.fude) actors.fude.dataset.state = 'scribble';
-      if (actors.uso) actors.uso.dataset.state = 'sideeye';
-    } else if (intent === 'GENTLE_CARESS') {
-      if (actors.tsugi) {
-        actors.tsugi.dataset.state = 'paint';
-        showTag('tsugi', 'Gentle touch.', 2000);
-      }
-      if (actors.oops) actors.oops.dataset.state = 'happy';
-      if (actors.kiki) actors.kiki.dataset.state = 'happy';
-      if (actors.uso) actors.uso.dataset.state = 'proud';
-      if (actors.fude) actors.fude.dataset.state = 'idle';
-    } else if (intent === 'CURIOUS_ORBIT') {
-      if (actors.oops) {
-        actors.oops.dataset.state = 'mindblown';
-        physics.applyImpulse('oops', 0, -25, 1.06, 0.95);
-        showTag('oops', 'Dizzy!', 1600);
-      }
-      if (actors.kiki) actors.kiki.dataset.state = 'listen';
-      if (actors.uso) actors.uso.dataset.state = 'doubt';
-      if (actors.fude) actors.fude.dataset.state = 'scribble';
-      if (actors.tsugi) actors.tsugi.dataset.state = 'idle';
-    } else if (intent === 'CONTEMPLATIVE_STILLNESS') {
-      setCrewRestPositions();
-      if (actors.oops) actors.oops.dataset.state = 'sip';
-      if (actors.tsugi) actors.tsugi.dataset.state = 'idle';
-      if (actors.kiki) actors.kiki.dataset.state = 'sleep';
-      if (actors.fude) actors.fude.dataset.state = 'idle';
-      if (actors.uso) actors.uso.dataset.state = 'sip';
-      dialogue.setArc('TRANQUIL_KILN');
-    }
-  };
-
-  /* Click-to-interact micro reactions for each pottery character */
-  const bindActorClicks = () => {
-    if (actors.oops) {
-      actors.oops.addEventListener('click', (e) => {
-        e.stopPropagation();
-        physics.applyImpulse('oops', 0, -220, 0.72, 1.4);
-        actors.oops!.dataset.state = 'panic';
-        showTag('oops', 'Careful! I am fragile!', 1800, true);
-        later(1800, () => (actors.oops!.dataset.state = 'sideeye'));
-      });
-    }
-    if (actors.tsugi) {
-      actors.tsugi.addEventListener('click', (e) => {
-        e.stopPropagation();
-        physics.applyImpulse('tsugi', 0, -140, 0.88, 1.18);
-        actors.tsugi!.dataset.state = 'happy';
-        showTag('tsugi', '24k gold lacquer curing.', 1800, true);
-        later(1800, () => (actors.tsugi!.dataset.state = 'proud'));
-      });
-    }
-    if (actors.kiki) {
-      actors.kiki.addEventListener('click', (e) => {
-        e.stopPropagation();
-        physics.applyImpulse('kiki', 0, -180, 0.82, 1.25);
-        actors.kiki!.dataset.state = 'listen';
-        showTag('kiki', 'Listening to the web feeds.', 1800, true);
-      });
-    }
-    if (actors.fude) {
-      actors.fude.addEventListener('click', (e) => {
-        e.stopPropagation();
-        physics.applyImpulse('fude', 0, -150, 0.85, 1.2);
-        actors.fude!.dataset.state = 'scribble';
-        toggleLedger(true);
-        later(1800, () => (actors.fude!.dataset.state = 'idle'));
-      });
-    }
-    if (actors.uso) {
-      actors.uso.addEventListener('click', (e) => {
-        e.stopPropagation();
-        physics.applyImpulse('uso', 0, -150, 0.85, 1.2);
-        actors.uso!.dataset.state = 'doubt';
-        showTag('uso', 'Show me the paper first.', 1800, true);
-        later(1800, () => (actors.uso!.dataset.state = 'sip'));
-      });
-    }
-  };
-  bindActorClicks();
-
-  /* Main animation and simulation loop */
-  let lastFrameTime = performance.now();
-  let simRaf = 0;
-
-  const tickSimulation = (now: number) => {
-    simRaf = 0;
-    const dt = (now - lastFrameTime) / 1000;
-    lastFrameTime = now;
-
-    if (stageEl) {
-      const box = stageEl.getBoundingClientRect();
-      const bounds = { width: box.width, height: box.height };
-
-      // Update autonomous Tsugi assist if painting is active
-      game.updateTsugiAssist(dt, now);
-
-      // Seam walk progress during automatic fracture choreography
-      if (activeSeamWalk && actors.tsugi && plate) {
-        const elapsed = now - activeSeamWalk.startTime;
-        const progress = Math.min(1.0, elapsed / activeSeamWalk.duration);
-        const traj = activeSeamWalk.trajectory;
-        const trajIdx = Math.min(traj.length - 1, Math.floor(progress * (traj.length - 1)));
-        const pt = traj[trajIdx];
-
-        physics.setTarget('tsugi', pt.x, pt.y);
-        plate.setGoldRadius(pt.r);
-
-        if (progress >= 1.0) {
-          activeSeamWalk = null;
-        }
-      }
-
-      // Update Kinematic Intent every ~60ms
-      if (now - intentDebounceTimer > 60 && !activeSeamWalk) {
-        intentDebounceTimer = now;
-        const intent = brain.getKinematicIntent(now);
-        if (intent !== lastIntent) {
-          lastIntent = intent;
-          onIntentChanged(intent);
-        }
-      }
-
-      // Evaluate Multi-Attribute Utility Theory (MAUT) every ~250ms
-      if (now - mautDebounceTimer > 250 && !activeSeamWalk) {
-        mautDebounceTimer = now;
-        const maut = brain.evaluateMAUT(now);
-
-        if (maut.action === 'SPEECH_TAG' && dialogue.canSpeak(now)) {
-          const curArc = dialogue.getArc();
-          const candidates: CrewActorId[] =
-            curArc === 'TRANQUIL_KILN' ? ['kiki', 'tsugi', 'uso', 'fude', 'oops'] :
-            curArc === 'GOLDEN_WAY' ? ['tsugi', 'oops', 'fude'] :
-            curArc === 'FRACTURE_STRIKE' ? ['oops', 'uso', 'kiki'] : ['tsugi', 'fude', 'kiki'];
-          const speaker = candidates[Math.floor(Math.random() * candidates.length)];
-          const line = dialogue.requestDialogue(speaker, curArc, { now, streak: game.getLedger().currentStreak });
-          if (line) {
-            showTag(line.speaker, line.text, line.durationMs);
-            brain.recordAction('SPEECH_TAG', now);
-          }
-        } else if (maut.action === 'OOPS_TUMBLE') {
-          physics.applyImpulse('oops', (Math.random() - 0.5) * 35, -25, 1.10, 0.92);
-          brain.recordAction('OOPS_TUMBLE', now);
-        }
-      }
-
-      // Advance physics integrator with obstacle avoidance & phase-shifted breathing
-      physics.update(dt, pointer, bounds, { allowTopRimIds: ['kiki'] });
-
-      // Update DOM actors from physics state (including sub-pixel gaze IK and subtle head tilt)
-      for (const [id, el] of Object.entries(actors)) {
-        if (!el) continue;
-        const s = physics.getActor(id);
-        if (!s) continue;
-        el.style.setProperty('--x', `${Math.round(s.x)}px`);
-        el.style.setProperty('--y', `${Math.round(s.y)}px`);
-        el.style.setProperty('--scale-x', s.scaleX.toFixed(3));
-        el.style.setProperty('--scale-y', s.scaleY.toFixed(3));
-        el.style.setProperty('--tilt', `${s.headTilt.toFixed(2)}deg`);
-        el.style.setProperty('--pupil-x', `${s.gazeX.toFixed(2)}px`);
-        el.style.setProperty('--pupil-y', `${s.gazeY.toFixed(2)}px`);
-      }
-
-      // Update Telemetry HUD if active
-      if (isTelemetryActive && telemetryEl && !telemetryEl.hidden) {
-        const istate = brain.getIntentState();
-        const rawFeats = brain.getLastFeatures();
-        const probs = brain.getProbabilities();
-        const lat = brain.getLatency();
-
-        if (hudIntent) hudIntent.textContent = istate.current;
-        if (hudConf) hudConf.textContent = `${Math.round(istate.confidence * 100)}% (${Math.round(istate.durationInState)}ms)`;
-        if (hudLatency) hudLatency.textContent = `${lat.toFixed(3)}ms`;
-        if (hudSpeed) hudSpeed.textContent = rawFeats[0].toFixed(2);
-        if (hudAccel) hudAccel.textContent = rawFeats[2].toFixed(3);
-        if (hudJerk) hudJerk.textContent = rawFeats[4].toFixed(4);
-        if (hudCurve) hudCurve.textContent = rawFeats[5].toFixed(3);
-        if (hudDwell) hudDwell.textContent = rawFeats[9].toFixed(2);
-        if (hudEff) hudEff.textContent = rawFeats[6].toFixed(2);
-
-        if (hudBarFills && hudBarVals) {
-          for (let k = 0; k < 5; k++) {
-            const pct = Math.round((probs[k] || 0) * 100);
-            const fill = hudBarFills[k];
-            const val = hudBarVals[k];
-            if (fill) fill.style.width = `${pct}%`;
-            if (val) val.textContent = `${pct}%`;
-          }
-        }
-      }
-    }
-
-    if (!reduced) simRaf = requestAnimationFrame(tickSimulation);
-  };
-
-  const startSimulation = () => {
-    if (!simRaf && !reduced) {
-      lastFrameTime = performance.now();
-      simRaf = requestAnimationFrame(tickSimulation);
-    }
-  };
-
-  // Pointer & Dragging Events for Lacquer Painting
-  if (!reduced) {
-    window.addEventListener('pointerdown', (e) => {
-      isPointerDragging = true;
-      if (!stageEl) return;
-      const box = stageEl.getBoundingClientRect();
-      const pt = { x: e.clientX - box.left, y: e.clientY - box.top };
-      if (game.isNearCrack(pt, 36) && !game.getIsCured()) {
-        game.paintAt(pt);
-        dialogue.setArc('GOLDEN_WAY');
-        startSimulation();
-      }
-    });
-
-    window.addEventListener('pointerup', () => {
-      isPointerDragging = false;
-    });
-
-    window.addEventListener('pointermove', (e) => {
-      if (!stageEl) return;
-      const box = stageEl.getBoundingClientRect();
-      pointer.x = e.clientX - box.left;
-      pointer.y = e.clientY - box.top;
-      pointer.screenX = e.clientX;
-      pointer.screenY = e.clientY;
-      brain.record(pointer.x, pointer.y, false);
-      startSimulation();
-
-      const isNear = game.isNearCrack(pointer, 36);
-      plateEl?.classList.toggle('is-brush', isNear && !game.getIsCured());
-
-      if (isNear && isPointerDragging && !game.getIsCured()) {
-        game.paintAt(pointer);
-        dialogue.setArc('GOLDEN_WAY');
-      }
-    }, { passive: true });
-
-    // Mobile Touch Architecture (<768px): default touch-action: pan-y preserves vertical scrolling
-    plateEl?.addEventListener('touchstart', (e) => {
-      if (e.touches.length === 1 && stageEl) {
-        const t = e.touches[0];
-        const box = stageEl.getBoundingClientRect();
-        const pt = { x: t.clientX - box.left, y: t.clientY - box.top };
-        if (game.isNearCrack(pt, 36) && !game.getIsCured()) {
-          touchNearCrack = true;
-          e.preventDefault();
-          game.paintAt(pt);
-          dialogue.setArc('GOLDEN_WAY');
-          startSimulation();
-        } else {
-          touchNearCrack = false;
-        }
-      }
-    }, { passive: false });
-
-    plateEl?.addEventListener('touchmove', (e) => {
-      if (touchNearCrack && e.touches.length === 1 && stageEl) {
-        const t = e.touches[0];
-        const box = stageEl.getBoundingClientRect();
-        const pt = { x: t.clientX - box.left, y: t.clientY - box.top };
-        e.preventDefault();
-        game.paintAt(pt);
-        dialogue.setArc('GOLDEN_WAY');
-        startSimulation();
-      }
-    }, { passive: false });
-  }
+  // Direct tactile interaction: tapping an actor triggers physical pantomime and a dry, hairline byline
+  oops?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    oops.dataset.state = 'sideeye';
+    const n = beat++;
+    say(oops, OOPS_SAYS[n % OOPS_SAYS.length], 2000);
+  });
+  tsugi?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    tsugi.dataset.state = 'paint';
+    const n = beat++;
+    say(tsugi, TSUGI_SAYS[n % TSUGI_SAYS.length], 2000);
+  });
 
   const strikePlate = (n: number, at?: { x: number; y: number }) => {
     plate?.strike(n, at);
@@ -1209,20 +457,19 @@ const edgeLine = edge.map(([x, d]) => `${(x * 10).toFixed(0)},${(EDGE_DEPTH - d)
 
   const show = (n: number, at?: { x: number; y: number }) => {
     current = n;
-    strikePlate(n, at);
     claimEls.forEach((el, i) => {
       el.classList.toggle('on', i === n);
       el.classList.remove('play');
     });
+    strikePlate(n, at);
     if (!reduced) {
-      void claimEls[n].offsetWidth;
+      void claimEls[n].offsetWidth; // restart the keyframes on a repeat visit
       claimEls[n].classList.add('play');
     }
     cues.forEach((c, i) => {
       c.classList.toggle('cue--on', i === n);
       c.setAttribute('aria-pressed', String(i === n));
     });
-    updateObstacles();
   };
 
   cues.forEach((c, i) => {
@@ -1232,6 +479,7 @@ const edgeLine = edge.map(([x, d]) => `${(x * 10).toFixed(0)},${(EDGE_DEPTH - d)
       claimsBox?.setAttribute('aria-live', 'polite');
       show(i);
     });
+    // One pass through the five, then rest on the first. It is not a carousel.
     c.querySelector('.cue__bar')?.addEventListener('animationend', (e) => {
       if ((e as AnimationEvent).animationName !== DWELL_END || !auto || i !== current) return;
       if (i === cues.length - 1) {
@@ -1244,24 +492,14 @@ const edgeLine = edge.map(([x, d]) => `${(x * 10).toFixed(0)},${(EDGE_DEPTH - d)
     });
   });
 
+  // Anywhere on the plate that is not already a control breaks the next claim,
+  // from exactly where it was struck.
   plateEl?.addEventListener('click', (e) => {
     if (!plate || (e.target as HTMLElement).closest('a, button, input')) return;
     if (getSelection()?.toString()) return;
-    // If user clicked to paint near crack, do not advance claim
-    if (stageEl) {
-      const box = stageEl.getBoundingClientRect();
-      const pt = { x: e.clientX - box.left, y: e.clientY - box.top };
-      if (game.isNearCrack(pt, 24) && !game.getIsCured()) {
-        return;
-      }
-    }
     auto = false;
     syncAuto();
     claimsBox?.setAttribute('aria-live', 'polite');
-    if (stageEl) {
-      const box = stageEl.getBoundingClientRect();
-      brain.record(e.clientX - box.left, e.clientY - box.top, true);
-    }
     show((current + 1) % claimEls.length, { x: e.clientX, y: e.clientY });
   });
 
@@ -1278,27 +516,20 @@ const edgeLine = edge.map(([x, d]) => `${(x * 10).toFixed(0)},${(EDGE_DEPTH - d)
   if (reduced && pause) pause.hidden = true;
   syncAuto();
 
-  // Resize observer to update physics targets and negative space obstacles
-  new ResizeObserver(() => {
-    updateObstacles();
-    setCrewRestPositions();
-    renderSvgVeins();
-  }).observe(stageEl || document.body);
-
   const startPlate = () => {
-    updateObstacles();
-    setCrewRestPositions();
-    strikePlate(0);
-    startSimulation();
-  };
-
-  if (reduced || !plate) {
-    updateObstacles();
+    claimEls.forEach((el, i) => {
+      el.classList.toggle('on', i === 0);
+      el.classList.remove('play');
+    });
+    cues.forEach((c, i) => {
+      c.classList.toggle('cue--on', i === 0);
+      c.setAttribute('aria-pressed', String(i === 0));
+    });
+    plate?.settle(0);
     restCrew();
-  } else {
-    claimEls[0].classList.remove('play');
-    void claimEls[0].offsetWidth;
-    if (!reduced) claimEls[0].classList.add('play');
+  };
+  restCrew();
+  if (plate) {
     document.fonts.load('800 80px Inter').then(startPlate, startPlate);
   }
 
@@ -1562,369 +793,44 @@ const edgeLine = edge.map(([x, d]) => `${(x * 10).toFixed(0)},${(EDGE_DEPTH - d)
   }
   /* Once the shader is running it paints the whole band, headline included. The
      DOM headline keeps its layout and stays in the accessibility tree. */
-  .plate__gl { position: absolute; inset: 0; width: 100%; height: 100%; display: block; touch-action: pan-y; }
-  .plate.gl { cursor: crosshair; background: var(--tldr-bg); touch-action: pan-y; }
-  .plate.gl.is-brush { cursor: cell; }
+  .plate__gl { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+  .plate.gl { cursor: crosshair; background: var(--tldr-bg); }
   .plate.gl::before { display: none; }
   .plate.gl .claim__pc, .plate.gl .claim__seam { visibility: hidden; }
   .plate.gl a, .plate.gl button { cursor: pointer; }
   .plate.gl .claim.play .claim__mend { animation-delay: 1.75s; }
-  /* ---------- the crew: Living Ceramic Terrarium ---------- */
-  .crew-stage {
-    position: absolute; inset: 0; z-index: 2; pointer-events: none;
-    --actor: clamp(58px, 6.8vw, 98px);
-    overflow: hidden; touch-action: pan-y;
-  }
+  /* ---------- the crew, working on the plate ---------- */
+  .crew-stage { position: absolute; inset: 0; z-index: 2; pointer-events: none; --actor: clamp(68px, 7.2vw, 108px); }
   html:not(.js) .crew-stage { display: none; }
-
   .crew-actor {
     position: absolute; left: 0; top: 0; width: var(--actor); height: var(--actor);
-    min-width: 44px; min-height: 44px;
-    transform: translate(calc(var(--x, -200px) - 50%), calc(var(--y, -200px) - 100%)) scale(var(--scale-x, 1), var(--scale-y, 1)) rotate(var(--tilt, 0deg));
-    transform-origin: 50% 100%;
-    pointer-events: auto; cursor: pointer; user-select: none;
-    touch-action: manipulation;
-    will-change: transform;
-    transition: outline-offset 0.15s ease;
+    transform: translate(calc(var(--x, -200px) - 50%), calc(var(--y, -200px) - 100%));
+    transition: transform .8s cubic-bezier(.45, .05, .4, 1);
   }
-  .crew-actor:active {
-    transform: translate(calc(var(--x, -200px) - 50%), calc(var(--y, -200px) - 100%)) scale(calc(var(--scale-x, 1) * 1.15), calc(var(--scale-y, 1) * 0.85)) rotate(var(--tilt, 0deg));
-  }
-  .crew-actor:focus-visible { outline: 2px dashed var(--ochre); outline-offset: 4px; border-radius: 8px; }
-
+  .crew-actor.no-move { transition: none; }
   .crew-actor .crew { width: 100%; height: 100%; display: none; }
-  .crew-actor[data-state='swing'] .is-swing,
-  .crew-actor[data-state='panic'] .is-panic,
-  .crew-actor[data-state='sideeye'] .is-sideeye,
-  .crew-actor[data-state='happy'] .is-happy,
-  .crew-actor[data-state='sip'] .is-sip,
-  .crew-actor[data-state='idle'] .is-idle,
-  .crew-actor[data-state='paint'] .is-paint,
-  .crew-actor[data-state='proud'] .is-proud,
-  .crew-actor[data-state='listen'] .is-listen,
-  .crew-actor[data-state='mindblown'] .is-mindblown,
-  .crew-actor[data-state='sleep'] .is-sleep,
-  .crew-actor[data-state='scribble'] .is-scribble,
-  .crew-actor[data-state='count'] .is-count,
-  .crew-actor[data-state='doubt'] .is-doubt {
-    display: block;
-  }
-
-  /* Gaze Inverse Kinematics: pupils track pointer with stable SVG coordinate bounds */
-  .crew-actor .crew-ink circle.k {
-    transform-box: fill-box;
-    transform-origin: center;
-    transform: translate(var(--pupil-x, 0px), var(--pupil-y, 0px));
-  }
-
-  /* Prop kinetic animations during specific key actions */
+  .crew-actor[data-state='swing'] .is-swing, .crew-actor[data-state='panic'] .is-panic,
+  .crew-actor[data-state='sideeye'] .is-sideeye, .crew-actor[data-state='idle'] .is-idle,
+  .crew-actor[data-state='paint'] .is-paint, .crew-actor[data-state='proud'] .is-proud { display: block; }
+  .crew-actor.walking .crew { animation: crew-hop .24s ease-in-out infinite alternate; }
   .crew-actor.hit .is-swing .crew-prop { animation: crew-hammer .33s cubic-bezier(.6, 0, .9, .5) both; }
-  .crew-actor[data-state='paint'] .crew-prop { animation: crew-brush .42s ease-in-out infinite alternate; }
-  .crew-actor[data-state='scribble'] .crew-prop { animation: crew-pen .22s ease-in-out infinite alternate; }
+  .crew-actor[data-state='paint']:not(.walking) .crew-prop { animation: crew-brush .5s ease-in-out infinite alternate; }
+  @keyframes crew-hop { from { transform: translateY(0); } to { transform: translateY(-7%) rotate(3deg); } }
   @keyframes crew-hammer { from { transform: rotate(-58deg); } 82% { transform: rotate(48deg); } to { transform: rotate(40deg); } }
   @keyframes crew-brush { from { transform: rotate(-16deg); } to { transform: rotate(14deg); } }
-  @keyframes crew-pen { from { transform: rotate(-10deg) translateY(-2px); } to { transform: rotate(12deg) translateY(2px); } }
-
-  /* Organic rim-anchored tags */
-  .crew-tag {
-    position: absolute; left: 50%; bottom: calc(100% - 6px);
-    transform: translate(-50%, 4px) scale(0.85); transform-origin: 50% 100%;
-    opacity: 0; pointer-events: none; white-space: nowrap;
-    font-family: var(--serif); font-style: italic; font-size: 0.8125rem; line-height: 1.2;
-    padding: 0.25rem 0.55rem;
-    background: var(--paper); color: var(--ink); border: 1px solid var(--border);
-    border-radius: 8px 8px 8px 2px;
-    box-shadow: 0 4px 12px color-mix(in srgb, var(--ink) 12%, transparent);
-    transition: opacity 0.2s var(--ease), transform 0.25s var(--ease);
-    z-index: 10;
-  }
-  .crew-tag.on {
-    opacity: 1; transform: translate(-50%, -6px) scale(1);
-  }
-
+  /* Two onlookers, standing on the broken edge of the plate. */
+  .crew-side { position: absolute; left: 56%; bottom: 9px; display: flex; gap: .15rem; }
+  .crew-side .crew { width: calc(var(--actor) * .78); height: calc(var(--actor) * .78); }
   .crew-stage .crew-say {
-    position: absolute; left: 0; top: 0; white-space: normal; width: max-content; max-width: min(16rem, 82vw); opacity: 0;
+    position: absolute; left: 0; top: 0; white-space: normal; width: max-content; max-width: min(15rem, 80vw); opacity: 0;
     transform: translate(calc(var(--x, 0px) - 50%), calc(var(--y, 0px) - 100%)) scale(.94);
     transform-origin: 50% 100%; transition: opacity .25s ease, transform .25s var(--ease);
-    z-index: 10;
   }
   .crew-stage .crew-say.on { opacity: 1; transform: translate(calc(var(--x, 0px) - 50%), calc(var(--y, 0px) - 100%)); }
-
-  /* Dev Telemetry HUD Overlay */
-  .crew-telemetry {
-    position: absolute; inset: 0; pointer-events: none; z-index: 12;
-    font-family: monospace; font-size: 0.72rem; color: var(--ink);
-  }
-  .crew-telemetry[hidden] { display: none; }
-  .crew-telemetry__card {
-    position: absolute; right: 1rem; top: 1rem; width: min(22rem, 90vw);
-    background: color-mix(in srgb, var(--paper) 92%, transparent);
-    border: 1px solid var(--border); border-radius: 8px;
-    padding: 0.75rem; box-shadow: 0 8px 30px color-mix(in srgb, var(--ink) 12%, transparent);
-    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
-    display: flex; flex-direction: column; gap: 0.5rem;
-    pointer-events: auto; user-select: none;
-  }
-  .crew-telemetry__top {
-    display: flex; align-items: center; justify-content: space-between;
-    border-bottom: 1px solid var(--border); padding-bottom: 0.4rem;
-  }
-  .crew-telemetry__pill {
-    font-size: 0.65rem; font-weight: 700; letter-spacing: 0.05em;
-    padding: 0.15rem 0.4rem; border-radius: 4px;
-    background: color-mix(in srgb, var(--ochre) 18%, transparent); color: var(--ochre);
-  }
-  .crew-telemetry__intent {
-    font-weight: 700; color: var(--mizu); letter-spacing: 0.02em;
-  }
-  .crew-telemetry__time {
-    color: var(--ink); opacity: 0.7; font-size: 0.68rem;
-  }
-  .crew-telemetry__row {
-    display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.4rem;
-  }
-  .crew-telemetry__col {
-    display: flex; flex-direction: column; gap: 0.1rem;
-    background: color-mix(in srgb, var(--ink) 4%, transparent);
-    padding: 0.25rem 0.35rem; border-radius: 4px;
-  }
-  .crew-telemetry__label {
-    font-size: 0.62rem; opacity: 0.65; text-transform: uppercase; letter-spacing: 0.04em;
-  }
-  .crew-telemetry__val {
-    font-size: 0.75rem;
-  }
-  .crew-telemetry__sec {
-    display: flex; flex-direction: column; gap: 0.3rem;
-    border-top: 1px solid color-mix(in srgb, var(--border) 60%, transparent);
-    padding-top: 0.4rem;
-  }
-  .crew-telemetry__meter {
-    display: flex; flex-direction: column; gap: 0.25rem;
-  }
-  .crew-telemetry__bar-row {
-    display: grid; grid-template-columns: 3.5rem 1fr 2.4rem; align-items: center; gap: 0.4rem;
-    font-size: 0.65rem;
-  }
-  .crew-telemetry__bar-track {
-    height: 5px; background: color-mix(in srgb, var(--ink) 10%, transparent);
-    border-radius: 3px; overflow: hidden;
-  }
-  .crew-telemetry__bar-fill {
-    height: 100%; width: 0%; background: var(--mizu);
-    transition: width 0.1s linear; border-radius: 3px;
-  }
-  .crew-telemetry__bar-fill[data-bar="0"] { background: var(--hanko); }
-  .crew-telemetry__bar-fill[data-bar="1"] { background: var(--ochre); }
-  .crew-telemetry__bar-fill[data-bar="2"] { background: var(--mizu); }
-  .crew-telemetry__bar-fill[data-bar="3"] { background: var(--plum); }
-  .crew-telemetry__bar-fill[data-bar="4"] { background: var(--moss); }
-  .crew-telemetry__status {
-    font-size: 0.62rem; opacity: 0.7; font-style: italic;
-  }
-  .crew-telemetry__debug-boxes {
-    position: absolute; inset: 0; pointer-events: none;
-  }
-  .crew-telemetry__obs-box {
-    position: absolute; border: 1px dashed var(--indigo);
-    background: color-mix(in srgb, var(--indigo) 6%, transparent);
-    border-radius: 4px; pointer-events: none;
-  }
-  .crew-telemetry__anchor-box {
-    position: absolute; width: 14px; height: 14px; border-radius: 50%;
-    border: 1px solid var(--ochre); transform: translate(-50%, -50%);
-    pointer-events: none;
-  }
-
-  /* SVG Gold Lacquer Seam Veins */
-  .kintsugi-veins {
-    position: absolute; inset: 0; width: 100%; height: 100%;
-    pointer-events: none; z-index: 1; overflow: visible;
-  }
-  .kintsugi-veins path.vein-crack {
-    fill: none; stroke: color-mix(in srgb, var(--ink) 40%, transparent);
-    stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round;
-  }
-  .kintsugi-veins path.vein-gold {
-    fill: none; stroke: var(--ochre);
-    stroke-width: 2.8; stroke-linecap: round; stroke-linejoin: round;
-    filter: drop-shadow(0 0 3px var(--ochre));
-    transition: stroke-dashoffset 0.08s linear;
-  }
-
-  /* Stamped Red Hanko Seal (金継) */
-  .kintsugi-hanko {
-    position: absolute; right: clamp(1rem, 3.5vw, 2.5rem); bottom: clamp(1rem, 2.5vw, 2.2rem);
-    z-index: 10; pointer-events: none; user-select: none;
-    animation: hanko-stamp 0.45s cubic-bezier(0.18, 0.89, 0.32, 1.28) both;
-  }
-  .kintsugi-hanko[hidden] { display: none; }
-  .hanko-seal {
-    display: inline-flex; align-items: center; justify-content: center;
-    width: 2.6rem; height: 2.6rem;
-    border: 2px solid var(--hanko); border-radius: 6px;
-    color: var(--hanko); background: color-mix(in srgb, var(--hanko) 12%, transparent);
-    font-family: var(--serif); font-weight: 800; font-size: 1.05rem; line-height: 1;
-    letter-spacing: 0.05em;
-    box-shadow: inset 0 0 6px color-mix(in srgb, var(--hanko) 25%, transparent),
-                0 3px 12px color-mix(in srgb, var(--hanko) 20%, transparent);
-    transform: rotate(-5deg);
-  }
-  @keyframes hanko-stamp {
-    from { opacity: 0; transform: scale(2.2) rotate(-18deg); }
-    70% { opacity: 1; transform: scale(0.92) rotate(-3deg); }
-    to { opacity: 1; transform: scale(1) rotate(-5deg); }
-  }
-
-  /* Diegetic Content Bridging Toast */
-  .kintsugi-bridge {
-    position: absolute; left: 50%; bottom: 1.25rem; transform: translateX(-50%);
-    z-index: 15; display: flex; align-items: center; gap: 0.75rem;
-    max-width: min(32rem, 90vw); padding: 0.5rem 0.85rem;
-    background: var(--paper); border: 1.5px solid var(--ochre);
-    border-radius: 10px;
-    box-shadow: 0 8px 24px color-mix(in srgb, var(--ink) 18%, transparent);
-    animation: bridge-slide-up 0.35s var(--ease) both;
-  }
-  .kintsugi-bridge[hidden] { display: none; }
-  .bridge__hanko {
-    flex-shrink: 0; width: 1.8rem; height: 1.8rem; display: flex; align-items: center; justify-content: center;
-    border: 1.5px solid var(--hanko); border-radius: 4px; color: var(--hanko);
-    background: color-mix(in srgb, var(--hanko) 10%, transparent);
-    font-family: var(--serif); font-weight: 800; font-size: 0.75rem;
-  }
-  .bridge__content {
-    display: flex; flex-direction: column; gap: 0.1rem; min-width: 0;
-  }
-  .bridge__status {
-    font-family: var(--font); font-size: 0.65rem; font-weight: 700; text-transform: uppercase;
-    letter-spacing: 0.05em; color: var(--ochre);
-  }
-  .bridge__link {
-    font-family: var(--serif); font-size: 0.875rem; color: var(--ink); text-decoration: none;
-    display: flex; align-items: center; gap: 0.35rem; font-style: italic;
-    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-  }
-  .bridge__link:hover { color: var(--ochre); }
-  .bridge__arrow { color: var(--ochre); font-style: normal; font-weight: 700; }
-  .bridge__close {
-    background: none; border: none; font-size: 1.25rem; line-height: 1; color: var(--ink-soft);
-    cursor: pointer; padding: 0.2rem; margin-left: auto;
-  }
-  .bridge__close:hover { color: var(--ink); }
-  @keyframes bridge-slide-up {
-    from { opacity: 0; transform: translate(-50%, 14px); }
-    to { opacity: 1; transform: translate(-50%, 0); }
-  }
-
-  /* Fude's Repair Chronicle Modal */
-  .kintsugi-ledger {
-    position: fixed; inset: 0; z-index: 100;
-    display: flex; align-items: center; justify-content: center;
-    padding: 1rem;
-  }
-  .kintsugi-ledger[hidden] { display: none; }
-  .ledger__backdrop {
-    position: absolute; inset: 0;
-    background: color-mix(in srgb, var(--ink) 45%, transparent);
-    backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
-  }
-  .ledger__card {
-    position: relative; width: min(28rem, 92vw);
-    background: var(--paper); border: 1.5px solid var(--border);
-    border-radius: 12px; padding: 1.25rem;
-    box-shadow: 0 16px 48px color-mix(in srgb, var(--ink) 25%, transparent);
-    display: flex; flex-direction: column; gap: 1rem;
-  }
-  .ledger__header {
-    display: flex; align-items: center; justify-content: space-between;
-    border-bottom: 1px solid var(--border); padding-bottom: 0.75rem;
-  }
-  .ledger__title-wrap {
-    display: flex; align-items: center; gap: 0.5rem;
-  }
-  .ledger__seal {
-    width: 1.7rem; height: 1.7rem; display: flex; align-items: center; justify-content: center;
-    border: 1.5px solid var(--hanko); border-radius: 4px; color: var(--hanko);
-    background: color-mix(in srgb, var(--hanko) 10%, transparent);
-    font-family: var(--serif); font-weight: 800; font-size: 0.75rem;
-  }
-  .ledger__title {
-    font-family: var(--font); font-size: 0.95rem; font-weight: 800; color: var(--ink);
-    margin: 0;
-  }
-  .ledger__close {
-    background: none; border: none; font-size: 1.4rem; line-height: 1; color: var(--ink-soft);
-    cursor: pointer; padding: 0.2rem;
-  }
-  .ledger__close:hover { color: var(--ink); }
-  .ledger__grid {
-    display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem;
-    background: color-mix(in srgb, var(--ink) 4%, transparent);
-    padding: 0.75rem; border-radius: 8px; border: 1px solid var(--border-soft);
-  }
-  .ledger__stat {
-    display: flex; flex-direction: column; align-items: center; gap: 0.2rem;
-  }
-  .ledger__val {
-    font-family: var(--font); font-size: 1.35rem; font-weight: 800; color: var(--ochre);
-  }
-  .ledger__lbl {
-    font-family: var(--font); font-size: 0.65rem; color: var(--ink-soft); text-transform: uppercase;
-    letter-spacing: 0.05em;
-  }
-  .ledger__section {
-    display: flex; flex-direction: column; gap: 0.4rem;
-  }
-  .ledger__sub {
-    font-family: var(--font); font-size: 0.7rem; font-weight: 700; text-transform: uppercase;
-    letter-spacing: 0.05em; color: var(--indigo);
-  }
-  .ledger__desc {
-    font-family: var(--serif); font-size: 0.8125rem; color: var(--ink-soft); margin: 0;
-    line-height: 1.4;
-  }
-  .ledger__bridge-link {
-    display: flex; flex-direction: column; gap: 0.2rem;
-    padding: 0.65rem 0.85rem; border-radius: 8px;
-    background: color-mix(in srgb, var(--ochre) 8%, transparent);
-    border: 1px solid color-mix(in srgb, var(--ochre) 35%, transparent);
-    text-decoration: none; color: var(--ink);
-    transition: background 0.15s ease, border-color 0.15s ease;
-  }
-  .ledger__bridge-link:hover {
-    background: color-mix(in srgb, var(--ochre) 14%, transparent);
-    border-color: var(--ochre);
-  }
-  .ledger__bridge-title {
-    font-family: var(--font); font-size: 0.875rem; font-weight: 700; color: var(--ink);
-  }
-  .ledger__bridge-ask {
-    font-family: var(--serif); font-size: 0.78rem; font-style: italic; color: var(--ink-soft);
-  }
-  .ledger__footer {
-    display: flex; justify-content: center;
-    border-top: 1px solid color-mix(in srgb, var(--border) 60%, transparent);
-    padding-top: 0.5rem;
-  }
-  .ledger__hint {
-    font-family: var(--font); font-size: 0.68rem; color: var(--ink-faint);
-  }
-  .ledger__hint kbd {
-    display: inline-block; padding: 0.1rem 0.35rem; font-size: 0.65rem;
-    border: 1px solid var(--border); border-radius: 4px;
-    background: color-mix(in srgb, var(--ink) 6%, transparent);
-    color: var(--ink);
-  }
-
-  @media (max-width: 40rem) {
-    .crew-tag { font-size: 0.75rem; padding: 0.2rem 0.45rem; max-width: 85vw; }
-    .kintsugi-bridge { bottom: 0.75rem; width: 94vw; }
-  }
-
+  @media (max-width: 60rem) { .crew-side { display: none; } }
   @media (prefers-reduced-motion: reduce) {
-    .crew-actor, .crew-stage .crew-say, .crew-tag { transition: none; }
-    .crew-actor .crew, .crew-actor .crew-prop, .crew-actor .crew-ink circle.k { animation: none !important; }
+    .crew-actor, .crew-stage .crew-say { transition: none; }
+    .crew-actor .crew, .crew-actor .crew-prop { animation: none !important; }
   }
   .empty-q__crew { display: inline-block; width: 4.5rem; height: 4.5rem; vertical-align: middle; margin-right: .5rem; }
 
