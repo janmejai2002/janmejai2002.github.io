@@ -127,8 +127,9 @@ const ghosts = Array.from({ length: capacity - n }, (_, k) => toPath(cells[n + k
   .bowl__base { fill: var(--stone); }
   .bowl__rim { fill: none; stroke: var(--border); stroke-width: 2; }
   .bowl__ghosts path {
-    fill: var(--paper-2); fill-opacity: .55; stroke: var(--ochre); stroke-width: 3.4;
-    stroke-dasharray: .5 11; stroke-linecap: round;
+    fill: var(--paper-2); fill-opacity: .35;
+    stroke: color-mix(in srgb, var(--stone) 85%, var(--border));
+    stroke-width: 1; stroke-dasharray: none;
   }
   .shard { cursor: pointer; outline: none; }
   .shard__ground { fill: var(--paper); }

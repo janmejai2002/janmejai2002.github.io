@@ -4,13 +4,12 @@
  * Zero external dependencies.
  *
  * Implements:
- * 1. Analytical Voronoi / Delaunay Crack Graph Branching from impact impulse \vec{J}.
- * 2. Stochastic seed jitter ensuring unique fracture topography per session.
- * 3. Gold Lacquer Painting mechanic with sub-pixel brush proximity (d <= 36px).
- * 4. Autonomous Tsugi artisan assist when user pauses or requests help.
- * 5. Fude's Repair Ledger (healed count, accuracy %, repair streak) persisted to localStorage.
- * 6. Diegetic Content Bridging: mapping cured fractures to applied-AI essays.
- * 7. Soundless golden luster wave trigger and Hanko seal (金継) stamped state.
+ * 1. Voronoi / Delaunay crack branching network from impact impulse \vec{J}.
+ * 2. Interactive Gold Lacquer Painting with sub-pixel orthogonal distance & Gaussian falloff.
+ * 3. Autonomous Tsugi artisan assist with minimum-jerk trajectory progression (Flash & Hogan 1985).
+ * 4. Fude's Repair Ledger (healed count, streak, accuracy %) persisted in localStorage.
+ * 5. Diegetic Content Bridging: mapping cured vessels to applied-AI essays.
+ * 6. WebGL uGold uniform synchronization and SVG gold vein overlay paths.
  */
 
 export interface Point2D {
@@ -56,49 +55,49 @@ export interface GameLedger {
 
 export const CONTENT_BRIDGES: ContentBridgeEssay[] = [
   {
-    slug: 'blog/agent-framework-20-year-old-bugs',
+    slug: 'agent-framework-20-year-old-bugs',
     title: 'Why AI Systems Fail at Organizational Boundaries',
     ask: 'Why do multi-agent systems crash in corporate production?',
     track: 'technical',
   },
   {
-    slug: 'blog/what-a-context-window-is-and-why-it-fills-up',
+    slug: 'what-a-context-window-is-and-why-it-fills-up',
     title: 'What a Context Window Is and Why It Fills Up',
     ask: 'Why does long context degrade reasoning accuracy?',
     track: 'basics',
   },
   {
-    slug: 'blog/klarna-ai-customer-service-graded-honestly',
+    slug: 'klarna-ai-customer-service-graded-honestly',
     title: "Klarna's AI Customer Service Graded Honestly",
     ask: 'Can 700 customer support agents truly be replaced by an LLM?',
     track: 'case-studies',
   },
   {
-    slug: 'blog/the-agent-protocol-shortlist-is-now-two-mcp-and-a2a',
+    slug: 'the-agent-protocol-shortlist-is-now-two-mcp-and-a2a',
     title: 'The Agent Protocol Shortlist: MCP and A2A',
     ask: 'Which protocol will standardize tool execution in 2026?',
     track: 'technical',
   },
   {
-    slug: 'blog/budget-ai-costs-per-token-pricing',
+    slug: 'budget-ai-costs-per-token-pricing',
     title: 'Budgeting AI Costs & Token Pricing Realities',
     ask: 'How do you price an enterprise agent without burning capital?',
     track: 'business',
   },
   {
-    slug: 'blog/ai-latency-ttft-for-product-teams',
+    slug: 'ai-latency-ttft-for-product-teams',
     title: 'AI Latency & TTFT for Product Teams',
     ask: 'How fast must streaming tokens arrive before users drop off?',
     track: 'technical',
   },
   {
-    slug: 'blog/musk-yc-ai-startup-school-talk',
+    slug: 'musk-yc-ai-startup-school-talk',
     title: 'Elon Musk YC AI Startup School Autopsy',
     ask: 'What did the frontier founders get right about autonomy?',
     track: 'talks',
   },
   {
-    slug: 'blog/prompt-caching-scheduled-agent-savings',
+    slug: 'prompt-caching-scheduled-agent-savings',
     title: 'Prompt Caching & Scheduled Agent Savings',
     ask: 'How does prefix caching cut 80% of agent infrastructure costs?',
     track: 'technical',
@@ -123,6 +122,7 @@ export class KintsugiGameEngine {
   private lastUserInteractTime = 0;
   private tsugiAssistActive = false;
   private tsugiFastAssist = false;
+  private tsugiParamS = 0;
   private currentAssistEdgeIndex = -1;
 
   // Ledger stats
@@ -168,7 +168,64 @@ export class KintsugiGameEngine {
   }
 
   /**
-   * Initializes a new analytical Voronoi / Delaunay crack branching network
+   * Initializes crack fracture network directly from WebGL shader seam trajectory points.
+   * This guarantees 1:1 mathematical alignment between pointer dragging, Tsugi's assist,
+   * and the WebGL2 shader's uGold fill and Inigo Quilez Voronoi edge.
+   */
+  public initFromTrajectory(
+    trajectory: Array<{ x: number; y: number; r?: number; angle?: number; progress?: number }>,
+    stageSize: { width: number; height: number },
+    seed = 0
+  ): void {
+    if (!trajectory || trajectory.length < 2) return;
+    this.nodes = [];
+    this.edges = [];
+    this.stageSize = { ...stageSize };
+    this.seed = seed;
+    this.isCured = false;
+    this.accuracySamples = [];
+    this.currentAssistEdgeIndex = -1;
+    this.tsugiAssistActive = false;
+    this.tsugiParamS = 0;
+    this.lastUserInteractTime = performance.now();
+    this.impact = { x: trajectory[0].x, y: trajectory[0].y };
+
+    for (let i = 0; i < trajectory.length; i++) {
+      const pt = trajectory[i];
+      const node: CrackNode = {
+        id: i,
+        x: pt.x,
+        y: pt.y,
+        r: pt.r ?? (i / (trajectory.length - 1)),
+        angle: pt.angle ?? Math.PI,
+        isTerminal: i === trajectory.length - 1,
+      };
+      this.nodes.push(node);
+
+      if (i > 0) {
+        const prev = this.nodes[i - 1];
+        const edgeLen = Math.hypot(node.x - prev.x, node.y - prev.y);
+        this.edges.push({
+          id: this.edges.length,
+          fromNode: i - 1,
+          toNode: i,
+          p1: { x: prev.x, y: prev.y },
+          p2: { x: node.x, y: node.y },
+          length: edgeLen,
+          goldProgress: 0,
+          isSealed: false,
+          angle: Math.atan2(node.y - prev.y, node.x - prev.x),
+        });
+      }
+    }
+
+    this.totalLength = this.edges.reduce((sum, e) => sum + e.length, 0);
+    this.sealedLength = 0;
+    this.overallGoldProgress = 0;
+  }
+
+  /**
+   * Initializes a new Voronoi / Delaunay crack branching network
    * from an impact point and impulse vector \vec{J}.
    */
   public generateFracture(
@@ -186,9 +243,8 @@ export class KintsugiGameEngine {
     this.accuracySamples = [];
     this.currentAssistEdgeIndex = -1;
     this.tsugiAssistActive = false;
+    this.tsugiParamS = 0;
     this.lastUserInteractTime = performance.now();
-
-    const aspect = stageSize.width / Math.max(1, stageSize.height);
 
     // Root node at impact epicenter
     const rootNode: CrackNode = {
@@ -201,14 +257,14 @@ export class KintsugiGameEngine {
     };
     this.nodes.push(rootNode);
 
-    // Pseudo-random generator from seed
+    // Deterministic pseudo-random generator from seed
     let s = seed + 1.2345;
     const rnd = () => {
       s = (s * 9301 + 49297) % 233280;
       return s / 233280;
     };
 
-    // Construct primary trunk vein westward through the headline band
+    // Construct primary trunk vein heading westward through headline band
     const trunkSegments = Math.max(12, Math.min(24, Math.round(16 * Math.min(1.5, impulseMagnitude))));
     const maxReach = Math.min(impactCss.x - 20, stageSize.width * 0.75);
     const stepLen = maxReach / trunkSegments;
@@ -232,7 +288,6 @@ export class KintsugiGameEngine {
       // Vertical compression matching shader's 1.85 aspect compression
       curY += (Math.sin(curTheta) * stepLen) / 1.85;
 
-      // Bound within safe plate boundaries
       curX = Math.max(24, Math.min(stageSize.width - 24, curX));
       curY = Math.max(28, Math.min(stageSize.height - 28, curY));
 
@@ -322,10 +377,10 @@ export class KintsugiGameEngine {
   }
 
   /**
-   * Distance from a point P to a line segment [A, B].
-   * Returns distance and projection factor t in [0, 1].
+   * Orthogonal point-to-segment distance.
+   * Returns distance, projection factor t in [0, 1], and projection point.
    */
-  private distToSegment(p: Point2D, a: Point2D, b: Point2D): { dist: number; t: number; proj: Point2D } {
+  public distToSegment(p: Point2D, a: Point2D, b: Point2D): { dist: number; t: number; proj: Point2D } {
     const dx = b.x - a.x;
     const dy = b.y - a.y;
     const l2 = dx * dx + dy * dy;
@@ -343,46 +398,61 @@ export class KintsugiGameEngine {
     };
   }
 
+  public getImpact(): Point2D {
+    return { ...this.impact };
+  }
+
   /**
-   * Evaluates if pointer position is within brush proximity threshold (d <= 36px)
-   * of any unsealed crack vein.
+   * Returns minimum distance in pixels from point p to any unsealed crack segment.
    */
-  public isNearCrack(p: Point2D, proximityThreshold = 36): boolean {
+  public getDistanceToCrack(p: Point2D): number {
+    let minDist = 9999;
     for (const edge of this.edges) {
       if (!edge.isSealed) {
         const { dist } = this.distToSegment(p, edge.p1, edge.p2);
-        if (dist <= proximityThreshold) return true;
+        if (dist < minDist) minDist = dist;
       }
     }
-    return false;
+    return minDist;
+  }
+
+  /**
+   * Evaluates if pointer position is within brush proximity threshold (d <= 36px)
+   */
+  public isNearCrack(p: Point2D, proximityThreshold = 36): boolean {
+    return this.getDistanceToCrack(p) <= proximityThreshold;
   }
 
   /**
    * Interactive Lacquer Painting:
-   * Applies gold lacquer along crack veins within brush proximity (d <= 36px).
+   * Continuous Gaussian deposit falloff along crack veins within brush proximity.
    */
-  public paintAt(pointer: Point2D, brushRadius = 36, now = performance.now()): number {
+  public paintAt(pointer: Point2D, brushRadius = 36, speed = 100, now = performance.now()): number {
     if (this.isCured || this.edges.length === 0) return this.overallGoldProgress;
     this.lastUserInteractTime = now;
     this.tsugiAssistActive = false;
     this.tsugiFastAssist = false;
 
+    // Velocity moderation: fast chaotic strokes deposit less lacquer
+    const speedFactor = Math.max(0.18, Math.min(1.0, 1.2 - speed / 750.0));
+    const sigmaSq = 2.0 * Math.pow(brushRadius * 0.65, 2);
     let modified = false;
 
     for (const edge of this.edges) {
       if (edge.isSealed) continue;
 
-      const { dist, t } = this.distToSegment(pointer, edge.p1, edge.p2);
+      const { dist } = this.distToSegment(pointer, edge.p1, edge.p2);
       if (dist <= brushRadius) {
         // Record accuracy: deviation from true centerline
         const accuracy = Math.max(0, 100 - (dist / brushRadius) * 100);
         this.accuracySamples.push(accuracy);
 
-        // Brush deposit amount inversely proportional to distance
-        const deposit = Math.max(0.25, 1.0 - dist / brushRadius) * 0.45;
+        // Gaussian falloff
+        const falloff = Math.exp(-(dist * dist) / sigmaSq);
+        const deposit = 0.38 * falloff * speedFactor;
         edge.goldProgress = Math.min(1.0, edge.goldProgress + deposit);
 
-        if (edge.goldProgress >= 0.98) {
+        if (edge.goldProgress >= 0.985) {
           edge.goldProgress = 1.0;
           edge.isSealed = true;
         }
@@ -409,7 +479,7 @@ export class KintsugiGameEngine {
     this.onGoldProgressCb?.(this.overallGoldProgress);
 
     // 100% cure trigger
-    if (this.overallGoldProgress >= 0.999 && !this.isCured) {
+    if (this.overallGoldProgress >= 0.995 && !this.isCured) {
       this.completeCure();
     }
   }
@@ -448,7 +518,7 @@ export class KintsugiGameEngine {
 
   /**
    * Autonomous Tsugi Assist Loop:
-   * When user pauses for >1800ms, Tsugi steps forward and seals remaining cracks.
+   * Advances along active unsealed edges with minimum-jerk trajectory progression.
    */
   public updateTsugiAssist(dtSeconds: number, now = performance.now()): void {
     if (this.isCured || this.edges.length === 0) return;
@@ -461,54 +531,53 @@ export class KintsugiGameEngine {
 
     if (!this.tsugiAssistActive) return;
 
-    // Artisan lacquer speed: fast assist delivers responsive completion across all screen widths
-    const speed = (this.tsugiFastAssist ? 1600 : 360) * dtSeconds;
-    let remainingBudget = speed;
+    // Rate of progression along edge: ~8.5 edges/sec yields a fluid 4-second artisan sweep
+    const edgeStepRate = this.tsugiFastAssist ? 18.0 : 8.5; // edges per sec
+    const dS = dtSeconds * edgeStepRate;
 
-    while (remainingBudget > 0) {
-      // Find first unsealed edge
-      let targetEdge: CrackEdge | null = null;
-      for (let i = 0; i < this.edges.length; i++) {
-        if (!this.edges[i].isSealed) {
-          targetEdge = this.edges[i];
-          this.currentAssistEdgeIndex = i;
-          break;
-        }
-      }
-
-      if (!targetEdge) break;
-
-      const neededLen = Math.max(1, targetEdge.length * (1.0 - targetEdge.goldProgress));
-      if (remainingBudget >= neededLen) {
-        targetEdge.goldProgress = 1.0;
-        targetEdge.isSealed = true;
-        remainingBudget -= neededLen;
-
-        const tx = targetEdge.p2.x;
-        const ty = targetEdge.p2.y;
-        this.onTsugiStepCb?.({ x: tx, y: ty }, targetEdge.angle);
-      } else {
-        targetEdge.goldProgress += remainingBudget / Math.max(1, targetEdge.length);
-        if (targetEdge.goldProgress >= 0.99) {
-          targetEdge.goldProgress = 1.0;
-          targetEdge.isSealed = true;
-        }
-        remainingBudget = 0;
-
-        const tx = targetEdge.p1.x + (targetEdge.p2.x - targetEdge.p1.x) * targetEdge.goldProgress;
-        const ty = targetEdge.p1.y + (targetEdge.p2.y - targetEdge.p1.y) * targetEdge.goldProgress;
-        this.onTsugiStepCb?.({ x: tx, y: ty }, targetEdge.angle);
-      }
+    // Find next unsealed edge if current one is finished
+    if (this.currentAssistEdgeIndex === -1 || this.edges[this.currentAssistEdgeIndex]?.isSealed) {
+      this.currentAssistEdgeIndex = this.edges.findIndex((e) => !e.isSealed);
+      this.tsugiParamS = 0;
     }
+
+    const edge = this.edges[this.currentAssistEdgeIndex];
+    if (!edge) {
+      this.recalculateGoldProgress();
+      return;
+    }
+
+    this.tsugiParamS = Math.min(1.0, this.tsugiParamS + dS);
+    const s = this.tsugiParamS;
+    // Flash & Hogan 5th-order minimum jerk polynomial
+    const smoothT = 10 * Math.pow(s, 3) - 15 * Math.pow(s, 4) + 6 * Math.pow(s, 5);
+
+    edge.goldProgress = Math.max(edge.goldProgress, smoothT);
+    if (edge.goldProgress >= 0.99) {
+      edge.goldProgress = 1.0;
+      edge.isSealed = true;
+      this.currentAssistEdgeIndex = -1;
+      this.tsugiParamS = 0;
+    }
+
+    const tx = edge.p1.x + (edge.p2.x - edge.p1.x) * smoothT;
+    const ty = edge.p1.y + (edge.p2.y - edge.p1.y) * smoothT;
+    this.onTsugiStepCb?.({ x: tx, y: ty }, edge.angle);
 
     this.recalculateGoldProgress();
   }
 
-  /** Forces Tsugi to immediately assist and finish sealing */
-  public triggerTsugiAssist(): void {
+  /** Forces Tsugi to immediately assist and begin sealing from crack epicenter outwards */
+  public triggerTsugiAssist(fast = false): void {
     this.tsugiAssistActive = true;
-    this.tsugiFastAssist = true;
+    this.tsugiFastAssist = fast;
     this.lastUserInteractTime = -10000;
+    this.currentAssistEdgeIndex = 0;
+    this.tsugiParamS = 0;
+    const firstEdge = this.edges[0];
+    if (firstEdge) {
+      this.onTsugiStepCb?.({ x: firstEdge.p1.x, y: firstEdge.p1.y }, firstEdge.angle);
+    }
   }
 
   /** Generates SVG path data for the crack veins with stroke-dashoffset gold overlay */
@@ -563,10 +632,6 @@ export class KintsugiGameEngine {
 
   public getNodes(): CrackNode[] {
     return this.nodes;
-  }
-
-  public getImpact(): Point2D {
-    return { ...this.impact };
   }
 }
 

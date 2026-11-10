@@ -121,23 +121,82 @@ const edgeLine = edge.map(([x, d]) => `${(x * 10).toFixed(0)},${(EDGE_DEPTH - d)
       </div>
     </div>
 
-    {/* The crew. Oops breaks the plate, Tsugi mends it, the other two have opinions. */}
+    {/* The 5-Crew Living Terrarium: Oops, Tsugi, Kiki, Fude, and Uso */}
     <div class="crew-stage on-plate" data-crew aria-hidden="true">
-      <div class="crew-actor" data-actor="oops" data-state="swing">
-        <Crew who="oops" mood="swing" class="is-swing" />
-        <Crew who="oops" mood="panic" class="is-panic" />
-        <Crew who="oops" mood="sideeye" class="is-sideeye" />
-      </div>
-      <div class="crew-actor" data-actor="tsugi" data-state="idle">
+      {/* 1. Tsugi (The Master Builder · Gold Brush) */}
+      <div class="crew-actor" data-actor="tsugi" data-state="idle" title="Tsugi · Master Builder">
         <Crew who="tsugi" mood="idle" class="is-idle" />
         <Crew who="tsugi" mood="paint" class="is-paint" />
         <Crew who="tsugi" mood="proud" class="is-proud" />
       </div>
-      <div class="crew-side">
-        <Crew who="uso" mood="doubt" />
-        <Crew who="fude" mood="scribble" />
+
+      {/* 2. Oops (The Apprentice · Iron Mallet) */}
+      <div class="crew-actor" data-actor="oops" data-state="idle" title="Oops · Curious Apprentice">
+        <Crew who="oops" mood="idle" class="is-idle" />
+        <Crew who="oops" mood="swing" class="is-swing" />
+        <Crew who="oops" mood="panic" class="is-panic" />
+        <Crew who="oops" mood="sideeye" class="is-sideeye" />
       </div>
+
+      {/* 3. Kiki (The Radar Feline · Ear Horn) */}
+      <div class="crew-actor" data-actor="kiki" data-state="listen" title="Kiki · Frontier Radar">
+        <Crew who="kiki" mood="listen" class="is-listen" />
+        <Crew who="kiki" mood="idle" class="is-idle" />
+        <Crew who="kiki" mood="happy" class="is-happy" />
+      </div>
+
+      {/* 4. Fude (The Scribe · Quill & Ink) */}
+      <div class="crew-actor" data-actor="fude" data-state="scribble" title="Fude · The Scribe">
+        <Crew who="fude" mood="scribble" class="is-scribble" />
+        <Crew who="fude" mood="idle" class="is-idle" />
+        <Crew who="fude" mood="count" class="is-count" />
+      </div>
+
+      {/* 5. Uso (The Skeptic · Loupe) */}
+      <div class="crew-actor" data-actor="uso" data-state="doubt" title="Uso · Rigorous Skeptic">
+        <Crew who="uso" mood="doubt" class="is-doubt" />
+        <Crew who="uso" mood="idle" class="is-idle" />
+        <Crew who="uso" mood="sideeye" class="is-sideeye" />
+      </div>
+
       <span class="crew-say" data-say></span>
+    </div>
+
+    {/* Dev Telemetry HUD Overlay (~ or ?debug=crew) */}
+    <div class="crew-hud" id="crewHud" aria-hidden="true">
+      <div class="crew-hud__head">
+        <span class="crew-hud__title">TERRARIUM TELEMETRY (12-D ML)</span>
+        <button type="button" class="crew-hud__close" id="hudClose" aria-label="Close Telemetry HUD">✕</button>
+      </div>
+      <div class="crew-hud__state">
+        <span class="hud-label">INTENT:</span>
+        <span class="hud-badge" id="hudStateBadge">CONTEMPLATING</span>
+        <span class="hud-conf" id="hudConfidence">100%</span>
+      </div>
+      <div class="crew-hud__bars" id="hudBayesBars">
+        <div class="hud-bar-row"><span class="hud-bar-name">Striking</span><div class="hud-bar-track"><div class="hud-bar-fill" id="barStriking"></div></div><span class="hud-bar-val" id="valStriking">0%</span></div>
+        <div class="hud-bar-row"><span class="hud-bar-name">Agitated</span><div class="hud-bar-track"><div class="hud-bar-fill" id="barAgitated"></div></div><span class="hud-bar-val" id="valAgitated">0%</span></div>
+        <div class="hud-bar-row"><span class="hud-bar-name">Exploring</span><div class="hud-bar-track"><div class="hud-bar-fill" id="barExploring"></div></div><span class="hud-bar-val" id="valExploring">0%</span></div>
+        <div class="hud-bar-row"><span class="hud-bar-name">Painting</span><div class="hud-bar-track"><div class="hud-bar-fill" id="barPainting"></div></div><span class="hud-bar-val" id="valPainting">0%</span></div>
+        <div class="hud-bar-row"><span class="hud-bar-name">Contemplating</span><div class="hud-bar-track"><div class="hud-bar-fill" id="barContemplating"></div></div><span class="hud-bar-val" id="valContemplating">100%</span></div>
+      </div>
+      <div class="crew-hud__metrics">
+        <div class="hud-metric"><span class="hud-lbl">Jerk:</span> <span id="hudJerk">0.00</span></div>
+        <div class="hud-metric"><span class="hud-lbl">Speed:</span> <span id="hudVelocity">0 px/s</span></div>
+        <div class="hud-metric"><span class="hud-lbl">Dwell:</span> <span id="hudDwell">100%</span></div>
+        <div class="hud-metric"><span class="hud-lbl">Inference:</span> <span id="hudLatency">0.02ms</span></div>
+      </div>
+      <div class="crew-hud__kintsugi">
+        <div class="hud-kintsugi-head">
+          <span class="hud-lbl">GOLD REPAIR</span>
+          <span class="hud-gold-pct" id="hudGoldPct">0%</span>
+        </div>
+        <div class="hud-bar-track"><div class="hud-bar-fill hud-bar-fill--gold" id="hudGoldFill"></div></div>
+      </div>
+      <div class="crew-hud__ledger">
+        <div class="hud-lbl">FUDE'S REPAIR LEDGER:</div>
+        <div id="hudLedgerStats">Healed: 0 · Streak: 0 · Acc: 98.4%</div>
+      </div>
     </div>
   </section>
   <svg class="plate-edge" viewBox={`0 0 1000 ${EDGE_DEPTH}`} preserveAspectRatio="none" aria-hidden="true">
@@ -281,6 +340,9 @@ const edgeLine = edge.map(([x, d]) => `${(x * 10).toFixed(0)},${(EDGE_DEPTH - d)
 
 <script>
   import { createPlate } from '../scripts/kintsugi';
+  import { createCrewBrain } from '../lib/crew-brain';
+  import { createCrewPhysics } from '../lib/crew-physics';
+  import { createKintsugiGame } from '../lib/kintsugi-game';
 
   const CAP = 8;
   const DWELL_END = 'cue-fill';
@@ -294,8 +356,56 @@ const edgeLine = edge.map(([x, d]) => `${(x * 10).toFixed(0)},${(EDGE_DEPTH - d)
   const claimsBox = document.querySelector<HTMLElement>('[data-claims]');
   const plateEl = document.querySelector<HTMLElement>('.plate');
   const hint = document.querySelector<HTMLElement>('[data-hint]');
+  const stageEl = document.querySelector<HTMLElement>('[data-crew]');
+  const bubble = stageEl?.querySelector<HTMLElement>('[data-say]') ?? null;
+
+  // Telemetry HUD Elements
+  const hud = document.getElementById('crewHud');
+  const hudClose = document.getElementById('hudClose');
+  const hudBadge = document.getElementById('hudStateBadge');
+  const hudConf = document.getElementById('hudConfidence');
+  const barStriking = document.getElementById('barStriking');
+  const valStriking = document.getElementById('valStriking');
+  const barAgitated = document.getElementById('barAgitated');
+  const valAgitated = document.getElementById('valAgitated');
+  const barExploring = document.getElementById('barExploring');
+  const valExploring = document.getElementById('valExploring');
+  const barPainting = document.getElementById('barPainting');
+  const valPainting = document.getElementById('valPainting');
+  const barContemplating = document.getElementById('barContemplating');
+  const valContemplating = document.getElementById('valContemplating');
+  const hudJerk = document.getElementById('hudJerk');
+  const hudVelocity = document.getElementById('hudVelocity');
+  const hudDwell = document.getElementById('hudDwell');
+  const hudLatency = document.getElementById('hudLatency');
+  const hudGoldPct = document.getElementById('hudGoldPct');
+  const hudGoldFill = document.getElementById('hudGoldFill');
+  const hudLedgerStats = document.getElementById('hudLedgerStats');
+
   let current = 0;
   let auto = false;
+  let isPointerDown = false;
+  let lastFrameTime = performance.now();
+  let pointerWorld = { x: 400, y: 200, px: 400, py: 200, speed: 0 };
+
+  // 1. Initialize Machine Learning & Physics Engines
+  const brain = createCrewBrain();
+  const physics = createCrewPhysics();
+  const game = createKintsugiGame();
+
+  // 2. Query Companion Figurines & Pupil Circles
+  const actorIds = ['tsugi', 'oops', 'kiki', 'fude', 'uso'] as const;
+  const actorEls = new Map<string, HTMLElement>();
+  const actorPupils = new Map<string, SVGCircleElement[]>();
+
+  for (const id of actorIds) {
+    const el = stageEl?.querySelector<HTMLElement>(`[data-actor="${id}"]`);
+    if (el) {
+      actorEls.set(id, el);
+      const pupils = Array.from(el.querySelectorAll<SVGCircleElement>('circle.k'));
+      actorPupils.set(id, pupils);
+    }
+  }
 
   // Null without WebGL2, in which case the CSS crack below it stays in charge.
   const plate = plateEl ? createPlate({ plate: plateEl, claims: claimEls, reduced }) : null;
@@ -309,41 +419,15 @@ const edgeLine = edge.map(([x, d]) => `${(x * 10).toFixed(0)},${(EDGE_DEPTH - d)
     }
   };
 
-  /* ---------- the crew: timed to the shader's own schedule ----------
-     The fracture starts about 560ms after a strike and the gold about 1.5s after. */
-  const stageEl = document.querySelector<HTMLElement>('[data-crew]');
-  const actor = (name: string) => stageEl?.querySelector<HTMLElement>(`[data-actor="${name}"]`) ?? null;
-  const oops = actor('oops');
-  const tsugi = actor('tsugi');
-  const bubble = stageEl?.querySelector<HTMLElement>('[data-say]') ?? null;
-  const OOPS_SAYS = ['Load-bearing, apparently.', 'Like that when I got here.', 'Checking the seam telemetry.'];
-  const TSUGI_SAYS = ['Small words. Big cracks.', 'Sealing the invariant.', 'The gold is wet. Come in.'];
-  let crewTimers: number[] = [];
-  let beat = 0;
-  const later = (ms: number, fn: () => void) => crewTimers.push(window.setTimeout(fn, ms));
-  const inStage = (x: number, y: number) => {
-    const b = stageEl!.getBoundingClientRect();
-    const size = oops?.offsetWidth ?? 90;
-    let minY = size + 10;
-    if (window.matchMedia('(max-width: 40rem)').matches) {
-      const idEl = document.querySelector<HTMLElement>('.plate__id');
-      if (idEl) {
-        const idBottom = idEl.getBoundingClientRect().bottom - b.top;
-        minY = Math.max(minY, idBottom + size + 44);
-      }
-    }
-    return {
-      x: Math.max(size / 2, Math.min(b.width - size / 2, x)),
-      y: Math.max(minY, Math.min(b.height - 30, y)),
-    };
+  // Soundless tactile speech bylines (restrained, no cartoon bubbles)
+  const SAY_LINES: Record<string, string[]> = {
+    tsugi: ['Small words. Big cracks.', 'Sealing the invariant.', 'The gold is wet. Come in.'],
+    oops:  ['Load-bearing, apparently.', 'Like that when I got here.', 'Checking the seam telemetry.'],
+    kiki:  ['Radar sweep active.', 'Listening for anomalous shifts.', 'Frontier signal detected.'],
+    fude:  ['Writing to persistent ledger.', 'Inscribing the repaired seam.', 'Audit recorded.'],
+    uso:   ['Let me check the unit economics.', 'That number looks suspicious.', 'Holding this up to the light.'],
   };
-  const stand = (el: HTMLElement | null, x: number, y: number) => {
-    if (!el) return { x, y };
-    const p = inStage(x, y);
-    el.style.setProperty('--x', `${Math.round(p.x)}px`);
-    el.style.setProperty('--y', `${Math.round(p.y)}px`);
-    return p;
-  };
+
   let sayTimer: number | null = null;
   const say = (who: HTMLElement | null, text: string, duration = 2400) => {
     if (!bubble || !who || !stageEl) return;
@@ -351,9 +435,10 @@ const edgeLine = edge.map(([x, d]) => `${(x * 10).toFixed(0)},${(EDGE_DEPTH - d)
     bubble.textContent = text;
     const b = stageEl.getBoundingClientRect();
     const half = Math.min(bubble.offsetWidth / 2 + 8, b.width / 2);
-    const x = Math.max(half, Math.min(b.width - half, parseFloat(who.style.getPropertyValue('--x'))));
+    const actorX = parseFloat(who.style.getPropertyValue('--x')) || (b.width * 0.5);
+    const x = Math.max(half, Math.min(b.width - half, actorX));
     bubble.style.setProperty('--x', `${Math.round(x)}px`);
-    let bubbleY = parseFloat(who.style.getPropertyValue('--y')) - who.offsetHeight + 4;
+    let bubbleY = (parseFloat(who.style.getPropertyValue('--y')) || 100) - who.offsetHeight + 4;
     const idEl = document.querySelector<HTMLElement>('.plate__id');
     if (idEl) {
       const idBottom = idEl.getBoundingClientRect().bottom - b.top;
@@ -369,90 +454,224 @@ const edgeLine = edge.map(([x, d]) => `${(x * 10).toFixed(0)},${(EDGE_DEPTH - d)
       }, duration);
     }
   };
-  const playCrew = () => {
-    if (!plate || !oops || !tsugi) return;
-    crewTimers.forEach(clearTimeout);
-    crewTimers = [];
-    bubble?.classList.remove('on');
-    const n = beat++;
-    oops.classList.remove('gone');
-    later(270, () => {
-      const hit = plate.impactPx();
-      const size = oops.offsetWidth;
-      oops.classList.add('no-move');
-      stand(oops, hit.x + size * 0.42, hit.y + size * 0.62);
-      void oops.offsetWidth;
-      oops.classList.remove('no-move', 'away');
-      oops.dataset.state = 'swing';
-      oops.classList.remove('hit');
-      void oops.offsetWidth;
-      oops.classList.add('hit');
-      tsugi.classList.add('no-move');
-      const tsugiGround = inStage(0, hit.y + size * 0.72);
-      tsugi.style.setProperty('--x', `${Math.round(-size * 1.5)}px`);
-      tsugi.style.setProperty('--y', `${Math.round(tsugiGround.y)}px`);
-      void tsugi.offsetWidth;
-      tsugi.classList.remove('no-move');
-      tsugi.dataset.state = 'idle';
-      later(330, () => {
-        oops.dataset.state = 'panic';
-      });
-      later(1150, () => {
-        const b = stageEl.getBoundingClientRect();
-        oops.classList.add('walking');
-        stand(oops, Math.min(b.width - size * 1.2, Math.max(hit.x + size * 2.4, b.width * 0.72)), Math.max(size * 1.3, hit.y * 0.85));
-        tsugi.classList.add('walking');
-        tsugi.dataset.state = 'paint';
-        stand(tsugi, hit.x - size * 0.4, hit.y + size * 0.35);
-      });
-      later(1950, () => {
-        oops.classList.remove('walking');
-        tsugi.classList.remove('walking');
-        bubble?.classList.remove('on');
-        oops.dataset.state = 'sideeye';
-      });
-      later(2750, () => {
-        // Post-repair settle: Tsugi steps back into the right margin, clearing the text
-        const b = stageEl.getBoundingClientRect();
-        tsugi.classList.add('walking');
-        stand(tsugi, b.width * 0.76, b.height * 0.58);
-        later(450, () => {
-          tsugi.classList.remove('walking');
-          tsugi.dataset.state = 'proud';
-        });
-      });
+
+  // Wire click on each companion figurine
+  let speechIndex = 0;
+  for (const [id, el] of actorEls.entries()) {
+    el.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const lines = SAY_LINES[id] ?? ['...'];
+      const text = lines[speechIndex++ % lines.length];
+      say(el, text, 2200);
     });
+  }
+
+  // Setup Obstacles Bounding Geometry in Physics Engine
+  const updateObstacles = () => {
+    if (!stageEl) return;
+    const sRect = stageEl.getBoundingClientRect();
+    const obstacles: Array<{ left: number; top: number; right: number; bottom: number }> = [];
+
+    const idEl = document.querySelector<HTMLElement>('.plate__id');
+    if (idEl) {
+      const r = idEl.getBoundingClientRect();
+      obstacles.push({
+        left: r.left - sRect.left,
+        top: r.top - sRect.top,
+        right: r.right - sRect.left,
+        bottom: r.bottom - sRect.top,
+      });
+    }
+
+    const currentClaim = claimEls[current];
+    if (currentClaim) {
+      const saidEl = currentClaim.querySelector<HTMLElement>('.claim__said');
+      if (saidEl) {
+        const r = saidEl.getBoundingClientRect();
+        obstacles.push({
+          left: r.left - sRect.left,
+          top: r.top - sRect.top,
+          right: r.right - sRect.left,
+          bottom: r.bottom - sRect.top,
+        });
+      }
+    }
+
+    const cuesEl = document.querySelector<HTMLElement>('.cues');
+    if (cuesEl) {
+      const r = cuesEl.getBoundingClientRect();
+      obstacles.push({
+        left: r.left - sRect.left,
+        top: r.top - sRect.top,
+        right: r.right - sRect.left,
+        bottom: r.bottom - sRect.top,
+      });
+    }
+
+    physics.setObstacles(obstacles);
   };
-  const restCrew = () => {
-    if (!oops || !tsugi || !stageEl) return;
+
+  // Settle Figurine Anchor Docks (Zero Text Occlusion Layout)
+  const settleActors = () => {
+    if (!stageEl) return;
     const b = stageEl.getBoundingClientRect();
-    const size = oops.offsetWidth;
-    oops.classList.add('no-move');
-    tsugi.classList.add('no-move');
-    stand(tsugi, b.width * 0.76, b.height * 0.62);
-    stand(oops, b.width * 0.76 + size * 1.4, b.height * 0.62 + size * 0.2);
-    oops.dataset.state = 'sideeye';
-    tsugi.dataset.state = 'proud';
-    // Rest in dignified silence — no popup speech bubble covering introductory text
+    const wrapEl = document.querySelector<HTMLElement>('.plate__in');
+    let textBounds: { left: number; right: number } | undefined;
+    if (wrapEl) {
+      const wr = wrapEl.getBoundingClientRect();
+      textBounds = { left: wr.left - b.left, right: wr.right - b.left };
+    }
+    const targets = physics.getRestTargets(b.width, b.height, textBounds);
+    const isMobile = window.innerWidth < 900;
+
+    for (const [id, pt] of Object.entries(targets)) {
+      if (!physics.getActor(id)) {
+        physics.addActor(id, { x: pt.x, y: pt.y, width: 84, height: 84 });
+      } else {
+        physics.setTarget(id, pt.x, pt.y);
+      }
+
+      const el = actorEls.get(id);
+      if (el) {
+        if (id === 'kiki' && !isMobile) {
+          el.style.setProperty('--vis', '1');
+          el.classList.add('is-active');
+        } else if (!el.classList.contains('is-active')) {
+          el.style.setProperty('--vis', '0');
+        }
+      }
+    }
   };
 
-  // Direct tactile interaction: tapping an actor triggers physical pantomime and a dry, hairline byline
-  oops?.addEventListener('click', (e) => {
-    e.stopPropagation();
-    oops.dataset.state = 'sideeye';
-    const n = beat++;
-    say(oops, OOPS_SAYS[n % OOPS_SAYS.length], 2000);
-  });
-  tsugi?.addEventListener('click', (e) => {
-    e.stopPropagation();
-    tsugi.dataset.state = 'paint';
-    const n = beat++;
-    say(tsugi, TSUGI_SAYS[n % TSUGI_SAYS.length], 2000);
+  // Kintsugi Game Callbacks
+  game.onGoldProgress((prog) => {
+    plate?.setGoldProgress(prog);
   });
 
+  game.onTsugiStep((pt, angle) => {
+    const tsugiEl = actorEls.get('tsugi');
+    if (!tsugiEl) return;
+    // Lock Tsugi's brush tip directly onto the growing gold seam
+    physics.setPosition('tsugi', pt.x, pt.y);
+    physics.setTarget('tsugi', pt.x, pt.y);
+    tsugiEl.style.setProperty('--vis', '1');
+    tsugiEl.classList.add('is-active');
+    tsugiEl.dataset.state = 'paint';
+    const deg = Math.max(-12, Math.min(12, (angle * 180 / Math.PI) * 0.1));
+    tsugiEl.style.setProperty('--rot', `${deg}deg`);
+  });
+
+  game.onSeamCured((ledger, bridge) => {
+    plate?.triggerGoldLusterWave();
+    const tsugiEl = actorEls.get('tsugi');
+    const fudeEl = actorEls.get('fude');
+
+    // Tsugi celebrates 100% cure, then exits proudly off-stage left
+    if (tsugiEl) {
+      tsugiEl.dataset.state = 'proud';
+      window.setTimeout(() => {
+        const curY = physics.getActor('tsugi')?.y ?? 200;
+        physics.setTarget('tsugi', -110, curY);
+      }, 1600);
+      window.setTimeout(() => {
+        if (tsugiEl) {
+          tsugiEl.style.setProperty('--vis', '0');
+          tsugiEl.classList.remove('is-active');
+          tsugiEl.dataset.state = 'idle';
+        }
+      }, 2600);
+    }
+
+    // Fude steps in to inscribe the repair ledger
+    if (fudeEl && stageEl) {
+      const b = stageEl.getBoundingClientRect();
+      physics.setPosition('fude', -60, b.height * 0.78);
+      physics.setTarget('fude', 54, b.height * 0.78);
+      fudeEl.style.setProperty('--vis', '1');
+      fudeEl.classList.add('is-active');
+      fudeEl.dataset.state = 'scribble';
+      say(fudeEl, `Seam healed. Inscribed: ${bridge.title}`, 3000);
+
+      window.setTimeout(() => {
+        physics.setTarget('fude', -100, b.height * 0.78);
+      }, 3400);
+      window.setTimeout(() => {
+        if (fudeEl) {
+          fudeEl.style.setProperty('--vis', '0');
+          fudeEl.classList.remove('is-active');
+          fudeEl.dataset.state = 'idle';
+        }
+      }, 4200);
+    }
+
+    if (hudLedgerStats) {
+      hudLedgerStats.textContent = `Healed: ${ledger.totalHealed} · Streak: ${ledger.currentStreak} (Best: ${ledger.bestStreak}) · Acc: ${ledger.meanAccuracyPct}%`;
+    }
+  });
+
+  // Strike & Fracture Trigger
   const strikePlate = (n: number, at?: { x: number; y: number }) => {
+    if (!plateEl || !stageEl) return;
     plate?.strike(n, at);
-    if (!reduced) playCrew();
+
+    const b = stageEl.getBoundingClientRect();
+    if (plate) {
+      const traj = plate.getSeamTrajectory(36);
+      game.initFromTrajectory(traj, { width: b.width, height: b.height }, plate.getSeed());
+    } else {
+      const hit = { x: b.width * 0.72, y: b.height * 0.5 };
+      game.generateFracture(hit, { width: b.width, height: b.height }, 3.1415 + n * 4.17);
+    }
+
+    const impact = plate ? plate.impactPx() : game.getImpact();
+    const saidEl = claimEls[current]?.querySelector<HTMLElement>('.claim__said');
+    const saidBottom = saidEl && b.width < 640 ? saidEl.getBoundingClientRect().bottom - b.top : 0;
+    const safeY = saidBottom > 0 ? Math.max(impact.y, saidBottom + 16) : impact.y;
+
+    // 1. Oops (The Apprentice with Mallet) enters dynamically from right edge
+    const oopsEl = actorEls.get('oops');
+    if (oopsEl && !reduced) {
+      physics.setPosition('oops', b.width + 75, safeY);
+      physics.setTarget('oops', Math.min(b.width - 44, impact.x + 36), safeY + 10);
+      oopsEl.style.setProperty('--vis', '1');
+      oopsEl.classList.add('is-active');
+      oopsEl.dataset.state = 'swing';
+
+      window.setTimeout(() => {
+        if (oopsEl) {
+          oopsEl.dataset.state = 'panic';
+          physics.applyImpulse('oops', 45, -70, 1.35, 0.7);
+        }
+      }, 340);
+
+      window.setTimeout(() => {
+        if (oopsEl) {
+          oopsEl.dataset.state = 'sideeye';
+          physics.setTarget('oops', b.width + 120, safeY);
+        }
+      }, 1300);
+
+      window.setTimeout(() => {
+        if (oopsEl) {
+          oopsEl.style.setProperty('--vis', '0');
+          oopsEl.classList.remove('is-active');
+          oopsEl.dataset.state = 'idle';
+        }
+      }, 2100);
+    }
+
+    // 2. Tsugi (The Master Builder) starts DIRECTLY AT THE CRACK EPICENTER!
+    const tsugiEl = actorEls.get('tsugi');
+    if (tsugiEl && !reduced) {
+      physics.setPosition('tsugi', impact.x, safeY);
+      physics.setTarget('tsugi', impact.x, safeY);
+      tsugiEl.style.setProperty('--vis', '1');
+      tsugiEl.classList.add('is-active');
+      tsugiEl.dataset.state = 'paint';
+
+      // Start autonomous repair progressing outward from crack epicenter
+      game.triggerTsugiAssist(false);
+    }
   };
 
   const show = (n: number, at?: { x: number; y: number }) => {
@@ -463,15 +682,210 @@ const edgeLine = edge.map(([x, d]) => `${(x * 10).toFixed(0)},${(EDGE_DEPTH - d)
     });
     strikePlate(n, at);
     if (!reduced) {
-      void claimEls[n].offsetWidth; // restart the keyframes on a repeat visit
+      void claimEls[n].offsetWidth;
       claimEls[n].classList.add('play');
     }
     cues.forEach((c, i) => {
       c.classList.toggle('cue--on', i === n);
       c.setAttribute('aria-pressed', String(i === n));
     });
+    updateObstacles();
   };
 
+  // Pointer & Kinematic Event Listeners
+  const onPointerMove = (e: PointerEvent) => {
+    if (!stageEl) return;
+    const b = stageEl.getBoundingClientRect();
+    const x = e.clientX - b.left;
+    const y = e.clientY - b.top;
+
+    const dx = x - pointerWorld.px;
+    const dy = y - pointerWorld.py;
+    pointerWorld.speed = Math.hypot(dx, dy) * 40;
+    pointerWorld.px = pointerWorld.x;
+    pointerWorld.py = pointerWorld.y;
+    pointerWorld.x = x;
+    pointerWorld.y = y;
+
+    const now = performance.now();
+    const distToCrack = game.getDistanceToCrack({ x, y });
+    brain.setInteractionContext(distToCrack, isPointerDown);
+    brain.record(x, y, false, now);
+
+    // Interactive Gold Lacquer Painting when dragging along crack
+    if (isPointerDown && distToCrack <= 48) {
+      const prog = game.paintAt({ x, y }, 42, pointerWorld.speed, now);
+      plate?.setGoldProgress(prog);
+    }
+  };
+
+  const onPointerDown = (e: PointerEvent) => {
+    if (!stageEl) return;
+    const b = stageEl.getBoundingClientRect();
+    const x = e.clientX - b.left;
+    const y = e.clientY - b.top;
+    isPointerDown = true;
+    const now = performance.now();
+    const distToCrack = game.getDistanceToCrack({ x, y });
+    brain.setInteractionContext(distToCrack, true);
+    brain.record(x, y, true, now);
+
+    if (distToCrack <= 48) {
+      const prog = game.paintAt({ x, y }, 42, 40, now);
+      plate?.setGoldProgress(prog);
+    }
+  };
+
+  const onPointerUp = () => {
+    isPointerDown = false;
+    brain.setInteractionContext(999, false);
+  };
+
+  window.addEventListener('pointermove', onPointerMove, { passive: true });
+  window.addEventListener('mousemove', onPointerMove, { passive: true });
+  stageEl?.addEventListener('pointermove', onPointerMove, { passive: true });
+  stageEl?.addEventListener('mousemove', onPointerMove, { passive: true });
+  plateEl?.addEventListener('pointerdown', onPointerDown);
+  plateEl?.addEventListener('mousedown', onPointerDown);
+  window.addEventListener('pointerup', onPointerUp);
+  window.addEventListener('mouseup', onPointerUp);
+
+  let usoActive = false;
+
+  // Unified Terrarium Animation Loop (60fps)
+  const terrariumLoop = (now: number) => {
+    const dt = Math.min(0.04, Math.max(0.001, (now - lastFrameTime) / 1000));
+    lastFrameTime = now;
+
+    if (!stageEl) {
+      requestAnimationFrame(terrariumLoop);
+      return;
+    }
+
+    const b = stageEl.getBoundingClientRect();
+    const stageBounds = { width: b.width, height: b.height };
+
+    // 1. Advance Machine Learning Intent Engine
+    brain.update(now);
+    const intent = brain.getIntentState();
+    const maut = brain.evaluateMAUT(now);
+    const isContemplating = intent.latentName === 'Contemplating';
+
+    // 2. Advance Autonomous Kintsugi Game & Tsugi Assist
+    game.updateTsugiAssist(dt, now);
+
+    // 3. Advance Organic Physics & Gaze IK
+    physics.update(dt, { x: pointerWorld.x, y: pointerWorld.y }, stageBounds, {
+      allowTopRimIds: ['kiki'],
+      isContemplating,
+    });
+
+    // 4. Update Figurine DOM Transforms & Pupil Gaze IK
+    for (const actor of physics.getAllActors()) {
+      const el = actorEls.get(actor.id);
+      if (!el) continue;
+
+      el.style.setProperty('--x', `${actor.x.toFixed(1)}px`);
+      el.style.setProperty('--y', `${actor.y.toFixed(1)}px`);
+      el.style.setProperty('--sx', actor.scaleX.toFixed(3));
+      el.style.setProperty('--sy', actor.scaleY.toFixed(3));
+      el.style.setProperty('--rot', `${actor.headTilt.toFixed(2)}deg`);
+
+      // Update Eye Pupils
+      const pupils = actorPupils.get(actor.id);
+      if (pupils) {
+        for (const p of pupils) {
+          p.style.transform = `translate(${actor.gazeX.toFixed(2)}px, ${actor.gazeY.toFixed(2)}px)`;
+        }
+      }
+    }
+
+    // 4b. Uso (The Skeptic) peeks in during deep contemplation (> 3.5s) to inspect craft
+    if (isContemplating && intent.durationInState > 3500 && !usoActive && stageEl && !reduced) {
+      usoActive = true;
+      const usoEl = actorEls.get('uso');
+      if (usoEl) {
+        physics.setPosition('uso', b.width + 70, b.height * 0.76);
+        physics.setTarget('uso', b.width - 56, b.height * 0.76);
+        usoEl.style.setProperty('--vis', '1');
+        usoEl.classList.add('is-active');
+        usoEl.dataset.state = 'doubt';
+        say(usoEl, 'Checking the seam... Genuine lacquer.', 2500);
+
+        window.setTimeout(() => {
+          physics.setTarget('uso', b.width + 100, b.height * 0.76);
+        }, 3200);
+        window.setTimeout(() => {
+          if (usoEl) {
+            usoEl.style.setProperty('--vis', '0');
+            usoEl.classList.remove('is-active');
+            usoEl.dataset.state = 'idle';
+            usoActive = false;
+          }
+        }, 4100);
+      }
+    }
+
+    // 5. Update Telemetry HUD if open
+    if (hud?.classList.contains('active')) {
+      if (hudBadge) hudBadge.textContent = intent.latentName.toUpperCase();
+      if (hudConf) hudConf.textContent = `${Math.round(intent.confidence * 100)}%`;
+
+      const probs = brain.getProbabilities();
+      const pStriking = Math.round((probs[0] ?? 0) * 100);
+      const pAgitated = Math.round((probs[1] ?? 0) * 100);
+      const pExploring = Math.round((probs[2] ?? 0) * 100);
+      const pPainting = Math.round((probs[3] ?? 0) * 100);
+      const pContemplating = Math.round((probs[4] ?? 0) * 100);
+
+      if (barStriking) barStriking.style.width = `${pStriking}%`;
+      if (valStriking) valStriking.textContent = `${pStriking}%`;
+      if (barAgitated) barAgitated.style.width = `${pAgitated}%`;
+      if (valAgitated) valAgitated.textContent = `${pAgitated}%`;
+      if (barExploring) barExploring.style.width = `${pExploring}%`;
+      if (valExploring) valExploring.textContent = `${pExploring}%`;
+      if (barPainting) barPainting.style.width = `${pPainting}%`;
+      if (valPainting) valPainting.textContent = `${pPainting}%`;
+      if (barContemplating) barContemplating.style.width = `${pContemplating}%`;
+      if (valContemplating) valContemplating.textContent = `${pContemplating}%`;
+
+      const feats = brain.getLastFeatures();
+      if (hudJerk) hudJerk.textContent = (feats[4] * 10).toFixed(2);
+      if (hudVelocity) hudVelocity.textContent = `${Math.round(feats[0] * 100)} px/s`;
+      if (hudDwell) hudDwell.textContent = `${Math.round(feats[9] * 100)}%`;
+      if (hudLatency) hudLatency.textContent = `${brain.getLatency().toFixed(2)}ms`;
+
+      const goldProg = Math.round(game.getGoldProgress() * 100);
+      if (hudGoldPct) hudGoldPct.textContent = `${goldProg}%`;
+      if (hudGoldFill) hudGoldFill.style.width = `${goldProg}%`;
+    }
+
+    requestAnimationFrame(terrariumLoop);
+  };
+
+  // Wire Dev Telemetry HUD Overlay (~ or ?debug=crew)
+  const toggleHud = () => {
+    hud?.classList.toggle('active');
+  };
+
+  hudClose?.addEventListener('click', () => {
+    hud?.classList.remove('active');
+  });
+
+  window.addEventListener('keydown', (e) => {
+    if (e.key === '~' || e.key === '`') {
+      const activeEl = document.activeElement;
+      if (activeEl && /^(INPUT|TEXTAREA)$/.test(activeEl.tagName)) return;
+      e.preventDefault();
+      toggleHud();
+    }
+  });
+
+  if (window.location.search.includes('debug=crew')) {
+    hud?.classList.add('active');
+  }
+
+  // Cues Navigation Click Handlers
   cues.forEach((c, i) => {
     c.addEventListener('click', () => {
       auto = false;
@@ -479,7 +893,6 @@ const edgeLine = edge.map(([x, d]) => `${(x * 10).toFixed(0)},${(EDGE_DEPTH - d)
       claimsBox?.setAttribute('aria-live', 'polite');
       show(i);
     });
-    // One pass through the five, then rest on the first. It is not a carousel.
     c.querySelector('.cue__bar')?.addEventListener('animationend', (e) => {
       if ((e as AnimationEvent).animationName !== DWELL_END || !auto || i !== current) return;
       if (i === cues.length - 1) {
@@ -492,10 +905,8 @@ const edgeLine = edge.map(([x, d]) => `${(x * 10).toFixed(0)},${(EDGE_DEPTH - d)
     });
   });
 
-  // Anywhere on the plate that is not already a control breaks the next claim,
-  // from exactly where it was struck.
   plateEl?.addEventListener('click', (e) => {
-    if (!plate || (e.target as HTMLElement).closest('a, button, input')) return;
+    if (!plate || (e.target as HTMLElement).closest('a, button, input, .crew-actor')) return;
     if (getSelection()?.toString()) return;
     auto = false;
     syncAuto();
@@ -526,11 +937,32 @@ const edgeLine = edge.map(([x, d]) => `${(x * 10).toFixed(0)},${(EDGE_DEPTH - d)
       c.setAttribute('aria-pressed', String(i === 0));
     });
     plate?.settle(0);
-    restCrew();
+    const b = stageEl?.getBoundingClientRect();
+    if (b) {
+      if (plate) {
+        const traj = plate.getSeamTrajectory(36);
+        game.initFromTrajectory(traj, { width: b.width, height: b.height }, plate.getSeed());
+      } else {
+        const hit = { x: b.width * 0.72, y: b.height * 0.5 };
+        game.generateFracture(hit, { width: b.width, height: b.height }, 3.1415);
+      }
+    }
+    updateObstacles();
+    settleActors();
+    requestAnimationFrame(terrariumLoop);
   };
-  restCrew();
+
+  settleActors();
+  updateObstacles();
+  window.addEventListener('resize', () => {
+    updateObstacles();
+    settleActors();
+  });
+
   if (plate) {
     document.fonts.load('800 80px Inter').then(startPlate, startPlate);
+  } else {
+    requestAnimationFrame(terrariumLoop);
   }
 
   /* ---------- the question list ---------- */
@@ -800,34 +1232,85 @@ const edgeLine = edge.map(([x, d]) => `${(x * 10).toFixed(0)},${(EDGE_DEPTH - d)
   .plate.gl a, .plate.gl button { cursor: pointer; }
   .plate.gl .claim.play .claim__mend { animation-delay: 1.75s; }
   /* ---------- the crew, working on the plate ---------- */
-  .crew-stage { position: absolute; inset: 0; z-index: 2; pointer-events: none; --actor: clamp(68px, 7.2vw, 108px); }
+  .crew-stage { position: absolute; inset: 0; z-index: 2; pointer-events: none; --actor: clamp(64px, 6.8vw, 104px); }
   html:not(.js) .crew-stage { display: none; }
   .crew-actor {
     position: absolute; left: 0; top: 0; width: var(--actor); height: var(--actor);
-    transform: translate(calc(var(--x, -200px) - 50%), calc(var(--y, -200px) - 100%));
-    transition: transform .8s cubic-bezier(.45, .05, .4, 1);
+    transform: translate(calc(var(--x, -200px) - 50%), calc(var(--y, -200px) - 100%)) scale(var(--sx, 1), var(--sy, 1)) rotate(var(--rot, 0deg));
+    transform-origin: 50% 100%;
+    opacity: var(--vis, 0);
+    pointer-events: none;
+    transition: opacity 0.35s ease;
+    will-change: transform, opacity;
+    cursor: pointer;
+  }
+  .crew-actor.is-active {
+    pointer-events: auto;
   }
   .crew-actor.no-move { transition: none; }
   .crew-actor .crew { width: 100%; height: 100%; display: none; }
-  .crew-actor[data-state='swing'] .is-swing, .crew-actor[data-state='panic'] .is-panic,
-  .crew-actor[data-state='sideeye'] .is-sideeye, .crew-actor[data-state='idle'] .is-idle,
-  .crew-actor[data-state='paint'] .is-paint, .crew-actor[data-state='proud'] .is-proud { display: block; }
+  .crew-actor[data-state='swing'] .is-swing,
+  .crew-actor[data-state='panic'] .is-panic,
+  .crew-actor[data-state='sideeye'] .is-sideeye,
+  .crew-actor[data-state='idle'] .is-idle,
+  .crew-actor[data-state='paint'] .is-paint,
+  .crew-actor[data-state='proud'] .is-proud,
+  .crew-actor[data-state='listen'] .is-listen,
+  .crew-actor[data-state='scribble'] .is-scribble,
+  .crew-actor[data-state='doubt'] .is-doubt,
+  .crew-actor[data-state='happy'] .is-happy,
+  .crew-actor[data-state='count'] .is-count {
+    display: block;
+  }
   .crew-actor.walking .crew { animation: crew-hop .24s ease-in-out infinite alternate; }
   .crew-actor.hit .is-swing .crew-prop { animation: crew-hammer .33s cubic-bezier(.6, 0, .9, .5) both; }
   .crew-actor[data-state='paint']:not(.walking) .crew-prop { animation: crew-brush .5s ease-in-out infinite alternate; }
   @keyframes crew-hop { from { transform: translateY(0); } to { transform: translateY(-7%) rotate(3deg); } }
   @keyframes crew-hammer { from { transform: rotate(-58deg); } 82% { transform: rotate(48deg); } to { transform: rotate(40deg); } }
   @keyframes crew-brush { from { transform: rotate(-16deg); } to { transform: rotate(14deg); } }
-  /* Two onlookers, standing on the broken edge of the plate. */
-  .crew-side { position: absolute; left: 56%; bottom: 9px; display: flex; gap: .15rem; }
-  .crew-side .crew { width: calc(var(--actor) * .78); height: calc(var(--actor) * .78); }
+
   .crew-stage .crew-say {
     position: absolute; left: 0; top: 0; white-space: normal; width: max-content; max-width: min(15rem, 80vw); opacity: 0;
     transform: translate(calc(var(--x, 0px) - 50%), calc(var(--y, 0px) - 100%)) scale(.94);
     transform-origin: 50% 100%; transition: opacity .25s ease, transform .25s var(--ease);
+    pointer-events: none;
   }
   .crew-stage .crew-say.on { opacity: 1; transform: translate(calc(var(--x, 0px) - 50%), calc(var(--y, 0px) - 100%)); }
-  @media (max-width: 60rem) { .crew-side { display: none; } }
+
+  /* Telemetry HUD */
+  .crew-hud {
+    position: fixed; right: 1.25rem; top: 1.25rem; z-index: 9999;
+    width: min(340px, 92vw); padding: 1rem 1.15rem;
+    background: color-mix(in srgb, var(--tldr-bg) 95%, transparent); backdrop-filter: blur(14px);
+    border: 1px solid var(--tldr-hair); border-radius: 8px;
+    color: var(--tldr-ink); font-family: monospace; font-size: 0.75rem;
+    line-height: 1.4; box-shadow: 0 16px 40px color-mix(in srgb, var(--tldr-bg) 60%, black);
+    display: none; pointer-events: auto;
+  }
+  .crew-hud.active { display: block; }
+  .crew-hud__head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.65rem; border-bottom: 1px solid var(--tldr-hair); padding-bottom: 0.4rem; }
+  .crew-hud__title { font-weight: 800; font-size: 0.72rem; letter-spacing: 0.08em; color: var(--ochre); }
+  .crew-hud__close { cursor: pointer; color: var(--tldr-dim); font-size: 0.9rem; background: none; border: none; padding: 0; }
+  .crew-hud__close:hover { color: var(--tldr-ink); }
+  .crew-hud__state { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.6rem; }
+  .hud-label { color: var(--tldr-dim); font-size: 0.68rem; letter-spacing: 0.04em; }
+  .hud-badge { background: color-mix(in srgb, var(--ochre) 25%, transparent); color: var(--ochre); padding: 0.15rem 0.45rem; border-radius: 4px; font-weight: 700; border: 1px solid color-mix(in srgb, var(--ochre) 40%, transparent); }
+  .hud-conf { margin-left: auto; color: var(--tldr-ink); font-weight: 600; }
+  .crew-hud__bars { display: grid; gap: 0.35rem; margin-bottom: 0.75rem; }
+  .hud-bar-row { display: grid; grid-template-columns: 82px 1fr 34px; align-items: center; gap: 0.4rem; font-size: 0.68rem; }
+  .hud-bar-name { color: var(--tldr-dim); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .hud-bar-track { background: color-mix(in srgb, var(--tldr-dim) 18%, transparent); height: 6px; border-radius: 3px; overflow: hidden; }
+  .hud-bar-fill { background: var(--mizu); height: 100%; width: 0%; transition: width 0.08s ease; }
+  .hud-bar-fill--gold { background: var(--ochre); }
+  .hud-bar-val { text-align: right; color: var(--tldr-dim); font-variant-numeric: tabular-nums; }
+  .crew-hud__metrics { display: grid; grid-template-columns: 1fr 1fr; gap: 0.35rem 0.8rem; margin-bottom: 0.75rem; border-top: 1px solid var(--tldr-hair); padding-top: 0.5rem; }
+  .hud-metric { font-size: 0.68rem; color: var(--tldr-ink); }
+  .hud-lbl { color: var(--tldr-dim); font-size: 0.68rem; }
+  .crew-hud__kintsugi { margin-bottom: 0.65rem; border-top: 1px solid var(--tldr-hair); padding-top: 0.5rem; }
+  .hud-kintsugi-head { display: flex; justify-content: space-between; margin-bottom: 0.25rem; font-size: 0.68rem; }
+  .hud-gold-pct { color: var(--ochre); font-weight: 700; }
+  .crew-hud__ledger { font-size: 0.68rem; color: var(--tldr-ink); border-top: 1px solid var(--tldr-hair); padding-top: 0.5rem; }
+
   @media (prefers-reduced-motion: reduce) {
     .crew-actor, .crew-stage .crew-say { transition: none; }
     .crew-actor .crew, .crew-actor .crew-prop { animation: none !important; }

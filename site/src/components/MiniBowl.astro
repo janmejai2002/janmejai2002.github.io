@@ -66,7 +66,7 @@ const box = cell
   .minibowl { display: block; width: 100%; height: auto; overflow: visible; }
   .minibowl__base { fill: var(--stone); }
   .minibowl__rim { fill: none; stroke: var(--border); stroke-width: 4; }
-  .minibowl__ghost { fill: none; stroke: var(--ochre); stroke-width: 3; stroke-dasharray: .5 15; stroke-linecap: round; }
+  .minibowl__ghost { fill: none; stroke: color-mix(in srgb, var(--stone) 80%, var(--border)); stroke-width: 1.5; stroke-dasharray: none; }
   .minibowl__shard { fill: var(--card); stroke: color-mix(in srgb, var(--ochre) 60%, var(--stone)); stroke-width: 4; stroke-linejoin: round; }
   .minibowl__shard--mizu { fill: color-mix(in srgb, var(--mizu) 30%, var(--card)); }
   .minibowl__shard--ochre { fill: color-mix(in srgb, var(--ochre) 30%, var(--card)); }
@@ -74,7 +74,7 @@ const box = cell
   .minibowl__shard--moss { fill: color-mix(in srgb, var(--moss) 30%, var(--card)); }
   .minibowl__shard--hanko { fill: color-mix(in srgb, var(--hanko) 30%, var(--card)); }
   .minibowl__shard--indigo { fill: color-mix(in srgb, var(--indigo) 30%, var(--card)); }
-  .minibowl__slot { fill: var(--paper-2); stroke: var(--ochre); stroke-width: 3; stroke-dasharray: 2 12; stroke-linecap: round; }
+  .minibowl__slot { fill: var(--paper-2); stroke: color-mix(in srgb, var(--stone) 80%, var(--border)); stroke-width: 1.5; stroke-dasharray: none; }
   .minibowl__fill { fill: var(--card); }
   .minibowl__seam { fill: none; stroke: var(--ochre); stroke-width: 15; stroke-linejoin: round; stroke-dasharray: 1; }
 </style>
