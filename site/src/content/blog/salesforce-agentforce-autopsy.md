@@ -36,25 +36,36 @@ By the close of the subsequent fiscal year, Salesforce corporate leadership repo
 
 At the core of Agentforce sits the **Atlas Reasoning Engine**, the proprietary orchestration system that interprets user intent, evaluates context, and sequences API actions against the Salesforce platform.
 
-```text
-+-----------------------------------------------------------------------------------+
-|                        ATLAS REASONING ENGINE PIPELINE                            |
-+-----------------------------------------------------------------------------------+
-|  +-----------------------------------------------------------------------------+  |
-|  | State Evaluator: User Intent, CRM Session Memory, Entity Extractions        |  |
-|  +-----------------------------------------------------------------------------+  |
-|                                         |                                         |
-|                                         v                                         |
-|  +-----------------------------------------------------------------------------+  |
-|  | Flow Orchestrator: Agent Graph DAG, Intent Disambiguation, Plan Generation  |  |
-|  +-----------------------------------------------------------------------------+  |
-|                                         |                                         |
-|                                         v                                         |
-|  +-----------------------------------------------------------------------------+  |
-|  | Side Effect Executor: Apex @InvocableMethod, Autolaunched Flows, MuleSoft   |  |
-|  +-----------------------------------------------------------------------------+  |
-+-----------------------------------------------------------------------------------+
-```
+<figure class="diagram">
+<svg viewBox="0 0 720 295" role="img" aria-labelledby="atlas-pipe-title atlas-pipe-desc">
+  <title id="atlas-pipe-title">Atlas Reasoning Engine Three-Phase Execution Pipeline</title>
+  <desc id="atlas-pipe-desc">Pipeline illustrating the sequential flow through state evaluation, flow orchestration via Agent Graph DAG, and side effect execution.</desc>
+  <g font-family="inherit">
+    <!-- Phase 1: State Evaluator -->
+    <rect x="20" y="20" width="680" height="62" rx="10" fill="var(--card)" stroke="var(--border)" stroke-width="1.5"/>
+    <text x="40" y="45" font-size="12.5" font-weight="700" fill="var(--ink)" letter-spacing="0.04em">1. STATE EVALUATOR</text>
+    <text x="40" y="66" font-size="11" fill="var(--ink-faint)">User Intent Ingestion • CRM Session Memory Retrieval • Data Cloud Entity Extractions</text>
+    <circle cx="670" cy="51" r="5" fill="var(--mizu)"/>
+    <!-- Connector down -->
+    <path d="M 360 82 L 360 110" fill="none" stroke="var(--border)" stroke-width="1.5"/>
+    <polygon points="356,106 360,114 364,106" fill="var(--border)"/>
+    <!-- Phase 2: Flow Orchestrator -->
+    <rect x="20" y="114" width="680" height="62" rx="10" fill="var(--wash-mizu)" stroke="var(--border)" stroke-width="1.5"/>
+    <text x="40" y="139" font-size="12.5" font-weight="700" fill="var(--mizu)" letter-spacing="0.04em">2. FLOW ORCHESTRATOR (ATLAS AGENT GRAPH)</text>
+    <text x="40" y="160" font-size="11" fill="var(--ink-soft)">Agent Script DAG Compilation • Intent Disambiguation • Deterministic Policy Guardrails</text>
+    <circle cx="670" cy="145" r="5" fill="var(--mizu)"/>
+    <!-- Connector down -->
+    <path d="M 360 176 L 360 204" fill="none" stroke="var(--border)" stroke-width="1.5"/>
+    <polygon points="356,200 360,208 364,200" fill="var(--border)"/>
+    <!-- Phase 3: Side Effect Executor -->
+    <rect x="20" y="208" width="680" height="62" rx="10" fill="var(--card)" stroke="var(--border)" stroke-width="1.5"/>
+    <text x="40" y="233" font-size="12.5" font-weight="700" fill="var(--ink)" letter-spacing="0.04em">3. SIDE EFFECT EXECUTOR</text>
+    <text x="40" y="254" font-size="11" fill="var(--ink-faint)">Apex @InvocableMethod Annotations • Autolaunched Flows • MuleSoft OpenAPI Callouts</text>
+    <circle cx="670" cy="239" r="5" fill="var(--hanko)"/>
+  </g>
+</svg>
+<figcaption>Atlas runtime architecture: User utterances pass through memory grounding and Agent Script DAG orchestration before triggering transactional side effects in CRM systems.</figcaption>
+</figure>
 
 Atlas structures autonomous reasoning into three explicit runtime phases: State, Flow, and Side Effects. In the State phase, the engine ingests user utterances, normalizes customer identifiers, and fetches conversational session history from memory. In the Flow phase, the system compiles high-level human authoring instructions, written in [Salesforce Agent Script](https://architect.salesforce.com/docs/architect/fundamentals/guide/hybrid-reasoning-agentforce-builder-agent-script.html), into a directed acyclic graph termed the Agent Graph. This graph defines the acceptable sequence of actions and constrains probabilistic decision-making within deterministic enterprise guardrails. In the Side Effects phase, the agent executes external calls by invoking Apex `@InvocableMethod` annotations, Autolaunched Flows, or OpenAPI endpoints registered through Salesforce External Services.
 
@@ -68,17 +79,11 @@ The commercial thesis presented by Salesforce executives positions Agentforce as
 
 That financial calculation breaks down as soon as production deflection metrics replace marketing assumptions. In messy enterprise customer environments, first-contact resolution rates for autonomous agents hover near 54%. The remaining 46% of interactions fail to reach a definitive resolution and escalate to human customer service tiers.
 
-```text
-+---------------------------------------------------------------------------------------------+
-|                            UNIT RESOLUTION COST COMPARISON                                  |
-+---------------------------------------------------------------------+-----------------------+
-| Operational Workflow Category                                       | Blended Cost / Ticket |
-+---------------------------------------------------------------------+-----------------------+
-| Clean Autonomous AI Resolution (1 turn, no escalation)              | $0.20 - $2.00         |
-| Direct Human Tier-1 Resolution (Standard contact center)            | $4.50 - $7.20         |
-| Failed AI Deflection (2 tool turns + human escalation handoff)      | $5.90 - $7.50         |
-+---------------------------------------------------------------------+-----------------------+
-```
+| Operational Workflow Category | Blended Cost / Ticket |
+| --- | --- |
+| Clean Autonomous AI Resolution (1 turn, no escalation) | $0.20 - $2.00 |
+| Direct Human Tier-1 Resolution (Standard contact center) | $4.50 - $7.20 |
+| Failed AI Deflection (2 tool turns + human escalation handoff) | $5.90 - $7.50 |
 
 When an autonomous agent fails, the enterprise pays twice. First, the organization consumes the software runtime fee: either the flat $2.00 conversation billing charge or the cumulative Flex Credits consumed by intermediate tool executions ($0.10 to $0.40). Second, the escalated customer arrives at the human representative with increased frustration and an incomplete transcript history. Human agents require an average of 42 additional seconds simply parsing the chaotic conversation log generated by the failed agent before initiating actual troubleshooting.
 

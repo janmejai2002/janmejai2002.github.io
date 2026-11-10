@@ -510,7 +510,7 @@ html:not(.js) .scroll-reveal { opacity: 1; transform: none; filter: none; }
   background: var(--tldr-bg);
   color: var(--tldr-ink);
   padding: 1.6rem 1.75rem 1.75rem;
-  margin: 0 0 2.75rem;
+  margin: 2.5rem 0 2.75rem;
   /* One corner left square. The whole site argues nothing is finished. */
   border-radius: 18px 18px 18px 4px;
   border-left: 3px solid var(--mizu);
