@@ -1,27 +1,65 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" role="img">
-<title>OpenAI Computer Use Architecture Schematic</title>
-<desc>Minimalist geometric blueprint depicting an agent core surrounded by accessibility grids and an off-axis cinnabar seal.</desc>
-<defs>
-<filter id="grain" x="0" y="0" width="100%" height="100%">
-<feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch"/>
-</filter>
-</defs>
-<rect width="1600" height="900" fill="{{paper}}"/>
-<path d="M80,80h1440v740h-1440zM80,450h1440M800,80v740" fill="none" stroke="{{border}}" stroke-width="1"/>
-<circle cx="800" cy="450" r="320" fill="none" stroke="{{border}}" stroke-width="1" stroke-dasharray="4,8"/>
-<circle cx="800" cy="450" r="220" fill="none" stroke="{{border}}" stroke-width="1.5"/>
-<circle cx="800" cy="450" r="140" fill="none" stroke="{{ink}}" stroke-width="2"/>
-<circle cx="800" cy="450" r="45" fill="none" stroke="{{ink}}" stroke-width="2.5"/>
-<line x1="800" y1="230" x2="800" y2="130" stroke="{{ink}}" stroke-width="1.5"/>
-<line x1="800" y1="670" x2="800" y2="770" stroke="{{ink}}" stroke-width="1.5"/>
-<line x1="580" y1="450" x2="480" y2="450" stroke="{{ink}}" stroke-width="1.5"/>
-<line x1="1020" y1="450" x2="1120" y2="450" stroke="{{ink}}" stroke-width="1.5"/>
-<rect x="785" y="115" width="30" height="30" fill="{{paper}}" stroke="{{ink}}" stroke-width="1.5"/>
-<rect x="785" y="755" width="30" height="30" fill="{{paper}}" stroke="{{ink}}" stroke-width="1.5"/>
-<rect x="465" y="435" width="30" height="30" fill="{{paper}}" stroke="{{ink}}" stroke-width="1.5"/>
-<rect x="1105" y="435" width="30" height="30" fill="{{paper}}" stroke="{{ink}}" stroke-width="1.5"/>
-<rect x="855" y="475" width="46" height="46" fill="none" stroke="{{hanko}}" stroke-width="3"/>
-<rect x="863" y="483" width="30" height="30" fill="{{hanko}}" fill-opacity="0.15" stroke="{{hanko}}" stroke-width="1"/>
-<circle cx="878" cy="498" r="6" fill="{{hanko}}"/>
-<rect width="1600" height="900" filter="url(#grain)" opacity="0.05"/>
+  <title>Accessibility Tree Replacing Vision Loop</title>
+  <desc>Geometric plate showing a fading coordinate screenshot grid on the left displaced by a structured accessibility node hierarchy and code execution seal on the right.</desc>
+  <defs>
+    <filter id="grain" x="0" y="0" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch"/>
+    </filter>
+  </defs>
+  <rect width="1600" height="900" fill="{{paper}}"/>
+
+  <!-- Subtle framing border -->
+  <path d="M80,80h1440v740h-1440z" fill="none" stroke="{{border}}" stroke-width="1"/>
+
+  <!-- Left: The legacy vision screenshot coordinate frame (imprecise, dashed, fading) -->
+  <rect x="220" y="240" width="380" height="420" fill="none" stroke="{{border}}" stroke-width="1.5" stroke-dasharray="6,8"/>
+  <!-- Crosshair coordinates -->
+  <line x1="220" y1="450" x2="600" y2="450" stroke="{{border}}" stroke-width="1"/>
+  <line x1="410" y1="240" x2="410" y2="660" stroke="{{border}}" stroke-width="1"/>
+  <circle cx="410" cy="450" r="80" fill="none" stroke="{{border}}" stroke-width="1" stroke-dasharray="4,6"/>
+  <circle cx="410" cy="450" r="4" fill="{{border}}"/>
+  <!-- Ghost pixel sampling nodes -->
+  <rect x="290" y="320" width="40" height="40" fill="none" stroke="{{border}}" stroke-width="1"/>
+  <rect x="490" y="380" width="40" height="40" fill="none" stroke="{{border}}" stroke-width="1"/>
+  <rect x="340" y="520" width="40" height="40" fill="none" stroke="{{border}}" stroke-width="1"/>
+
+  <!-- Center: Transition vector passing from vision into structured DOM -->
+  <line x1="600" y1="450" x2="780" y2="450" stroke="{{ink}}" stroke-width="2"/>
+  <polyline points="760,442 780,450 760,458" fill="none" stroke="{{ink}}" stroke-width="2"/>
+
+  <!-- Right: Structured Accessibility Tree & Code Execution Hierarchy -->
+  <!-- Root Tree Node -->
+  <circle cx="880" cy="450" r="14" fill="{{paper}}" stroke="{{ink}}" stroke-width="2.5"/>
+  <circle cx="880" cy="450" r="4" fill="{{ink}}"/>
+
+  <!-- Branch lines to accessibility children -->
+  <path d="M894,450 H980 V290 H1060" fill="none" stroke="{{ink}}" stroke-width="2"/>
+  <path d="M894,450 H1060" fill="none" stroke="{{ink}}" stroke-width="2"/>
+  <path d="M894,450 H980 V610 H1060" fill="none" stroke="{{ink}}" stroke-width="2"/>
+
+  <!-- Child node elements (AXTree nodes) -->
+  <rect x="1060" y="270" width="40" height="40" fill="{{paper}}" stroke="{{ink}}" stroke-width="2"/>
+  <circle cx="1080" cy="450" r="12" fill="{{paper}}" stroke="{{ink}}" stroke-width="2"/>
+  <rect x="1060" y="590" width="40" height="40" fill="{{paper}}" stroke="{{ink}}" stroke-width="2"/>
+
+  <!-- Sub-branching execution paths -->
+  <path d="M1100,290 H1180 V230 H1260" fill="none" stroke="{{ink}}" stroke-width="1.5"/>
+  <path d="M1100,290 H1180 V350 H1260" fill="none" stroke="{{ink}}" stroke-width="1.5"/>
+  <path d="M1092,450 H1260" fill="none" stroke="{{ink}}" stroke-width="1.5"/>
+  <path d="M1100,610 H1180 V550 H1260" fill="none" stroke="{{ink}}" stroke-width="1.5"/>
+  <path d="M1100,610 H1180 V670 H1260" fill="none" stroke="{{ink}}" stroke-width="1.5"/>
+
+  <!-- Terminal action nodes -->
+  <circle cx="1260" cy="230" r="5" fill="{{ink}}"/>
+  <circle cx="1260" cy="350" r="5" fill="{{ink}}"/>
+  <circle cx="1260" cy="550" r="5" fill="{{ink}}"/>
+  <circle cx="1260" cy="670" r="5" fill="{{ink}}"/>
+
+  <!-- Hanko execution seal: Stamped on the primary direct code-execution node -->
+  <rect x="1240" y="426" width="48" height="48" fill="none" stroke="{{hanko}}" stroke-width="3"/>
+  <rect x="1248" y="434" width="32" height="32" fill="{{hanko}}" fill-opacity="0.2" stroke="{{hanko}}" stroke-width="1"/>
+  <circle cx="1264" cy="450" r="7" fill="{{hanko}}"/>
+
+  <!-- Surface grain texture -->
+  <rect width="1600" height="900" filter="url(#grain)" opacity="0.05"/>
 </svg>

@@ -70,12 +70,13 @@ Draft the article using this exact markdown skeleton:
 
 ## Artwork brief
 - Argument in one sentence: [Core visual metaphor]
-- Geometry: [Concentric circles, waveform pulses, grid lines]
+- Geometry: [Must be 100% uniquely designed for this topic's specific metaphor — do NOT copy generic concentric circles or boilerplate skeletons]
 - Accent: hanko
 - Deliberate imperfection: [A severed waveform or displaced cinnabar seal stamp]
 
 ## Artwork SVG
 Alt: [One sentence description of the diagram]
+(Design a fresh, bespoke SVG diagram that expresses this specific talk's mechanism. Use semantic tokens {{paper}}, {{ink}}, {{border}}, {{hanko}}, and the grain filter.)
 ```xml
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" role="img">
   <defs><filter id="grain" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch"/></filter></defs>
@@ -153,7 +154,7 @@ Draft the article in Markdown using this exact skeleton:
 [The complete technical stack, base models, parameter counts, context engineering, vector indexes, and SLA latency targets. Include an ASCII flow graph.]
 
 ## 2. The Balance Sheet
-[The financial reality: cost per resolution vs. legacy human labor. Document hidden infrastructure costs: GPU hours, cache write surcharges, embedding fees, and human escalation overhead. Contrast claimed executive ROI with measured margins.]
+[The financial reality: cost per resolution vs. legacy human labor. Include a GitHub-Flavored Markdown table comparing unit economics (e.g. `| Metric / Cost Component | Financial Figure |`). NEVER wrap tables in backtick code blocks or ASCII box art; use real Markdown table pipes.]
 
 ## 3. The Edge Cases and Breakages
 [System failure modes: hallucinations, prompt injection, data drift, traffic surges, and customer dissatisfaction. Detail the human escalation path when confidence falls below the acceptance threshold.]

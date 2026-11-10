@@ -422,18 +422,20 @@ html:not(.js) .scroll-reveal { opacity: 1; transform: none; filter: none; }
 }
 .body pre code { background: none; padding: 0; border: 0; }
 .body table {
-  width: 100%; border-collapse: collapse; margin: 2rem 0;
+  width: 100%; border-collapse: collapse; margin: 2.25rem 0;
   font-size: .9375rem; display: block; overflow-x: auto;
+  border-radius: 8px; border: 1px solid var(--border);
 }
-.body th, .body td { border: 1px solid var(--border); padding: .6rem .8rem; text-align: left; }
-.body th { background: var(--stone); font-weight: 700; color: var(--ink); }
+.body th, .body td { border: 1px solid var(--border); padding: .75rem 1rem; text-align: left; }
+.body th { background: var(--card); font-weight: 700; color: var(--ink); font-size: .875rem; }
+.body tr:nth-child(even) td { background: var(--paper2); }
 .body hr { border: 0; border-top: 1px solid var(--border); margin: 3rem 0; }
 
 /* ---------- Article imagery ----------
    Figures are the only image container in article prose. Markdown's bare
    `![alt](src)` is wrapped by the remark plugin so every picture gets the same
    frame, and `aspect-ratio` is not needed because <Image> emits width/height. */
-.hero-figure { margin: 2.5rem 0 0; }
+.hero-figure { margin: 2.5rem 0 2.5rem; }
 .body figure { margin: 2.5rem 0; }
 .hero-figure img,
 .body figure img,
