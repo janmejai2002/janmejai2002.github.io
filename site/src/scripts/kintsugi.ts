@@ -631,8 +631,9 @@ export function createPlate({ plate, claims, reduced }: Options): Plate | null {
     return getSeamTrajectory(impact, seed, box, count);
   };
   const setGoldRadius = (r: number) => {
-    manualGoldRadius = r;
-    state.gold = r;
+    const clampedR = Math.max(0, Math.min(maxR, r));
+    manualGoldRadius = clampedR;
+    state.gold = clampedR;
     wake();
   };
   const getMaxRadius = () => maxR;

@@ -174,14 +174,16 @@ export class CrewPhysicsEngine {
       const overlapY = actorBottom > obs.top - this.margin && actorTop < obs.bottom + this.margin;
 
       if (overlapX && overlapY) {
-        // Resolve along the axis with the shortest push-out distance
+        const pushUp = clampedY - (obs.top - this.margin);
         const pushDown = obs.bottom + actorH + this.margin - clampedY;
         const pushLeft = clampedX - (obs.left - halfW - this.margin);
         const pushRight = (obs.right + halfW + this.margin) - clampedX;
 
-        // If pushing down stays within stage bounds, push down (preferred for text)
-        if (clampedY + pushDown <= stageBounds.height - 8) {
+        // If pushing down stays within stage bounds and is shorter, push down; otherwise push up (e.g. bottom cues)
+        if (pushDown < pushUp && clampedY + pushDown <= stageBounds.height - 8) {
           clampedY += pushDown;
+        } else if (clampedY - pushUp >= actorH + this.margin) {
+          clampedY = obs.top - this.margin;
         } else if (pushLeft < pushRight && obs.left - halfW - this.margin >= halfW + this.margin) {
           clampedX = obs.left - halfW - this.margin;
         } else {
@@ -221,8 +223,59 @@ export class CrewPhysicsEngine {
       const dx = safeTarget.x - actor.x;
       const dy = safeTarget.y - actor.y;
 
-      const ax = (dx * actor.stiffness - actor.vx * actor.damping) / actor.mass;
-      const ay = (dy * actor.stiffness - actor.vy * actor.damping) / actor.mass;
+      let ax = (dx * actor.stiffness - actor.vx * actor.damping) / actor.mass;
+      let ay = (dy * actor.stiffness - actor.vy * actor.damping) / actor.mass;
+
+      // Soft potential field & damped margin repulsion for obstacles
+      if (!isRim) {
+        const halfW = actor.width * 0.44;
+        const aLeft = actor.x - halfW;
+        const aRight = actor.x + halfW;
+        const aTop = actor.y - actor.height;
+        const aBottom = actor.y;
+
+        const kRep = 320;
+        const cRep = 26;
+
+        for (const obs of this.obstacles) {
+          const obsL = obs.left - this.margin;
+          const obsR = obs.right + this.margin;
+          const obsT = obs.top - this.margin;
+          const obsB = obs.bottom + this.margin;
+
+          if (aRight > obsL && aLeft < obsR && aBottom > obsT && aTop < obsB) {
+            const penLeft = aRight - obsL;
+            const penRight = obsR - aLeft;
+            const penUp = aBottom - obsT;
+            const penDown = obsB - aTop;
+
+            const minPenX = Math.min(penLeft, penRight);
+            const minPenY = Math.min(penUp, penDown);
+
+            if (minPenX < minPenY) {
+              if (penLeft < penRight) {
+                ax += (-penLeft * kRep) / actor.mass;
+                if (actor.vx > 0) actor.vx -= actor.vx * Math.min(1.0, cRep * step);
+                if (penLeft > 4) actor.x -= penLeft * 0.12;
+              } else {
+                ax += (penRight * kRep) / actor.mass;
+                if (actor.vx < 0) actor.vx -= actor.vx * Math.min(1.0, cRep * step);
+                if (penRight > 4) actor.x += penRight * 0.12;
+              }
+            } else {
+              if (penUp < penDown) {
+                ay += (-penUp * kRep) / actor.mass;
+                if (actor.vy > 0) actor.vy -= actor.vy * Math.min(1.0, cRep * step);
+                if (penUp > 4) actor.y -= penUp * 0.12;
+              } else {
+                ay += (penDown * kRep) / actor.mass;
+                if (actor.vy < 0) actor.vy -= actor.vy * Math.min(1.0, cRep * step);
+                if (penDown > 4) actor.y += penDown * 0.12;
+              }
+            }
+          }
+        }
+      }
 
       actor.vx += ax * step;
       actor.vy += ay * step;
@@ -237,6 +290,15 @@ export class CrewPhysicsEngine {
 
       actor.x += actor.vx * step;
       actor.y += actor.vy * step;
+
+      // Safe bounds clamping
+      const halfW = actor.width / 2;
+      actor.x = Math.max(halfW + 4, Math.min(stageBounds.width - halfW - 4, actor.x));
+      if (isRim) {
+        actor.y = Math.max(actor.height * 0.65, Math.min(stageBounds.height - 6, actor.y));
+      } else {
+        actor.y = Math.max(actor.height + 4, Math.min(stageBounds.height - 6, actor.y));
+      }
 
       // 3. Dynamic squash-and-stretch
       // When moving quickly, stretch in movement direction and compress along lateral
@@ -265,8 +327,7 @@ export class CrewPhysicsEngine {
       actor.scaleX += actor.vScaleX * step;
       actor.scaleY += actor.vScaleY * step;
 
-      // 4. Gaze Inverse Kinematics (Gaze IK)
-      // Actor's face in container space (approx 65/148 across, 80/148 down)
+      // 4. Gaze Inverse Kinematics (Gaze IK) with sub-pixel interpolation and strict boundary clamping
       const faceWorldX = actor.x + ((65 / 148) - 0.5) * actor.width;
       const faceWorldY = actor.y - actor.height + (80 / 148) * actor.height;
 
@@ -274,13 +335,25 @@ export class CrewPhysicsEngine {
       const gdy = pointer.y - faceWorldY;
       const dist = Math.hypot(gdx, gdy);
 
-      // Max eye pupil shift in SVG coordinates (~2.4px radius max)
+      // Max eye pupil shift in SVG coordinates (~2.4px radius max, strictly <= 2.5px)
       const maxPupilShift = 2.4;
       const gazeStrength = Math.min(1.0, dist / 240);
       const angle = Math.atan2(gdy, gdx);
 
-      actor.gazeX = Math.cos(angle) * maxPupilShift * gazeStrength;
-      actor.gazeY = Math.sin(angle) * maxPupilShift * gazeStrength;
+      const targetGazeX = Math.cos(angle) * maxPupilShift * gazeStrength;
+      const targetGazeY = Math.sin(angle) * maxPupilShift * gazeStrength;
+
+      // Sub-pixel smooth lerp to eliminate pupil jitter
+      const gazeLerp = Math.min(1.0, step * 16.0);
+      actor.gazeX += (targetGazeX - actor.gazeX) * gazeLerp;
+      actor.gazeY += (targetGazeY - actor.gazeY) * gazeLerp;
+
+      // Strict radial clamping so r <= 2.4px at all times
+      const rGaze = Math.hypot(actor.gazeX, actor.gazeY);
+      if (rGaze > maxPupilShift) {
+        actor.gazeX = (actor.gazeX / rGaze) * maxPupilShift;
+        actor.gazeY = (actor.gazeY / rGaze) * maxPupilShift;
+      }
     }
   }
 }

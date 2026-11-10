@@ -21,6 +21,12 @@ export const GESTURE_CLASSES = [
 
 export type GestureClass = (typeof GESTURE_CLASSES)[number];
 
+export interface IntentState {
+  current: GestureClass;
+  confidence: number;
+  durationInState: number;
+}
+
 // Model architecture constants (12 -> 16 -> 5)
 const FEATURE_MEANS = new Float32Array([
   2.777900, 4.907819, 0.155030, 0.381365, 0.011296, 0.465832,
@@ -94,11 +100,23 @@ export class CrewBrain {
   private hidden = new Float32Array(16);
   private logits = new Float32Array(5);
   private probs = new Float32Array(5);
-  private lastIntent: GestureClass = 'CONTEMPLATIVE_STILLNESS';
   private lastEvaluationTime = 0;
+  private lastLatencyMs = 0;
+
+  // Intent State Machine with Hysteresis & Dwell
+  private intentState: IntentState = {
+    current: 'CONTEMPLATIVE_STILLNESS',
+    confidence: 1.0,
+    durationInState: 0,
+  };
+  private rawIntent: GestureClass = 'CONTEMPLATIVE_STILLNESS';
+  private candidateIntent: GestureClass = 'CONTEMPLATIVE_STILLNESS';
+  private candidateSince = -1000;
+  private lastTransitionTime = -1000;
 
   constructor() {
     this.buffer = new Array(BUFFER_CAPACITY).fill(null).map(() => ({ x: 0, y: 0, t: 0, isClick: 0 }));
+    this.probs[4] = 1.0;
   }
 
   /** Ingests raw pointer/touch coordinates */
@@ -254,8 +272,9 @@ export class CrewBrain {
     this.features[11] = vEntropy;
   }
 
-  /** Executes 2-layer forward pass (<0.02ms) */
+  /** Executes 2-layer forward pass and intent state machine (<0.02ms) */
   public update(now = performance.now()): GestureClass {
+    const tStart = performance.now();
     this.lastEvaluationTime = now;
     const samples = this.getWindowSamples(now);
     this.extractFeatures(samples, now);
@@ -303,17 +322,81 @@ export class CrewBrain {
       }
     }
 
-    // Stillness fallback if no movement recorded in the last 200ms
-    if (samples.length === 0 || (samples.length > 0 && now - samples[samples.length - 1].t > 220)) {
+    // Stillness fallback: when cursor halts (>200ms without pointer events),
+    // smoothly ramp confidence towards stillness without sudden snapping.
+    const latestSample = samples.length > 0 ? samples[samples.length - 1] : null;
+    const timeSinceHalt = latestSample ? now - latestSample.t : 9999;
+    if (timeSinceHalt > 200) {
       bestIdx = 4; // CONTEMPLATIVE_STILLNESS
+      const haltFactor = Math.min(1.0, (timeSinceHalt - 200) / 120);
+      const prevStill = this.probs[4];
+      this.probs[4] = Math.max(prevStill, 0.72 + 0.28 * haltFactor);
+      bestProb = this.probs[4];
     }
 
-    this.lastIntent = GESTURE_CLASSES[bestIdx];
-    return this.lastIntent;
+    this.rawIntent = GESTURE_CLASSES[bestIdx];
+    const rawConfidence = bestProb;
+
+    // --- Intent State Machine with Hysteresis & Dwell ---
+    const CONFIDENCE_THRESHOLD = 0.70;
+    const SUSTAIN_DURATION_MS = 250;
+    const MIN_DWELL_MS = 400; // Enforce maximum 1 transition per 400ms
+
+    const timeInState = Math.max(0, now - this.lastTransitionTime);
+    this.intentState.durationInState = timeInState;
+
+    if (rawConfidence >= CONFIDENCE_THRESHOLD) {
+      if (this.rawIntent !== this.candidateIntent) {
+        this.candidateIntent = this.rawIntent;
+        // If coming from reset or multi-sample buffer, anchor candidate start to earliest sample
+        if (this.candidateSince < 0 && samples.length > 0) {
+          this.candidateSince = samples[0].t;
+        } else {
+          this.candidateSince = now;
+        }
+      }
+    } else {
+      if (this.candidateIntent !== this.intentState.current) {
+        this.candidateIntent = this.intentState.current;
+        this.candidateSince = now;
+      }
+    }
+
+    if (this.candidateIntent === this.intentState.current) {
+      // In current state: rolling exponential average for smooth confidence readout
+      const curIdx = GESTURE_CLASSES.indexOf(this.intentState.current);
+      const curProb = this.probs[curIdx] ?? 0.8;
+      this.intentState.confidence = this.intentState.confidence * 0.82 + curProb * 0.18;
+    } else {
+      const candidateDuration = now - this.candidateSince;
+      const requiredSustain = this.candidateIntent === 'HEAVY_STRIKE' ? 60 : SUSTAIN_DURATION_MS;
+
+      if (
+        candidateDuration >= requiredSustain &&
+        timeInState >= MIN_DWELL_MS &&
+        rawConfidence >= CONFIDENCE_THRESHOLD
+      ) {
+        this.intentState.current = this.candidateIntent;
+        this.intentState.confidence = rawConfidence;
+        this.intentState.durationInState = 0;
+        this.lastTransitionTime = now;
+      }
+    }
+
+    this.lastLatencyMs = performance.now() - tStart;
+    return this.intentState.current;
   }
 
   public getKinematicIntent(now = performance.now()): GestureClass {
     return this.update(now);
+  }
+
+  public getIntentState(): IntentState {
+    return { ...this.intentState };
+  }
+
+  public getRawIntent(): GestureClass {
+    return this.rawIntent;
   }
 
   public getProbabilities(): Float32Array {
@@ -324,7 +407,15 @@ export class CrewBrain {
     return this.features;
   }
 
-  public reset(): void {
+  public getNormalizedFeatures(): Float32Array {
+    return this.normFeatures;
+  }
+
+  public getLatency(): number {
+    return this.lastLatencyMs;
+  }
+
+  public reset(initialTime = 0): void {
     this.head = 0;
     this.count = 0;
     this.features.fill(0);
@@ -332,7 +423,17 @@ export class CrewBrain {
     this.hidden.fill(0);
     this.logits.fill(0);
     this.probs.fill(0);
-    this.lastIntent = 'CONTEMPLATIVE_STILLNESS';
+    this.probs[4] = 1.0;
+    this.rawIntent = 'CONTEMPLATIVE_STILLNESS';
+    this.intentState = {
+      current: 'CONTEMPLATIVE_STILLNESS',
+      confidence: 1.0,
+      durationInState: 0,
+    };
+    this.candidateIntent = 'CONTEMPLATIVE_STILLNESS';
+    this.candidateSince = initialTime - 1000;
+    this.lastTransitionTime = initialTime - 1000;
+    this.lastLatencyMs = 0;
   }
 }
 

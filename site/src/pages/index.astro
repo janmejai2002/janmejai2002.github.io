@@ -164,6 +164,60 @@ const edgeLine = edge.map(([x, d]) => `${(x * 10).toFixed(0)},${(EDGE_DEPTH - d)
       </div>
 
       <span class="crew-say" data-say></span>
+
+      {/* Dev Telemetry HUD Overlay (Toggle via '~' or ?debug=crew) */}
+      <div class="crew-telemetry" data-telemetry hidden aria-hidden="true">
+        <div class="crew-telemetry__card">
+          <div class="crew-telemetry__top">
+            <span class="crew-telemetry__pill">TERRARIUM TELEMETRY</span>
+            <span class="crew-telemetry__intent" data-hud-intent>STILLNESS</span>
+            <span class="crew-telemetry__time" data-hud-conf>100%</span>
+          </div>
+          <div class="crew-telemetry__row">
+            <div class="crew-telemetry__col">
+              <span class="crew-telemetry__label">Speed</span>
+              <span class="crew-telemetry__val"><b data-hud-speed>0.00</b> px/ms</span>
+            </div>
+            <div class="crew-telemetry__col">
+              <span class="crew-telemetry__label">Accel</span>
+              <span class="crew-telemetry__val"><b data-hud-accel>0.00</b> px/ms²</span>
+            </div>
+            <div class="crew-telemetry__col">
+              <span class="crew-telemetry__label">Jerk</span>
+              <span class="crew-telemetry__val"><b data-hud-jerk>0.00</b> px/ms³</span>
+            </div>
+          </div>
+          <div class="crew-telemetry__row">
+            <div class="crew-telemetry__col">
+              <span class="crew-telemetry__label">Curvature</span>
+              <span class="crew-telemetry__val"><b data-hud-curve>0.00</b> rad/px</span>
+            </div>
+            <div class="crew-telemetry__col">
+              <span class="crew-telemetry__label">Dwell</span>
+              <span class="crew-telemetry__val"><b data-hud-dwell>1.00</b></span>
+            </div>
+            <div class="crew-telemetry__col">
+              <span class="crew-telemetry__label">Efficiency</span>
+              <span class="crew-telemetry__val"><b data-hud-eff>0.00</b></span>
+            </div>
+          </div>
+          <div class="crew-telemetry__sec">
+            <div class="crew-telemetry__label">Micro-Brain Softmax (12→16→5) · <span data-hud-latency>0.00ms</span></div>
+            <div class="crew-telemetry__meter" data-hud-bars>
+              <div class="crew-telemetry__bar-row"><span>STRIKE</span><div class="crew-telemetry__bar-track"><div class="crew-telemetry__bar-fill" data-bar="0"></div></div><span data-bar-val="0">0%</span></div>
+              <div class="crew-telemetry__bar-row"><span>SHAKE</span><div class="crew-telemetry__bar-track"><div class="crew-telemetry__bar-fill" data-bar="1"></div></div><span data-bar-val="1">0%</span></div>
+              <div class="crew-telemetry__bar-row"><span>CARESS</span><div class="crew-telemetry__bar-track"><div class="crew-telemetry__bar-fill" data-bar="2"></div></div><span data-bar-val="2">0%</span></div>
+              <div class="crew-telemetry__bar-row"><span>ORBIT</span><div class="crew-telemetry__bar-track"><div class="crew-telemetry__bar-fill" data-bar="3"></div></div><span data-bar-val="3">0%</span></div>
+              <div class="crew-telemetry__bar-row"><span>STILL</span><div class="crew-telemetry__bar-track"><div class="crew-telemetry__bar-fill" data-bar="4"></div></div><span data-bar-val="4">100%</span></div>
+            </div>
+          </div>
+          <div class="crew-telemetry__sec">
+            <div class="crew-telemetry__label">Physics & Mascots</div>
+            <div class="crew-telemetry__status" data-hud-status>Negative space bounds locked · Press ~ to dismiss</div>
+          </div>
+        </div>
+        <div class="crew-telemetry__debug-boxes" data-hud-boxes></div>
+      </div>
     </div>
   </section>
   <svg class="plate-edge" viewBox={`0 0 1000 ${EDGE_DEPTH}`} preserveAspectRatio="none" aria-hidden="true">
@@ -408,24 +462,98 @@ const edgeLine = edge.map(([x, d]) => `${(x * 10).toFixed(0)},${(EDGE_DEPTH - d)
   let lastIntent: GestureClass = 'CONTEMPLATIVE_STILLNESS';
   let intentDebounceTimer = 0;
 
+  /* Dev Telemetry HUD overlay controllers */
+  const telemetryEl = document.querySelector<HTMLElement>('[data-telemetry]');
+  const hudIntent = telemetryEl?.querySelector<HTMLElement>('[data-hud-intent]');
+  const hudConf = telemetryEl?.querySelector<HTMLElement>('[data-hud-conf]');
+  const hudLatency = telemetryEl?.querySelector<HTMLElement>('[data-hud-latency]');
+  const hudSpeed = telemetryEl?.querySelector<HTMLElement>('[data-hud-speed]');
+  const hudAccel = telemetryEl?.querySelector<HTMLElement>('[data-hud-accel]');
+  const hudJerk = telemetryEl?.querySelector<HTMLElement>('[data-hud-jerk]');
+  const hudCurve = telemetryEl?.querySelector<HTMLElement>('[data-hud-curve]');
+  const hudDwell = telemetryEl?.querySelector<HTMLElement>('[data-hud-dwell]');
+  const hudEff = telemetryEl?.querySelector<HTMLElement>('[data-hud-eff]');
+  const hudBoxes = telemetryEl?.querySelector<HTMLElement>('[data-hud-boxes]');
+  const hudBarFills = telemetryEl?.querySelectorAll<HTMLElement>('[data-bar]');
+  const hudBarVals = telemetryEl?.querySelectorAll<HTMLElement>('[data-bar-val]');
+
+  let currentObstacles: Rect[] = [];
+  const urlParams = new URLSearchParams(window.location.search);
+  let isTelemetryActive = urlParams.get('debug') === 'crew';
+  if (telemetryEl && isTelemetryActive) {
+    telemetryEl.hidden = false;
+  }
+
+  const renderTelemetryBoxes = () => {
+    if (!hudBoxes || !isTelemetryActive || !stageEl) return;
+    hudBoxes.innerHTML = '';
+    const b = stageEl.getBoundingClientRect();
+    for (const obs of currentObstacles) {
+      const boxDiv = document.createElement('div');
+      boxDiv.className = 'crew-telemetry__obs-box';
+      boxDiv.style.left = `${Math.round(obs.left)}px`;
+      boxDiv.style.top = `${Math.round(obs.top)}px`;
+      boxDiv.style.width = `${Math.round(obs.right - obs.left)}px`;
+      boxDiv.style.height = `${Math.round(obs.bottom - obs.top)}px`;
+      hudBoxes.appendChild(boxDiv);
+    }
+    const targets = getRestTargets(b.width, b.height);
+    for (const [id, pt] of Object.entries(targets)) {
+      const dot = document.createElement('div');
+      dot.className = 'crew-telemetry__anchor-box';
+      dot.style.left = `${Math.round(pt.x)}px`;
+      dot.style.top = `${Math.round(pt.y)}px`;
+      dot.title = `Anchor: ${id}`;
+      hudBoxes.appendChild(dot);
+    }
+  };
+
+  window.addEventListener('keydown', (e) => {
+    if (e.key === '`' || e.key === '~') {
+      if (!telemetryEl) return;
+      isTelemetryActive = !isTelemetryActive;
+      telemetryEl.hidden = !isTelemetryActive;
+      if (isTelemetryActive) {
+        renderTelemetryBoxes();
+        startSimulation();
+      }
+    }
+  });
+
   const later = (ms: number, fn: () => void) => {
     const tid = window.setTimeout(fn, ms);
     crewTimers.push(tid);
     return tid;
   };
 
-  const showTag = (who: keyof typeof actors, text: string, dur = 2400) => {
+  let lastGlobalTagTime = 0;
+  let activeTagWho: string | null = null;
+  const MIN_TAG_COOLDOWN_MS = 3500; // Enforce strict >=3.5s cooldown between organic tags
+
+  const showTag = (who: keyof typeof actors, text: string, dur = 2400, force = false): boolean => {
+    const now = performance.now();
+    if (!force) {
+      if (now - lastGlobalTagTime < MIN_TAG_COOLDOWN_MS) return false;
+      if (activeTagWho && activeTagWho !== who) return false; // Do not interrupt active dialogue
+    }
     const actorEl = actors[who];
     const tag = actorEl?.querySelector<HTMLElement>('.crew-tag');
-    if (!tag) return;
+    if (!tag) return false;
+
+    lastGlobalTagTime = now;
+    activeTagWho = who;
     tag.textContent = text;
     tag.classList.add('on');
     const existing = tagTimers.get(who);
     if (existing) clearTimeout(existing);
     tagTimers.set(
       who,
-      window.setTimeout(() => tag.classList.remove('on'), dur)
+      window.setTimeout(() => {
+        tag.classList.remove('on');
+        if (activeTagWho === who) activeTagWho = null;
+      }, dur)
     );
+    return true;
   };
 
   const say = (who: HTMLElement | null, text: string) => {
@@ -490,26 +618,28 @@ const edgeLine = edge.map(([x, d]) => `${(x * 10).toFixed(0)},${(EDGE_DEPTH - d)
       });
     }
 
+    currentObstacles = obstacles;
     physics.setObstacles(obstacles);
+    if (isTelemetryActive) renderTelemetryBoxes();
   };
 
   const getRestTargets = (w: number, h: number) => {
     const isNarrow = window.matchMedia('(max-width: 40rem)').matches;
     if (isNarrow) {
       return {
-        kiki: { x: w * 0.5, y: 34 },
-        tsugi: { x: w * 0.32, y: h - 30 },
-        oops: { x: w * 0.68, y: h - 30 },
-        fude: { x: w * 0.88, y: h - 26 },
-        uso: { x: w * 0.12, y: h - 26 },
+        kiki: { x: w * 0.50, y: 32 },
+        tsugi: { x: w * 0.28, y: h - 85 },
+        oops: { x: w * 0.72, y: h - 85 },
+        fude: { x: w * 0.88, y: h - 80 },
+        uso: { x: w * 0.12, y: h - 80 },
       };
     }
     return {
-      kiki: { x: w * 0.52, y: 38 },
-      tsugi: { x: w * 0.74, y: h * 0.64 },
-      oops: { x: w * 0.88, y: h * 0.66 },
-      fude: { x: w * 0.92, y: h * 0.84 },
-      uso: { x: w * 0.16, y: h * 0.86 },
+      kiki: { x: w * 0.50, y: 36 },
+      tsugi: { x: w * 0.72, y: h * 0.65 },
+      oops: { x: w * 0.90, y: h * 0.62 },
+      fude: { x: w * 0.91, y: h * 0.86 },
+      uso: { x: w * 0.14, y: h * 0.88 },
     };
   };
 
@@ -559,19 +689,19 @@ const edgeLine = edge.map(([x, d]) => `${(x * 10).toFixed(0)},${(EDGE_DEPTH - d)
     later(240, () => {
       physics.applyImpulse('oops', 380, 70, 1.45, 0.62);
       actors.oops.dataset.state = 'panic';
-      showTag('oops', OOPS_SAYS[n % OOPS_SAYS.length], 2400);
+      showTag('oops', OOPS_SAYS[n % OOPS_SAYS.length], 2400, true);
 
       // Kiki spiral-eyed shockwave reaction on top rim
       if (actors.kiki) {
         physics.applyImpulse('kiki', 0, -120, 1.25, 0.75);
         actors.kiki.dataset.state = 'mindblown';
-        showTag('kiki', 'Acoustic shockwave!', 1800);
+        showTag('kiki', 'Acoustic shockwave!', 1800, true);
       }
 
       // Fude frantically grabs notebook
       if (actors.fude) {
         actors.fude.dataset.state = 'scribble';
-        showTag('fude', FUDE_SAYS[n % FUDE_SAYS.length], 2200);
+        showTag('fude', FUDE_SAYS[n % FUDE_SAYS.length], 2200, true);
       }
 
       // Uso leans forward with magnifying glass
@@ -610,12 +740,12 @@ const edgeLine = edge.map(([x, d]) => `${(x * 10).toFixed(0)},${(EDGE_DEPTH - d)
       plate.setGoldRadius(plate.getMaxRadius());
 
       actors.tsugi.dataset.state = 'proud';
-      showTag('tsugi', TSUGI_SAYS[n % TSUGI_SAYS.length], 2800);
+      showTag('tsugi', TSUGI_SAYS[n % TSUGI_SAYS.length], 2800, true);
       say(actors.tsugi, TSUGI_SAYS[n % TSUGI_SAYS.length]);
 
       if (actors.uso) {
         actors.uso.dataset.state = 'sip';
-        showTag('uso', 'Approved.', 2000);
+        showTag('uso', 'Approved.', 2000, true);
       }
       if (actors.fude) actors.fude.dataset.state = 'count';
     });
@@ -630,31 +760,29 @@ const edgeLine = edge.map(([x, d]) => `${(x * 10).toFixed(0)},${(EDGE_DEPTH - d)
     if (intent === 'FRANTIC_SHAKE') {
       if (actors.oops) {
         actors.oops.dataset.state = 'panic';
-        physics.applyImpulse('oops', (Math.random() - 0.5) * 160, -80, 1.25, 0.8);
-        showTag('oops', 'Earthquake drill!', 1600);
+        physics.applyImpulse('oops', (Math.random() - 0.5) * 60, -35, 1.15, 0.88);
+        showTag('oops', 'Earthquake drill!', 1800);
       }
       if (actors.tsugi) actors.tsugi.dataset.state = 'paint';
       if (actors.kiki) actors.kiki.dataset.state = 'mindblown';
       if (actors.fude) actors.fude.dataset.state = 'scribble';
       if (actors.uso) actors.uso.dataset.state = 'sideeye';
     } else if (intent === 'GENTLE_CARESS') {
+      // Mascots stay anchored; subtle head tilt and gentle breathing, NO cursor chasing!
       if (actors.tsugi) {
         actors.tsugi.dataset.state = 'paint';
-        physics.setTarget('tsugi', pointer.x - 30, pointer.y + 40);
-        showTag('tsugi', 'Gentle touch.', 1800);
+        showTag('tsugi', 'Gentle touch.', 2000);
       }
       if (actors.oops) actors.oops.dataset.state = 'happy';
       if (actors.kiki) actors.kiki.dataset.state = 'happy';
       if (actors.uso) actors.uso.dataset.state = 'proud';
       if (actors.fude) actors.fude.dataset.state = 'idle';
     } else if (intent === 'CURIOUS_ORBIT') {
-      physics.setTarget('oops', pointer.x + 45, pointer.y + 30);
-      physics.setTarget('tsugi', pointer.x - 45, pointer.y + 30);
-      physics.setTarget('uso', pointer.x - 25, pointer.y + 55);
-      physics.setTarget('fude', pointer.x + 25, pointer.y + 55);
+      // Mascots stay anchored; gaze IK tracks orbit; slight curious sway
       if (actors.oops) {
         actors.oops.dataset.state = 'mindblown';
-        showTag('oops', 'Dizzy!', 1400);
+        physics.applyImpulse('oops', 0, -25, 1.06, 0.95);
+        showTag('oops', 'Dizzy!', 1600);
       }
       if (actors.kiki) actors.kiki.dataset.state = 'listen';
       if (actors.uso) actors.uso.dataset.state = 'doubt';
@@ -677,7 +805,7 @@ const edgeLine = edge.map(([x, d]) => `${(x * 10).toFixed(0)},${(EDGE_DEPTH - d)
         e.stopPropagation();
         physics.applyImpulse('oops', 0, -220, 0.72, 1.4);
         actors.oops!.dataset.state = 'panic';
-        showTag('oops', 'Careful! I am fragile!', 1800);
+        showTag('oops', 'Careful! I am fragile!', 1800, true);
         later(1800, () => (actors.oops!.dataset.state = 'sideeye'));
       });
     }
@@ -686,7 +814,7 @@ const edgeLine = edge.map(([x, d]) => `${(x * 10).toFixed(0)},${(EDGE_DEPTH - d)
         e.stopPropagation();
         physics.applyImpulse('tsugi', 0, -140, 0.88, 1.18);
         actors.tsugi!.dataset.state = 'happy';
-        showTag('tsugi', '24k gold lacquer curing.', 1800);
+        showTag('tsugi', '24k gold lacquer curing.', 1800, true);
         later(1800, () => (actors.tsugi!.dataset.state = 'proud'));
       });
     }
@@ -695,7 +823,7 @@ const edgeLine = edge.map(([x, d]) => `${(x * 10).toFixed(0)},${(EDGE_DEPTH - d)
         e.stopPropagation();
         physics.applyImpulse('kiki', 0, -180, 0.82, 1.25);
         actors.kiki!.dataset.state = 'listen';
-        showTag('kiki', 'Listening to the web feeds.', 1800);
+        showTag('kiki', 'Listening to the web feeds.', 1800, true);
       });
     }
     if (actors.fude) {
@@ -703,7 +831,7 @@ const edgeLine = edge.map(([x, d]) => `${(x * 10).toFixed(0)},${(EDGE_DEPTH - d)
         e.stopPropagation();
         physics.applyImpulse('fude', 0, -150, 0.85, 1.2);
         actors.fude!.dataset.state = 'scribble';
-        showTag('fude', 'Logged in the registry.', 1800);
+        showTag('fude', 'Logged in the registry.', 1800, true);
         later(1800, () => (actors.fude!.dataset.state = 'idle'));
       });
     }
@@ -712,7 +840,7 @@ const edgeLine = edge.map(([x, d]) => `${(x * 10).toFixed(0)},${(EDGE_DEPTH - d)
         e.stopPropagation();
         physics.applyImpulse('uso', 0, -150, 0.85, 1.2);
         actors.uso!.dataset.state = 'doubt';
-        showTag('uso', 'Show me the paper first.', 1800);
+        showTag('uso', 'Show me the paper first.', 1800, true);
         later(1800, () => (actors.uso!.dataset.state = 'sip'));
       });
     }
@@ -759,7 +887,7 @@ const edgeLine = edge.map(([x, d]) => `${(x * 10).toFixed(0)},${(EDGE_DEPTH - d)
         }
       }
 
-      // Advance physics integrator
+      // Advance physics integrator with potential field obstacle avoidance
       physics.update(dt, pointer, bounds, { allowTopRimIds: ['kiki'] });
 
       // Update DOM actors from physics state
@@ -773,6 +901,34 @@ const edgeLine = edge.map(([x, d]) => `${(x * 10).toFixed(0)},${(EDGE_DEPTH - d)
         el.style.setProperty('--scale-y', s.scaleY.toFixed(3));
         el.style.setProperty('--pupil-x', `${s.gazeX.toFixed(2)}px`);
         el.style.setProperty('--pupil-y', `${s.gazeY.toFixed(2)}px`);
+      }
+
+      // Update Telemetry HUD if active
+      if (isTelemetryActive && telemetryEl && !telemetryEl.hidden) {
+        const istate = brain.getIntentState();
+        const rawFeats = brain.getLastFeatures();
+        const probs = brain.getProbabilities();
+        const lat = brain.getLatency();
+
+        if (hudIntent) hudIntent.textContent = istate.current;
+        if (hudConf) hudConf.textContent = `${Math.round(istate.confidence * 100)}% (${Math.round(istate.durationInState)}ms)`;
+        if (hudLatency) hudLatency.textContent = `${lat.toFixed(3)}ms`;
+        if (hudSpeed) hudSpeed.textContent = rawFeats[0].toFixed(2);
+        if (hudAccel) hudAccel.textContent = rawFeats[2].toFixed(3);
+        if (hudJerk) hudJerk.textContent = rawFeats[4].toFixed(4);
+        if (hudCurve) hudCurve.textContent = rawFeats[5].toFixed(3);
+        if (hudDwell) hudDwell.textContent = rawFeats[9].toFixed(2);
+        if (hudEff) hudEff.textContent = rawFeats[6].toFixed(2);
+
+        if (hudBarFills && hudBarVals) {
+          for (let k = 0; k < 5; k++) {
+            const pct = Math.round((probs[k] || 0) * 100);
+            const fill = hudBarFills[k];
+            const val = hudBarVals[k];
+            if (fill) fill.style.width = `${pct}%`;
+            if (val) val.textContent = `${pct}%`;
+          }
+        }
       }
     }
 
@@ -1196,10 +1352,11 @@ const edgeLine = edge.map(([x, d]) => `${(x * 10).toFixed(0)},${(EDGE_DEPTH - d)
     display: block;
   }
 
-  /* Gaze Inverse Kinematics: pupils track pointer */
+  /* Gaze Inverse Kinematics: pupils track pointer with stable SVG coordinate bounds */
   .crew-actor .crew-ink circle.k {
+    transform-box: fill-box;
+    transform-origin: center;
     transform: translate(var(--pupil-x, 0px), var(--pupil-y, 0px));
-    transition: transform 0.05s ease-out;
   }
 
   /* Prop kinetic animations during specific key actions */
@@ -1234,6 +1391,92 @@ const edgeLine = edge.map(([x, d]) => `${(x * 10).toFixed(0)},${(EDGE_DEPTH - d)
     z-index: 10;
   }
   .crew-stage .crew-say.on { opacity: 1; transform: translate(calc(var(--x, 0px) - 50%), calc(var(--y, 0px) - 100%)); }
+
+  /* Dev Telemetry HUD Overlay */
+  .crew-telemetry {
+    position: absolute; inset: 0; pointer-events: none; z-index: 12;
+    font-family: monospace; font-size: 0.72rem; color: var(--ink);
+  }
+  .crew-telemetry[hidden] { display: none; }
+  .crew-telemetry__card {
+    position: absolute; right: 1rem; top: 1rem; width: min(22rem, 90vw);
+    background: color-mix(in srgb, var(--paper) 92%, transparent);
+    border: 1px solid var(--border); border-radius: 8px;
+    padding: 0.75rem; box-shadow: 0 8px 30px color-mix(in srgb, var(--ink) 12%, transparent);
+    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+    display: flex; flex-direction: column; gap: 0.5rem;
+    pointer-events: auto; user-select: none;
+  }
+  .crew-telemetry__top {
+    display: flex; align-items: center; justify-content: space-between;
+    border-bottom: 1px solid var(--border); padding-bottom: 0.4rem;
+  }
+  .crew-telemetry__pill {
+    font-size: 0.65rem; font-weight: 700; letter-spacing: 0.05em;
+    padding: 0.15rem 0.4rem; border-radius: 4px;
+    background: color-mix(in srgb, var(--ochre) 18%, transparent); color: var(--ochre);
+  }
+  .crew-telemetry__intent {
+    font-weight: 700; color: var(--mizu); letter-spacing: 0.02em;
+  }
+  .crew-telemetry__time {
+    color: var(--ink); opacity: 0.7; font-size: 0.68rem;
+  }
+  .crew-telemetry__row {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.4rem;
+  }
+  .crew-telemetry__col {
+    display: flex; flex-direction: column; gap: 0.1rem;
+    background: color-mix(in srgb, var(--ink) 4%, transparent);
+    padding: 0.25rem 0.35rem; border-radius: 4px;
+  }
+  .crew-telemetry__label {
+    font-size: 0.62rem; opacity: 0.65; text-transform: uppercase; letter-spacing: 0.04em;
+  }
+  .crew-telemetry__val {
+    font-size: 0.75rem;
+  }
+  .crew-telemetry__sec {
+    display: flex; flex-direction: column; gap: 0.3rem;
+    border-top: 1px solid color-mix(in srgb, var(--border) 60%, transparent);
+    padding-top: 0.4rem;
+  }
+  .crew-telemetry__meter {
+    display: flex; flex-direction: column; gap: 0.25rem;
+  }
+  .crew-telemetry__bar-row {
+    display: grid; grid-template-columns: 3.5rem 1fr 2.4rem; align-items: center; gap: 0.4rem;
+    font-size: 0.65rem;
+  }
+  .crew-telemetry__bar-track {
+    height: 5px; background: color-mix(in srgb, var(--ink) 10%, transparent);
+    border-radius: 3px; overflow: hidden;
+  }
+  .crew-telemetry__bar-fill {
+    height: 100%; width: 0%; background: var(--mizu);
+    transition: width 0.1s linear; border-radius: 3px;
+  }
+  .crew-telemetry__bar-fill[data-bar="0"] { background: var(--hanko); }
+  .crew-telemetry__bar-fill[data-bar="1"] { background: var(--ochre); }
+  .crew-telemetry__bar-fill[data-bar="2"] { background: var(--mizu); }
+  .crew-telemetry__bar-fill[data-bar="3"] { background: var(--plum); }
+  .crew-telemetry__bar-fill[data-bar="4"] { background: var(--moss); }
+  .crew-telemetry__status {
+    font-size: 0.62rem; opacity: 0.7; font-style: italic;
+  }
+  .crew-telemetry__debug-boxes {
+    position: absolute; inset: 0; pointer-events: none;
+  }
+  .crew-telemetry__obs-box {
+    position: absolute; border: 1px dashed var(--indigo);
+    background: color-mix(in srgb, var(--indigo) 6%, transparent);
+    border-radius: 4px; pointer-events: none;
+  }
+  .crew-telemetry__anchor-box {
+    position: absolute; width: 14px; height: 14px; border-radius: 50%;
+    border: 1px solid var(--ochre); transform: translate(-50%, -50%);
+    pointer-events: none;
+  }
 
   @media (prefers-reduced-motion: reduce) {
     .crew-actor, .crew-stage .crew-say, .crew-tag { transition: none; }
