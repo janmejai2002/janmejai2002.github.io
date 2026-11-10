@@ -33,7 +33,7 @@ Most agent builds hit the same wall. The agent is eight tool calls deep, it cont
 
 There is now a benchmark that tried to find out. Its answer is not the one the category is selling.
 
-## What the benchmark actually asks
+## What does the benchmark actually ask?
 
 [LongMemEval-V2](https://arxiv.org/abs/2605.12493) came out of UCLA on 12 May 2026, from Di Wu, Zixiang Ji, Asmi Kawatkar, Bryan Kwan, Jia-Chen Gu, Nanyun Peng and Kai-Wei Chang. It is deliberately not a conversation benchmark. Where most memory evaluations ask whether a system remembers what a user said forty sessions ago, this one asks whether an agent has learned its way around a workplace.
 
@@ -103,7 +103,7 @@ The Medium tier moves the numbers but not the ordering: retrieval-to-slice falls
 
 Twenty points does not come back from prompt tuning. Both systems are reading the same 25 million tokens and doing something structurally different with them.
 
-## Why the coding agent won
+## Why did the coding agent win?
 
 The obvious reading is *grep beats embeddings*. That reading gets the mechanism backwards.
 

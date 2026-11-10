@@ -30,7 +30,7 @@ notionId: '3c9ced67-050a-8131-a173-f662a3a1394d'
 
 </div>
 
-## The situation
+## What problem was Uber trying to solve?
 
 At Uber, an analyst asking "how many completed trips in São Paulo last week" does not struggle with SQL syntax. The struggle is knowing which of hundreds of thousands of tables holds that answer, and how Uber's internal data models encode a concept like "completed trip." That knowledge lives in a few people's heads and in tribal Slack threads.
 
@@ -38,7 +38,7 @@ The scale of the problem is specific. Uber's data platform serves "approximately
 
 QueryGPT began as a 2023 internal hackathon project and now sits inside Uber's existing query interface as an assistive layer. The function it targets is the one every data team recognizes: the standing queue of "can you pull me the numbers on…" requests that turns analysts into a translation service.
 
-## What they built
+## What did Uber actually build?
 
 QueryGPT is not a prompt wrapped around GPT-4. It is a multi-agent pipeline whose whole purpose is to hand the language model a small, relevant problem instead of a huge, ambiguous one. It runs on OpenAI's GPT-4 Turbo (model 1106, 128K context) with few-shot examples.
 
@@ -56,7 +56,7 @@ QueryGPT is not a prompt wrapped around GPT-4. It is a multi-agent pipeline whos
 
 Uber also describes an evaluation harness: a manually curated set of golden question-to-SQL pairs drawn from real logs, scored on intent match, table overlap (0-1), whether the query runs, whether it returns rows, and an LLM-assigned similarity score against the golden SQL. Two test modes exist — *vanilla* (the full pipeline end to end) and *decoupled* (correct intent and tables injected, to isolate one component's performance).
 
-## What they claim
+## What does Uber claim it achieved?
 
 The numbers Uber published, in its own words:
 
@@ -65,7 +65,7 @@ The numbers Uber published, in its own words:
 
 That is the complete set of outcome metrics in the post. There is no published accuracy rate, no execution-success percentage, no latency figure, and no stated time window for the daily-active-user average. The evaluation framework is described in detail; not one score from it is reported.
 
-## How much to believe it
+## How much of Uber's claim should you believe?
 
 **Grade: C — first-party claim.** Uber is describing its own tool, names a baseline, and is unusually candid about the mechanism and the failure modes. But every headline number is an internal claim with no method attached, and the accuracy question — does the query return the *right* answer — is left blank.
 
@@ -80,7 +80,7 @@ One number to actively distrust: the "70% faster" and "140,000 hours saved per m
 
 What would raise this to a B: a before/after time study on matched queries, an execution-accuracy rate on a held-out set, and a usage-retention curve past the first weeks.
 
-## What you could apply
+## What could you apply from Uber?
 
 **Who this is for:** data platform teams, analytics engineering leads, and anyone whose week is shaped by a backlog of ad-hoc data pulls.
 

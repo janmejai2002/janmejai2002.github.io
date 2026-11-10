@@ -30,6 +30,9 @@ function check(path, html) {
   const rel = relative(dist, path);
   const fail = (msg) => failures.push(`${rel}: ${msg}`);
 
+  // Redirect stubs are not pages; none of the content assertions apply.
+  if (/http-equiv="refresh"/i.test(html.slice(0, 500))) return;
+
   const body = html.slice(html.indexOf('<div class="body">'));
 
   // 1. Escaped markup leaking into prose means a raw HTML block was broken.

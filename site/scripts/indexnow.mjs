@@ -30,9 +30,13 @@ if (!keyFile) {
 }
 const key = readFileSync(join(pub, keyFile), 'utf8').trim();
 
-const urls = process.argv
-  .slice(2)
-  .filter((u) => u.startsWith(`https://${HOST}/`));
+// --sitemap submits every live URL: for a one-off backlog push after a deploy,
+// not for routine use, since the protocol asks for changed URLs only.
+const args = process.argv.slice(2);
+const fromSitemap = args.includes('--sitemap')
+  ? [...(await (await fetch(`https://${HOST}/sitemap-0.xml`)).text()).matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1])
+  : [];
+const urls = [...args, ...fromSitemap].filter((u) => u.startsWith(`https://${HOST}/`));
 
 if (!urls.length) {
   console.log('indexnow: no URLs to submit');

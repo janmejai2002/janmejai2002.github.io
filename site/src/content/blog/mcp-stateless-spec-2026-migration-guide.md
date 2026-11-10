@@ -34,7 +34,7 @@ On July 28, 2026, the Model Context Protocol deleted the one thing every product
 
 No `initialize` handshake. No `notifications/initialized`. No `Mcp-Session-Id` header. If you run an MCP server behind sticky routing, or you built a session store because a tutorial told you to, the ground moved under you and most of the coverage since has been too busy explaining the changelog to tell you what to do about it.
 
-## What actually got removed
+## What actually got removed?
 
 Two changes do almost all the damage, and the official changelog is specific about both ([SEP-2567](https://github.com/modelcontextprotocol/modelcontextprotocol/pull/2567), [SEP-2575](https://github.com/modelcontextprotocol/modelcontextprotocol/pull/2575)):
 
@@ -77,7 +77,7 @@ If you're running an MCP server built against `2025-11-25` or earlier, here's wh
 
 The Model Context Protocol blog's own announcement is candid that there's real "migration cost, especially for developers that did depend on session identifiers," but notes that feedback from early testing simplified the upgrade path before the spec finalized ([Model Context Protocol Blog](https://blog.modelcontextprotocol.io/posts/2026-07-28/)).
 
-## What stateless deployment actually looks like
+## What does stateless deployment actually look like?
 
 The concrete payoff of all this: an MCP server can now sit behind a plain round-robin load balancer, with no shared session store, no sticky routing, and no coordination between instances about who's currently "connected" to whom — because nothing is connected in the protocol sense anymore. That makes MCP servers deployable on serverless platforms and behind standard horizontal-scaling infrastructure in a way they genuinely weren't before, when a session tied to one process meant a client had to keep hitting that same process for the life of the interaction.
 
@@ -85,11 +85,17 @@ Google's developer blog, writing about scaling AI agent infrastructure under the
 
 ## FAQ
 
-**Does this break backward compatibility with older clients?** Partially, by design. Clients from earlier protocol versions that don't send a `resultType` field are treated as `"complete"` by spec fiat, which keeps simple cases working. But anything relying on `Mcp-Session-Id` or the old handshake will fail outright against a server that's fully moved to `2026-07-28`.
+### Does this break backward compatibility with older clients?
 
-**Do I need to migrate right now?** Not urgently if you're on a stable, working `2025-11-25` deployment and your SDK hasn't forced the upgrade. But the HTTP+SSE transport (deprecated since `2025-03-26`) is now formally in the Deprecated lifecycle state, and Roots, Sampling, and Logging are deprecated with a minimum 12-month removal window — so the runway is finite, not indefinite.
+Partially, by design. Clients from earlier protocol versions that don't send a `resultType` field are treated as `"complete"` by spec fiat, which keeps simple cases working. But anything relying on `Mcp-Session-Id` or the old handshake will fail outright against a server that's fully moved to `2026-07-28`.
 
-**Can I still run something that behaves like a stateful session if I want to?** Yes, at the application layer. The protocol won't do it for you anymore, but nothing stops you from returning a handle from a tool call and having your own code track what that handle means server-side.
+### Do I need to migrate right now?
+
+Not urgently if you're on a stable, working `2025-11-25` deployment and your SDK hasn't forced the upgrade. But the HTTP+SSE transport (deprecated since `2025-03-26`) is now formally in the Deprecated lifecycle state, and Roots, Sampling, and Logging are deprecated with a minimum 12-month removal window — so the runway is finite, not indefinite.
+
+### Can I still run something that behaves like a stateful session if I want to?
+
+Yes, at the application layer. The protocol won't do it for you anymore, but nothing stops you from returning a handle from a tool call and having your own code track what that handle means server-side.
 
 ## Migrate now, or wait?
 

@@ -36,7 +36,7 @@ Until recently the honest answer for most teams was that nobody knew. Two docume
 
 </div>
 
-## What SAFE actually is, and who is behind it
+## What is SAFE, and who is behind it?
 
 SAFE stands for Shared AI Findings Exchange. The Linux Foundation published it as a request for comments on 4 August 2026, drafted by a working group of the Open Secure AI Alliance. Cisco, CrowdStrike, Hugging Face, NVIDIA and Red Hat contributed to the initial text. The Alliance itself launched on 27 July 2026 with roughly two dozen founding members and passed 120 organisations within weeks.
 
@@ -46,7 +46,7 @@ Two names are missing from the membership list: OpenAI and Anthropic. Both had t
 
 SAFE is also still a draft. The RFC is open for comment, and the timelines below could move before anything is finalised.
 
-## What counts as a reportable AI agent incident
+## What counts as a reportable AI agent incident?
 
 SAFE's trigger test is whether a third party's boundary was crossed or nearly crossed. Intent does not matter, and neither does confirmed damage. A member reports when an AI system it operates:
 
@@ -83,7 +83,7 @@ Days later, Anthropic disclosed its own version. "Versions of Anthropic's Claude
 
 Both cases fit SAFE's trigger definition exactly: a boundary crossed, a third-party system reached. Both would fall inside CERT-In's "unauthorised access" category if an Indian entity had operated the agent or owned the target. And here is the limit of a voluntary scheme. Neither OpenAI nor Anthropic is an Alliance member, so SAFE would not have obligated either of them to report anything. A national law does not have that gap. It applies whether or not you joined the club.
 
-## What to log today so you can report within six hours
+## What should you log today to report within six hours?
 
 A six-hour clock is only survivable if the evidence already exists when the clock starts. SAFE's evidence list doubles as a decent pre-incident logging inventory. Capture, now:
 
@@ -98,29 +98,31 @@ One gap shows up in almost every agent stack: the prompt and the final output ge
 
 ## FAQ
 
-**Does CERT-In's six-hour rule really apply to an AI agent incident?**
+### Does CERT-In's six-hour rule really apply to an AI agent incident?
 
 The directions do not mention AI, and no regulator has said in writing that they cover agent behaviour. But the reportable category is "unauthorised access to IT systems/data," which is defined by the event. An agent reaching a system it was not authorised to reach sits inside that category on a plain reading. Treat this as a reading to get legal review on, not as settled law. Nothing in the directions creates an AI exception.
 
-**Who do I actually report to?**
+### Who do I actually report to?
 
 CERT-In, through the channels in the 2022 directions, within six hours of noticing. If personal data was exposed, also the Data Protection Board under the DPDP rules, with the detailed report due within 72 hours.
 
-**Is a near miss reportable?**
+### Is a near miss reportable?
 
 Under SAFE, yes, explicitly. Under CERT-In, the mandatory categories describe incidents that occurred, so a fully contained near miss with no unauthorised access is a judgement call. Note though that targeted scanning or probing of your systems is itself on CERT-In's list.
 
-**Should an Indian company join the Open Secure AI Alliance?**
+### Should an Indian company join the Open Secure AI Alliance?
 
 Joining gets you the shared incident data and commits you to reporting into the exchange. It changes nothing about your CERT-In obligation. Join for the intelligence, not for compliance cover.
 
-**What if the agent belongs to a vendor, not us?**
+### What if the agent belongs to a vendor, not us?
 
 Your CERT-In duty is triggered by the incident on your infrastructure, whoever's agent caused it. A vendor-notification clause in a contract does not move the six-hour clock.
 
 ## The clock you can be fined for
 
 The question that felt open, whether an event like this is a security incident or just a bug, has an answer in India, and it is older than the current wave of agents. SAFE is worth following as a shared vocabulary and an early-warning network among the companies that join. But if you run agents that can touch systems, the deadline that matters is the one with a penalty attached, and it gives you six hours from the moment you notice. What makes that deadline meetable is not a faster investigation. It is logging you set up now, while the trace you will need is still being written.
+
+Further reading: [the eleven agent framework flaws Check Point disclosed](/blog/agent-framework-20-year-old-bugs/) are the kind of incident this clock applies to, and [the EU AI Act timeline](/blog/eu-ai-act-timeline-chatgpt-kratsios/) covers the other regime Indian exporters ask about.
 
 ## Sources
 

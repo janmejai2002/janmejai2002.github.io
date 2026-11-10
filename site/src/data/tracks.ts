@@ -41,6 +41,7 @@ export const TRACKS = [
     ask: 'For people who want precedent',
     blurb:
       'What a named company actually did with AI — in marketing, operations, support, engineering, anywhere real work happens — the mechanism, the published numbers, how much the evidence carries, and what you could apply.',
+    meta: 'What named companies actually did with AI: the mechanism, the published numbers, how far the evidence carries, and what you could apply.',
     cta: 'Read the case studies',
   },
   {

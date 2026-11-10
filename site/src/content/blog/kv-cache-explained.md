@@ -27,7 +27,7 @@ notionId: '413ced67-050a-8162-a772-f9582771ce0d'
 
 </div>
 
-## The memory wall: why token generation leaves GPU compute cores starving
+## Why does token generation leave GPU compute cores starving?
 
 Engineers profiling large language model (LLM) serving often expect latency to scale with floating-point compute. When deployments lag, teams shop for higher teraFLOPS ratings. Production telemetry tells a different story: during token generation, GPU Tensor Cores spend up to 90% of their cycles stalled, waiting on High Bandwidth Memory (HBM) transfers.
 
@@ -49,7 +49,7 @@ The [Roofline performance model](https://doi.org/10.1145/1498765.1498785) formal
 
 Moving from an [A100 SXM4 80GB](https://awesomeagents.ai/hardware/nvidia-a100/) to an [H100 PCIe 80GB](https://www.thundercompute.com/blog/nvidia-h100-specs-full-guide) more than doubles FP16 compute (312 to 756 TFLOPS), yet batch-1 decode speed for a 16GB model stays flat (~127.4 vs. ~125.0 tok/s) because both share ~2.0 TB/s bandwidth. Streaming 16GB at 3,350 GB/s on an H100 SXM5 caps batch-1 speed at 209.4 tok/s.
 
-## Under the hood of attention: what keys and values actually represent
+## What do keys and values actually represent?
 
 Understanding why is LLM generation memory bound requires inspecting what does KV cache actually store across steps. Inside each transformer layer, token embedding $x_t$ multiplies against weight matrices ($W_Q,W_K,W_V$) to produce three vectors:
 

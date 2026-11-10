@@ -36,13 +36,13 @@ The details, to be fair, were specific. The assistant ran across [23 markets, 24
 
 And then there was the money. Klarna said the assistant was [estimated to drive $40 million in profit improvement for 2024](https://www.klarna.com/international/press/klarna-ai-assistant-handles-two-thirds-of-customer-service-chats-in-its-first-month/). Forty million dollars is a real number, the kind that gets a CFO's attention. It's also, notably, a projection for a fiscal year that had barely started, based on one month of live data.
 
-## Read the Fine Print, Not the Headline
+## What did Klarna's release actually claim?
 
 Here's the thing about Klarna's own release: it's more careful than most of the coverage that followed it. The company didn't say the AI beat human agents on customer satisfaction. It said satisfaction was [on par with human agents](https://www.klarna.com/international/press/klarna-ai-assistant-handles-two-thirds-of-customer-service-chats-in-its-first-month/). Equal, not better. That's a meaningfully smaller claim than the one that ended up in a thousand secondhand summaries, and it's worth sitting with, because a lot of what got repeated about this case study simply isn't what Klarna said.
 
 Same with the $40 million. It was never presented as a confirmed figure — it was [estimated](https://www.klarna.com/international/press/klarna-ai-assistant-handles-two-thirds-of-customer-service-chats-in-its-first-month/), a forward-looking number from a company with every incentive to sound impressive to investors ahead of an IPO push. None of that makes the number fake. It makes it a projection, self-reported by the company that benefits from it sounding big, covering a single month of operation. That's a different category of fact than "audited annual savings," and treating it as the latter is where a lot of the AI-replaces-service-teams narrative went wrong.
 
-## Fourteen Months Later, the Story Changes
+## Why did Klarna start rehiring humans?
 
 Fast forward to May 2025. Bloomberg got Siemiatkowski on the record, and Customer Experience Dive reported the quote that undercut the whole triumphant arc: cost, he said, had been ["a too predominant evaluation factor when organizing this,"](https://www.customerexperiencedive.com/news/klarna-reinvests-human-talent-customer-service-AI-chatbot/747586/) and the result was, in his own word, ["lower quality."](https://www.customerexperiencedive.com/news/klarna-reinvests-human-talent-customer-service-AI-chatbot/747586/)
 
@@ -54,7 +54,7 @@ It would be tidy, and wrong, to call this a full reversal. It wasn't Klarna ripp
 
 That's the honest read: a company that leaned hard into an automation number because the number was genuinely good and genuinely useful for a narrative it wanted to tell, then found out a year-plus later that going further wasn't free. Cost-optimizing the evaluation criteria produced a system that was fine at scale and disappointing at the edges — the messy, human, non-average cases that don't show up cleanly in a first-month satisfaction score.
 
-## What To Ask Before You Cite a Vendor's Own Numbers
+## What should you ask before citing a vendor's numbers?
 
 This case gets cited constantly — in decks, in blog posts, in "AI is already replacing jobs" arguments. Most of the people citing it never open the source. If you're one of the people who does, here's the checklist this case study earns:
 
@@ -65,6 +65,8 @@ This case gets cited constantly — in decks, in blog posts, in "AI is already r
 - **What was optimized for?** Siemiatkowski's own answer, over a year later, was cost — and he said that emphasis cost the company quality. If a launch metric is about efficiency, ask what it isn't measuring.
 
 Klarna's numbers weren't lies. They were a company's best first-month read on its own system, reported honestly within their limits, then flattened by everyone downstream who wanted a clean AI-wins-or-AI-fails story. The real story was never that clean. It rarely is.
+
+Further reading: the [AI deployment claims tracker](/tracker/) applies the same checks to other public numbers, including [Commonwealth Bank’s fraud claim](/blog/commonwealth-bank-ai-fraud-detection/) and [Block’s productivity figures](/blog/block-ai-champions-program-goose/).
 
 ## Sources
 

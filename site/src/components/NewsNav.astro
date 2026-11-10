@@ -1,0 +1,27 @@
+---
+import { categories, catSlug, months, monthLabel } from '../data/news-archive';
+const path = Astro.url.pathname;
+const current = (href: string) => (path === href ? 'page' : undefined);
+---
+
+<nav class="newsnav" aria-label="News archives">
+  <p>
+    <span>By function</span>
+    {categories.map((c) => (
+      <a href={`/news/${catSlug(c)}/`} aria-current={current(`/news/${catSlug(c)}/`)}>{c}</a>
+    ))}
+  </p>
+  <p>
+    <span>By month</span>
+    {months.map((m) => (
+      <a href={`/news/${m}/`} aria-current={current(`/news/${m}/`)}>{monthLabel(m)}</a>
+    ))}
+  </p>
+</nav>
+
+<style>
+  .newsnav { margin: 0 0 2rem; font-size: .8125rem; }
+  .newsnav p { display: flex; flex-wrap: wrap; gap: .35rem .9rem; margin: 0 0 .5rem; }
+  .newsnav span { font-weight: 800; color: var(--ink-faint); }
+  .newsnav a[aria-current='page'] { font-weight: 800; color: var(--ink); }
+</style>

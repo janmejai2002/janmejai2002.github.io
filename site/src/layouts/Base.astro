@@ -20,6 +20,14 @@ export interface Props {
   wide?: boolean;
   /** The index only: no rail, full-bleed sections, wordmark in the nav. */
   immersive?: boolean;
+  headline?: string;
+  articleSection?: string;
+  wordCount?: number;
+  alternativeHeadline?: string;
+  breadcrumbs?: { name: string; path?: string }[];
+  noindex?: boolean;
+  pageType?: string;
+  schema?: Record<string, unknown>;
 }
 const { progress = false, section, wide = false, immersive = false, ...seo } = Astro.props;
 const path = Astro.url.pathname;
@@ -108,6 +116,13 @@ const year = new Date().getFullYear();
             <a href="https://linkedin.com/in/janmejai" rel="me noopener">LinkedIn</a>
             &nbsp;·&nbsp;
             <a href="/rss.xml">RSS</a>
+          </span>
+          <span>
+            <a href="/blog/">All articles</a>
+            &nbsp;·&nbsp;
+            <a href="/tracker/">AI claims tracker</a>
+            &nbsp;·&nbsp;
+            <a href="/tools/prompt-caching-calculator/">Caching calculator</a>
           </span>
           <span class="colophon">
             Written by a human and an automated system, working in the open.

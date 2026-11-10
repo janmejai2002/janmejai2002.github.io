@@ -24,13 +24,13 @@ Ask an engineer in April 2025 whether they were on MCP or A2A and you'd get a bl
 
 </div>
 
-## MCP is a client asking a tool for data
+## What does MCP do?
 
 MCP, built by Anthropic, runs a client-server model: an LLM-driven client connects to an MCP server over HTTP, SSE, or local stdio, and that server exposes tools, files, or APIs behind a fixed JSON schema ([Auth0](https://auth0.com/blog/mcp-vs-a2a/); [A Survey of Agent Interoperability Protocols](https://arxiv.org/abs/2505.02279)). The shape of a call is rigid on purpose. Auth0's walkthrough traces the sequence: the agent hits a question it can't answer from its own context, sends a structured request to the MCP server, the server checks permission and returns a result, and that result gets folded into the agent's working memory before it replies ([Auth0](https://auth0.com/blog/mcp-vs-a2a/)). One request, one typed response, done. Rakesh Gohel's breakdown of the same flow adds the piece Auth0 leaves implicit: an optional human-in-the-loop approval step sits between the LLM choosing a server and that server actually running ([Rakesh Gohel, LinkedIn](https://www.linkedin.com/posts/rakeshgohel01_both-mcp-and-a2a-have-changed-how-we-use-activity-7320066606284304386-IO-s)).
 
 MCP was never built to let two agents negotiate. That gap is what A2A fills.
 
-## A2A is one agent asking another agent to work
+## What does A2A do?
 
 A2A connects a "client agent," which formulates a task, to a "remote agent," which acts on it. Discovery happens through an Agent Card: a public JSON file listing an agent's skills, endpoint, and authentication requirements, so a client can pick the right remote agent before sending anything ([Google Developers Blog](https://developers.googleblog.com/en/a2a-a-new-era-of-agent-interoperability/)). Once matched, the two agents exchange a Task object with a unique ID that moves through a defined lifecycle, streamed over Server-Sent Events for long-running work or returned synchronously for quick ones; the output is called an artifact ([Google Developers Blog](https://developers.googleblog.com/en/a2a-a-new-era-of-agent-interoperability/); [Rakesh Gohel, LinkedIn](https://www.linkedin.com/posts/rakeshgohel01_a2a-vs-mcp-which-one-to-choose-for-ai-agents-activity-7317888587155263488-40Xc)). If the task needs more input mid-flight, the client sends follow-up messages against the same Task ID through `tasks/send` or `tasks/sendSubscribe` rather than starting over ([Rakesh Gohel, LinkedIn](https://www.linkedin.com/posts/rakeshgohel01_a2a-vs-mcp-which-one-to-choose-for-ai-agents-activity-7317888587155263488-40Xc)). Messages also carry "parts," typed content blocks that let the two agents negotiate format on the fly, including iframes, video, and web forms ([Google Developers Blog](https://developers.googleblog.com/en/a2a-a-new-era-of-agent-interoperability/)).
 
@@ -44,7 +44,7 @@ The survey's authors examined MCP alongside A2A, plus two protocols with far les
 
 Elastic's search engineering team put this into an actual pipeline. Their November 13, 2025 writeup describes an "LLM Agent newsroom" where specialized agents research, write, edit, and publish news articles inside Elasticsearch, using MCP to give each agent its tools and A2A to hand tasks between them ([Elastic Search Labs](https://www.elastic.co/search-labs/blog/a2a-protocol-mcp-llm-agent-newsroom-elasticsearch)). That's the pattern the arXiv survey argues for in the abstract, run by an engineering team with production infrastructure at stake rather than a research group modeling it on paper.
 
-## The gap neither protocol closes
+## What gap does neither protocol close?
 
 None of this settles the question that actually worries people running these systems at scale. The unanswered questions are simple to state and hard to solve: how do you verify what an agent actually did, who approved it and under what policy, and can you trust the chain of interactions across multiple agents? MCP and A2A are complementary layers, not competing standards, and the architecture backs that up. Complementary building blocks still need a foundation under them, and audit trails aren't in either spec.
 

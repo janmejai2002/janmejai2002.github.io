@@ -3,6 +3,7 @@ import { join } from 'node:path';
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 import { rehypeFigure } from './plugins/rehype-figure.mjs';
+import { rehypeInternalLinks } from './plugins/rehype-internal-links.mjs';
 
 // Post dates, read straight off the markdown so the sitemap can carry lastmod.
 // The content collection is not available this early — the config is evaluated
@@ -34,14 +35,27 @@ const DATES = postDates();
 // The newest post is the best available signal for how fresh the index is.
 const NEWEST = [...DATES.values()].sort().pop() ?? new Date().toISOString();
 
+const newsFile = new URL('./src/data/news.json', import.meta.url).pathname.replace(/^\/([A-Za-z]:)/, '$1');
+const NEWS_LATEST = JSON.parse(readFileSync(newsFile, 'utf8'))
+  .map((item) => item.date)
+  .sort()
+  .pop();
+
 // GitHub Pages user site → served at the root of janmejai2002.github.io.
 // If you move this to a PROJECT repo instead (e.g. github.com/janmejai2002/wabi-sabi),
 // add `base: '/wabi-sabi/'` below and keep `site` as the github.io origin.
 // For a custom domain later: set `site` to it and drop a CNAME file in site/public/.
 export default defineConfig({
   site: 'https://janmejai2002.github.io',
+  // Static hosting has no server redirects, so Astro emits a page with an
+  // instant refresh and a canonical pointing at the destination.
+  redirects: {
+    '/blog/klarna-ai-customer-service-case-study/': '/blog/klarna-ai-customer-service-graded-honestly/',
+    '/topics/': '/blog/',
+  },
   integrations: [
     sitemap({
+      filter: (page) => !page.endsWith('/status/'),
       serialize(item) {
         const path = new URL(item.url).pathname;
         const lastmod = DATES.get(path);
@@ -53,13 +67,18 @@ export default defineConfig({
           return { ...item, lastmod: NEWEST, changefreq: 'weekly', priority: 1.0 };
         }
         // /news/ moves daily; the rest are effectively static.
-        if (path === '/news/') return { ...item, changefreq: 'daily', priority: 0.7 };
+        if (path === '/news/') {
+          return { ...item, lastmod: new Date(NEWS_LATEST).toISOString(), changefreq: 'daily', priority: 0.7 };
+        }
+        if (path === '/tracker/' || path.startsWith('/topics/') || path.startsWith('/tools/')) {
+          return { ...item, changefreq: 'weekly', priority: 0.8 };
+        }
         return { ...item, changefreq: 'monthly', priority: 0.5 };
       },
     }),
   ],
   markdown: {
     shikiConfig: { theme: 'github-dark-dimmed', wrap: true },
-    rehypePlugins: [rehypeFigure],
+    rehypePlugins: [rehypeFigure, rehypeInternalLinks],
   },
 });

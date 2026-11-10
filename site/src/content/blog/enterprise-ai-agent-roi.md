@@ -27,7 +27,7 @@ notionId: '413ced67-050a-811d-981f-cf69819a379e'
 
 </div>
 
-## The impending 2027 agent cancellation reckoning: what the data shows
+## What does the data show about the 2027 agent cancellations?
 
 Software vendors are shifting contracts to per-agent licensing tiers, yet buyers face operational gridlock. In [WRITER's 2026 AI Adoption Survey](https://writer.com/blog/enterprise-ai-adoption-2026/) of 2,400 leaders and employees, 97% deployed AI agents and 59% spend over $1M annually, yet 79% struggle to scale, 75% report performative strategies, and only 23% capture significant enterprise AI agent ROI.
 
@@ -35,7 +35,7 @@ This gridlock is triggering a broad project cull. [Gartner's agentic AI forecast
 
 CFOs spending over $1M annually now audit soft productivity metrics and cut pilots lacking verified EBITDA gains. In [PwC's 2026 Global CEO Survey](https://www.pwc.com/gx/en/news-room/press-releases/2026/pwc-2026-global-ceo-survey.html) of 4,454 CEOs, 56% reported zero AI revenue or cost gains, and only 12% achieved both. [Automaton's 2026 AI ROI report](https://automatonagency.com/insights/ai-automation-roi-what-to-expect) notes credit desks add a 30-bps spread penalty to AI spenders lacking verified returns. While [Gartner's 2028 forecast](https://www.gartner.com/en/newsroom/press-releases/2025-06-25-gartner-predicts-over-40-percent-of-agentic-ai-projects-will-be-canceled-by-end-of-2027) projects 15% of daily decisions running autonomously across 33% of enterprise apps, surviving 2027 requires strict unit economics.
 
-## Unmasking agent washing: separating autonomous utility from repackaged RPA
+## What is agent washing, and how do you spot it?
 
 A primary driver of the 2027 cancellation wave is what [Gartner defines as agent washing](https://www.gartner.com/en/newsroom/press-releases/2025-06-25-gartner-predicts-over-40-percent-of-agentic-ai-projects-will-be-canceled-by-end-of-2027): vendors rebranding prompt wrappers, decision-tree chatbots, and RPA macros as autonomous agents to inflate contract values. Out of thousands of self-described agentic vendors, [Gartner's audit](https://www.gartner.com/en/newsroom/press-releases/2025-06-25-gartner-predicts-over-40-percent-of-agentic-ai-projects-will-be-canceled-by-end-of-2027) identifies roughly 130 companies that deliver real multi-step planning and dynamic tool execution.
 
@@ -59,7 +59,7 @@ When [Salesforce introduced Flex Credits](https://www.salesforce.com/news/press-
 
 Outcome pricing looks safe because [Sierra](https://sierra.ai/blog/outcome-based-pricing-for-ai-agents) and [Zendesk](https://www.zendesk.com/blog/ai/agentic-ai/outcome-based-pricing/) waive fees on escalations, yet attribution disputes arise. [Zendesk's billing rules](https://www.zendesk.com/blog/ai/agentic-ai/outcome-based-pricing/) mark a chat resolved after an LLM check and a 2-hour messaging (or 72-hour email) quiet window. If an unhelped user calls phone support 3 hours later, the vendor still bills a resolution unless logs are reconciled.
 
-## The three structural killers of enterprise agent ROI: dirty data, missing guardrails, and token sprawl
+## What kills enterprise agent ROI?
 
 When enterprise AI agents destroy margins, the failure originates in three structural layers of the buyer's stack:
 
@@ -67,7 +67,7 @@ When enterprise AI agents destroy margins, the failure originates in three struc
 1. **Missing deterministic escalation gates:** Enterprises grant write permissions to probabilistic models without circuit breakers. In [WRITER's 2026 survey](https://writer.com/blog/enterprise-ai-adoption-2026/), 67% of executives reported a security incident from unapproved AI tools, 79% built AI apps in silos, and 55% called internal AI use a chaotic free-for-all. Meanwhile, 36% lack an agent supervision plan, and 35% cannot immediately shut down a rogue agent. Without strict RBAC limits and human-in-the-loop (HITL) gates on state-mutating API calls, one hallucinated refund erases months of savings.
 1. **Unmonitored token sprawl and retry loops:** Under metered tiers like [Agentforce Flex Credits](https://www.salesforce.com/news/press-releases/2025/05/15/agentforce-flexible-pricing-news/) ($0.10/action) and [Copilot Studio](https://superdupr.com/blog/copilot-studio-pricing) ($200/25K credits), multi-agent workflows multiply variable costs whenever downstream APIs fail. Schema mismatches that trigger retry loops or deep graph lookups multiply Copilot Studio credit burn elevenfold for identical traffic volumes, per [2026 billing audits](https://superdupr.com/blog/copilot-studio-pricing).
 
-## The CFO playbook: structuring outcome-based contracts and deterministic governance gates
+## How should a CFO structure agent contracts?
 
 To remain in the 60% of deployments surviving past 2027, finance and engineering leaders must enforce an audited True Cost of Ownership (`TCO`) formula, a readiness scorecard, and binding pilot kill gates.
 

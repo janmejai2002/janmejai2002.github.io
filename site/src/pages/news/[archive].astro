@@ -1,0 +1,51 @@
+---
+import Base from '../../layouts/Base.astro';
+import NewsBrowser from '../../components/NewsBrowser.astro';
+import NewsNav from '../../components/NewsNav.astro';
+import { allNews, categories, catSlug, months, monthLabel } from '../../data/news-archive';
+
+export function getStaticPaths() {
+  return [
+    ...categories.map((c) => ({
+      params: { archive: catSlug(c) },
+      props: {
+        heading: `${c} news`,
+        title: `${c} News for B-School Interviews — wAIbi-sabi`,
+        description: `${c} stories for Indian B-school interview prep, each with the angle an interviewer is likely to push on.`,
+        items: allNews.filter((i) => i.category === c),
+      },
+    })),
+    ...months.map((m) => ({
+      params: { archive: m },
+      props: {
+        heading: monthLabel(m),
+        title: `B-School Business News, ${monthLabel(m)} — wAIbi-sabi`,
+        description: `Business news from ${monthLabel(m)} for Indian B-school interviews, with the angle an interviewer is likely to push on.`,
+        items: allNews.filter((i) => i.date.startsWith(m)),
+      },
+    })),
+  ];
+}
+
+const { heading, title, description, items } = Astro.props;
+---
+
+<Base
+  title={title}
+  description={description}
+  section="BSchool"
+  pageType="CollectionPage"
+  breadcrumbs={[
+    { name: 'Home', path: '/' },
+    { name: 'BSchool news', path: '/news/' },
+    { name: heading },
+  ]}
+>
+  <section class="hero fade-up d1" style="padding-bottom:1.75rem">
+    <span class="hanko">Archive</span>
+    <h1>{heading}</h1>
+    <p>{items.length} stories, each with the angle an interviewer is likely to push on.</p>
+  </section>
+  <NewsNav />
+  <NewsBrowser items={items} />
+</Base>

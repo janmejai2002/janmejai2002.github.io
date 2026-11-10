@@ -28,7 +28,7 @@ notionId: '3ceced67-050a-81dd-9b51-c0775482d320'
 
 </div>
 
-## The N × M Integration Problem
+## What problem does MCP solve?
 
 Before the [Model Context Protocol (MCP)](https://www.anthropic.com/news/model-context-protocol), connecting an AI agent to an external system required custom, bespoke glue code for every combination of client and tool. If you had 5 AI interfaces (Claude Desktop, Cursor, Zed, LangChain, custom CLI) and 10 enterprise data sources (GitHub, Postgres, Slack, Jira, Google Drive), engineering teams had to build and maintain 50 separate integration pipelines ($N \times M$).
 
@@ -56,7 +56,7 @@ The [MCP specification](https://modelcontextprotocol.io/specification/2026-07-28
 
 Crucially, **the server never calls the LLM directly**. The server simply declares what it can do; the client negotiates capabilities and passes schemas to the LLM; the LLM chooses which tool to invoke; and the host prompts the human operator before executing sensitive side-effects.
 
-## The Three Core Primitives
+## What are MCP's three core primitives?
 
 MCP models all external interactions around three standardized primitives:
 

@@ -1,0 +1,66 @@
+---
+import Base from '../layouts/Base.astro';
+import { CLAIMS, LAST_REVIEWED } from '../data/agent-tracker';
+
+const reviewed = new Date(`${LAST_REVIEWED}T00:00:00Z`).toLocaleDateString('en-IN', {
+  day: 'numeric',
+  month: 'long',
+  year: 'numeric',
+  timeZone: 'UTC',
+});
+---
+
+<Base
+  title="AI Deployment Claims Tracker — wAIbi-sabi"
+  description="Public claims about AI deployments compared with the evidence behind them, with a verdict and primary source for each. Updated as new evidence appears."
+  section="Tracker"
+  pageType="Dataset"
+  breadcrumbs={[{ name: 'Home', path: '/' }, { name: 'AI claims tracker' }]}
+  schema={{
+    creator: { '@id': new URL('/#person', Astro.site).href },
+    dateModified: LAST_REVIEWED,
+    keywords: ['AI deployment claims', 'AI ROI evidence', 'AI case studies', 'AI agents'],
+    isAccessibleForFree: true,
+  }}
+>
+  <section class="hero fade-up d1">
+    <span class="hanko">Tracker</span>
+    <h1>AI deployment claims tracker</h1>
+    <p>
+      Which public AI success numbers survive a look at the source? Each entry records the claim,
+      what the evidence supports, and where to check it yourself.
+    </p>
+    <p class="meta">Last reviewed {reviewed}. {CLAIMS.length} claims.</p>
+  </section>
+
+  <div class="claims">
+    {
+      CLAIMS.map((c) => (
+        <article class="claim">
+          <header>
+            <h2>{c.who}</h2>
+            <span class="verdict">{c.verdict}</span>
+          </header>
+          <p><strong>Claim.</strong> {c.claim}</p>
+          <p><strong>Evidence.</strong> {c.evidence}</p>
+          <p class="links">
+            <a href={`/blog/${c.article}/`}>Full analysis</a>
+            {c.sources.map(([name, url]) => (
+              <a href={url} rel="noopener">{name}</a>
+            ))}
+          </p>
+        </article>
+      ))
+    }
+  </div>
+</Base>
+
+<style>
+  .claims { margin-top: 2rem; }
+  .claim { padding: 1.4rem 0; border-top: 1px solid var(--border); }
+  .claim header { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: .5rem; }
+  .claim h2 { margin: 0; font-size: 1.2rem; }
+  .verdict { font-size: .75rem; font-weight: 800; color: var(--hanko); }
+  .claim p { margin: .7rem 0 0; line-height: 1.6; font-size: .9375rem; }
+  .links { display: flex; flex-wrap: wrap; gap: .4rem 1rem; font-size: .8125rem !important; }
+</style>

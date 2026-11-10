@@ -27,7 +27,7 @@ notionId: '3ceced67-050a-8188-b579-f05b4182936d'
 
 </div>
 
-## The Core Distinction: Weights vs Attention
+## What is the difference between fine-tuning and prompting?
 
 The debate between fine-tuning and prompting is fundamentally a choice between **modifying parametric memory** (the static mathematical weights inside neural layers) and **steering in-context attention** (the working memory processed during a single inference pass).
 
@@ -54,7 +54,7 @@ LoRA Fine-Tuning (Custom Hosted):
   Upfront: $15,000 (Data) + $500 (Train)  │  Total: $15,500+
 ```
 
-## The Break-Even Calculation: When Fine-Tuning Wins
+## When does fine-tuning break even?
 
 Fine-tuning pays back its upfront development cost under two specific conditions: **massive token volume** and **extreme context compression**.
 

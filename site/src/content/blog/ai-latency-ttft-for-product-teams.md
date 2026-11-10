@@ -36,13 +36,13 @@ Here's the moment that matters: the user hits enter, and then stares at a blank 
 
 That's not a technicality. It's the whole ballgame for perceived speed. A response that takes six seconds to *finish* but starts streaming words at second one feels instant. A response that finishes in four seconds but shows nothing until second three feels like a hang. Same total time. Wildly different user experience.
 
-## TTFT vs. latency: two different problems wearing one trenchcoat
+## What is the difference between TTFT and latency?
 
 Product teams love the word "latency" because it sounds like a single dial you can turn. It isn't. Latency is defined more broadly as "the delay between submitting a prompt and receiving the generated output" [Claude Platform Docs — Latency definition](https://platform.claude.com/docs/en/about-claude/glossary) — that's the whole journey, start to finish. TTFT is the first leg of that journey, and for anything conversational or interactive, it's the leg your user actually feels.
 
 Think of it like ordering food. Total latency is "how long until my full meal is on the table." TTFT is "how long until the waiter brings bread." A restaurant that takes forty minutes for the entrée but drops bread in ninety seconds feels attentive. One that makes you sit in silence for five minutes before anything happens, even if the entrée arrives at minute thirty, feels neglectful. You're not building a kitchen. You're building the bread service.
 
-## What's actually slowing you down
+## What is actually slowing you down?
 
 When a team says "the AI is slow," they usually mean one thing: the model. Sometimes that's true. But the factors that influence responsiveness are explicitly plural — model size, hardware capabilities, network conditions, and the complexity of the prompt and the generated response all play a role [Claude Platform Docs — latency factors](https://platform.claude.com/docs/en/about-claude/glossary).
 
@@ -68,7 +68,7 @@ There's also a wrinkle worth building into your expectations before you chase a 
 
 Streaming architecture is the other half of this. If your product isn't streaming tokens as they generate — if it's waiting for the full response and dumping it on screen at once — you've thrown away the entire benefit of a low TTFT. You could have a blazing-fast first token and a user who never sees it, because your UI is holding the whole response hostage until it's complete.
 
-## What to put on the dashboard
+## What should you put on the dashboard?
 
 If you take one thing out of this: stop reporting a single "response time" number to your team and split it into two.
 

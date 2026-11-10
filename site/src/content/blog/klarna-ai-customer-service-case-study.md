@@ -3,6 +3,7 @@ title: 'Klarna''s AI Support Agent: The Numbers, the Hype, and the Walkback'
 description: 'Klarna says its OpenAI-powered assistant did the work of 700 agents in month one. A year later it''s rehiring humans. Here''s what the evidence actually shows.'
 pubDate: 2026-09-02
 track: case-studies
+draft: true
 question: 'Did Klarna''s AI really replace 700 agents, and why is it rehiring humans now?'
 keywords:
   - Klarna AI customer service

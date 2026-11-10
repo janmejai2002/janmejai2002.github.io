@@ -36,7 +36,7 @@ You ask a model a question. It writes back a paragraph. Somewhere in that exchan
 
 This is the part budgeting spreadsheets miss most often. Teams price out their prompts — the instructions, the customer message, the pasted document — and forget that the response is the line item doing the real damage. A verbose model that writes three paragraphs when one would do isn't just annoying. It's a 3x line item.
 
-## What a token actually is, and why it matters for your invoice
+## What is a token, and why does it matter for your invoice?
 
 A token isn't a word. It's a chunk of text the model processes, and the rough conversion is about 3.5 English characters per token [character-to-token ratio](https://platform.claude.com/docs/en/about-claude/glossary). That means a tight 100-word answer is somewhere around 140-180 tokens, and a rambling 400-word answer can blow past 550. Nobody sees this happening in real time, which is exactly why "cost per response" claims from vendors deserve a second look — a "response" is not a fixed unit, and a vendor benchmarking their tool on terse answers will quote you a number that evaporates the moment your actual use case produces longer output.
 

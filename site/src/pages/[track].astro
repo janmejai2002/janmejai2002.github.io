@@ -28,7 +28,9 @@ const dateOf = (d: Date) =>
 
 <Base
   title={`${t.label} — wAIbi-sabi`}
-  description={t.blurb}
+  description={'meta' in t ? t.meta : t.blurb}
+  pageType="CollectionPage"
+  breadcrumbs={[{ name: 'Home', path: '/' }, { name: t.label }]}
   section={t.label}
 >
   <article class="theme" style={`--accent:var(--${t.accent});--tint:var(--wash-${t.accent})`}>

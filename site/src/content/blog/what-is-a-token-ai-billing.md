@@ -34,7 +34,7 @@ Paste a résumé into an AI chatbot and ask for edits, and something happens bef
 
 This matters because AI tools feel free, or flat-rate, or bundled into some app you already pay for. Underneath, on the raw API that powers most of those apps, you're paying by the piece. And the pieces you get back cost more than the pieces you send in. That asymmetry is the whole story.
 
-## What a Token Actually Is
+## What is a token, actually?
 
 A token is "the smallest individual unit of a language model," and it "can correspond to words, subwords, characters, or even bytes," according to Anthropic's own glossary [Anthropic glossary](https://platform.claude.com/docs/en/about-claude/glossary). So "cat" might be one token. "Unbelievable" might get split into three. A single emoji might eat a token by itself. There's no clean rule you can eyeball from the page.
 
@@ -50,7 +50,7 @@ On Claude 3.5 Sonnet, input tokens run $3 per million. Output tokens run $15 per
 
 Why would a company price it that way? Generating output takes more computation per token than processing input — the model has to produce something new at each step, not just absorb what's already there. Whatever the engineering reason, the billing consequence is simple: short questions are cheap. Long, chatty, essay-length answers are where the meter really runs.
 
-## The Worked Example: One Email, Real Money
+## What does one email actually cost?
 
 Take that résumé edit. Say the résumé plus your instructions comes to 3,500 characters. Using the roughly-3.5-characters-per-token conversion, that's about 1,000 input tokens — approximate, since actual tokenization varies by wording and language [Anthropic glossary](https://platform.claude.com/docs/en/about-claude/glossary).
 

@@ -29,7 +29,7 @@ notionId: '411ced67-050a-8167-9189-fe95212e57ce'
 
 </div>
 
-## The Latency Equation: Cloud Vectors vs. Memory-Mapped Disk
+## How does cloud vector latency compare with local search?
 
 When developers first connected autonomous AI agents to enterprise software repositories, the default blueprint came directly from enterprise chatbots: chunk the codebase, send the text to a hosted embedding API, store high-dimensional vectors in a managed cloud database, and execute cosine similarity searches on every user prompt.
 
@@ -55,7 +55,7 @@ At 10 retrieval steps, an agent powered by cloud vector retrieval spends 3.5 to 
 
 This difference determines whether an interactive agent feels immediate or unresponsive. Tools like ripgrep achieve sub-15ms execution across 100,000 source files because they use Rust finite automata, SIMD-accelerated string scanning, and direct memory-mapped file handles (`mmap`). They bypass the operating system network stack, require zero idle RAM, and eliminate external API rate limits.
 
-## The Exact-Match Deficit: Why Cosine Distance Breaks Code Navigation
+## Why does cosine distance break code navigation?
 
 The deeper flaw of vector retrieval on source code is syntactic. Dense embedding models map text into high-dimensional geometric spaces where proximity corresponds to conceptual relatedness. This functions reliably for natural language paragraphs where "automobile" should match "car".
 
@@ -163,7 +163,7 @@ Tools like `zvec-grep` and local vector stores require on-device embedding gener
 
 Local-first tools operate on the files checked out on the immediate filesystem. They cannot natively cross repository boundaries to inspect third-party API documentation, corporate Notion pages, or internal Slack discussions unless those sources are explicitly synchronized to the local disk.
 
-## Decision Matrix: Choosing the Right Retrieval Primitive
+## Which retrieval primitive should you choose?
 
 Engineering teams should not treat code retrieval as an either-or dogma. Production architectures assign specific retrieval tools to matching query intents:
 
@@ -182,3 +182,11 @@ Engineering teams should not treat code retrieval as an either-or dogma. Product
 | Multi-repo documentation wikis (Notion, Confluence) | Hosted Vector RAG | 250ms - 800ms | External SaaS API |
 
 The shift from cloud vector RAG to local-first search is not a retreat from artificial intelligence; it is an architectural correction. Software engineering requires mathematical precision, immediate feedback, and structural awareness. By shifting the first three layers of retrieval directly onto the developer machine, coding agents gain the speed and accuracy necessary to build real software.
+
+## Sources
+
+- [Aider: "Building a better repository map with tree sitter"](https://aider.chat/2023/10/22/repomap.html)
+- [ripgrep project repository](https://github.com/BurntSushi/ripgrep)
+- [Akita on Rails: "Is RAG Dead? Long Context, Grep, and the End of the Mandatory Vector DB"](https://akitaonrails.com/en/2026/04/06/rag-is-dead-long-context/)
+- [Zilliz: the counter-argument against grep-only retrieval](https://zilliz.com/it/blog/why-im-against-claude-codes-grep-only-retrieval-it-just-burns-too-many-tokens)
+

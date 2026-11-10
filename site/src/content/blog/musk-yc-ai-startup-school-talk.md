@@ -28,13 +28,13 @@ notionId: '3ceced67-050a-81b4-bdeb-f26fbb7434b0'
 
 </div>
 
-## He Thinks the Machine Wakes Up This Year
+## When does Musk expect superintelligence?
 
 Elon Musk doesn't hedge much when he sets a date. Onstage at Y Combinator's AI Startup School in June 2025, he told the room that digital superintelligence — his term for an AI "smarter than any human at anything" — is close enough to touch. "It may happen this year," he said, "and if it doesn't happen this year, next year for sure," according to the [full exchange](https://www.youtube.com/watch?v=cFIlta1GkiE). No caveats about compute bottlenecks, no asterisk about regulation. Just a countdown.
 
 Then, in the same breath, he put a number on the downside. Asked about existential risk, he said he'd "sort of agree with Jeff Hinton that maybe it's a 10 to 20% chance of annihilation," which he flipped into a more palatable frame: "that's 80 to 90% probability of a great outcome," per [the talk](https://www.youtube.com/watch?v=cFIlta1GkiE). Sit with that math for a second. The man building the thing is telling a room of founders there's a real, not-hypothetical chance it ends humanity — and building it anyway, because he'd rather be present for the outcome than absent from the decision. That's the tension the whole talk sits inside.
 
-## The Six-Month Miracle in Memphis
+## How did xAI build Memphis in six months?
 
 Here's the story he tells to explain why he thinks speed itself is a form of safety — or at least a form of survival in a race he believes is already underway.
 
@@ -71,6 +71,8 @@ On the broader AI landscape, he expects "several deep intelligences" to emerge g
 ## The Tiny Candle
 
 He closes on the Fermi paradox — the puzzle of why, in a universe this vast, we've found no evidence of other intelligent life. Musk's answer, offered without much hedging, is that civilizations may be rare, fragile, or simply young, and that humanity's role might be transitional rather than final. He describes human consciousness as "a tiny candle in a vast darkness" and calls humans "the biological bootloader for digital super intelligence" — a line that reframes his entire timeline. If that's the premise, then the 10-20% annihilation odds aren't a bug in the plan. They're the price of admission he says he's willing to pay to see what boots up next.
+
+Further reading: [Zoubin Ghahramani’s argument that reliable AI must represent its own uncertainty](/blog/ai-uncertainty-ghahramani-deepmind-podcast/) is a useful contrast to forecasts stated this confidently.
 
 ## Sources
 

@@ -36,7 +36,7 @@ Here's the scene. You open a chatbot to help plan a trip. You mention you're veg
 
 This isn't a bug report waiting to be filed. It's how the technology is built to work, and understanding why turns a frustrating glitch into something you can actually plan around.
 
-## Working Memory, Not a Filing Cabinet
+## What is a context window?
 
 The term for what the model can "see" at any given moment is the context window: the amount of text it can look back on and reference while generating new text ([Anthropic glossary](https://platform.claude.com/docs/en/about-claude/glossary)). Anthropic's own docs are explicit that this is different from the vast corpus of data the model was trained on — the context window is described as a working memory for the model, not the trained-on archive itself ([Anthropic glossary](https://platform.claude.com/docs/en/about-claude/glossary)).
 
@@ -48,7 +48,7 @@ People often assume a chatbot "learns" from talking to them the way a person doe
 
 Both of those happen before your chat starts, not during it. Nothing you type gets folded permanently into the model's knowledge mid-conversation. Whatever it "knows" about you right now lives only in the context window — the notepad, not the training. Close the notepad, and it's gone.
 
-## Where the Words Go When They Fall Off the Edge
+## Where do words go when they fall off the edge?
 
 So why does the AI forget the earlier parts of a long chat specifically? Because the context window has a limit, and once a conversation grows past it, the earliest material stops being visible to the model when it generates a new reply. The glossary puts it plainly: a smaller context window may limit the model's ability to handle longer prompts or maintain coherence over extended conversations ([Anthropic glossary](https://platform.claude.com/docs/en/about-claude/glossary)). Flip that around, and you get the mechanism behind the vegetarian-shellfish mixup — your early messages simply aged out of the window that the model is looking at when it writes the next line.
 
