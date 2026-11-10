@@ -121,22 +121,48 @@ const edgeLine = edge.map(([x, d]) => `${(x * 10).toFixed(0)},${(EDGE_DEPTH - d)
       </div>
     </div>
 
-    {/* The crew. Oops breaks the plate, Tsugi mends it, the other two have opinions. */}
+    {/* The Living Ceramic Terrarium: all 5 pottery figures */}
     <div class="crew-stage on-plate" data-crew aria-hidden="true">
-      <div class="crew-actor" data-actor="oops" data-state="swing">
+      <div class="crew-actor" data-actor="oops" data-state="swing" tabindex="0" role="button" aria-label="Interact with Oops">
         <Crew who="oops" mood="swing" class="is-swing" />
         <Crew who="oops" mood="panic" class="is-panic" />
         <Crew who="oops" mood="sideeye" class="is-sideeye" />
+        <Crew who="oops" mood="happy" class="is-happy" />
+        <Crew who="oops" mood="sip" class="is-sip" />
+        <span class="crew-tag" data-tag="oops"></span>
       </div>
-      <div class="crew-actor" data-actor="tsugi" data-state="idle">
+
+      <div class="crew-actor" data-actor="tsugi" data-state="idle" tabindex="0" role="button" aria-label="Interact with Tsugi">
         <Crew who="tsugi" mood="idle" class="is-idle" />
         <Crew who="tsugi" mood="paint" class="is-paint" />
         <Crew who="tsugi" mood="proud" class="is-proud" />
+        <Crew who="tsugi" mood="happy" class="is-happy" />
+        <span class="crew-tag" data-tag="tsugi"></span>
       </div>
-      <div class="crew-side">
-        <Crew who="uso" mood="doubt" />
-        <Crew who="fude" mood="scribble" />
+
+      <div class="crew-actor" data-actor="kiki" data-state="listen" tabindex="0" role="button" aria-label="Interact with Kiki">
+        <Crew who="kiki" mood="listen" class="is-listen" />
+        <Crew who="kiki" mood="mindblown" class="is-mindblown" />
+        <Crew who="kiki" mood="sleep" class="is-sleep" />
+        <Crew who="kiki" mood="happy" class="is-happy" />
+        <span class="crew-tag" data-tag="kiki"></span>
       </div>
+
+      <div class="crew-actor" data-actor="fude" data-state="scribble" tabindex="0" role="button" aria-label="Interact with Fude">
+        <Crew who="fude" mood="scribble" class="is-scribble" />
+        <Crew who="fude" mood="count" class="is-count" />
+        <Crew who="fude" mood="idle" class="is-idle" />
+        <span class="crew-tag" data-tag="fude"></span>
+      </div>
+
+      <div class="crew-actor" data-actor="uso" data-state="doubt" tabindex="0" role="button" aria-label="Interact with Uso">
+        <Crew who="uso" mood="doubt" class="is-doubt" />
+        <Crew who="uso" mood="sip" class="is-sip" />
+        <Crew who="uso" mood="proud" class="is-proud" />
+        <Crew who="uso" mood="sideeye" class="is-sideeye" />
+        <span class="crew-tag" data-tag="uso"></span>
+      </div>
+
       <span class="crew-say" data-say></span>
     </div>
   </section>
@@ -280,7 +306,9 @@ const edgeLine = edge.map(([x, d]) => `${(x * 10).toFixed(0)},${(EDGE_DEPTH - d)
 </Base>
 
 <script>
-  import { createPlate } from '../scripts/kintsugi';
+  import { createPlate, type Plate, type SeamPoint } from '../scripts/kintsugi';
+  import { createCrewBrain, type GestureClass } from '../lib/crew-brain';
+  import { createCrewPhysics, type ActorPhysicsState, type Rect } from '../lib/crew-physics';
 
   const CAP = 8;
   const DWELL_END = 'cue-fill';
@@ -309,49 +337,107 @@ const edgeLine = edge.map(([x, d]) => `${(x * 10).toFixed(0)},${(EDGE_DEPTH - d)
     }
   };
 
-  /* ---------- the crew: timed to the shader's own schedule ----------
-     The fracture starts about 560ms after a strike and the gold about 1.5s after. */
+  /* ---------- The Living Ceramic Terrarium: 5-Crew Engine ---------- */
   const stageEl = document.querySelector<HTMLElement>('[data-crew]');
-  const actor = (name: string) => stageEl?.querySelector<HTMLElement>(`[data-actor="${name}"]`) ?? null;
-  const oops = actor('oops');
-  const tsugi = actor('tsugi');
+  const actors = {
+    oops: stageEl?.querySelector<HTMLElement>('[data-actor="oops"]') ?? null,
+    tsugi: stageEl?.querySelector<HTMLElement>('[data-actor="tsugi"]') ?? null,
+    kiki: stageEl?.querySelector<HTMLElement>('[data-actor="kiki"]') ?? null,
+    fude: stageEl?.querySelector<HTMLElement>('[data-actor="fude"]') ?? null,
+    uso: stageEl?.querySelector<HTMLElement>('[data-actor="uso"]') ?? null,
+  };
   const bubble = stageEl?.querySelector<HTMLElement>('[data-say]') ?? null;
-  const OOPS_SAYS = ['That one was like that when I got here.', 'It looked load-bearing.', 'I barely touched it.', 'Is this one of the good plates?', 'Not my fault. Probably.'];
-  const TSUGI_SAYS = ['Welcome in. Mind the cracks.', 'Hold still. The gold is wet.', 'Good as new. Better, actually.', 'This is the fourth one today.', 'Nothing is finished here. Come in.'];
-  let crewTimers: number[] = [];
-  let beat = 0;
-  const later = (ms: number, fn: () => void) => crewTimers.push(window.setTimeout(fn, ms));
-  const inStage = (x: number, y: number) => {
-    const b = stageEl!.getBoundingClientRect();
-    const size = oops?.offsetWidth ?? 90;
-    let minY = size + 10;
-    if (window.matchMedia('(max-width: 40rem)').matches) {
-      const idEl = document.querySelector<HTMLElement>('.plate__id');
-      if (idEl) {
-        const idBottom = idEl.getBoundingClientRect().bottom - b.top;
-        minY = Math.max(minY, idBottom + size + 44);
-      }
+
+  const OOPS_SAYS = [
+    'That one was like that when I got here.',
+    'It looked load-bearing.',
+    'I barely touched it.',
+    'Is this one of the good plates?',
+    'Not my fault. Probably.',
+  ];
+  const TSUGI_SAYS = [
+    'Welcome in. Mind the cracks.',
+    'Hold still. The gold is wet.',
+    'Good as new. Better, actually.',
+    'This is the fourth one today.',
+    'Nothing is finished here. Come in.',
+  ];
+  const KIKI_SAYS = [
+    'Acoustic fracture logged.',
+    'Listening on all bands.',
+    'Signal loud and clear.',
+    'Monitoring the web feeds.',
+  ];
+  const FUDE_SAYS = [
+    'Tally updated in ink.',
+    'Incident #512 entered.',
+    'Notes logged in ledger.',
+    'Writing before asking.',
+  ];
+  const USO_SAYS = [
+    'Inspecting the repair seam.',
+    'Let me see the primary source.',
+    'Urushi looks authentic.',
+    'Needs verification.',
+  ];
+
+  const brain = createCrewBrain();
+  const physics = createCrewPhysics();
+
+  const ACTOR_SPECS: Record<string, { stiffness: number; damping: number; mass: number }> = {
+    oops: { stiffness: 210, damping: 18, mass: 1.0 },
+    tsugi: { stiffness: 180, damping: 20, mass: 1.1 },
+    kiki: { stiffness: 230, damping: 22, mass: 0.9 },
+    fude: { stiffness: 190, damping: 21, mass: 1.0 },
+    uso: { stiffness: 195, damping: 20, mass: 1.0 },
+  };
+
+  for (const [id, el] of Object.entries(actors)) {
+    if (el) {
+      const w = el.offsetWidth || 80;
+      const h = el.offsetHeight || 80;
+      physics.addActor(id, { x: 0, y: 0, width: w, height: h }, ACTOR_SPECS[id]);
     }
-    return {
-      x: Math.max(size / 2, Math.min(b.width - size / 2, x)),
-      y: Math.max(minY, Math.min(b.height - 30, y)),
-    };
+  }
+
+  let crewTimers: number[] = [];
+  let tagTimers = new Map<string, number>();
+  let beat = 0;
+  let activeSeamWalk: { trajectory: SeamPoint[]; startTime: number; duration: number } | null = null;
+  const pointer = { x: 0, y: 0, screenX: 0, screenY: 0 };
+  let lastIntent: GestureClass = 'CONTEMPLATIVE_STILLNESS';
+  let intentDebounceTimer = 0;
+
+  const later = (ms: number, fn: () => void) => {
+    const tid = window.setTimeout(fn, ms);
+    crewTimers.push(tid);
+    return tid;
   };
-  const stand = (el: HTMLElement | null, x: number, y: number) => {
-    if (!el) return { x, y };
-    const p = inStage(x, y);
-    el.style.setProperty('--x', `${Math.round(p.x)}px`);
-    el.style.setProperty('--y', `${Math.round(p.y)}px`);
-    return p;
+
+  const showTag = (who: keyof typeof actors, text: string, dur = 2400) => {
+    const actorEl = actors[who];
+    const tag = actorEl?.querySelector<HTMLElement>('.crew-tag');
+    if (!tag) return;
+    tag.textContent = text;
+    tag.classList.add('on');
+    const existing = tagTimers.get(who);
+    if (existing) clearTimeout(existing);
+    tagTimers.set(
+      who,
+      window.setTimeout(() => tag.classList.remove('on'), dur)
+    );
   };
+
   const say = (who: HTMLElement | null, text: string) => {
     if (!bubble || !who || !stageEl) return;
     bubble.textContent = text;
     const b = stageEl.getBoundingClientRect();
     const half = Math.min(bubble.offsetWidth / 2 + 8, b.width / 2);
-    const x = Math.max(half, Math.min(b.width - half, parseFloat(who.style.getPropertyValue('--x'))));
+    const whoX = parseFloat(who.style.getPropertyValue('--x') || '0');
+    const whoY = parseFloat(who.style.getPropertyValue('--y') || '0');
+    const x = Math.max(half, Math.min(b.width - half, whoX));
     bubble.style.setProperty('--x', `${Math.round(x)}px`);
-    let bubbleY = parseFloat(who.style.getPropertyValue('--y')) - who.offsetHeight + 4;
+    let bubbleY = whoY - who.offsetHeight + 4;
     if (window.matchMedia('(max-width: 40rem)').matches) {
       const idEl = document.querySelector<HTMLElement>('.plate__id');
       if (idEl) {
@@ -363,67 +449,360 @@ const edgeLine = edge.map(([x, d]) => `${(x * 10).toFixed(0)},${(EDGE_DEPTH - d)
     }
     bubble.style.setProperty('--y', `${Math.round(bubbleY)}px`);
     bubble.classList.add('on');
+    later(3200, () => bubble.classList.remove('on'));
   };
+
+  const updateObstacles = () => {
+    if (!stageEl) return;
+    const stageBox = stageEl.getBoundingClientRect();
+    const obstacles: Rect[] = [];
+
+    const idEl = document.querySelector<HTMLElement>('.plate__id');
+    if (idEl) {
+      const b = idEl.getBoundingClientRect();
+      obstacles.push({
+        left: b.left - stageBox.left,
+        top: b.top - stageBox.top,
+        right: b.right - stageBox.left,
+        bottom: b.bottom - stageBox.top + 8,
+      });
+    }
+
+    const activeClaim = document.querySelector<HTMLElement>('.claim.on .claim__said');
+    if (activeClaim) {
+      const b = activeClaim.getBoundingClientRect();
+      obstacles.push({
+        left: b.left - stageBox.left,
+        top: b.top - stageBox.top,
+        right: b.right - stageBox.left,
+        bottom: b.bottom - stageBox.top + 6,
+      });
+    }
+
+    const cuesEl = document.querySelector<HTMLElement>('.cues');
+    if (cuesEl) {
+      const b = cuesEl.getBoundingClientRect();
+      obstacles.push({
+        left: b.left - stageBox.left,
+        top: b.top - stageBox.top,
+        right: b.right - stageBox.left,
+        bottom: b.bottom - stageBox.top + 4,
+      });
+    }
+
+    physics.setObstacles(obstacles);
+  };
+
+  const getRestTargets = (w: number, h: number) => {
+    const isNarrow = window.matchMedia('(max-width: 40rem)').matches;
+    if (isNarrow) {
+      return {
+        kiki: { x: w * 0.5, y: 34 },
+        tsugi: { x: w * 0.32, y: h - 30 },
+        oops: { x: w * 0.68, y: h - 30 },
+        fude: { x: w * 0.88, y: h - 26 },
+        uso: { x: w * 0.12, y: h - 26 },
+      };
+    }
+    return {
+      kiki: { x: w * 0.52, y: 38 },
+      tsugi: { x: w * 0.74, y: h * 0.64 },
+      oops: { x: w * 0.88, y: h * 0.66 },
+      fude: { x: w * 0.92, y: h * 0.84 },
+      uso: { x: w * 0.16, y: h * 0.86 },
+    };
+  };
+
+  const setCrewRestPositions = () => {
+    if (!stageEl) return;
+    const b = stageEl.getBoundingClientRect();
+    const targets = getRestTargets(b.width, b.height);
+    for (const [id, pt] of Object.entries(targets)) {
+      physics.setTarget(id, pt.x, pt.y);
+    }
+  };
+
+  const restCrew = () => {
+    setCrewRestPositions();
+    if (actors.oops) actors.oops.dataset.state = 'sideeye';
+    if (actors.tsugi) actors.tsugi.dataset.state = 'proud';
+    if (actors.kiki) actors.kiki.dataset.state = 'listen';
+    if (actors.fude) actors.fude.dataset.state = 'idle';
+    if (actors.uso) actors.uso.dataset.state = 'sip';
+    say(actors.tsugi, TSUGI_SAYS[0]);
+  };
+
+  /* The 5-Crew Choreography on Fracture Strike */
   const playCrew = () => {
-    if (!plate || !oops || !tsugi) return;
+    if (!plate || !actors.oops || !actors.tsugi || !stageEl) return;
     crewTimers.forEach(clearTimeout);
     crewTimers = [];
     bubble?.classList.remove('on');
     const n = beat++;
-    oops.classList.remove('gone');
-    later(270, () => {
-      const hit = plate.impactPx();
-      const size = oops.offsetWidth;
-      oops.classList.add('no-move');
-      stand(oops, hit.x + size * 0.42, hit.y + size * 0.62);
-      void oops.offsetWidth;
-      oops.classList.remove('no-move', 'away');
-      oops.dataset.state = 'swing';
-      oops.classList.remove('hit');
-      void oops.offsetWidth;
-      oops.classList.add('hit');
-      tsugi.classList.add('no-move');
-      const tsugiGround = inStage(0, hit.y + size * 0.72);
-      tsugi.style.setProperty('--x', `${Math.round(-size * 1.5)}px`);
-      tsugi.style.setProperty('--y', `${Math.round(tsugiGround.y)}px`);
-      void tsugi.offsetWidth;
-      tsugi.classList.remove('no-move');
-      tsugi.dataset.state = 'idle';
-      later(330, () => {
-        oops.dataset.state = 'panic';
-        say(oops, OOPS_SAYS[n % OOPS_SAYS.length]);
-      });
-      later(1150, () => {
-        oops.classList.add('walking');
-        stand(oops, hit.x + size * 2.3, hit.y + size * 1.15);
-        tsugi.classList.add('walking');
-        tsugi.dataset.state = 'paint';
-        stand(tsugi, hit.x - size * 0.5, hit.y + size * 0.72);
-      });
-      later(1950, () => {
-        oops.classList.remove('walking');
-        tsugi.classList.remove('walking');
-        bubble?.classList.remove('on');
-        oops.dataset.state = 'sideeye';
-      });
-      later(2950, () => {
-        tsugi.dataset.state = 'proud';
-        say(tsugi, TSUGI_SAYS[n % TSUGI_SAYS.length]);
-      });
+    activeSeamWalk = null;
+
+    const hit = plate.impactPx();
+    const trajectory = plate.getSeamTrajectory(35);
+    const b = stageEl.getBoundingClientRect();
+
+    // 1. Oops positions at fracture impact point and winds up hammer
+    physics.setPosition('oops', hit.x + 32, hit.y + 40);
+    actors.oops.dataset.state = 'swing';
+    actors.oops.classList.remove('hit');
+    void actors.oops.offsetWidth;
+    actors.oops.classList.add('hit');
+
+    // Kiki perks up on rim
+    if (actors.kiki) actors.kiki.dataset.state = 'listen';
+
+    // 2. Shockwave jolt: Oops tumbles back violently with squash & stretch
+    later(240, () => {
+      physics.applyImpulse('oops', 380, 70, 1.45, 0.62);
+      actors.oops.dataset.state = 'panic';
+      showTag('oops', OOPS_SAYS[n % OOPS_SAYS.length], 2400);
+
+      // Kiki spiral-eyed shockwave reaction on top rim
+      if (actors.kiki) {
+        physics.applyImpulse('kiki', 0, -120, 1.25, 0.75);
+        actors.kiki.dataset.state = 'mindblown';
+        showTag('kiki', 'Acoustic shockwave!', 1800);
+      }
+
+      // Fude frantically grabs notebook
+      if (actors.fude) {
+        actors.fude.dataset.state = 'scribble';
+        showTag('fude', FUDE_SAYS[n % FUDE_SAYS.length], 2200);
+      }
+
+      // Uso leans forward with magnifying glass
+      if (actors.uso) {
+        actors.uso.dataset.state = 'doubt';
+      }
+    });
+
+    // 3. Oops scrambles behind plate rim; Tsugi prepares brush at seam origin
+    later(750, () => {
+      const rest = getRestTargets(b.width, b.height);
+      physics.setTarget('oops', rest.oops.x, rest.oops.y);
+      actors.oops.dataset.state = 'sideeye';
+
+      if (actors.kiki) actors.kiki.dataset.state = 'listen';
+
+      // Tsugi advances with brush
+      actors.tsugi.dataset.state = 'paint';
+      if (trajectory.length > 0) {
+        physics.setTarget('tsugi', trajectory[0].x, trajectory[0].y);
+      }
+    });
+
+    // 4. Seam Walk: Tsugi walks directly along Voronoi crack, coupling shader gold
+    later(950, () => {
+      activeSeamWalk = {
+        trajectory,
+        startTime: performance.now(),
+        duration: 1650,
+      };
+    });
+
+    // 5. Seam complete: Tsugi wipes brow proud; Uso nods & sips tea
+    later(2750, () => {
+      activeSeamWalk = null;
+      plate.setGoldRadius(plate.getMaxRadius());
+
+      actors.tsugi.dataset.state = 'proud';
+      showTag('tsugi', TSUGI_SAYS[n % TSUGI_SAYS.length], 2800);
+      say(actors.tsugi, TSUGI_SAYS[n % TSUGI_SAYS.length]);
+
+      if (actors.uso) {
+        actors.uso.dataset.state = 'sip';
+        showTag('uso', 'Approved.', 2000);
+      }
+      if (actors.fude) actors.fude.dataset.state = 'count';
     });
   };
-  const restCrew = () => {
-    if (!oops || !tsugi || !stageEl) return;
-    const b = stageEl.getBoundingClientRect();
-    const size = oops.offsetWidth;
-    oops.classList.add('no-move');
-    tsugi.classList.add('no-move');
-    stand(tsugi, b.width * 0.76, b.height * 0.62);
-    stand(oops, b.width * 0.76 + size * 1.4, b.height * 0.62 + size * 0.2);
-    oops.dataset.state = 'sideeye';
-    tsugi.dataset.state = 'proud';
-    say(tsugi, TSUGI_SAYS[0]);
+
+  /* Intent state reactions from the micro neural net */
+  const onIntentChanged = (intent: GestureClass) => {
+    if (activeSeamWalk) return; // Do not interrupt active fracture repair
+    const b = stageEl?.getBoundingClientRect();
+    if (!b) return;
+
+    if (intent === 'FRANTIC_SHAKE') {
+      if (actors.oops) {
+        actors.oops.dataset.state = 'panic';
+        physics.applyImpulse('oops', (Math.random() - 0.5) * 160, -80, 1.25, 0.8);
+        showTag('oops', 'Earthquake drill!', 1600);
+      }
+      if (actors.tsugi) actors.tsugi.dataset.state = 'paint';
+      if (actors.kiki) actors.kiki.dataset.state = 'mindblown';
+      if (actors.fude) actors.fude.dataset.state = 'scribble';
+      if (actors.uso) actors.uso.dataset.state = 'sideeye';
+    } else if (intent === 'GENTLE_CARESS') {
+      if (actors.tsugi) {
+        actors.tsugi.dataset.state = 'paint';
+        physics.setTarget('tsugi', pointer.x - 30, pointer.y + 40);
+        showTag('tsugi', 'Gentle touch.', 1800);
+      }
+      if (actors.oops) actors.oops.dataset.state = 'happy';
+      if (actors.kiki) actors.kiki.dataset.state = 'happy';
+      if (actors.uso) actors.uso.dataset.state = 'proud';
+      if (actors.fude) actors.fude.dataset.state = 'idle';
+    } else if (intent === 'CURIOUS_ORBIT') {
+      physics.setTarget('oops', pointer.x + 45, pointer.y + 30);
+      physics.setTarget('tsugi', pointer.x - 45, pointer.y + 30);
+      physics.setTarget('uso', pointer.x - 25, pointer.y + 55);
+      physics.setTarget('fude', pointer.x + 25, pointer.y + 55);
+      if (actors.oops) {
+        actors.oops.dataset.state = 'mindblown';
+        showTag('oops', 'Dizzy!', 1400);
+      }
+      if (actors.kiki) actors.kiki.dataset.state = 'listen';
+      if (actors.uso) actors.uso.dataset.state = 'doubt';
+      if (actors.fude) actors.fude.dataset.state = 'scribble';
+      if (actors.tsugi) actors.tsugi.dataset.state = 'idle';
+    } else if (intent === 'CONTEMPLATIVE_STILLNESS') {
+      setCrewRestPositions();
+      if (actors.oops) actors.oops.dataset.state = 'sip';
+      if (actors.tsugi) actors.tsugi.dataset.state = 'idle';
+      if (actors.kiki) actors.kiki.dataset.state = 'sleep';
+      if (actors.fude) actors.fude.dataset.state = 'idle';
+      if (actors.uso) actors.uso.dataset.state = 'sip';
+    }
   };
+
+  /* Click-to-interact micro reactions for each character */
+  const bindActorClicks = () => {
+    if (actors.oops) {
+      actors.oops.addEventListener('click', (e) => {
+        e.stopPropagation();
+        physics.applyImpulse('oops', 0, -220, 0.72, 1.4);
+        actors.oops!.dataset.state = 'panic';
+        showTag('oops', 'Careful! I am fragile!', 1800);
+        later(1800, () => (actors.oops!.dataset.state = 'sideeye'));
+      });
+    }
+    if (actors.tsugi) {
+      actors.tsugi.addEventListener('click', (e) => {
+        e.stopPropagation();
+        physics.applyImpulse('tsugi', 0, -140, 0.88, 1.18);
+        actors.tsugi!.dataset.state = 'happy';
+        showTag('tsugi', '24k gold lacquer curing.', 1800);
+        later(1800, () => (actors.tsugi!.dataset.state = 'proud'));
+      });
+    }
+    if (actors.kiki) {
+      actors.kiki.addEventListener('click', (e) => {
+        e.stopPropagation();
+        physics.applyImpulse('kiki', 0, -180, 0.82, 1.25);
+        actors.kiki!.dataset.state = 'listen';
+        showTag('kiki', 'Listening to the web feeds.', 1800);
+      });
+    }
+    if (actors.fude) {
+      actors.fude.addEventListener('click', (e) => {
+        e.stopPropagation();
+        physics.applyImpulse('fude', 0, -150, 0.85, 1.2);
+        actors.fude!.dataset.state = 'scribble';
+        showTag('fude', 'Logged in the registry.', 1800);
+        later(1800, () => (actors.fude!.dataset.state = 'idle'));
+      });
+    }
+    if (actors.uso) {
+      actors.uso.addEventListener('click', (e) => {
+        e.stopPropagation();
+        physics.applyImpulse('uso', 0, -150, 0.85, 1.2);
+        actors.uso!.dataset.state = 'doubt';
+        showTag('uso', 'Show me the paper first.', 1800);
+        later(1800, () => (actors.uso!.dataset.state = 'sip'));
+      });
+    }
+  };
+  bindActorClicks();
+
+  /* Main animation and simulation loop */
+  let lastFrameTime = performance.now();
+  let simRaf = 0;
+
+  const tickSimulation = (now: number) => {
+    simRaf = 0;
+    const dt = (now - lastFrameTime) / 1000;
+    lastFrameTime = now;
+
+    if (stageEl) {
+      const box = stageEl.getBoundingClientRect();
+      const bounds = { width: box.width, height: box.height };
+
+      // Seam walk progress
+      if (activeSeamWalk && actors.tsugi && plate) {
+        const elapsed = now - activeSeamWalk.startTime;
+        const progress = Math.min(1.0, elapsed / activeSeamWalk.duration);
+        const traj = activeSeamWalk.trajectory;
+        const trajIdx = Math.min(traj.length - 1, Math.floor(progress * (traj.length - 1)));
+        const pt = traj[trajIdx];
+
+        physics.setTarget('tsugi', pt.x, pt.y);
+        // Couple shader gold radius directly to Tsugi's brush position!
+        plate.setGoldRadius(pt.r);
+
+        if (progress >= 1.0) {
+          activeSeamWalk = null;
+        }
+      }
+
+      // Update Kinematic Intent every ~60ms
+      if (now - intentDebounceTimer > 60 && !activeSeamWalk) {
+        intentDebounceTimer = now;
+        const intent = brain.getKinematicIntent(now);
+        if (intent !== lastIntent) {
+          lastIntent = intent;
+          onIntentChanged(intent);
+        }
+      }
+
+      // Advance physics integrator
+      physics.update(dt, pointer, bounds, { allowTopRimIds: ['kiki'] });
+
+      // Update DOM actors from physics state
+      for (const [id, el] of Object.entries(actors)) {
+        if (!el) continue;
+        const s = physics.getActor(id);
+        if (!s) continue;
+        el.style.setProperty('--x', `${Math.round(s.x)}px`);
+        el.style.setProperty('--y', `${Math.round(s.y)}px`);
+        el.style.setProperty('--scale-x', s.scaleX.toFixed(3));
+        el.style.setProperty('--scale-y', s.scaleY.toFixed(3));
+        el.style.setProperty('--pupil-x', `${s.gazeX.toFixed(2)}px`);
+        el.style.setProperty('--pupil-y', `${s.gazeY.toFixed(2)}px`);
+      }
+    }
+
+    if (!reduced) simRaf = requestAnimationFrame(tickSimulation);
+  };
+
+  const startSimulation = () => {
+    if (!simRaf && !reduced) {
+      lastFrameTime = performance.now();
+      simRaf = requestAnimationFrame(tickSimulation);
+    }
+  };
+
+  // Pointer event telemetry ingestion for the micro-brain
+  if (!reduced) {
+    addEventListener(
+      'pointermove',
+      (e) => {
+        if (!stageEl) return;
+        const box = stageEl.getBoundingClientRect();
+        pointer.x = e.clientX - box.left;
+        pointer.y = e.clientY - box.top;
+        pointer.screenX = e.clientX;
+        pointer.screenY = e.clientY;
+        brain.record(pointer.x, pointer.y, false);
+        startSimulation();
+      },
+      { passive: true }
+    );
+  }
 
   const strikePlate = (n: number, at?: { x: number; y: number }) => {
     plate?.strike(n, at);
@@ -438,13 +817,14 @@ const edgeLine = edge.map(([x, d]) => `${(x * 10).toFixed(0)},${(EDGE_DEPTH - d)
       el.classList.remove('play');
     });
     if (!reduced) {
-      void claimEls[n].offsetWidth; // restart the keyframes on a repeat visit
+      void claimEls[n].offsetWidth;
       claimEls[n].classList.add('play');
     }
     cues.forEach((c, i) => {
       c.classList.toggle('cue--on', i === n);
       c.setAttribute('aria-pressed', String(i === n));
     });
+    updateObstacles();
   };
 
   cues.forEach((c, i) => {
@@ -454,7 +834,6 @@ const edgeLine = edge.map(([x, d]) => `${(x * 10).toFixed(0)},${(EDGE_DEPTH - d)
       claimsBox?.setAttribute('aria-live', 'polite');
       show(i);
     });
-    // One pass through the five, then rest on the first. It is not a carousel.
     c.querySelector('.cue__bar')?.addEventListener('animationend', (e) => {
       if ((e as AnimationEvent).animationName !== DWELL_END || !auto || i !== current) return;
       if (i === cues.length - 1) {
@@ -467,14 +846,16 @@ const edgeLine = edge.map(([x, d]) => `${(x * 10).toFixed(0)},${(EDGE_DEPTH - d)
     });
   });
 
-  // Anywhere on the plate that is not already a control breaks the next claim,
-  // from exactly where it was struck.
   plateEl?.addEventListener('click', (e) => {
     if (!plate || (e.target as HTMLElement).closest('a, button, input')) return;
     if (getSelection()?.toString()) return;
     auto = false;
     syncAuto();
     claimsBox?.setAttribute('aria-live', 'polite');
+    if (stageEl) {
+      const box = stageEl.getBoundingClientRect();
+      brain.record(e.clientX - box.left, e.clientY - box.top, true);
+    }
     show((current + 1) % claimEls.length, { x: e.clientX, y: e.clientY });
   });
 
@@ -491,13 +872,26 @@ const edgeLine = edge.map(([x, d]) => `${(x * 10).toFixed(0)},${(EDGE_DEPTH - d)
   if (reduced && pause) pause.hidden = true;
   syncAuto();
 
-  const startPlate = () => strikePlate(0);
-  if (reduced || !plate) restCrew();
-  if (plate) {
+  // Resize observer to update physics targets and negative space obstacles
+  new ResizeObserver(() => {
+    updateObstacles();
+    setCrewRestPositions();
+  }).observe(stageEl || document.body);
+
+  const startPlate = () => {
+    updateObstacles();
+    setCrewRestPositions();
+    strikePlate(0);
+    startSimulation();
+  };
+
+  if (reduced || !plate) {
+    updateObstacles();
+    restCrew();
+  } else {
     claimEls[0].classList.remove('play');
     void claimEls[0].offsetWidth;
     if (!reduced) claimEls[0].classList.add('play');
-    // The headline is set into a texture, so it has to wait for the real face.
     document.fonts.load('800 80px Inter').then(startPlate, startPlate);
   }
 
@@ -767,38 +1161,83 @@ const edgeLine = edge.map(([x, d]) => `${(x * 10).toFixed(0)},${(EDGE_DEPTH - d)
   .plate.gl .claim__pc, .plate.gl .claim__seam { visibility: hidden; }
   .plate.gl a, .plate.gl button { cursor: pointer; }
   .plate.gl .claim.play .claim__mend { animation-delay: 1.75s; }
-  /* ---------- the crew, working on the plate ---------- */
-  .crew-stage { position: absolute; inset: 0; z-index: 2; pointer-events: none; --actor: clamp(68px, 7.2vw, 108px); }
+  /* ---------- the crew: Living Ceramic Terrarium ---------- */
+  .crew-stage {
+    position: absolute; inset: 0; z-index: 2; pointer-events: none;
+    --actor: clamp(58px, 6.8vw, 98px);
+    overflow: hidden;
+  }
   html:not(.js) .crew-stage { display: none; }
+
   .crew-actor {
     position: absolute; left: 0; top: 0; width: var(--actor); height: var(--actor);
-    transform: translate(calc(var(--x, -200px) - 50%), calc(var(--y, -200px) - 100%));
-    transition: transform .8s cubic-bezier(.45, .05, .4, 1);
+    transform: translate(calc(var(--x, -200px) - 50%), calc(var(--y, -200px) - 100%)) scale(var(--scale-x, 1), var(--scale-y, 1));
+    transform-origin: 50% 100%;
+    pointer-events: auto; cursor: pointer; user-select: none;
+    will-change: transform;
   }
-  .crew-actor.no-move { transition: none; }
+  .crew-actor:focus-visible { outline: 2px dashed var(--ochre); outline-offset: 4px; border-radius: 8px; }
+
   .crew-actor .crew { width: 100%; height: 100%; display: none; }
-  .crew-actor[data-state='swing'] .is-swing, .crew-actor[data-state='panic'] .is-panic,
-  .crew-actor[data-state='sideeye'] .is-sideeye, .crew-actor[data-state='idle'] .is-idle,
-  .crew-actor[data-state='paint'] .is-paint, .crew-actor[data-state='proud'] .is-proud { display: block; }
-  .crew-actor.walking .crew { animation: crew-hop .24s ease-in-out infinite alternate; }
+  .crew-actor[data-state='swing'] .is-swing,
+  .crew-actor[data-state='panic'] .is-panic,
+  .crew-actor[data-state='sideeye'] .is-sideeye,
+  .crew-actor[data-state='happy'] .is-happy,
+  .crew-actor[data-state='sip'] .is-sip,
+  .crew-actor[data-state='idle'] .is-idle,
+  .crew-actor[data-state='paint'] .is-paint,
+  .crew-actor[data-state='proud'] .is-proud,
+  .crew-actor[data-state='listen'] .is-listen,
+  .crew-actor[data-state='mindblown'] .is-mindblown,
+  .crew-actor[data-state='sleep'] .is-sleep,
+  .crew-actor[data-state='scribble'] .is-scribble,
+  .crew-actor[data-state='count'] .is-count,
+  .crew-actor[data-state='doubt'] .is-doubt {
+    display: block;
+  }
+
+  /* Gaze Inverse Kinematics: pupils track pointer */
+  .crew-actor .crew-ink circle.k {
+    transform: translate(var(--pupil-x, 0px), var(--pupil-y, 0px));
+    transition: transform 0.05s ease-out;
+  }
+
+  /* Prop kinetic animations during specific key actions */
   .crew-actor.hit .is-swing .crew-prop { animation: crew-hammer .33s cubic-bezier(.6, 0, .9, .5) both; }
-  .crew-actor[data-state='paint']:not(.walking) .crew-prop { animation: crew-brush .5s ease-in-out infinite alternate; }
-  @keyframes crew-hop { from { transform: translateY(0); } to { transform: translateY(-7%) rotate(3deg); } }
+  .crew-actor[data-state='paint'] .crew-prop { animation: crew-brush .42s ease-in-out infinite alternate; }
+  .crew-actor[data-state='scribble'] .crew-prop { animation: crew-pen .22s ease-in-out infinite alternate; }
   @keyframes crew-hammer { from { transform: rotate(-58deg); } 82% { transform: rotate(48deg); } to { transform: rotate(40deg); } }
   @keyframes crew-brush { from { transform: rotate(-16deg); } to { transform: rotate(14deg); } }
-  /* Two onlookers, standing on the broken edge of the plate. */
-  .crew-side { position: absolute; left: 56%; bottom: 9px; display: flex; gap: .15rem; }
-  .crew-side .crew { width: calc(var(--actor) * .78); height: calc(var(--actor) * .78); }
+  @keyframes crew-pen { from { transform: rotate(-10deg) translateY(-2px); } to { transform: rotate(12deg) translateY(2px); } }
+
+  /* Organic rim-anchored tags */
+  .crew-tag {
+    position: absolute; left: 50%; bottom: calc(100% - 6px);
+    transform: translate(-50%, 4px) scale(0.85); transform-origin: 50% 100%;
+    opacity: 0; pointer-events: none; white-space: nowrap;
+    font-family: var(--serif); font-style: italic; font-size: 0.8125rem; line-height: 1.2;
+    padding: 0.25rem 0.55rem;
+    background: var(--paper); color: var(--ink); border: 1px solid var(--border);
+    border-radius: 8px 8px 8px 2px;
+    box-shadow: 0 4px 12px color-mix(in srgb, var(--ink) 12%, transparent);
+    transition: opacity 0.2s var(--ease), transform 0.25s var(--ease);
+    z-index: 10;
+  }
+  .crew-tag.on {
+    opacity: 1; transform: translate(-50%, -6px) scale(1);
+  }
+
   .crew-stage .crew-say {
-    position: absolute; left: 0; top: 0; white-space: normal; width: max-content; max-width: min(15rem, 80vw); opacity: 0;
+    position: absolute; left: 0; top: 0; white-space: normal; width: max-content; max-width: min(16rem, 82vw); opacity: 0;
     transform: translate(calc(var(--x, 0px) - 50%), calc(var(--y, 0px) - 100%)) scale(.94);
     transform-origin: 50% 100%; transition: opacity .25s ease, transform .25s var(--ease);
+    z-index: 10;
   }
   .crew-stage .crew-say.on { opacity: 1; transform: translate(calc(var(--x, 0px) - 50%), calc(var(--y, 0px) - 100%)); }
-  @media (max-width: 60rem) { .crew-side { display: none; } }
+
   @media (prefers-reduced-motion: reduce) {
-    .crew-actor, .crew-stage .crew-say { transition: none; }
-    .crew-actor .crew, .crew-actor .crew-prop { animation: none !important; }
+    .crew-actor, .crew-stage .crew-say, .crew-tag { transition: none; }
+    .crew-actor .crew, .crew-actor .crew-prop, .crew-actor .crew-ink circle.k { animation: none !important; }
   }
   .empty-q__crew { display: inline-block; width: 4.5rem; height: 4.5rem; vertical-align: middle; margin-right: .5rem; }
 

@@ -213,12 +213,87 @@ const rgb = (value: string): [number, number, number] => {
   return m && m.length >= 3 ? [+m[0] / 255, +m[1] / 255, +m[2] / 255] : [0.5, 0.5, 0.5];
 };
 
+export interface SeamPoint {
+  x: number;       // CSS px from plate top-left
+  y: number;       // CSS px from plate top-left
+  r: number;       // radius in shader units (aspect-scaled)
+  angle: number;   // angle of tangent in radians
+  progress: number; // 0..1
+}
+
+export function getSeamTrajectory(
+  uImpact: { x: number; y: number },
+  uSeed: number,
+  box: { width: number; height: number },
+  count = 30
+): SeamPoint[] {
+  const aspect = box.width / Math.max(1, box.height);
+  const points: SeamPoint[] = [];
+  // The crack travels westward through the headline band.
+  // We bound maxSeamR so it stays within the plate and matches the shader's energy reach (length(d * vec2(.62, 1.85))).
+  const maxSeamR = Math.max(0.15, Math.min(uImpact.x - 0.06, aspect * 0.65, 1.35));
+
+  for (let i = 0; i <= count; i++) {
+    const s = i / count;
+    const prog = Math.pow(s, 0.95);
+    const r = prog * maxSeamR;
+
+    // Log-polar Voronoi path: crack travels predominantly westward through the headline
+    const w1 = Math.sin(prog * 5.2 + uSeed * 1.7) * 0.24;
+    const w2 = Math.sin(prog * 13.4 - uSeed * 0.8) * 0.12;
+    const w3 = Math.cos(prog * 24.0 + uSeed * 3.1) * 0.05;
+    const theta = Math.PI + (w1 + w2 + w3);
+
+    // Vertical displacement is compressed by 1.85 to match fragment shader's length(d * vec2(.62, 1.85))
+    const rawPx = uImpact.x + r * Math.cos(theta);
+    const rawPy = uImpact.y + (r / 1.85) * Math.sin(theta);
+
+    const px = Math.max(0.04, Math.min(aspect - 0.04, rawPx));
+    const py = Math.max(0.12, Math.min(0.88, rawPy));
+
+    const cssX = Math.max(16, Math.min(box.width - 16, px * box.height));
+    const cssY = Math.max(16, Math.min(box.height - 16, (1.0 - py) * box.height));
+
+    let angle = Math.PI;
+    if (i > 0) {
+      const prev = points[i - 1];
+      angle = Math.atan2(cssY - prev.y, cssX - prev.x);
+    }
+
+    points.push({
+      x: cssX,
+      y: cssY,
+      r,
+      angle,
+      progress: s,
+    });
+  }
+
+  if (points.length > 1) {
+    points[0].angle = points[1].angle;
+  }
+
+  return points;
+}
+
 export interface Plate {
   /** Break claim n. `at` is a point in viewport px; omit to use its default. */
   strike(n: number, at?: { x: number; y: number }): void;
   /** Where the last strike landed, in CSS px from the plate's top left. */
   impactPx(): { x: number; y: number };
   durationToMend: number;
+  /** Normalized shader coordinates of the impact point */
+  getImpact(): { x: number; y: number };
+  /** Seed value used for the Voronoi fracture pattern */
+  getSeed(): number;
+  /** Evaluates points along the active fracture seam in CSS px */
+  getSeamTrajectory(count?: number): SeamPoint[];
+  /** Couples uGold shader expansion to Tsugi's brush tip position */
+  setGoldRadius(r: number): void;
+  /** Maximum radius in shader units */
+  getMaxRadius(): number;
+  /** Rest to settled state */
+  settle(): void;
 }
 
 interface Options {
@@ -281,6 +356,7 @@ export function createPlate({ plate, claims, reduced }: Options): Plate | null {
   const impact = { x: 0.5, y: 0.5 };
   let seed = 3.7;
   let maxR = 2;
+  let manualGoldRadius = -1;
   const state = { prog: 0, jolt: 0, resid: 0, gold: 0, fade: 0 };
 
   const paint = document.createElement('canvas');
@@ -429,6 +505,7 @@ export function createPlate({ plate, claims, reduced }: Options): Plate | null {
     seed = 1.3 + n * 4.17 + (at ? (at.x % 13) * 0.61 : 0);
     placeImpact(n, at);
     inscribe(n);
+    manualGoldRadius = -1;
     state.prog = state.jolt = state.resid = state.gold = 0;
     state.fade = 0;
     phase = 'break';
@@ -455,7 +532,11 @@ export function createPlate({ plate, claims, reduced }: Options): Plate | null {
       const jf = 1 - outCubic((c - 400) / 780);
       state.jolt = c < 170 ? 0 : Math.min(jr, jf);
       state.resid = inOut((c - 420) / 700);
-      state.gold = inOut((c - 900) / 1500) * maxR;
+      if (manualGoldRadius >= 0) {
+        state.gold = manualGoldRadius;
+      } else {
+        state.gold = inOut((c - 900) / 1500) * maxR;
+      }
       if (c >= MEND - 320) {
         settled();
         phase = 'idle';
@@ -543,5 +624,34 @@ export function createPlate({ plate, claims, reduced }: Options): Plate | null {
     const box = plate.getBoundingClientRect();
     return { x: impact.x * box.height, y: box.height - impact.y * box.height };
   };
-  return { strike, impactPx, durationToMend: MEND };
+  const getImpact = () => ({ x: impact.x, y: impact.y });
+  const getSeed = () => seed;
+  const getTrajectory = (count = 30) => {
+    const box = plate.getBoundingClientRect();
+    return getSeamTrajectory(impact, seed, box, count);
+  };
+  const setGoldRadius = (r: number) => {
+    manualGoldRadius = r;
+    state.gold = r;
+    wake();
+  };
+  const getMaxRadius = () => maxR;
+  const settle = () => {
+    manualGoldRadius = -1;
+    settled();
+    sharpen();
+    wake();
+  };
+
+  return {
+    strike,
+    impactPx,
+    durationToMend: MEND,
+    getImpact,
+    getSeed,
+    getSeamTrajectory: getTrajectory,
+    setGoldRadius,
+    getMaxRadius,
+    settle,
+  };
 }
