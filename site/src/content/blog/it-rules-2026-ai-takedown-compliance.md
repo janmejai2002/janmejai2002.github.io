@@ -34,7 +34,7 @@ Six months ago, an Indian platform had 36 hours to act on a takedown order. Toda
 
 That compression is the headline most coverage led with, and it's real. But the takedown clock is the easy part to understand and the easy part to build for: it's a webhook and an on-call rotation. The harder part, and the part almost nobody outside the law firms has explained plainly, is that MeitY told platforms to label and permanently tag AI content without telling them how. The Information Technology (Intermediary Guidelines and Digital Media Ethics Code) Amendment Rules, 2026 came into force on 20 February 2026, and they mark the first time an Indian statute has tried to regulate synthetic media directly rather than through general intermediary-liability language. If your product generates content and distributes it to other users, this rule decides whether you keep your safe harbour, regardless of how large your platform is.
 
-## What actually counts as SGI
+## What actually counts as SGI?
 
 The rules define "synthetically generated information" as audio, visual, or audio-visual content that's artificially or algorithmically created, generated, modified, or altered to look indistinguishable from a real person or a real event. Two things about that definition matter more than the headline number.
 

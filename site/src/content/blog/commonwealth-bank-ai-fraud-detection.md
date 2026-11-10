@@ -31,7 +31,7 @@ notionId: '3caced67-050a-8167-b11d-d451f12c7c47'
 
 </div>
 
-## The situation
+## What problem was Commonwealth Bank trying to solve?
 
 A real-time payment either clears in a few seconds or it does not. That single constraint is most of the reason Commonwealth Bank of Australia now runs machine-learning models in front of more than 20 million payments a day. A review that takes a human analyst two minutes is not a control on a faster-payments rail; whatever catches a scam has to do it before the money moves.
 
@@ -39,7 +39,7 @@ CBA is Australia's largest bank, with about 16 million customers and more than 3
 
 The standard tool for this is a rules engine: block a card-not-present payment over a set amount from a new device in a risky merchant category, and so on. Rules are fast and easy to explain to an auditor. They also throw false positives, and they lag every new scam pattern by however long it takes someone to notice it and write the next rule. CBA has been putting machine learning against that gap since 2015, when it built its Customer Engagement Engine. What is new is the scoring volume, the near-real-time latency, and a report published in February 2026, *Our Approach to Adopting AI*, that describes some of it first-hand.
 
-## What they built
+## What did Commonwealth Bank actually build?
 
 Three layers, roughly.
 
@@ -53,7 +53,7 @@ Three layers, roughly.
 
 One governance detail is worth flagging. CBA classifies AI as a "material risk" under its board-level framework and requires a reviewer independent of the model's developer before anything deploys. It also writes an explicit exception into its rule that customers be told when they are dealing with AI: an exception may be made "in relation to fraud."
 
-## What they claim
+## What does Commonwealth Bank claim it achieved?
 
 As reported, with the wording intact:
 
@@ -65,7 +65,7 @@ As reported, with the wording intact:
 
 Most of these come with a baseline: a prior-year period, or a pre-model alert-accuracy figure. None come with a method. There is no published decomposition of the fraud-loss fall, no false-positive or customer-friction rate, and the loss-prevention figures are CBA's own estimates of losses that did not happen.
 
-## How much to believe it
+## How much of Commonwealth Bank's claim should you believe?
 
 **Grade B** for the mechanism. The description of what the models screen, how the CNP score is built, where it plugs in, and the independent review step is first-party but specific, internally consistent, and stable across three years of separate CBA announcements plus an investor-reported half-year result. There is little reason to doubt that the system exists and works roughly as described.
 
@@ -73,7 +73,7 @@ Most of these come with a baseline: a prior-year period, or a pre-model alert-ac
 
 A Grade A version would need a controlled comparison: scored transactions against a held-out unscored control, or a difference-in-differences against banks without similar models, with precision, recall and false-positive rates attached. Banks rarely publish that, partly for competitive reasons and partly because it maps their defences for attackers. The CNP figure is the closest thing to a clean before-and-after in the whole account, and it is the one to cite if you are making an internal case.
 
-## What you could apply
+## What could you apply from Commonwealth Bank?
 
 If you run fraud, risk or payments operations, the usable lesson is narrower than "CBA cut fraud 20% with AI."
 

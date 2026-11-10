@@ -28,7 +28,7 @@ notionId: '3ceced67-050a-81bd-a31a-f83afc2265b4'
 
 </div>
 
-## The Dial Nobody Explains Properly
+## What does the temperature dial actually do?
 
 Ask two people what "temperature" means in AI and you'll get two shrugs and a "something to do with randomness." Fair enough — that's basically right, but the mechanism underneath is worth actually looking at, because it explains a lot of weird behavior people blame on the AI being "buggy" when it's really just doing what it was told.
 
@@ -44,7 +44,7 @@ It doesn't.
 
 Anthropic states it flatly: [even with temperature set to 0, results will not be fully deterministic, and identical inputs may produce different outputs across API calls](https://platform.claude.com/docs/en/about-claude/glossary). Ask the same question twice at the "no randomness" setting and you can still get two different answers. Not wildly different, usually — but different enough that anyone treating temperature 0 as a guarantee of reproducibility is building on sand.
 
-## Why Even Zero Can't Pin Down the Model
+## Why can't temperature zero pin down the model?
 
 This isn't a bug someone forgot to patch. It's baked into how these systems run at scale. The documentation is explicit that [this caveat applies both to Anthropic's own first-party inference service and to inference run through third-party cloud providers](https://platform.claude.com/docs/en/about-claude/glossary) — meaning it's not one company's infrastructure quirk, it's a property of how large models get served across distributed hardware, where tiny differences in how calculations get batched or ordered can nudge a probability by a hair, and a hair is sometimes enough to flip which token wins.
 
@@ -54,7 +54,7 @@ So if you're building something that depends on a model returning the exact same
 
 It's worth sitting with the token point for a second, because it reframes what temperature is actually doing. People imagine the model choosing between words like "happy," "joyful," "elated." In reality it's often choosing between token fragments — pieces of words, punctuation, even single characters when it hits something unfamiliar. [Tokens can correspond to words, subwords, characters, or bytes, depending on what's being processed](https://platform.claude.com/docs/en/about-claude/glossary), which is why unusual names or non-English text sometimes make output feel jerkier — the model is working with smaller, choppier units and temperature has more chances to introduce a wobble.
 
-## So What Should You Actually Do With It
+## What should you actually do with temperature?
 
 If you want the model to write a poem, brainstorm names, or draft five variations of ad copy, push temperature up — you're explicitly asking it to gamble on the less-obvious choice. If you want a summary, a code snippet, or an answer to a factual question, keep it low. But drop the idea that low temperature buys you a photocopier. What you actually get is a model that leans hard toward its best guess, run after run, without any guarantee of an identical transcript.
 

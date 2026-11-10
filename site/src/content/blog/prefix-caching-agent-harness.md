@@ -40,7 +40,7 @@ Without prefix caching, the transformer runs a quadratic prefill pass over the f
 
 Filtering MCP tools per step via RAG or injecting `UTC: 2026-11-08T14:41:25Z` into the system prompt breaks causal attention alignment: mutating one token at position 40 invalidates all 40,000 cached tokens after it.
 
-## Mechanics of prefix invalidation: how hash collisions and dynamic tokens break APC
+## How do dynamic tokens break prefix caching?
 
 Building a cache-stable runtime requires designing around how inference engines index KV memory: cumulative block hashing in [vLLM Automatic Prefix Caching (APC)](https://docs.vllm.ai/en/stable/design/prefix_caching/) and radix trees in [SGLang RadixAttention](https://arxiv.org/abs/2312.07104).
 
@@ -73,7 +73,7 @@ Four failure modes trigger a prompt caching latency spike in production:
 1. **Lookback and step limits:** [OpenAI prompt caching](https://openai.com/index/api-prompt-caching/) requires 1,024 tokens (128-token steps), while [Anthropic `cache_control` breakpoints](https://platform.claude.com/docs/en/build-with-claude/prompt-caching) scan back at most [20 content blocks](https://platform.claude.com/docs/en/build-with-claude/prompt-caching).
 1. **Shard drift:** [OpenAI routes requests](https://developers.openai.com/cookbook/examples/prompt_caching_201) on the first ~256 tokens up to ~[15 requests per minute (RPM) per prefix](https://developers.openai.com/cookbook/examples/prompt_caching_201) per server; omitting `prompt_cache_key` spills traffic to cold nodes.
 
-## The two-tier context pattern: segregating static tool catalogs from ephemeral state
+## How does the two-tier context pattern work?
 
 To prevent context engineering prefix invalidation, separate tool visibility from per-turn availability. Lock the complete tool catalog into Tier 1 (the static root prefix) and gate per-turn execution using request metadata or logit masks.
 

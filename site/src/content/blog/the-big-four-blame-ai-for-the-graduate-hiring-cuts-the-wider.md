@@ -40,7 +40,7 @@ Data shared by Jon Hering, cited in the same post: 80% of companies are using AI
 
 Ambitious forecasts don't settle the question either. Cem Dilmegani, who spent a decade as a McKinsey consultant, argues on AIMultiple that 90% of the white-collar roles he's seen "can be automated today with the right agent harness" ([AIMultiple](https://aimultiple.com/ai-job-loss)). Elsewhere on the same page, other AI experts are cited predicting that half of entry-level white-collar jobs will be lost by 2030 ([AIMultiple](https://aimultiple.com/ai-job-loss)). That's a forecast for five years out. It is not a count of what's already happened at KPMG this year.
 
-## Three Job Boards, Three Different Numbers
+## Why do job boards show different numbers?
 
 The graduate market beyond the Big Four doesn't move in step with any of this. Indeed's UK data shows the share of graduate jobs at its lowest level since at least 2018, with postings down 12% on a year earlier; Adzuna shows a steeper 32% drop over three years ([Varsity](https://www.varsity.co.uk/features/30269)). Survey the Institute of Student Employers' 69 largest employers, though, and the fall is milder: vacancies down 7% ([Varsity](https://www.varsity.co.uk/features/30269)). Check Target Connect, the platform run by Group GTI, and postings were actually up 8% in the 2024/5 hiring season compared with the year before ([Varsity](https://www.varsity.co.uk/features/30269)). Three measures. Three verdicts. Same graduate market.
 
@@ -48,7 +48,7 @@ The graduate market beyond the Big Four doesn't move in step with any of this. I
 
 Look at what a single firm's own numbers do to the tidy story. PwC hired 1,300 graduates in the UK and 3,200 in the US last year ([BBC](https://www.bbc.com/news/articles/cm272510e6jo)), while also cutting more than 5,600 roles worldwide and quietly dropping a 2021 plan to add 100,000 staff over five years ([BBC](https://www.bbc.com/news/articles/cm272510e6jo)). Those aren't the actions of a firm that simply swapped graduate labor for a chatbot. Scrapping a five-year hiring target is what a company does when the plan itself stopped making sense, regardless of what AI can or can't do.
 
-## Why AI Is the Easiest Line in the Press Release
+## Why is AI the easiest line in the press release?
 
 CNBC's reporting on AI-linked layoffs names the pattern bluntly: firms are blaming AI for job cuts, and critics say it's "a good excuse" ([CNBC](https://www.cnbc.com/2025/10/19/firms-are-blaming-ai-for-job-cuts-critics-say-its-a-good-excuse.html)). Lufthansa says it will cut 4,000 jobs by 2030 while leaning on AI for efficiency ([CNBC](https://www.cnbc.com/2025/10/19/firms-are-blaming-ai-for-job-cuts-critics-say-its-a-good-excuse.html)). Salesforce laid off 4,000 customer-support staff in September, saying AI now does half the work in that unit ([CNBC](https://www.cnbc.com/2025/10/19/firms-are-blaming-ai-for-job-cuts-critics-say-its-a-good-excuse.html)). Klarna has reduced headcount by 40% while pushing AI adoption hard ([CNBC](https://www.cnbc.com/2025/10/19/firms-are-blaming-ai-for-job-cuts-critics-say-its-a-good-excuse.html)). None of these figures are about graduate hiring. They show a pattern instead: when a company needs a story for a cut, AI is the line that makes it sound strategic instead of overdue.
 

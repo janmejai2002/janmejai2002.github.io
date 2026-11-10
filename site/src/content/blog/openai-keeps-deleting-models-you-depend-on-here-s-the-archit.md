@@ -43,7 +43,7 @@ Even a clean, well-documented migration isn't a drop-in swap. When Azure retired
 
 None of this opacity is limited to which model answers your prompt, either. In a separate thread, a ChatGPT user exported their account to investigate what was filling up their storage, and the ZIP file held [about 143 images at 60MB total](https://community.openai.com/t/chatgpt-s-hidden-failure-mode-architecture-collapse-under-real-use/1368718), with nothing accounting for the rest. They were careful about where to place the blame: ["This is not a complaint about GPT-4 or GPT-5"](https://community.openai.com/t/chatgpt-s-hidden-failure-mode-architecture-collapse-under-real-use/1368718). The model behaved fine. The infrastructure holding it up didn't tell them anything useful when it broke. Same shape of failure as the deprecation contradictions, just a different corner of the platform: confident model, opaque plumbing underneath.
 
-## The Architecture That Survives Model Retirement
+## What architecture survives model retirement?
 
 Which is why the fix has to live in your own code: OpenAI's paperwork won't stay internally consistent on its own.
 
@@ -64,6 +64,8 @@ Only temporarily. Dated snapshots (e.g., `gpt-4o-2024-05-13`) prevent unannounce
 
 ### How does Azure's retirement policy differ from direct OpenAI API?
 Azure exposes retirement dates programmatically through its Models API, provides an 18-month lifecycle for first-party models, and automatically repoints unmigrated deployments to successor snapshots before final cutoff.
+
+Further reading: [the fine-tuning trade-off](/blog/fine-tuning-vs-prompting-when/) gets worse when the base model can be retired, and [how Claude’s tiers price caching](/blog/claude-model-tiers-opus-sonnet-haiku/) matters when you plan a model swap.
 
 ## Sources
 

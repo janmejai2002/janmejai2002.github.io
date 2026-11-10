@@ -42,7 +42,7 @@ Two things the rewrites tend to skip. First, outcomes pricing did not start with
 
 The AI side is not subtle. Lilli, McKinsey's internal assistant, handles more than 500,000 prompts a month, and consultants report up to 30% time savings on knowledge work. In January 2026 Bob Sternfels said the firm was running about 25,000 personalised AI agents alongside its 40,000 people, and that AI had saved roughly 1.5 million hours of research and synthesis in a year. Headcount is down from a peak near 45,000 at the end of 2023. The analyst grind that used to fill a first-year's week is the exact thing being automated, and that is what forces the pricing question.
 
-## Anatomy of an outcomes-based engagement
+## What is inside an outcomes-based engagement?
 
 "Pay for results" is a slogan. The contract is a set of definitions, and each one is negotiable:
 
@@ -54,7 +54,7 @@ The AI side is not subtle. Lilli, McKinsey's internal assistant, handles more th
 
 None of this is exotic. All of it is where the engagement is actually priced, and most of it is invisible in coverage that stops at "the billable hour is dead."
 
-## Where it goes wrong: attribution
+## Where do outcomes-based contracts go wrong?
 
 The Government Outcomes Lab at Oxford studies outcomes-based contracts in the public sector, where they have a longer track record. Its taxonomy of gaming transfers almost directly to consulting.
 
@@ -88,19 +88,19 @@ For context on how far the AI reweighting goes at the strategy firms: Bain repor
 
 ## FAQ
 
-**Is the billable hour actually dead?**
+### Is the billable hour actually dead?
 
 No. It is losing share at the top firms for AI-heavy transformation work. Time-and-materials and fixed-fee are still the right structure for a lot of advisory, and outcomes pricing sits alongside them, not on top.
 
-**Does AI make consulting cheaper?**
+### Does AI make consulting cheaper?
 
 Not automatically. If the fee is tied to a result rather than hours, faster delivery does not lower the price. It can raise the firm's margin while your invoice stays flat, which is one reason to ask about AI use directly.
 
-**How do you measure an outcome you can't fully attribute?**
+### How do you measure an outcome you can't fully attribute?
 
 You negotiate a proxy and a window, and ideally a comparison group. If none of those is possible, the outcome is probably not a good candidate for outcomes pricing.
 
-**What am I paying for once the analysis is automated?**
+### What am I paying for once the analysis is automated?
 
 Judgement, accountability, an outside name your board will accept, and sometimes proprietary data or models. AI compresses the research and the first draft. It does not compress the part where someone signs their name to the recommendation.
 

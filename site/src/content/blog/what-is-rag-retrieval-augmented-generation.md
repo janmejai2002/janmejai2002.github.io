@@ -28,7 +28,7 @@ notionId: '3ceced67-050a-8128-bdf2-d86865c84cfb'
 
 </div>
 
-## Understanding RAG: Parametric vs Non-Parametric Memory
+## What is RAG, and how does it differ from model memory?
 
 Retrieval-Augmented Generation (RAG) was formally introduced by [Lewis et al. (2020)](https://arxiv.org/abs/2005.11401) as a general-purpose architecture combining pre-trained parametric memory (the sequence-to-sequence model weights) with explicit non-parametric memory (a dense vector or keyword index over external documentation). While pre-trained LLMs store vast factual knowledge in their weights, their ability to precisely manipulate and update that knowledge remains fundamentally constrained without an external index.
 
@@ -46,7 +46,7 @@ The foundational research on long-context retrieval performance by [Liu et al. (
 
 This U-shaped performance curve (primacy and recency bias) affects both standard and explicitly long-context models. As a result, relying on long-context prompting for precise factual retrieval over multi-megabyte inputs introduces unpredictable failure modes where key facts are silently ignored.
 
-## Economic and Latency Trade-offs
+## What are RAG's cost and latency trade-offs?
 
 Beyond accuracy, transformer attention imposes steep economic costs. Standard multi-head self-attention scales with quadratic computational complexity $O(n^2)$ relative to sequence length. As analyzed by [Redis AI benchmarks](https://redis.io/blog/rag-vs-large-context-window-ai-apps/), doubling context length roughly quadruples the attention compute overhead, driving up time-to-first-token (TTFT) and per-query API costs.
 

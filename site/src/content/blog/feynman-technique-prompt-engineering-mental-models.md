@@ -28,7 +28,7 @@ notionId: '3c7ced67-050a-81f5-9284-c435c7a9b6f8'
 
 You already know the failure mode. You type a request into a chatbot, get back three paragraphs of confident, plausible, slightly-wrong output, and you can't tell if the model misunderstood you or if you never actually told it what you meant. That's not a syntax problem. It's a mental-model problem, and there's a fix for it that has nothing to do with AI at all.
 
-## Why prompt engineering exists at all
+## Why does prompt engineering exist at all?
 
 Every explanation — yours to a colleague, a model's to you — has to cross a gap between what the explainer knows and what the listener needs. Prompting is how you manage that gap from the other side: not "what words unlock the model," but what you had to think through clearly enough to hand over in the first place.
 
@@ -85,6 +85,8 @@ Marketers already use models to turn one asset — a webinar, a product update �
 ## The pattern underneath all three
 
 In each case, the technique isn't being used to make the model sound simpler. It's being used to locate the exact place where an explanation — the model's or your own — is covering for something neither of you actually understands yet. That's a more durable skill than any specific prompt template, because it doesn't expire when the next model generation changes what tricks currently work. The four steps don't care whether the "student" being taught is a five-year-old, a client, a job candidate, or a language model predicting the next token. They just find the gap and make you fill it.
+
+Further reading: [why a long chat makes the model forget](/blog/what-a-context-window-is-and-why-it-fills-up/) and [why the same prompt returns different answers](/blog/why-ai-gives-different-answers-every-time/) explain two limits you will hit when testing prompts this way.
 
 ## Sources
 

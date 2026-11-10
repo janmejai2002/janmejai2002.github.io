@@ -30,11 +30,11 @@ notionId: '3c9ced67-050a-8120-903a-d3cc4b2ecfd9'
 
 </div>
 
-## Who's talking, and where
+## Who is speaking, and where?
 
 The talk is an episode of *Google DeepMind: The Podcast*, hosted by Hannah Fry, titled ["The mathematics of AI uncertainty"](https://www.youtube.com/watch?v=tBjgCj_dGZM) and published on 26 August 2026. It runs about 45 minutes. The guest, Zoubin Ghahramani, has worked in machine learning since the late 1980s, spent years collaborating with Geoffrey Hinton, and wrote a 2015 *Nature* review making the case for probabilistic methods. He is introduced here as a Cambridge professor and co-lead of frontier AI at Google DeepMind. The conversation is a two-hander: Fry is herself a mathematician sympathetic to the Bayesian view, so this is an argument being reinforced, not tested.
 
-## The argument
+## What is the argument?
 
 **Two uncertainties, two responses (roughly the 3–6 minute mark).** Ghahramani's practical distinction is between randomness you cannot reduce (the pedestrian) and ignorance you can (the unseen scenario). A self-driving car that senses it is in an unfamiliar situation — his example is a hailstorm with a horse in the road — should slow down; one that treats its own ignorance as confident knowledge will not. He notes that all these forms of uncertainty collapse, mathematically, onto probabilities, and that acquiring "a bit" of information is by definition halving your uncertainty.
 
@@ -46,7 +46,7 @@ The talk is an episode of *Google DeepMind: The Podcast*, hosted by Hannah Fry, 
 
 **The catch (around 34–36 minutes, and again near the end).** The Bayesian ideal — hold a probability distribution over every possibility and update it with each data point — is where, in his words, "the magic trick comes with a big curse." Done exactly, it is NP-hard and impossibly slow, which is why the field set it aside once training from data started working. His bet is that today's compute plus decades of approximation techniques make it worth another look, and that the same machinery would deliver continual learning without catastrophic forgetting and better data efficiency as a bonus.
 
-## What holds up, and what to watch
+## What holds up, and what should you watch?
 
 **The verifiable history checks out.** The 1986 *Parallel Distributed Processing* volumes and the Rumelhart–Hinton–Williams backpropagation paper did both appear in 1986. Hinton did win a Nobel Prize (Physics, 2024). Ghahramani's 2015 *Nature* paper is real, and its abstract does put representing and manipulating uncertainty about models and predictions at the centre of machine learning.
 
@@ -58,7 +58,7 @@ The talk is an episode of *Google DeepMind: The Podcast*, hosted by Hannah Fry, 
 
 **One detail not to repeat as fact:** the episode's captions render the guest's name and several technical terms imperfectly, and the casual "99% confident it's a cheetah" version of the adversarial-example story is a blend of results from that literature, not one canonical figure. The phenomenon is well established; the exact numbers in the retelling are not load-bearing.
 
-## What it means for you
+## What does it mean for you?
 
 If you build with LLMs, the practical takeaway is to stop treating a model's stated confidence as a real signal. It will say "I'm certain" and then reverse under mild pressure, because there is no stable belief underneath the sentence. Where calibration matters — anything medical, financial or safety-related — you need external checks: consistency sampling, retrieval with grounding, semantic-entropy-style measures, or a human in the loop. Ghahramani's calibration test is a fair yardstick to hold vendors to: if a system says "70%" a hundred times, it should be right about seventy of them.
 

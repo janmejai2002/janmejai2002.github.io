@@ -32,7 +32,7 @@ There is a number you have seen roughly forty times this year. Ninety-five perce
 
 It is a real finding from a real study. It also does not say what almost everyone using it thinks it says, and the gap between the two is the most useful thing in the whole report.
 
-## What the study actually measured
+## What did the study actually measure?
 
 The source is [*The GenAI Divide: State of AI in Business 2025*](https://www.aigl.blog/state-of-ai-in-business-2025/), from MIT's Project NANDA. The methodology is not exotic: analysis of more than 300 public AI deployments, 52 structured executive interviews, and a survey of 153 leaders.
 

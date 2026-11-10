@@ -30,7 +30,7 @@ notionId: '3caced67-050a-810a-99d7-e28ec5567c9e'
 
 </div>
 
-## Who's talking, and where
+## Who is speaking, and where?
 
 The talk is an invited research seminar at Microsoft Research, [posted 27 August 2026](https://www.youtube.com/watch?v=zl_RxpwPsIY), given by Aditya Kommineni, a fourth-year PhD student at the University of Southern California advised by Shrikanth Narayanan in the Signal Analysis and Interpretation Laboratory (SAIL). It runs about 57 minutes, much of it Q&A with a room of biosignal researchers. The framework and headline results were published in May 2026 as ["A Multi-dimensional Framework for Evaluating Generalization in EEG Foundation Models"](https://arxiv.org/abs/2605.28563) (Kommineni, Zhou, Avramidis, Feng, Narayanan). The interpretability analysis near the end is not in that preprint.
 
@@ -42,7 +42,7 @@ Kommineni's argument is that the field has been grading these models on a soft c
 
 The framework, laid out around the 10-minute mark, pins the backbone and varies three things: parameters (freeze the encoder, train only a linear probe or a small LoRA adapter), samples (cut the labeled data to 50–200 examples), and channels (drop electrodes or restrict them to certain lobes). Each is scored as a ratio: near 1 means the representation is pulling its weight, well below 1 means it is not.
 
-## What the numbers say
+## What do the numbers say?
 
 Against a frozen backbone — results from roughly 15 minutes in — the split is sharp. On the two long-context tasks, Sleep-EDF staging and a depression dataset, linear-probe scores reach 0.84 to 0.98 of full fine-tuning, and with a LoRA adapter sometimes above 1. On the four short-window datasets the same ratio sits at 0.62 to 0.87, and the plain supervised baselines (EEGNet and relatives, 4,000 to about a million parameters) match or beat the 5-to-9-million-parameter foundation models (LaBraM, CBraMod, CSBrain) outright. Kommineni's explanation for the motor-imagery gap: those models are pretrained mostly on clinical hospital EEG, heavy on ICU and epilepsy monitoring, whose statistics sit closer to sleep and clinical tasks than to someone imagining a hand movement.
 
@@ -50,7 +50,7 @@ The low-label regime is where a foundation model should shine, and for the long-
 
 Strip the channels down, about 40 minutes in, and the foundation models track EEGNet-Large almost exactly, "on par with, or slightly worse" across every configuration tested. Whatever the pretraining learned, it did not include a robust spatial prior.
 
-## What the embeddings actually encode
+## What do the embeddings actually encode?
 
 The most interesting stretch is diagnostic, from about 45 minutes. An EEG power spectrum decomposes into an aperiodic 1/f background — a slope and an offset — plus oscillatory peaks, the alpha and beta bands and so on. Roughly, and Kommineni is careful to say only roughly, the aperiodic part tends to be subject-stable while the oscillatory peaks carry more of the task.
 
@@ -58,7 +58,7 @@ He simulates spectra with known parameters, pushes them through the frozen model
 
 The consequence: a linear probe on the frozen embeddings predicts subject identity better than it predicts the downstream label, on five of the six datasets. The exception is Sleep-EDF, which uses only two electrodes, sited away from the regions that carry the strongest individual signature.
 
-## What holds up, and what to watch
+## What holds up, and what should you watch?
 
 The methodology critique is reasonable, and not unique to this group: EEG-foundation-model evaluation became its own subject through 2026, with benchmarks like OmniEEG-Bench and a systematic channel-adaptation study taking up the same question.
 
@@ -68,7 +68,7 @@ The aperiodic/periodic decomposition itself is standard and well validated: the 
 
 What to hold loosely: the talk's tone runs ahead of its own evidence in places. "Not better at all" is true for the short-window tasks, not for the long-context ones, where the low-label win is large and real. Kommineni's own paper credits the foundation models with a clear advantage there, and he hedges more in the room than the blunt framing suggests. Only three foundation models are tested, all masked-reconstruction transformers of similar vintage; he notes in the Q&A that newer in-context-learning architectures and larger models are not covered, and that "things have moved on" since the work was done. The interpretability results are new and from a single lab. And an audience aside about a startup pretraining on 250,000 hours of EEG is exactly that — an aside, not a checked number. His own summary of why the project exists doubles as the takeaway: on many of these comparisons, "most of the performance lies within the standard deviation."
 
-## What it means for you
+## What does it mean for you?
 
 The lesson transfers to any modality. Freeze the backbone and test few-shot before you credit the pretraining with anything. Evaluate under the distribution shift you will actually face, not a friendly single split. And probe what the embedding encodes — a model can score well by locking onto a confound, here subject identity, that a subject-disjoint split won't catch and a new user won't reproduce.
 

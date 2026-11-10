@@ -28,11 +28,11 @@ notionId: '413ced67-050a-8115-ae51-ca1cc1669719'
 
 </div>
 
-## 1. The Core Argument in Three Sentences
+## What is the core argument?
 
 The AI industry assumes that deploying agents across distinct enterprise domains requires bespoke runtime scaffolding, custom prompt graphs, and domain-specific tool definitions. Anthropic challenges this paradigm by showing that a general-purpose model coupled with a bash shell and a file system replaces specialized agent frameworks entirely. If this thesis holds true, engineering teams will stop building standalone agent wrappers and instead package domain expertise into version-controlled directory trees containing procedural markdown and reusable scripts.
 
-## 2. Five Timestamped Inflection Points
+## What were the five key moments in the talk?
 
 - **[01:13] The Collapse of Domain-Specific Scaffolding:** Barry Zhang asserted that "that paradigm is a tighter coupling between the model and a runtime environment put simply we think code is all we need." Early agent systems fragmented into bespoke orchestrators for coding, research, and data processing. THEREFORE, Anthropic discovered that running a general model over bash and a file system eliminates the need for distinct agent architectures across different business verticals.
 - **[03:36] The Context Poisoning of Traditional Tool Schemas:** Zhang highlighted the structural flaw in current tool patterns, noting that "traditional tools have pretty obvious problems... they always live in the context window." Injecting dozens of OpenAPI definitions floods the model's working memory with static schemas that sit idle during 95% of operational steps. THEREFORE, Anthropic abandoned in-context schema declarations in favor of file-system skills that load procedural knowledge only on demand.
@@ -40,7 +40,7 @@ The AI industry assumes that deploying agents across distinct enterprise domains
 - **[08:14] The Functional Split Between Transport and Procedural Expertise:** Mahesh Murag delineated the boundaries between protocols and knowledge, emphasizing that "MCP is providing the connection to the outside world while skills are providing the expertise." Model Context Protocol establishes standardized client-server transport to databases and third-party APIs. BUT transport layers lack operational taste, so skills package the organizational heuristics and validation scripts required to orchestrate those raw connections correctly.
 - **[13:25] File-System Artifacts as Transferable Machine Memory:** Zhang defined continuous agent learning through file persistence, observing that "anything that cloud writes down can be used efficiently by a future version of itself this makes the learning actually transferable." Multi-turn chat memory vanishes once a session closes, creating cold-start overhead for recurring corporate workflows. THEREFORE, allowing an agent to write tested utility scripts and procedural guidelines into version-controlled folders creates persistent, shareable institutional knowledge across engineering teams.
 
-## 3. What Was Claimed vs. What Benchmarks Prove
+## What was claimed, and what do benchmarks actually prove?
 
 The speakers argue that pairing a general model with bash and file-system skills renders complex agent scaffolding unnecessary, but production hardware constraints reveal critical operational trade-offs.
 
@@ -50,7 +50,7 @@ Second, dynamic procedural file retrieval risks destroying prompt cache efficien
 
 Third, container execution environments impose non-trivial latency floors. Running untrusted model code requires sandboxed isolation via microVMs such as Firecracker or lightweight containers like gVisor. Each bash execution cycle incurs 40ms to 200ms of process fork and IPC overhead. For workflows requiring rapid sub-second interaction, shell execution introduces latency penalties that dedicated native function calls avoid.
 
-## 4. What This Changes for Applied Engineers
+## What does this change for applied engineers?
 
 - **Purge static tool declarations from system prompts:** Audit your agent's initial prompt payload tomorrow morning and remove large OpenAPI JSON schemas. Replace them with a single shell execution tool and a concise text registry listing skill names and one-line descriptions, reducing baseline prompt token consumption by up to 80%.
 - **Implement a two-phase progressive activation gate:** Modify your agent harness to expose only top-level skill metadata during initial task routing. Program the runner to fetch the full procedural markdown file into active context only after the model explicitly emits an activation command.

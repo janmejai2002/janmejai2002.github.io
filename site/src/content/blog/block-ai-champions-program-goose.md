@@ -29,13 +29,13 @@ notionId: '3c8ced67-050a-81dc-a451-d9810ff0adab'
 
 </div>
 
-## The situation
+## What problem was Block trying to solve?
 
 Block — the company behind Square, Cash App, Afterpay and Tidal — had been sitting on an internal AI agent called Goose since 2024. ML engineer Brad Axen built it as a side bet that agents, not chat windows, would end up doing the real work; by the time Dhanji Prasanna took over as Block's head of technology, Goose was one of seven or eight experimental projects competing for attention. It worked. The problem was everything around it.
 
 Block's codebase wasn't built for an agent to walk into cold. Some monorepos run past 40,000 source files across 650-plus services, with build steps and tribal knowledge that live in senior engineers' heads rather than in any file an agent could read. Handing 3,000-plus engineers a licence to Goose, Cursor or Copilot doesn't fix that — an agent dropped into an undocumented repo either does nothing useful or does something confidently wrong. The bottleneck wasn't access to a coding agent. It was whether the repos themselves could be trusted with one.
 
-## What they built
+## What did Block actually build?
 
 Block's answer was the Engineering AI Champions program, launched in August 2025 under Angie Jones, the company's VP of Engineering for AI Tools & Enablement. Fifty developers were pulled from across Square, Cash App, Afterpay, Tidal, Proto and the Platform org — frontend, backend, mobile, hardware, data engineering, infra — and given 30% of their time for one explicit job: make their repos safe for agents to operate in. Collectively, their repos covered about 60% of Block's code.
 
@@ -45,7 +45,7 @@ On top of repo readiness, champions standardized on a context-engineering discip
 
 Deliberately, Block didn't standardize on one tool early. Champions used Claude Code, Goose, Cursor, Copilot, Cline, AMP and Firebender side by side, because a mobile engineer's problems with an agent weren't a JVM backend engineer's, and forcing one tool would have hidden that. What actually spread adoption wasn't a mandate — it was peer example: watching a teammate "knock out a tedious migration in an afternoon" lands differently than a tutorial, as Jones put it. Partway through, Block open-sourced Goose itself, turning roughly 3,000 internal testers into a community north of 30,000, feeding hardening back into the tool the champions were standardizing repos around.
 
-## What they claim
+## What does Block claim it achieved?
 
 Three months after the champions program launched, Block's engineering blog reported AI-authored code up 69%, self-reported time savings up 37%, and automated PRs up 21x, measured across the champions' repos against their pre-program baseline.
 
@@ -53,7 +53,7 @@ Separately, on Goose more broadly, Prasanna told Sequoia's Training Data podcast
 
 Then the numbers moved from an engineering blog to an earnings call. On February 26, 2026, alongside Q4 2025 results, CFO Amrita Ahuja told investors production code shipped per engineer was up "greater than 40%" since September. CEO Jack Dorsey argued "a significantly smaller team using the tools we are building can do more and do it better," pointing to a specific inflection: "something happened in December... the models just got an order of magnitude more capable." That same day, Block cut headcount from over 10,000 to just under 6,000 — roughly 4,000 roles, about 40% of the company. By the Q2 2026 call in August, Dorsey said code changes per engineer were up 150% since January, that a Block AI now touches "basically every single production code change or production code review," and that Square shipped 130 features in the first half of 2026, more than 3x the same period a year earlier. Separately, Ahuja told Fortune that gross profit per employee had climbed from $500,000 in 2019 to $750,000 in 2024 to $1 million in 2025, projected to reach $2 million in 2026, and framed the cuts as "not about bloat... about empowering our teams."
 
-## How much to believe it
+## How much of Block's claim should you believe?
 
 Grade these claims separately, because they don't deserve the same grade.
 
@@ -61,7 +61,7 @@ The champions-program numbers are the strongest evidence here: **B**. Block name
 
 The "40% more production code per engineer" figure, and everything built on top of it, is **C and D**. No methodology has been published for what "production code" means or how it's counted per engineer. The September-to-February figure at least predates the layoffs, so it isn't explained away by headcount alone — but the number that came next isn't so clean. By the Q2 2026 call, Dorsey cited code changes per engineer up 150% "since the start of the year," a window that includes the February 26 headcount cut itself. Whether that denominator is a fixed January headcount, a rolling average, or the smaller post-cut roster was never said — and depending on which, some real fraction of that 150% is arithmetic, not agentic. A company looks far more productive per head simply by having fewer heads, with nothing about how the remaining work gets done actually changing. Fortune's own reporting on the story flagged the adjacent point directly — "research finds that AI adoption alone doesn't automatically translate to higher profits per employee — it demands a reimagining of how work gets done" — and noted that market conditions, product expansion and cost management were all in the mix too. No outside auditor has verified Block's internal code-volume metrics, and "lines shipped" or "PRs opened" are exactly the kind of productivity proxy that inflates once people know they're being measured on it. None of that makes the claim false. It makes it a claim a company facing hard questions about a mass layoff has every incentive to make, which is precisely when it deserves the most scrutiny, not the least.
 
-## What you could apply
+## What could you apply from Block?
 
 The part of this worth stealing has nothing to do with headcount. It's the shape of the pilot.
 

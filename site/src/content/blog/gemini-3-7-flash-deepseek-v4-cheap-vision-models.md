@@ -34,7 +34,7 @@ That's not a metaphor. [Gemini 3.7 Flash launched at $0.75 per million input tok
 
 To understand why that race is happening now, and not two years ago, it helps to know what these models are actually doing when you hand them a photo.
 
-## What a vision model actually does
+## What does a vision model actually do?
 
 Strip away the branding and a vision-language model has two parts working together. A vision encoder looks at the image and turns it into a grid of numbers, visual tokens, that describe shapes, colors, and spatial layout the way a sentence describes an event. A language model backbone then reads those visual tokens next to your text prompt and generates a response, the same way it would if you'd typed the description yourself.
 

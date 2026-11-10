@@ -52,7 +52,7 @@ Skip this if it's old news. If it isn't, the rest of the piece needs it.
 
 That shift is what the traffic studies are trying to measure.
 
-## The two studies worth citing
+## Which two studies are worth citing?
 
 ### Pew Research: what people actually did
 
@@ -94,7 +94,7 @@ Population numbers don't transfer directly to your pages.
 
 "34.5% lower at position one" is a relative change in click-through rate on informational keywords, not a 34.5% cut to your traffic. Suppose a page gets 10,000 monthly impressions at position one and a 30% click-through rate, so 3,000 clicks. If an Overview starts showing on those queries and drops the click-through rate by a third, you land near 20%, or about 2,000 clicks. That's the shape of the loss: a click-through-rate haircut on the affected slice of your queries, not a uniform percentage off the whole site.
 
-## Measure your own loss
+## How do you measure your own loss?
 
 Google does not separate AI Overview impressions from blue-link impressions in Search Console; every appearance lands in the same bucket. So this is an estimate, not a clean read. A workable approach:
 

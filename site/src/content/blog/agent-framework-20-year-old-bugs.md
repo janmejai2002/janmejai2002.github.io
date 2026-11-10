@@ -38,7 +38,7 @@ Reporting the work, The Register summed the finding up: the flaws "reveal a secu
 
 Shahar Tal's summary of what they found: "Almost none of it was a completely new bug class. That's insecure deserialization, server-side request forgeries, path traversals, use-after-free." Those defects are two decades old, and they sit underneath software that reads your inbox and writes to your database. In Check Point's words, "the agent needs no dangerous tools to be turned against you: reading the wrong document is enough."
 
-## How a prompt becomes a shell
+## How does a prompt become a shell?
 
 The clearest worked example is Microsoft's own. In May 2026 its security team published a walkthrough of two Semantic Kernel flaws.
 
@@ -83,7 +83,7 @@ The third is trust-boundary confusion. Frameworks separate "the model produced t
 
 None of this is one vendor's mistake. Six frameworks, the same four errors: that is the story.
 
-## What actually blocks the chain
+## What actually blocks the attack chain?
 
 Ordered by risk reduced per hour spent.
 
@@ -107,11 +107,17 @@ It is not the whole problem. Your tool code still executes somewhere. Your crede
 
 ## FAQ
 
-**Is LangChain safe for production?** With `langchain-core` past 1.2.5 and `langgraph` and `langgraph-checkpoint` past the fixes above, the disclosed chains are closed. `langchain-core` alone draws more than 170 million PyPI downloads a month and `langgraph` more than 70 million, so "stop using it" is not a plan most teams can run. Patching is.
+### Is LangChain safe for production?
 
-**Should I switch frameworks?** Not for this. Check Point found the same bug classes in all six it tested, Microsoft's and Google's included. A switch buys a fresh backlog of the same mistakes.
+With `langchain-core` past 1.2.5 and `langgraph` and `langgraph-checkpoint` past the fixes above, the disclosed chains are closed. `langchain-core` alone draws more than 170 million PyPI downloads a month and `langgraph` more than 70 million, so "stop using it" is not a plan most teams can run. Patching is.
 
-**How do I test my own agent?** Trace every path where model output reaches a framework API: tool arguments, filter expressions, checkpoint keys, memory writes. For each, ask whether that value is ever `eval`'d, used to build a query, or deserialized. Then feed the agent a document whose text tries to reach those paths, and watch the logs, not the model's reply, for what the framework did with it.
+### Should I switch frameworks?
+
+Not for this. Check Point found the same bug classes in all six it tested, Microsoft's and Google's included. A switch buys a fresh backlog of the same mistakes.
+
+### How do I test my own agent?
+
+Trace every path where model output reaches a framework API: tool arguments, filter expressions, checkpoint keys, memory writes. For each, ask whether that value is ever `eval`'d, used to build a query, or deserialized. Then feed the agent a document whose text tries to reach those paths, and watch the logs, not the model's reply, for what the framework did with it.
 
 ## What to do this week versus this quarter
 
@@ -120,6 +126,8 @@ This week: run a dependency audit, move the four package families past their fix
 This quarter: put a real sandbox around `eval` and deserialization, move credential scoping to IAM, add egress filtering, extend tracing to checkpoint and deserialization events. Then write the test above and run it before every release.
 
 The bugs are old and the fixes are already shipped. The gap is the patch pass nobody put on the calendar.
+
+Further reading: teams in India should check [what CERT-In already requires after an agent incident](/blog/cert-in-ai-agent-incident-reporting-vs-safe/), and anyone weighing this exposure against the payoff should read [the evidence on enterprise agent ROI](/blog/enterprise-ai-agent-roi/).
 
 ## Sources
 

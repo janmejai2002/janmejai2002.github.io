@@ -34,7 +34,7 @@ Someone on your team opens a Slack thread: "Do we actually need Opus here, or wo
 
 Caching doesn't replace the tier decision. It sits underneath it, and it behaves the same way no matter which model you pick, which is exactly why it's worth understanding before you argue about Opus versus Sonnet versus Haiku.
 
-## How the Cache Actually Behaves
+## How does the cache actually behave?
 
 The mechanism itself is almost boringly simple. On each request, the system checks whether the prompt prefix up to your cache breakpoint was already processed recently. If it was, it reuses that work. If not, it processes the full prompt and caches the prefix once the response starts generating [prompt caching docs](https://platform.claude.com/docs/en/build-with-claude/prompt-caching).
 
@@ -50,7 +50,7 @@ Picture a research agent chaining tool calls with a long-reasoning model, each t
 
 If your workload has gaps wider than a few minutes between calls — batch jobs, async pipelines, anything with human-in-the-loop delays — the 5-minute window is fighting you structurally, not because you did anything wrong. Anthropic's answer is a 1-hour cache tier available at additional cost over the default [prompt caching docs](https://platform.claude.com/docs/en/build-with-claude/prompt-caching). It's a real trade: you pay more to keep the prefix warm longer, betting that you'll hit it enough times in that window to come out ahead of reprocessing from scratch. For a request pattern with short gaps between calls, that bet is easy. For one with long gaps that occasionally overshoot the window, it's a judgment call specific to your traffic shape.
 
-## What This Actually Means for Picking a Tier
+## What does this mean for picking a tier?
 
 The percentage caching saves you applies the same way whether you're calling Opus, Sonnet, or Haiku — it's a discount on reprocessing the prefix, not a model-specific feature. Which means the "should I downgrade tiers to save money" instinct often has the causality backwards. If your uncached prefix is large and hit repeatedly, fixing the caching setup can save you more than dropping a tier, without touching output quality at all. If your prefix is small or genuinely unique on every call — one-shot classification tasks, single-turn requests with no shared context — caching won't save you much regardless of tier, and the model choice is the only lever that matters.
 

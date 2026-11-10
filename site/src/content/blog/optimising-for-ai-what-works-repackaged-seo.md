@@ -30,7 +30,7 @@ notionId: '3caced67-050a-814a-93a3-de6c612fdd1f'
 
 </div>
 
-## What the vendors are selling, and what the words mean
+## What are the vendors selling, and what do the words mean?
 
 Three acronyms, one idea. Generative Engine Optimisation (GEO), Answer Engine Optimisation (AEO) and Large Language Model Optimisation (LLMO) all describe the same goal: getting your brand named, quoted or linked when someone asks ChatGPT, Perplexity, Gemini or Google's AI Overviews a question your business could answer.
 
@@ -50,7 +50,7 @@ What this study is not: a measurement of leads, revenue, or even live traffic. I
 
 **Tier three: asserted, not shown.** "Key takeaways" boxes, specific formatting templates, and llms.txt files fall here. On llms.txt in particular, Google has been explicit: it "is not needed for AI Overviews, AI Mode, or any other generative AI Search feature", and John Mueller has compared it to the long-dead keywords meta tag. It costs little to add and does no harm; just do not expect it to move anything in Google's AI surfaces.
 
-## Where the big numbers come from
+## Where do the big numbers come from?
 
 **"AI traffic converts 23x better."** One source: an Ahrefs blog post from 16 June 2025, titled, in full, "Does AI Search Traffic Convert Better Than Traditional Search? For Ahrefs, Yes: 0.5% of Visitors Drove 12.1% of Signups". Ahrefs looked at twelve months of its own website analytics and found that the small slice of visitors arriving from AI tools signed up at roughly 23 times the rate of organic search visitors. It is a real, honestly labelled result — the title says "For Ahrefs" — for a single B2B SaaS company with a product that a ChatGPT user researching SEO tools is primed to buy. It is not evidence that AI referrals convert 23x better for a law firm, a D2C brand, or a local service business.
 
@@ -68,7 +68,7 @@ That is a survey, not a census. The output depends on which prompts you picked, 
 
 Pricing runs from about $29 a month for an entry tool (Otterly's lowest tier) to the $400 to $500 range for the better-known dashboards; Peec's self-serve plans top out near $495. Profound does not publish prices, and third-party trackers place it between $99 and $399 a month depending on tier. In rupee terms that range runs from roughly ₹2,500 a month at the low end to ₹40,000-plus for the mid-tier dashboards, which for many Indian businesses is a real line item to justify against a channel that is still a rounding error in their referral traffic.
 
-## What to do this quarter with no budget
+## What should you do this quarter with no budget?
 
 A measurement setup you can build in an afternoon:
 
@@ -95,19 +95,19 @@ A rough decision rule:
 
 ## FAQ
 
-**Is GEO just SEO with a new invoice?**
+### Is GEO just SEO with a new invoice?
 
 Mostly. Authority, structured content, being quoted elsewhere and clean crawlability were SEO fundamentals before the acronym. The new work is prompt-set monitoring and writing to be quoted inside an answer rather than clicked. That does not need a new discipline or a new retainer.
 
-**Is llms.txt worth implementing?**
+### Is llms.txt worth implementing?
 
 It is low cost and does no harm, so add it if it takes ten minutes. Do not expect it to affect Google's AI features; Google has said it does not use it.
 
-**Can anyone guarantee my site gets cited by ChatGPT?**
+### Can anyone guarantee my site gets cited by ChatGPT?
 
 No. The engines change ranking behaviour without notice, and citation is influenced by factors outside your site. Anyone guaranteeing placement is selling certainty they do not have.
 
-**Does AI referral traffic convert well?**
+### Does AI referral traffic convert well?
 
 For some businesses, clearly yes — the Ahrefs case is real. Whether it holds for you depends on your category and buyer. Measure your own referral segment before assuming either way.
 

@@ -35,7 +35,7 @@ Somebody sets up a cron job. Every fifteen minutes it wakes an agent, hands it a
 
 This is the default state of every scheduled agent that doesn't think about caching. The fix isn't complicated. But the math around it has a trap door in it, and if you don't understand the trap door you can ship "caching" and get a bill that's worse than doing nothing.
 
-## What the cache actually is
+## What is the cache, actually?
 
 Prompt caching stores the KV-cache state for a prefix of your prompt so a later call with the identical prefix doesn't have to recompute attention over it from scratch. On the Anthropic side you mark the end of the stable prefix with a `cache_control` block; everything up to and including that marker becomes the cached unit. The first call that includes that marker is a **cache write** — you pay extra for it. Every subsequent call whose prefix matches exactly is a **cache read** — you pay much less for it.
 
@@ -45,7 +45,7 @@ I ran this in practice against a real scheduled-agent system prompt. The cold ca
 
 For sizing your own prompts: Anthropic's glossary states that [a token is roughly 3.5 English characters](https://platform.claude.com/docs/en/about-claude/glossary), so a 4,317-token system prompt is somewhere around 15,000 characters of tool schemas and instructions — not an unusual size for an agent with a handful of tools and a house style guide.
 
-## The exact break-even
+## When does prompt caching break even?
 
 Here's the math that matters, expressed in multiples of the base input price, using Anthropic's 5-minute cache:
 

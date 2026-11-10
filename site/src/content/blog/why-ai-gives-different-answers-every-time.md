@@ -31,7 +31,7 @@ notionId: '3caced67-050a-8135-9641-f248f1169fc2'
 
 </div>
 
-## The model is choosing the next word from a ranked list
+## How does a model choose the next word?
 
 A language model reads what you have written and produces a ranked list of candidates for the next chunk of text — a "token", usually a word or a piece of one. Each candidate gets a score. The model picks one, appends it, and repeats, one token at a time, until the answer is done.
 
@@ -45,7 +45,7 @@ Temperature is the dial that sets how strictly the model sticks to its top-ranke
 
 If the ranked list were the same every time, greedy decoding would give you the same answer every time. That is the assumption that breaks.
 
-## You set temperature to zero. The answer still moves.
+## Why does the answer still move at temperature zero?
 
 Here is the experiment that makes it concrete. In September 2025, the research group Thinking Machines Lab ran one fixed prompt, "Tell me about Richard Feynman", through the Qwen3-235B model 1,000 times, all at temperature zero. Greedy decoding throughout. Same prompt, same settings, same model.
 
@@ -73,7 +73,7 @@ OpenAI more or less says this in its own documentation. Its APIs are "non-determ
 
 If a model's answers seem to get better or worse overnight with no announcement, this is usually why. It is not the sampling. The thing you are calling is not quite the thing you were calling.
 
-## When this matters, and when to stop worrying about it
+## When does this matter?
 
 For most everyday use, it does not matter. Drafting an email, brainstorming names, summarising a document, asking a factual question — "stable in meaning, not in wording" is fine. Two phrasings of the same correct answer cost you nothing.
 
@@ -93,19 +93,19 @@ The levers that actually help, roughly in order of effort:
 
 ## FAQ
 
-**Is the model literally rolling dice?**
+### Is the model literally rolling dice?
 
 Only at the last step, and only if temperature is above zero. At temperature zero there is no dice roll at all, and the output can still vary for the batching reason above.
 
-**Can I set a seed and get identical output?**
+### Can I set a seed and get identical output?
 
 On some APIs you can set a seed, and it helps. The providers themselves describe it as best-effort, not a guarantee. On a shared hosted endpoint you cannot currently switch on true bitwise reproducibility as an end user.
 
-**Why does the same prompt sometimes cost a different amount?**
+### Why does the same prompt sometimes cost a different amount?
 
 Cost tracks the number of tokens in and out. If the answer comes out longer or shorter, the price moves with it. Same root cause: the output is not fixed.
 
-**Is this a bug the vendors should fix?**
+### Is this a bug the vendors should fix?
 
 It is a deliberate trade. Batching is what makes hosted inference cheap and fast. Guaranteeing determinism means giving some of that back, and most users would rather keep the speed.
 

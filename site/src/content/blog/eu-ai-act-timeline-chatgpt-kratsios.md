@@ -30,11 +30,11 @@ notionId: '3c8ced67-050a-8198-8e3b-d244c0939c27'
 
 </div>
 
-## Who, where, when
+## Who spoke, where and when?
 
 Kratsios spoke on August 18, 2026, at Y Combinator's Startup School, in a sit-down interview with Luther Lowe, YC's Washington-based head of public policy (previously the same role at Yelp — a detail he brings up himself late in the conversation). Kratsios is a Senate-confirmed "assistant to the president," runs OSTP, and served as the country's first CTO in Trump's first term before a stint as Scale AI's COO. The full 40-minute conversation, [Michael Kratsios: Inside the White House's AI Strategy](https://www.youtube.com/watch?v=zLUZclThLhU), is on YC's channel.
 
-## The argument he's actually making
+## What argument is he actually making?
 
 Strip away the DC color and Kratsios is defending one structural bet: don't legislate AI with hard, specific thresholds, because the frontier moves faster than any threshold can be redrawn once it's law.
 
@@ -50,7 +50,7 @@ By 19 minutes he offers his cleanest framework: technologies are "either born fr
 
 The last third of the talk moves away from AI specifically: a long walkthrough of what OSTP actually does day to day (roughly 22 minutes in), a report titled "Science and a New Golden Age" that Kratsios's office released the same week (around 27 minutes), a vision of AI-run "autonomous cloud labs" doing unattended scientific experimentation (30 minutes), a pitch for prioritizing quantum computing the way his office pushed AI in 2019 (32 minutes), and a call for Congress — not just executive orders — to legislate AI preemption and creator IP protections (35 minutes).
 
-## What holds up, and what doesn't
+## What holds up, and what doesn't?
 
 The claim that checks out cleanly: Kratsios says Trump signed "the first executive order in the history of the United States prioritizing artificial intelligence" in February 2019. That's accurate — [Executive Order 13859](https://www.federalregister.gov/documents/2019/02/14/2019-02544/maintaining-american-leadership-in-artificial-intelligence), "Maintaining American Leadership in Artificial Intelligence," was signed February 11, 2019, and did launch the American AI Initiative.
 
@@ -60,7 +60,7 @@ The R&D history is closer to right than wrong, but overstated. Kratsios says the
 
 Worth flagging as a matter of category, not accuracy: nearly everything else in the talk — the description of how OSTP coordinates agencies, what "Little Tech" needs, whether open-weight policy has changed — is Kratsios describing his own office's intentions and process. That's testimony about what the administration believes and says it's doing, not an independently verifiable result. It's worth taking at face value as a statement of position, while remembering that a policymaker describing his own policy is not the same kind of claim as an external, checkable fact.
 
-## What it means for you
+## What does it mean for you?
 
 If you build with AI and you're trying to read Washington's next move, the actionable signal here is narrower than the talk's tone suggests: no change to open-weight policy, a continued push for one national standard over a state patchwork, and a stated aversion to hard compute or capability thresholds in any future rule. That's useful to know. But the rhetorical scaffolding around it — particularly the EU comparison — is doing more persuasive work than the facts support, and it's worth separating "this is our policy" from "and here's proof the alternative failed," because in this case the proof doesn't hold up.
 

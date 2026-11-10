@@ -33,7 +33,7 @@ The library they hit was [LiteLLM, the routing layer that CrewAI, DSPy, Microsof
 
 No chatbot got jailbroken in that incident. The software connecting AI systems to real infrastructure became the target itself, and that's the direct cost of the shift this article is actually about: LLMs stopped being something you talk to and became something you give a job.
 
-## What "agentic" actually means
+## What does "agentic" actually mean?
 
 Chat is a single round trip. You ask, the model answers, the conversation waits for you again. An agent breaks that loop open: the model reads a goal, decides on a step, calls a tool (a database query, an API, a file write, another model), reads the result, and decides on the next step, without a human approving each one. The autonomy isn't in the model getting smarter. It's in the leash getting longer.
 
@@ -41,7 +41,7 @@ That distinction is why the LiteLLM incident matters here specifically. A chatbo
 
 In production, that loop rarely stays a single agent talking to a single tool. A support ticket might get triaged by one agent, handed to a second that queries the billing system, and closed out by a third that drafts the customer reply, each step passing state to the next without a human reading the handoff. That's what "LLM workflow" means once it stops being a diagram and becomes something running against real data: several models and several tools, chained together, each trusting what the last one handed it.
 
-## How far the shift has actually gone
+## How far has the shift actually gone?
 
 The numbers say this isn't a lab curiosity anymore. [80% of enterprise applications shipped or updated in the first quarter of 2026 embedded at least one AI agent, up from 33% in 2024](https://www.digitalapplied.com/blog/ai-agent-adoption-2026-enterprise-data-points) — a figure attributed to Gartner, and a steeper curve than any enterprise software category since cloud.
 

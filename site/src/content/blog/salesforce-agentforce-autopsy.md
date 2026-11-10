@@ -28,7 +28,7 @@ notionId: '413ced67-050a-8174-bdbe-e4dc7032a92a'
 
 </div>
 
-## 1. The Deployment
+## How was Agentforce deployed?
 
 In late 2024, Salesforce launched [Agentforce](https://www.salesforce.com/agentforce/), rebranding its foundational AI portfolio from assistive copilot prompts into fully autonomous enterprise agents. Positioned directly against human customer service and sales development representatives, Agentforce promised turnkey operational automation across Service Cloud, Sales Cloud, and external enterprise software systems.
 
@@ -73,7 +73,7 @@ Context engineering is managed by [Salesforce Data Cloud](https://investors.sale
 
 Latency constraints vary sharply across interaction tiers. While simple informational queries achieve a Time-to-First-Token (TTFT) of 620ms on pre-warmed Einstein models, multi-step actions requiring two or more tool invocations push production response times significantly higher. Internal telemetry records a median p50 latency of 2,410ms and a p95 latency of 4,820ms when Atlas chains an Apex record lookup with a MuleSoft billing callout, testing the tolerance of synchronous web chat connections.
 
-## 2. The Balance Sheet
+## What did Agentforce do to the economics?
 
 The commercial thesis presented by Salesforce executives positions Agentforce as an immediate labor-saving replacement for entry-level contact center personnel. Human tier-1 customer service representatives cost enterprise organizations between $4.50 and $7.20 per fully loaded resolution (averaging $2.80 per ticket in offshore business process outsourcing centers and $8.50 in onshore operations). When an autonomous AI agent resolves a case cleanly in a single turn at $2.00 per conversation, or via two standard actions consuming 40 Flex Credits ($0.20), the enterprise achieves an apparent 55% to 95% reduction in unit resolution costs.
 
@@ -97,7 +97,7 @@ Furthermore, procurement contracts rarely reflect the complete total cost of own
 
 For a mid-sized enterprise contact center operating 50 representative seats, the true first-year operational budget for Agentforce routinely expands from an anticipated $60,000 to over $225,000 when accounting for required platform dependencies.
 
-## 3. The Edge Cases and Breakages
+## Where does Agentforce break?
 
 Production telemetry from enterprise deployments reveals three systemic failure modes where the probabilistic reasoning of Atlas clashes with the rigid state machines of enterprise databases:
 
@@ -121,7 +121,7 @@ Atlas Circuit Breaker Threshold:
 
 To manage these failures, Salesforce mandates an automated escalation path within the Agent Development Lifecycle. When intent confidence scores drop below 0.72, or when a tool invocation returns an unhandled exception, Atlas trips an internal circuit breaker. The agent freezes further side effects, serializes the conversational state into a structured JSON payload, attaches an automated three-sentence diagnostic summary, and dispatches the session to a human agent via Salesforce Omni-Channel routing.
 
-## 4. The Reusable Blueprint
+## What is the reusable blueprint from Agentforce?
 
 Engineering teams architecting enterprise agent systems can extract four durable principles from the operational friction of Agentforce:
 
