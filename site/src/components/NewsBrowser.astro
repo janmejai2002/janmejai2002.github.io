@@ -203,25 +203,18 @@ const toSlug = (str: string) =>
                           </svg>
                         </div>
 
-                        {/* Card Meta Row with Intuitive Hot Seat Cue */}
+                        {/* Card Meta Row */}
                         <div class="card__meta">
                           <span class="card__cat" itemprop="articleSection">
                             <span class="card__dot" aria-hidden="true" />
                             {i.category}
                           </span>
-                          <span class="card__sep" aria-hidden="true">·</span>
-                          <time class="card__date" datetime={i.date} itemprop="datePublished">{fmtDate(i.date)}</time>
                           <span class="q__flag" data-flag hidden>
                             <svg class="flag-check" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                               <path d="M3 8.5l3.5 3.5 6.5-7" />
                             </svg>
                             Practised
                           </span>
-                          {i.source && host(i.source) && (
-                            <span class="card__host" title={`Reported via ${host(i.source)}`}>
-                              {host(i.source)}
-                            </span>
-                          )}
                         </div>
 
                         {/* Headline */}
@@ -906,24 +899,6 @@ const toSlug = (str: string) =>
     border-radius: 50%;
     background: var(--accent);
     flex-shrink: 0;
-  }
-  .card__sep {
-    color: var(--ink-faint);
-  }
-  .card__date {
-    font-variant-numeric: tabular-nums;
-  }
-  .card__host {
-    margin-left: auto;
-    font-size: .625rem;
-    font-weight: 700;
-    letter-spacing: .06em;
-    text-transform: uppercase;
-    color: var(--ink-faint);
-    background: color-mix(in srgb, var(--paper) 75%, transparent);
-    padding: .15rem .45rem;
-    border-radius: 4px;
-    border: 1px solid var(--border-soft);
   }
 
   .card__h {
