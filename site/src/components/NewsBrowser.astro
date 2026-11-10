@@ -745,10 +745,10 @@ const toSlug = (str: string) =>
     position: relative;
     width: 100%;
     flex: 1;
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: 100%;
+    grid-template-rows: minmax(100%, auto);
     border-radius: 0;
-    min-height: 100%;
   }
 
   /* Physics-inspired specular glaze reflection shader */
@@ -807,18 +807,17 @@ const toSlug = (str: string) =>
     filter: drop-shadow(0 0 4px color-mix(in srgb, var(--ochre) 65%, transparent));
   }
 
-  /* Both Faces: Tactile 2D Ceramic Tile Transition */
+  /* Both Faces: Tactile 2D Ceramic Tile Transition (Grid Stacking for Dynamic Height) */
   .card__face {
-    position: absolute;
-    inset: 0;
+    grid-area: 1 / 1 / 2 / 2;
     width: 100%;
-    height: 100%;
+    min-height: 100%;
     border-radius: 0;
     border: none;
     display: flex;
     flex-direction: column;
-    overflow: hidden;
     padding: 1.45rem 1.65rem 1.35rem;
+    box-sizing: border-box;
   }
 
   /* FRONT FACE */
@@ -827,9 +826,11 @@ const toSlug = (str: string) =>
     z-index: 2;
     opacity: 1;
     pointer-events: auto;
+    visibility: visible;
     transform: translateY(0);
     transition: opacity 0.28s cubic-bezier(0.2, 0.8, 0.25, 1),
-                transform 0.28s cubic-bezier(0.2, 0.8, 0.25, 1);
+                transform 0.28s cubic-bezier(0.2, 0.8, 0.25, 1),
+                visibility 0.28s;
   }
   .card__face--front::before {
     content: '';
@@ -850,9 +851,11 @@ const toSlug = (str: string) =>
     z-index: 1;
     opacity: 0;
     pointer-events: none;
+    visibility: hidden;
     transform: translateY(6px);
     transition: opacity 0.3s cubic-bezier(0.2, 0.8, 0.25, 1),
-                transform 0.3s cubic-bezier(0.2, 0.8, 0.25, 1);
+                transform 0.3s cubic-bezier(0.2, 0.8, 0.25, 1),
+                visibility 0.3s;
   }
   .card__face--back::before {
     content: '';
@@ -867,12 +870,14 @@ const toSlug = (str: string) =>
   .card.is-flipped .card__face--front {
     opacity: 0;
     pointer-events: none;
+    visibility: hidden;
     transform: translateY(-6px);
     z-index: 1;
   }
   .card.is-flipped .card__face--back {
     opacity: 1;
     pointer-events: auto;
+    visibility: visible;
     transform: translateY(0);
     z-index: 2;
   }
@@ -970,6 +975,7 @@ const toSlug = (str: string) =>
     gap: .75rem;
     padding-top: .95rem;
     border-top: 1px solid var(--border-soft);
+    flex-shrink: 0;
   }
 
   /* Invitation Affordance Pill in Card Meta */
@@ -1153,6 +1159,7 @@ const toSlug = (str: string) =>
     flex-wrap: wrap;
     padding-top: .95rem;
     border-top: 1px solid var(--border-soft);
+    flex-shrink: 0;
   }
   .back__actions {
     display: flex;
