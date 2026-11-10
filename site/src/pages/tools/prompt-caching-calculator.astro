@@ -1,0 +1,114 @@
+---
+import Base from '../../layouts/Base.astro';
+import { DEFAULTS, compute, money } from '../../data/caching';
+
+const r = compute(DEFAULTS);
+const fields = [
+  ['prefix', 'Cacheable prefix (tokens)', 'System prompt, tool definitions, documents'],
+  ['fresh', 'New input per call (tokens)', 'The part that changes every call'],
+  ['output', 'Output per call (tokens)', ''],
+  ['calls', 'Calls per run', 'Calls made inside one cache lifetime'],
+  ['runs', 'Runs per day', ''],
+  ['inPrice', 'Input price ($ per 1M tokens)', 'Use your provider’s current price'],
+  ['outPrice', 'Output price ($ per 1M tokens)', 'Use your provider’s current price'],
+  ['write', 'Cache write multiplier', '1.25 is Anthropic’s 5-minute cache'],
+  ['read', 'Cache read multiplier', '0.1 is Anthropic’s cache read'],
+] as const;
+---
+
+<Base
+  title="Prompt Caching Cost Calculator — wAIbi-sabi"
+  description="Work out whether prompt caching saves money on your workload: cost per run, monthly savings and the number of calls needed to break even."
+  section="Tools"
+  pageType="WebApplication"
+  breadcrumbs={[{ name: 'Home', path: '/' }, { name: 'Prompt caching calculator' }]}
+  schema={{ applicationCategory: 'BusinessApplication', operatingSystem: 'Any', isAccessibleForFree: true }}
+>
+  <section class="hero fade-up d1">
+    <span class="hanko">Tool</span>
+    <h1>Prompt caching calculator</h1>
+    <p>
+      Does prompt caching save money on your workload? Enter your token counts and prices to see
+      the cost per run, the monthly saving and the break-even point. Prices here are editable
+      starting values, so check them against your provider’s pricing page.
+    </p>
+  </section>
+
+  <form class="calc" id="calc">
+    {
+      fields.map(([id, label, hint]) => (
+        <label>
+          <span>{label}</span>
+          <input type="number" min="0" step="any" name={id} value={DEFAULTS[id]} />
+          {hint && <small>{hint}</small>}
+        </label>
+      ))
+    }
+  </form>
+
+  <div class="out" aria-live="polite">
+    <div><span>Without caching, per month</span><strong id="uncached">{money(r.uncachedMonth)}</strong></div>
+    <div><span>With caching, per month</span><strong id="cached">{money(r.cachedMonth)}</strong></div>
+    <div><span>Monthly saving</span><strong id="saved">{money(r.saved)}</strong></div>
+    <div><span>Saving</span><strong id="pct">{r.pct.toFixed(1)}%</strong></div>
+    <div><span>Calls per run to break even</span><strong id="breakeven">{r.breakEven ?? 'Never'}</strong></div>
+  </div>
+
+  <section class="how">
+    <h2>How is the saving calculated?</h2>
+    <p>
+      The first call in a run pays the write multiplier on the cacheable prefix. Every later call
+      in that run pays the read multiplier. New input and output are charged the same either way.
+      With a 1.25x write and a 0.1x read, two calls cost 1.35x against 2x uncached, so caching
+      pays from the second call.
+    </p>
+    <h2>When does prompt caching not save money?</h2>
+    <p>
+      When the cache expires between calls, or when something early in the prompt changes on every
+      call. A timestamp at the top of a prompt forces a fresh write each time, so you pay the write
+      premium and never collect a read.
+    </p>
+    <p>
+      Read the <a href="/blog/prompt-caching-scheduled-agent-savings/">full break-even math</a>,
+      <a href="/blog/prefix-caching-agent-harness/">what invalidates a prefix cache</a>, or
+      <a href="/topics/llm-costs/">everything on LLM costs</a>.
+    </p>
+  </section>
+</Base>
+
+<style>
+  .calc { display: grid; grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr)); gap: 1rem; margin: 2rem 0; }
+  .calc label { display: flex; flex-direction: column; gap: .3rem; font-size: .8125rem; font-weight: 600; }
+  .calc input {
+    font: inherit; padding: .55rem .7rem; border: 1px solid var(--border);
+    border-radius: 8px; background: var(--card); color: var(--ink);
+  }
+  .calc small { font-weight: 400; color: var(--ink-faint); }
+  .out { display: grid; grid-template-columns: repeat(auto-fill, minmax(11rem, 1fr)); gap: .75rem; margin: 0 0 3rem; }
+  .out div { padding: 1rem; border: 1px solid var(--border); border-radius: 12px; background: var(--card); }
+  .out span { display: block; font-size: .75rem; color: var(--ink-soft); margin-bottom: .35rem; }
+  .out strong { font-size: 1.35rem; font-variant-numeric: tabular-nums; }
+  .how h2 { font-size: 1.15rem; margin: 1.75rem 0 .5rem; }
+  .how p { line-height: 1.65; }
+</style>
+
+<script>
+  import { compute, money, type CacheInputs } from '../../data/caching';
+
+  const form = document.getElementById('calc') as HTMLFormElement;
+  const set = (id: string, text: string) => {
+    document.getElementById(id)!.textContent = text;
+  };
+  form.addEventListener('input', () => {
+    const values = Object.fromEntries(
+      [...new FormData(form).entries()].map(([k, v]) => [k, Math.max(Number(v) || 0, 0)])
+    ) as unknown as CacheInputs;
+    const r = compute(values);
+    set('uncached', money(r.uncachedMonth));
+    set('cached', money(r.cachedMonth));
+    set('saved', money(r.saved));
+    set('pct', `${r.pct.toFixed(1)}%`);
+    set('breakeven', r.breakEven === null ? 'Never' : String(r.breakEven));
+  });
+  form.addEventListener('submit', (e) => e.preventDefault());
+</script>
