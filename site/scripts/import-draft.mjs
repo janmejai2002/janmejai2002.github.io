@@ -94,6 +94,15 @@ let bodyText = raw.replace(/^---[\s\S]*?---\s*/, '').trim();
 // Strip leading H1 title if present
 bodyText = bodyText.replace(/^#\s+[^\n]+\n+/, '');
 
+function chunkText(text) {
+  if (!text) return [{ type: 'text', text: { content: '' } }];
+  const chunks = [];
+  for (let idx = 0; idx < text.length; idx += 2000) {
+    chunks.push({ type: 'text', text: { content: text.slice(idx, idx + 2000) } });
+  }
+  return chunks;
+}
+
 // Convert markdown text to Notion blocks
 function textToBlocks(text) {
   const blocks = [];
@@ -109,7 +118,7 @@ function textToBlocks(text) {
       object: 'block',
       type: 'callout',
       callout: {
-        rich_text: [{ type: 'text', text: { content: calloutLines.join('\n') } }],
+        rich_text: chunkText(calloutLines.join('\n')),
         icon: { emoji: '💡' },
       },
     });
@@ -139,7 +148,7 @@ function textToBlocks(text) {
         type: 'code',
         code: {
           language: lang === 'xml' || lang === 'svg' ? 'xml' : (lang === 'html' ? 'html' : 'plain text'),
-          rich_text: [{ type: 'text', text: { content: codeLines.join('\n').slice(0, 2000) } }],
+          rich_text: chunkText(codeLines.join('\n')),
         },
       });
       continue;
@@ -150,7 +159,7 @@ function textToBlocks(text) {
       blocks.push({
         object: 'block',
         type: 'heading_3',
-        heading_3: { rich_text: [{ type: 'text', text: { content: trimmed.slice(4).slice(0, 2000) } }] },
+        heading_3: { rich_text: chunkText(trimmed.slice(4)) },
       });
       i++;
       continue;
@@ -159,7 +168,7 @@ function textToBlocks(text) {
       blocks.push({
         object: 'block',
         type: 'heading_2',
-        heading_2: { rich_text: [{ type: 'text', text: { content: trimmed.slice(3).slice(0, 2000) } }] },
+        heading_2: { rich_text: chunkText(trimmed.slice(3)) },
       });
       i++;
       continue;
@@ -170,7 +179,7 @@ function textToBlocks(text) {
       blocks.push({
         object: 'block',
         type: 'bulleted_list_item',
-        bulleted_list_item: { rich_text: [{ type: 'text', text: { content: trimmed.slice(2).slice(0, 2000) } }] },
+        bulleted_list_item: { rich_text: chunkText(trimmed.slice(2)) },
       });
       i++;
       continue;
@@ -182,7 +191,7 @@ function textToBlocks(text) {
       blocks.push({
         object: 'block',
         type: 'numbered_list_item',
-        numbered_list_item: { rich_text: [{ type: 'text', text: { content: match[1].slice(0, 2000) } }] },
+        numbered_list_item: { rich_text: chunkText(match[1]) },
       });
       i++;
       continue;
@@ -193,7 +202,7 @@ function textToBlocks(text) {
       blocks.push({
         object: 'block',
         type: 'quote',
-        quote: { rich_text: [{ type: 'text', text: { content: trimmed.slice(2).slice(0, 2000) } }] },
+        quote: { rich_text: chunkText(trimmed.slice(2)) },
       });
       i++;
       continue;
@@ -210,7 +219,7 @@ function textToBlocks(text) {
     blocks.push({
       object: 'block',
       type: 'paragraph',
-      paragraph: { rich_text: [{ type: 'text', text: { content: trimmed.slice(0, 2000) } }] },
+      paragraph: { rich_text: chunkText(trimmed) },
     });
     i++;
   }
