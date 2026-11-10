@@ -65,25 +65,20 @@ const host = (url: string | null) => {
 ---
 
 <div class="news-browser" data-browser data-initial-cat={initialCat}>
-  {/* 1. Function Doors with Heroic Bespoke Animated Geometric Domain Marks */}
+  {/* 1. Function Doors matching Homepage segmented panel */}
   <div class="doors" role="group" aria-label="Filter by functional domain">
     <button
       type="button"
       class="door door--all"
       data-door="all"
+      data-label="All Tracks"
+      data-blurb="Everything, newest first"
       aria-pressed={initialCat === 'all' ? 'true' : 'false'}
       style="--accent:var(--ink);--tint:var(--paper-2)"
     >
-      <div class="door__seal" aria-hidden="true">
-        <DomainMark domain="all" class="door__mark" />
-      </div>
-      <div class="door__content">
-        <div class="door__head">
-          <span class="door__label">All Tracks</span>
-          <span class="door__count-badge">{items.length}</span>
-        </div>
-        <span class="door__blurb">Everything, newest first</span>
-      </div>
+      <span class="door__mark"><DomainMark domain="all" /></span>
+      <span class="door__label">All Tracks<span class="door__n">{totalCount ?? items.length}</span></span>
+      <span class="door__ask">Everything, chronological stream</span>
     </button>
 
     {
@@ -95,19 +90,14 @@ const host = (url: string | null) => {
             type="button"
             class="door"
             data-door={c}
+            data-label={c}
+            data-blurb={meta.blurb}
             aria-pressed={isSelected ? 'true' : 'false'}
             style={`--accent:var(--${meta.accent});--tint:var(--wash-${meta.accent})`}
           >
-            <div class="door__seal" aria-hidden="true">
-              <DomainMark domain={c as any} class="door__mark" />
-            </div>
-            <div class="door__content">
-              <div class="door__head">
-                <span class="door__label">{c}</span>
-                <span class="door__count-badge">{counts[c] ?? 0}</span>
-              </div>
-              <span class="door__blurb">{meta.blurb}</span>
-            </div>
+            <span class="door__mark"><DomainMark domain={c as any} /></span>
+            <span class="door__label">{c}<span class="door__n">{counts[c] ?? 0}</span></span>
+            <span class="door__ask">{meta.blurb}</span>
           </button>
         );
       })
@@ -142,9 +132,9 @@ const host = (url: string | null) => {
       </div>
 
       <div class="toolbar__actions">
-        <button type="button" class="test-toggle" id="flip-all-btn" title="Flip all cards into interview hot seat mode">
+        <button type="button" class="test-toggle" id="flip-all-btn" title="Shatter cards into interview hot seat mode">
           <span class="test-toggle__dot" aria-hidden="true"></span>
-          <span class="test-toggle__text">Flip all: Hot Seat mode</span>
+          <span class="test-toggle__text">Shatter all: Hot Seat mode</span>
         </button>
         <span class="practised-tally" id="practised-tally" hidden></span>
       </div>
@@ -187,21 +177,24 @@ const host = (url: string | null) => {
                     tabindex="0"
                     role="button"
                     aria-expanded="false"
-                    aria-label={`${i.headline}. Click to flip card and reveal the interviewer's cross-examination angle.`}
+                    aria-label={`${i.headline}. Click to shatter card and reveal the interviewer's cross-examination angle.`}
                     style={`--accent:var(--${meta.accent});--tint:var(--wash-${meta.accent})`}
                     itemscope
                     itemtype="https://schema.org/NewsArticle"
                   >
-                    <div class="card__flipper">
+                    {/* The Pixel Shatter Glitch Matrix (16 Fracturing Kintsugi Shards) */}
+                    <div class="card__shatter-matrix" aria-hidden="true">
+                      {Array.from({ length: 16 }).map((_, idx) => {
+                        const row = Math.floor(idx / 4);
+                        const col = idx % 4;
+                        return <span class="shatter-pixel" style={`--r:${row};--c:${col};--idx:${idx}`} />;
+                      })}
+                    </div>
+
+                    <div class="card__stage">
 
                       {/* FRONT FACE: The Factual Grounding (Story Brief) */}
                       <div class="card__face card__face--front">
-                        {/* Tactile Peeking Backside Edge: Hints at the Hot Seat underneath */}
-                        <div class="card__edge-peek" aria-hidden="true">
-                          <span class="peek-dot" />
-                          <span class="peek-label">HOT SEAT ↷</span>
-                        </div>
-
                         {/* Card Meta Row */}
                         <div class="card__meta">
                           <span class="card__cat" itemprop="articleSection">
@@ -231,7 +224,7 @@ const host = (url: string | null) => {
                           <p class="card__sum">{i.summary}</p>
                         </div>
 
-                        {/* Front Footer: Source on left, 3D Flip Invitation on right */}
+                        {/* Front Footer: Source on left, Pixel Shatter Trigger on right */}
                         <footer class="card__front-foot">
                           {i.source ? (
                             <a class="card__src" href={i.source} target="_blank" rel="noopener noreferrer">
@@ -245,13 +238,13 @@ const host = (url: string | null) => {
                           <button
                             type="button"
                             class="flip-btn flip-btn--to-back"
-                            aria-label="Flip card to reveal interviewer's angle"
-                            title="Flip to see interviewer's angle"
+                            aria-label="Shatter card to reveal interviewer's angle"
+                            title="Shatter card to reveal interviewer's angle"
                           >
                             <span class="flip-btn__pulse" aria-hidden="true" />
-                            <span class="flip-btn__label">Interview Angle</span>
+                            <span class="flip-btn__label">Reveal Hot Seat</span>
                             <svg class="flip-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                              <path d="M4 12v-2a6 6 0 0 1 10.3-4.2L17 8M17 8V3M17 8h-5M20 12v2a6 6 0 0 1-10.3 4.2L7 16M7 16v5M7 16h5" />
+                              <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
                             </svg>
                           </button>
                         </footer>
@@ -280,11 +273,11 @@ const host = (url: string | null) => {
                           <button
                             type="button"
                             class="flip-btn flip-btn--to-front"
-                            aria-label="Flip back to story briefing"
+                            aria-label="Shatter back to story briefing"
                             title="Return to story"
                           >
                             <svg class="flip-btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                              <path d="M20 12v-2a6 6 0 0 0-10.3-4.2L7 8M7 8V3M7 8h5M4 12v2a6 6 0 0 0 10.3 4.2L17 16M17 16v5M17 16h-5" />
+                              <path d="M11 22l10-12h-9l1-8-10 12h9l-1 8z" />
                             </svg>
                             <span class="flip-btn__label">Story</span>
                           </button>
@@ -371,29 +364,14 @@ const host = (url: string | null) => {
     margin-bottom: 3.5rem;
   }
 
-  /* ---------- 1. Function Doors (Heroic Ceramic Mon Seals) ---------- */
+  /* ---------- 1. Function Doors (Segmented Panel Matching Homepage) ---------- */
   .doors {
     display: grid;
     grid-template-columns: repeat(6, minmax(0, 1fr));
-    gap: .75rem;
-    margin-bottom: 2.75rem;
-  }
-  @media (max-width: 80rem) {
-    .doors {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: .85rem;
-    }
-  }
-  @media (max-width: 48rem) {
-    .doors {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: .65rem;
-    }
-  }
-  @media (max-width: 23rem) {
-    .doors {
-      grid-template-columns: minmax(0, 1fr);
-    }
+    border-block: 1px solid var(--border);
+    margin-top: 1.5rem;
+    margin-bottom: 2.5rem;
+    gap: 0;
   }
 
   .door {
@@ -401,130 +379,102 @@ const host = (url: string | null) => {
     color: inherit;
     text-align: left;
     cursor: pointer;
-    background: color-mix(in srgb, var(--card) 75%, transparent);
-    border: 1px solid var(--border-soft);
-    border-radius: 14px;
-    padding: 1.1rem 1rem 1rem;
-    display: flex;
-    flex-direction: column;
-    gap: .85rem;
+    background: none;
+    border: 0;
+    display: grid;
+    grid-template-columns: 2.5rem minmax(0, 1fr);
+    gap: .1rem .75rem;
+    align-items: center;
+    padding: 1.1rem 1rem;
     position: relative;
-    overflow: hidden;
-    transition: transform var(--dur-fast) var(--ease),
-                border-color var(--dur-fast) var(--ease),
-                background-color var(--dur-fast) var(--ease),
-                box-shadow var(--dur-fast) var(--ease);
+    border-radius: 0;
+    box-shadow: none;
+    transform: none;
+    transition: background-color var(--dur-fast) var(--ease);
   }
+
+  .door + .door {
+    box-shadow: inset 1px 0 0 var(--border);
+  }
+
   .door:hover {
-    transform: translateY(-3px);
-    border-color: var(--accent);
-    background: color-mix(in srgb, var(--tint) 60%, var(--card));
-    box-shadow: 0 8px 24px var(--shadow);
+    background-color: var(--tint);
   }
-  .door:active {
-    transform: translateY(-1px) scale(0.99);
-  }
+
   .door[aria-pressed='true'] {
-    background: var(--tint);
-    border-color: var(--accent);
-    box-shadow: 0 6px 20px color-mix(in srgb, var(--accent) 18%, transparent);
+    background-color: var(--tint);
   }
+
   .door[aria-pressed='true']::after {
     content: '';
     position: absolute;
     left: 0;
     right: 0;
-    bottom: 0;
-    height: 3.5px;
+    bottom: -1px;
+    height: 3px;
     background: var(--accent);
   }
 
-  /* Ceramic Seal: Prominent, tactile display of the kinetic geometric mark */
-  .door__seal {
-    width: 3.5rem;
-    height: 3.5rem;
-    border-radius: 12px;
-    background: color-mix(in srgb, var(--accent) 12%, var(--card));
-    border: 1px solid color-mix(in srgb, var(--accent) 32%, var(--border));
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all var(--dur-fast) var(--ease);
-    flex-shrink: 0;
-    box-shadow: inset 0 1px 3px rgba(255, 255, 255, 0.05),
-                0 2px 8px rgba(0, 0, 0, 0.1);
-  }
-  .door:hover .door__seal,
-  .door[aria-pressed='true'] .door__seal {
-    background: color-mix(in srgb, var(--accent) 22%, var(--card));
-    border-color: var(--accent);
-    transform: scale(1.06);
-    box-shadow: 0 4px 14px color-mix(in srgb, var(--accent) 30%, transparent);
-  }
   .door__mark {
-    --mark-size: 2.75rem;
-    width: var(--mark-size);
-    height: var(--mark-size);
+    grid-row: span 2;
+    color: var(--accent);
+    width: 2.5rem;
+    height: 2.5rem;
+    display: block;
+    --mark-size: 2.5rem;
+  }
+
+  .door__mark svg {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
     display: block;
   }
 
-  .door__content {
-    display: flex;
-    flex-direction: column;
-    gap: .25rem;
-    min-width: 0;
-  }
-  .door__head {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: .4rem;
-  }
   .door__label {
-    font-size: 1.0625rem;
+    font-size: 1.125rem;
     font-weight: 800;
     letter-spacing: -.02em;
     line-height: 1.2;
     color: var(--ink);
   }
-  .door__count-badge {
-    font-size: .6875rem;
-    font-weight: 800;
-    font-variant-numeric: tabular-nums;
-    color: var(--accent);
-    background: color-mix(in srgb, var(--accent) 14%, var(--card));
-    padding: .15rem .5rem;
-    border-radius: 999px;
-    border: 1px solid color-mix(in srgb, var(--accent) 28%, transparent);
-    flex-shrink: 0;
+
+  .door__n {
+    margin-left: .4rem;
+    font-size: .8125rem;
+    font-weight: 600;
+    letter-spacing: 0;
+    color: var(--ink-soft);
   }
-  .door__blurb {
-    font-size: .75rem;
+
+  .door__ask {
+    font-size: .8125rem;
     line-height: 1.35;
     color: var(--ink-soft);
   }
 
-  @media (max-width: 48rem) {
+  @media (max-width: 68rem) {
+    /* One swipeable row on tablet and mobile, exactly like the homepage */
+    .doors {
+      display: flex;
+      overflow-x: auto;
+      scroll-snap-type: x proximity;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+      border-block: 1px solid var(--border);
+      margin-top: 1rem;
+      margin-bottom: 2rem;
+    }
+    .doors::-webkit-scrollbar {
+      display: none;
+    }
     .door {
-      padding: .95rem .85rem .85rem;
-      gap: .65rem;
+      flex: 0 0 min(16.5rem, 72vw);
+      scroll-snap-align: start;
+      padding: .85rem .95rem;
     }
-    .door__seal {
-      width: 3rem;
-      height: 3rem;
-    }
-    .door__mark {
-      --mark-size: 2.25rem;
-    }
-    .door__label {
-      font-size: .9375rem;
-    }
-    .door__blurb {
-      font-size: .6875rem;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
+    .door + .door {
+      box-shadow: inset 1px 0 0 var(--border);
     }
   }
 
@@ -718,12 +668,12 @@ const host = (url: string | null) => {
     }
   }
 
-  /* ---------- 4. 3D Card Scene & Flip Mechanics ---------- */
+  /* ---------- 4. Pixel-Glitch Shatter Mechanics ---------- */
   .card-scene {
-    perspective: 1600px;
     min-height: 25.5rem;
     display: flex;
     flex-direction: column;
+    position: relative;
   }
   .card-scene--lead {
     grid-column: 1 / -1;
@@ -746,64 +696,57 @@ const host = (url: string | null) => {
     text-align: left;
     font: inherit;
     color: inherit;
+    border-radius: 14px;
+    overflow: hidden;
+    transition: transform var(--dur-fast) var(--ease),
+                box-shadow var(--dur-fast) var(--ease);
   }
 
-  .card__flipper {
+  .card:hover {
+    box-shadow: 0 4px 16px var(--shadow);
+  }
+
+  .card:focus-visible {
+    outline: 2px solid var(--ochre);
+    outline-offset: 4px;
+  }
+
+  .card__stage {
     position: relative;
     width: 100%;
     flex: 1;
     display: flex;
     flex-direction: column;
-    transform-style: preserve-3d;
-    transition: transform 0.68s cubic-bezier(0.2, 0.85, 0.25, 1);
-    /* Subtle 3D perspective angle revealing the card's thickness and rich earth backside */
-    transform: rotateY(-1.8deg) rotateX(1.2deg) translateZ(0);
-  }
-
-  .card:hover .card__flipper {
-    /* Gentle physical invitation: lifts slightly and tilts to reveal the underside */
-    transform: translateY(-5px) rotateY(-5.5deg) rotateX(2.2deg) translateZ(10px);
-  }
-
-  .card:focus-visible .card__flipper {
-    outline: 2px solid var(--ochre);
-    outline-offset: 4px;
     border-radius: 14px;
+    overflow: hidden;
   }
 
-  .card.is-flipped .card__flipper {
-    transform: rotateY(180deg) translateZ(0);
-  }
-
-  .card.is-flipped:hover .card__flipper {
-    transform: translateY(-5px) rotateY(183.5deg) rotateX(2deg) translateZ(10px);
-  }
-
-  /* Front and Back Face Shared Architecture */
+  /* Both Faces */
   .card__face {
     position: absolute;
     inset: 0;
     width: 100%;
     height: 100%;
-    -webkit-backface-visibility: hidden;
-    backface-visibility: hidden;
     border-radius: 14px;
     display: flex;
     flex-direction: column;
     overflow: hidden;
     box-shadow: 0 8px 26px var(--shadow);
-    transition: border-color var(--dur-fast) var(--ease),
-                box-shadow var(--dur-fast) var(--ease);
+    transition: opacity 0.32s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.32s cubic-bezier(0.16, 1, 0.3, 1),
+                filter 0.32s ease;
   }
 
-  /* FRONT FACE: Clean Factual Wabi-Sabi Paper Grounding */
+  /* FRONT FACE */
   .card__face--front {
     background: var(--card);
     border: 1px solid var(--border-soft);
     border-left: 3.5px solid var(--accent);
     padding: 1.45rem 1.65rem 1.35rem;
     z-index: 2;
-    transform: rotateY(0deg);
+    opacity: 1;
+    pointer-events: auto;
+    transform: scale(1);
   }
   .card__face--front::before {
     content: '';
@@ -818,38 +761,110 @@ const host = (url: string | null) => {
     opacity: 1;
   }
 
-  /* Tactile Peeking Backside Edge (Hints at the Hot Seat) */
-  .card__edge-peek {
-    position: absolute;
-    top: 14px;
-    right: -1px;
-    background: color-mix(in srgb, var(--accent) 18%, var(--paper-2));
-    border: 1px solid color-mix(in srgb, var(--accent) 50%, var(--border));
-    border-right: none;
-    border-radius: 6px 0 0 6px;
-    padding: .2rem .55rem .2rem .45rem;
-    display: inline-flex;
-    align-items: center;
-    gap: .3rem;
-    font-size: .5625rem;
-    font-weight: 800;
-    letter-spacing: .1em;
-    color: var(--accent);
-    box-shadow: -2px 2px 8px rgba(0, 0, 0, 0.12);
-    transition: transform var(--dur-fast) var(--ease),
-                background var(--dur-fast) var(--ease);
+  /* BACK FACE */
+  .card__face--back {
+    background: color-mix(in srgb, var(--tint) 25%, var(--card));
+    border: 1px solid color-mix(in srgb, var(--accent) 45%, var(--border));
+    border-left: 3.5px solid var(--accent);
+    padding: 1.45rem 1.65rem 1.35rem;
+    z-index: 1;
+    opacity: 0;
     pointer-events: none;
-    z-index: 5;
+    transform: scale(0.97);
   }
-  .peek-dot {
-    width: 5px;
-    height: 5px;
-    border-radius: 50%;
-    background: var(--accent);
+  .card__face--back::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(130% 100% at 90% 10%, color-mix(in srgb, var(--accent) 22%, transparent), transparent 70%),
+                radial-gradient(100% 80% at 10% 90%, color-mix(in srgb, var(--ochre) 14%, transparent), transparent 70%);
+    pointer-events: none;
   }
-  .card:hover .card__edge-peek {
-    transform: translateX(-4px);
-    background: color-mix(in srgb, var(--accent) 30%, var(--paper-2));
+
+  /* Active Revealed State */
+  .card.is-flipped .card__face--front {
+    opacity: 0;
+    pointer-events: none;
+    transform: scale(0.97);
+    z-index: 1;
+  }
+  .card.is-flipped .card__face--back {
+    opacity: 1;
+    pointer-events: auto;
+    transform: scale(1);
+    z-index: 2;
+  }
+
+  /* THE PIXEL SHATTER MATRIX (16 Fracturing Kintsugi Shards) */
+  .card__shatter-matrix {
+    position: absolute;
+    inset: 0;
+    z-index: 20;
+    pointer-events: none;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(4, 1fr);
+    border-radius: 14px;
+    overflow: hidden;
+    opacity: 0;
+  }
+
+  .shatter-pixel {
+    position: relative;
+    background: color-mix(in srgb, var(--accent) 30%, var(--card));
+    opacity: 0;
+    transform-origin: center;
+  }
+
+  /* Active during the shatter glitch transition */
+  .card.is-shattering .card__shatter-matrix {
+    opacity: 1;
+  }
+
+  .card.is-shattering .shatter-pixel {
+    animation: pixel-shatter-burst 0.38s cubic-bezier(0.2, 0.9, 0.3, 1) calc((var(--r) * 0.035s) + (var(--c) * 0.025s)) both;
+  }
+
+  @keyframes pixel-shatter-burst {
+    0% {
+      opacity: 0.95;
+      transform: scale(1) translate(0, 0);
+      box-shadow: inset 0 0 0 1px var(--ochre);
+      filter: brightness(1.2);
+    }
+    30% {
+      opacity: 0.9;
+      transform: scale(0.88) translate(calc((var(--c) - 1.5) * 8px), calc((var(--r) - 1.5) * 7px));
+      box-shadow: inset 0 0 0 1.5px var(--accent), 0 0 10px var(--ochre);
+      filter: hue-rotate(45deg) brightness(1.4);
+    }
+    60% {
+      opacity: 0.6;
+      transform: scale(0.7) translate(calc((var(--c) - 1.5) * 18px), calc((var(--r) - 1.5) * 15px));
+      filter: drop-shadow(2px 0 var(--hanko)) drop-shadow(-2px 0 var(--mizu));
+    }
+    85% {
+      opacity: 0.25;
+      transform: scale(0.35) translate(calc((var(--c) - 1.5) * 26px), calc((var(--r) - 1.5) * 22px));
+    }
+    100% {
+      opacity: 0;
+      transform: scale(0) translate(calc((var(--c) - 1.5) * 32px), calc((var(--r) - 1.5) * 28px));
+    }
+  }
+
+  /* Glitch Jitter on the Card Faces during Shatter */
+  .card.is-shattering .card__face {
+    animation: face-glitch-jitter 0.38s ease-out both;
+  }
+
+  @keyframes face-glitch-jitter {
+    0% { transform: scale(1) translate(0, 0); filter: none; }
+    20% { transform: scale(1.008) translate(-3px, 2px); filter: contrast(1.3) brightness(1.2); }
+    40% { transform: scale(0.992) translate(3px, -1px); filter: drop-shadow(2px 0 var(--hanko)); }
+    60% { transform: scale(1.004) translate(-2px, 0); filter: drop-shadow(-2px 0 var(--mizu)); }
+    80% { transform: scale(0.998) translate(1px, 0); filter: none; }
+    100% { transform: scale(1) translate(0, 0); filter: none; }
   }
 
   /* Front Content */
@@ -1258,6 +1273,8 @@ const host = (url: string | null) => {
   /* ---------- Comprehensive Mobile UX Designthinking Pass ---------- */
   @media (max-width: 48rem) {
     .toolbar {
+      position: static;
+      top: auto;
       padding: .65rem .75rem;
       margin-bottom: 2rem;
     }
@@ -1319,14 +1336,6 @@ const host = (url: string | null) => {
     .card__face {
       padding: 1.25rem 1.15rem 1.15rem;
       border-radius: 12px;
-    }
-    .card__edge-peek {
-      top: 10px;
-      font-size: .5rem;
-      padding: .15rem .45rem;
-    }
-    .card__host {
-      margin-right: 4.8rem;
     }
     .card__h {
       font-size: 1.125rem;
@@ -1503,43 +1512,54 @@ const host = (url: string | null) => {
     archive.prepend(firstDay);
   };
 
-  // 3D Card Flip Handler
-  const toggleFlip = (card: HTMLElement) => {
+  // Pixel Shatter Glitch Handler
+  const triggerCardShatter = (card: HTMLElement) => {
+    if (card.classList.contains('is-shattering')) return;
+    card.classList.add('is-shattering');
     const isFlipped = card.classList.toggle('is-flipped');
     card.setAttribute('aria-expanded', isFlipped ? 'true' : 'false');
+    setTimeout(() => {
+      card.classList.remove('is-shattering');
+    }, 390);
   };
 
   cards.forEach((card) => {
     card.addEventListener('click', (e) => {
       const target = e.target as HTMLElement;
-      // If user clicked inside a link, copy button, or practise button, don't flip
+      // If user clicked inside a link, copy button, or practise button, don't trigger shatter
       if (target.closest('a') || target.closest('.copy-angle-btn') || target.closest('.practise-btn')) {
         return;
       }
-      toggleFlip(card);
+      triggerCardShatter(card);
     });
 
-    // Keyboard accessibility: Space or Enter flips
+    // Keyboard accessibility: Space or Enter triggers shatter
     card.addEventListener('keydown', (e) => {
       if (e.key === ' ' || e.key === 'Enter') {
         const target = e.target as HTMLElement;
         if (target.closest('a') || target.closest('button')) return;
         e.preventDefault();
-        toggleFlip(card);
+        triggerCardShatter(card);
       }
     });
   });
 
-  // Flip All Button in Toolbar
+  // Flip All Button in Toolbar with Staggered Shatter Cascade
   flipAllBtn?.addEventListener('click', () => {
     allFlipped = !allFlipped;
     flipAllBtn.classList.toggle('is-active', allFlipped);
     const label = flipAllBtn.querySelector('.test-toggle__text');
-    if (label) label.textContent = allFlipped ? 'Flip all: Story mode' : 'Flip all: Hot Seat mode';
+    if (label) label.textContent = allFlipped ? 'Shatter all: Story mode' : 'Shatter all: Hot Seat mode';
 
-    cards.forEach((card) => {
-      card.classList.toggle('is-flipped', allFlipped);
-      card.setAttribute('aria-expanded', allFlipped ? 'true' : 'false');
+    cards.forEach((card, idx) => {
+      setTimeout(() => {
+        card.classList.add('is-shattering');
+        card.classList.toggle('is-flipped', allFlipped);
+        card.setAttribute('aria-expanded', allFlipped ? 'true' : 'false');
+        setTimeout(() => {
+          card.classList.remove('is-shattering');
+        }, 390);
+      }, (idx % 6) * 40);
     });
   });
 
