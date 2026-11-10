@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" role="img">
+  <title>Temperature Softmax Curve and Top-P Nucleus Cutoff</title>
+  <desc>Five vertical token probability columns under a Boltzmann curve with a moss vertical cutoff severing the rightmost two tail bars.</desc>
+  <defs><filter id="grain" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch"/></filter></defs>
+  <rect width="1600" height="900" fill="{{paper}}"/>
+  <path d="M180,140H1460M180,300H1460M180,460H1460M180,620H1460" stroke="{{border}}" stroke-width="1" stroke-dasharray="6,10" fill="none"/>
+  <path d="M180,90V740M174,740H1470" stroke="{{ink}}" stroke-width="2" fill="none"/>
+  <rect x="270" y="316" width="136" height="424" fill="{{moss}}" fill-opacity="0.22" stroke="{{ink}}" stroke-width="2"/>
+  <rect x="510" y="584" width="136" height="156" fill="{{moss}}" fill-opacity="0.22" stroke="{{ink}}" stroke-width="2"/>
+  <rect x="750" y="676" width="136" height="64" fill="{{moss}}" fill-opacity="0.22" stroke="{{ink}}" stroke-width="2"/>
+  <rect x="1030" y="718" width="136" height="22" fill="{{paper}}" stroke="{{border}}" stroke-width="1.5" stroke-dasharray="8,6"/>
+  <rect x="1270" y="732" width="136" height="8" fill="{{paper}}" stroke="{{border}}" stroke-width="1.5" stroke-dasharray="8,6"/>
+  <path d="M338,316C450,496,520,560,578,584C670,624,750,682,818,682C970,700,1130,722,1338,732" fill="none" stroke="{{ink}}" stroke-width="2.5"/>
+  <path d="M338,448C490,508,650,582,818,632C990,672,1170,696,1338,716" fill="none" stroke="{{border}}" stroke-width="1.5" stroke-dasharray="12,8"/>
+  <line x1="956" y1="96" x2="956" y2="762" stroke="{{moss}}" stroke-width="3" stroke-dasharray="14,8"/>
+  <line x1="942" y1="758" x2="974" y2="748" stroke="{{moss}}" stroke-width="2.5"/>
+  <rect width="1600" height="900" filter="url(#grain)" opacity="0.055"/>
+</svg>

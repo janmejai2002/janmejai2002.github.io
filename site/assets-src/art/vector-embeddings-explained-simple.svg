@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" role="img">
+  <title>Vector Embedding Spatial Coordinate Map</title>
+  <desc>Two directional coordinate rays converge into a moss semantic cluster measured by a cosine angle arc while a lexical outlier sits isolated.</desc>
+  <defs><filter id="grain" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch"/></filter></defs>
+  <rect width="1600" height="900" fill="{{paper}}"/>
+  <path d="M160,120V760M400,120V760M640,120V760M880,120V760M1120,120V760M1360,120V760M160,240H1440M160,400H1440M160,560H1440M160,760H1440" stroke="{{border}}" stroke-width="1" fill="none"/>
+  <circle cx="860" cy="316" r="136" fill="{{moss}}" fill-opacity="0.12" stroke="{{moss}}" stroke-width="2" stroke-dasharray="10,8"/>
+  <path d="M160,760L790,264M160,760L1290,704" stroke="{{ink}}" stroke-width="2.2" fill="none"/>
+  <line x1="160" y1="760" x2="936" y2="356" stroke="{{moss}}" stroke-width="3"/>
+  <path d="M370,595A264,264,0,0,1,404,638" fill="none" stroke="{{moss}}" stroke-width="2.5" stroke-dasharray="8,4"/>
+  <circle cx="160" cy="760" r="8" fill="{{ink}}"/>
+  <circle cx="790" cy="264" r="10" fill="{{ink}}"/>
+  <circle cx="936" cy="356" r="12" fill="{{moss}}"/>
+  <circle cx="844" cy="310" r="8" fill="{{moss}}"/>
+  <circle cx="890" cy="278" r="7" fill="{{moss}}"/>
+  <circle cx="824" cy="372" r="6" fill="{{ink}}"/>
+  <circle cx="1290" cy="704" r="9" fill="{{paper}}" stroke="{{ink}}" stroke-width="2"/>
+  <rect width="1600" height="900" filter="url(#grain)" opacity="0.055"/>
+</svg>

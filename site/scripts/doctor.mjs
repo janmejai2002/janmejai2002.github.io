@@ -42,7 +42,7 @@ const LIVE = process.env.SITE_URL ?? 'https://janmejai2002.github.io';
 const APPROVE_RATINGS = ['4', '5'];
 // Must track AUTO_TRACKS in publish-article.mjs — the tracks that publish with
 // no human in the path, so "ready and not live for half a day" is unambiguous.
-const AUTO_TRACKS = ['Talks', 'Case Studies', 'Basics'];
+const AUTO_TRACKS = ['Talks', 'Case Studies', 'Basics', 'Technical', 'Business'];
 const STALE_HOURS = 12;
 // Block types lib/notion.mjs' toMarkdown() knows how to render. Anything a draft
 // page uses that is not on this list crashes the publish poll.

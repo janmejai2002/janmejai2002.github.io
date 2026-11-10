@@ -45,14 +45,10 @@ Fine-tuning requires a substantial upfront investment before generating a single
 2. **Training Compute**: Fine-tuning open weights (such as Llama 3 or Mistral) or calling proprietary endpoints (OpenAI fine-tuning) incurs modest compute charges ($50–$500 per training run), but hyperparameter search and validation iterations compound rapidly.
 3. **Dedicated Hosting Surcharges**: Proprietary fine-tuned endpoints or dedicated cloud instances (AWS Bedrock Provisioned Throughput, Azure Dedicated AI) often require $1,000 to $5,000/month minimum commitments regardless of inference volume.
 
-```
-Total Cost Comparison over 100k Queries:
-Prompt Engineering (Sonnet 3.5):
-  Upfront: $0  │  Per-call: $0.003  │  Total: $300
-
-LoRA Fine-Tuning (Custom Hosted):
-  Upfront: $15,000 (Data) + $500 (Train)  │  Total: $15,500+
-```
+| Strategy | Upfront Investment | Marginal Cost / Query | Total Cost (100k Queries) |
+|---|---|---|---|
+| **Prompt Engineering (Sonnet 3.5)** | $0 | $0.003 | **$300** |
+| **LoRA Fine-Tuning (Custom Hosted)** | $15,000 (Data) + $500 (Train) | $0.0002 | **$15,500+** |
 
 ## When does fine-tuning break even?
 

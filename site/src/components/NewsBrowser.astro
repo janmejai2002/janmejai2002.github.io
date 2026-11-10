@@ -1,5 +1,6 @@
 ---
 import Crew from './Crew.astro';
+import DomainMark from './DomainMark.astro';
 
 export type NewsItem = {
   headline: string;
@@ -14,16 +15,17 @@ interface Props {
   items: NewsItem[];
   totalCount?: number;
   isLeadDay?: boolean;
+  initialCat?: string;
 }
 
-const { items, totalCount, isLeadDay = true } = Astro.props;
+const { items, totalCount, isLeadDay = true, initialCat = 'all' } = Astro.props;
 
 const CATEGORY_META: Record<string, { accent: string; blurb: string }> = {
   Consulting: { accent: 'hanko', blurb: 'Frameworks and client problems' },
   Finance: { accent: 'ochre', blurb: 'Markets, deals and numbers' },
   Marketing: { accent: 'mizu', blurb: 'Brands, pricing and consumers' },
   Operations: { accent: 'moss', blurb: 'Supply chains and unit economics' },
-  'Product Management': { accent: 'indigo', blurb: 'Users, metrics and trade-offs' },
+  'Product Management': { accent: 'plum', blurb: 'Users, metrics and trade-offs' },
 };
 
 const categories = Object.keys(CATEGORY_META);
@@ -60,32 +62,47 @@ const host = (url: string | null) => {
     return null;
   }
 };
+
+const toSlug = (str: string) =>
+  str
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/(^-|-$)/g, '')
+    .slice(0, 48);
 ---
 
-<div class="news-browser" data-browser>
-  <!-- 2. Function doors -->
-  <div class="doors" role="group" aria-label="Filter by function">
+<div class="news-browser" data-browser data-initial-cat={initialCat}>
+  {/* 1. Function Doors matching Homepage segmented panel */}
+  <div class="doors" role="group" aria-label="Filter by functional domain">
     <button
       type="button"
       class="door door--all"
       data-door="all"
-      aria-pressed="true"
+      data-label="All Tracks"
+      data-blurb="Everything, newest first"
+      aria-pressed={initialCat === 'all' ? 'true' : 'false'}
       style="--accent:var(--ink);--tint:var(--paper-2)"
     >
-      <span class="door__label">All<span class="door__n">{items.length}</span></span>
-      <span class="door__ask">Everything, newest first</span>
+      <span class="door__mark"><DomainMark domain="all" /></span>
+      <span class="door__label">All Tracks<span class="door__n">{totalCount ?? items.length}</span></span>
+      <span class="door__ask">Everything, chronological stream</span>
     </button>
+
     {
       categories.map((c) => {
         const meta = CATEGORY_META[c];
+        const isSelected = initialCat === c;
         return (
           <button
             type="button"
             class="door"
             data-door={c}
-            aria-pressed="false"
+            data-label={c}
+            data-blurb={meta.blurb}
+            aria-pressed={isSelected ? 'true' : 'false'}
             style={`--accent:var(--${meta.accent});--tint:var(--wash-${meta.accent})`}
           >
+            <span class="door__mark"><DomainMark domain={c as any} /></span>
             <span class="door__label">{c}<span class="door__n">{counts[c] ?? 0}</span></span>
             <span class="door__ask">{meta.blurb}</span>
           </button>
@@ -94,13 +111,24 @@ const host = (url: string | null) => {
     }
   </div>
 
-  <!-- 3. Toolbar -->
-  <div class="toolbar" role="region" aria-label="Filter and sort stories">
+  {/* 2. Modern Sticky Toolbar with 3D Flip All & Practice Mode */}
+  <div class="toolbar" role="region" aria-label="Filter and search briefings">
     <div class="toolbar__row">
       <div class="toolbar__search">
         <label for="news-q" class="sr-only">Search stories</label>
-        <input type="search" id="news-q" placeholder="Search headlines, summaries and angles…" autocomplete="off" />
+        <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="11" cy="11" r="7" /><path d="M20 20l-3.5-3.5" />
+        </svg>
+        <input
+          type="search"
+          id="news-q"
+          placeholder="Search 618+ briefings by company, metric, or question…"
+          autocomplete="off"
+          spellcheck="false"
+        />
+        <kbd class="search-kbd" aria-hidden="true">/</kbd>
       </div>
+
       <div class="toolbar__sort">
         <label for="news-sort" class="sr-only">Sort by</label>
         <select id="news-sort">
@@ -109,68 +137,203 @@ const host = (url: string | null) => {
           <option value="az">Headline A–Z</option>
         </select>
       </div>
+
       <div class="toolbar__actions">
-        <button type="button" class="linkish test-toggle" id="test-toggle" hidden>Test me: hide the angles</button>
+        <button type="button" class="test-toggle" id="flip-all-btn" title="Flip cards into interview hot seat mode">
+          <span class="test-toggle__dot" aria-hidden="true"></span>
+          <span class="test-toggle__text">Flip all: Hot Seat mode</span>
+        </button>
         <span class="practised-tally" id="practised-tally" hidden></span>
       </div>
     </div>
   </div>
 
-  <!-- 4. Days & Cards -->
-  <div class="days" id="news-archive">
+  {/* 3. Balanced Editorial Days & 3D Interactive Card Grid */}
+  <div class="days-stream" id="news-archive">
     {
       dates.map((d, dayIdx) => (
-        <section class="day" data-date={d}>
-          <div class="day__side">
-            <h2 class="day__label">
-              <time datetime={d}>{fmtDay(d)}</time>
-              <span class="day__count">{byDate[d].length} {byDate[d].length === 1 ? 'story' : 'stories'}</span>
-            </h2>
-          </div>
-          <div class="day__cards">
+        <section class="day-section" data-date={d}>
+          {/* Natural Editorial Dateline Header */}
+          <header class="day-head">
+            <div class="day-head__dateline">
+              <span class="day-head__dot" aria-hidden="true"></span>
+              <h2 class="day-head__title">
+                <time datetime={d}>{fmtDay(d)}</time>
+              </h2>
+              <span class="day-head__count">{byDate[d].length} {byDate[d].length === 1 ? 'briefing' : 'briefings'}</span>
+            </div>
+            <div class="day-head__seam" aria-hidden="true"></div>
+          </header>
+
+          {/* Balanced 2-Column Responsive 3D Card Grid */}
+          <div class="briefings-grid">
             {byDate[d].map((i, cardIdx) => {
               const isLead = isLeadDay && dayIdx === 0 && cardIdx === 0;
               const meta = CATEGORY_META[i.category] ?? { accent: 'ink', blurb: '' };
               const storyId = `${i.date}:${i.headline}`;
               return (
-                <article
-                  class:list={['card', isLead && 'card--lead']}
+                <div
+                  id={`story-${toSlug(i.headline)}`}
+                  class:list={['card-scene', isLead && 'card-scene--lead']}
                   data-cat={i.category}
                   data-date={i.date}
                   data-headline={i.headline.toLowerCase()}
                   data-id={storyId}
-                  style={`--accent:var(--${meta.accent});--tint:var(--wash-${meta.accent})`}
                 >
-                  <div class="card__meta">
-                    <span class="card__cat">
-                      <span class="card__dot" aria-hidden="true" />
-                      {i.category}
-                    </span>
-                    <span class="card__sep" aria-hidden="true">·</span>
-                    <time class="card__date" datetime={i.date}>{fmtDate(i.date)}</time>
-                    <span class="q__flag" data-flag hidden>Practised</span>
-                  </div>
+                  <article
+                    class="card"
+                    tabindex="0"
+                    role="button"
+                    aria-expanded="false"
+                    aria-label={`${i.headline}. Click tile to reveal interviewer's cross-examination angle.`}
+                    style={`--accent:var(--${meta.accent});--tint:var(--wash-${meta.accent})`}
+                    itemscope
+                    itemtype="https://schema.org/NewsArticle"
+                  >
+                    <div class="card__stage">
+                      {/* Physics-inspired ceramic glaze shader */}
+                      <div class="card__glaze-shader" aria-hidden="true" />
 
-                  <h3 class="card__h">{i.headline}</h3>
-                  <p class="card__sum">{i.summary}</p>
+                      {/* FRONT FACE: The Factual Grounding (Story Brief) */}
+                      <div class="card__face card__face--front">
+                        {/* Wabi-Sabi Kintsugi Streak connecting adjacent tiles */}
+                        <div class="tile-streak" aria-hidden="true">
+                          <svg viewBox="0 0 100 8" preserveAspectRatio="none">
+                            <polyline points="0,4 25,1 50,7 75,2 100,5" vector-effect="non-scaling-stroke" />
+                          </svg>
+                        </div>
 
-                  <div class="card__angle">
-                    <div class="angle__content">
-                      <span class="angle__label">They will push on</span>
-                      <p class="angle__text">{i.angle}</p>
+                        {/* Card Meta Row */}
+                        <div class="card__meta">
+                          <span class="card__cat" itemprop="articleSection">
+                            <span class="card__dot" aria-hidden="true" />
+                            {i.category}
+                          </span>
+                          <span class="q__flag" data-flag hidden>
+                            <svg class="flag-check" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                              <path d="M3 8.5l3.5 3.5 6.5-7" />
+                            </svg>
+                            Practised
+                          </span>
+                        </div>
+
+                        {/* Headline */}
+                        <h3 class="card__h" itemprop="headline">{i.headline}</h3>
+
+                        {/* Complete Factual Development (No Truncation) */}
+                        <div class="card__brief" itemprop="articleBody">
+                          <p class="card__sum">{i.summary}</p>
+                        </div>
+
+                        {/* Front Footer: Source on left, Distinct Hot Seat Trigger on right */}
+                        <footer class="card__front-foot">
+                          {i.source ? (
+                            <a class="card__src" href={i.source} target="_blank" rel="noopener noreferrer">
+                              <span>{host(i.source)}</span>
+                              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <path d="M7 17L17 7H8M17 7v9" />
+                              </svg>
+                            </a>
+                          ) : <span />}
+
+                          <button
+                            type="button"
+                            class="action-btn action-btn--reveal"
+                            aria-label="Reveal interviewer's cross-examination angle"
+                            title="Reveal Hot Seat angle"
+                          >
+                            <span class="action-btn__pulse" aria-hidden="true"></span>
+                            <span class="action-btn__txt">Hot Seat</span>
+                            <span class="action-btn__arrow" aria-hidden="true">→</span>
+                          </button>
+                        </footer>
+                      </div>
+
+                      {/* BACK FACE: The Interview Hot Seat Chamber */}
+                      <div class="card__face card__face--back">
+                        {/* Domain Mark Watermark */}
+                        <div class="back__watermark" aria-hidden="true">
+                          <DomainMark domain={i.category as any} />
+                        </div>
+
+                        {/* Gold Kintsugi Edge Seam */}
+                        <div class="tile-streak is-gold" aria-hidden="true">
+                          <svg viewBox="0 0 100 8" preserveAspectRatio="none">
+                            <polyline points="0,4 20,1 45,7 70,2 100,5" vector-effect="non-scaling-stroke" />
+                          </svg>
+                        </div>
+
+                        {/* Hot Seat Header: Category + Return to story */}
+                        <div class="back__head">
+                          <div class="back__tag">
+                            <span class="back__dot" aria-hidden="true" />
+                            <span>{i.category}</span>
+                            <span class="back__sep" aria-hidden="true">·</span>
+                            <span class="back__mode">Hot Seat</span>
+                          </div>
+                          <button
+                            type="button"
+                            class="action-btn action-btn--back"
+                            aria-label="Return to story briefing"
+                            title="Return to story"
+                          >
+                            <span class="action-btn__icon" aria-hidden="true">←</span>
+                            <span class="action-btn__txt">Story</span>
+                          </button>
+                        </div>
+
+                        {/* The Interviewer Angle Block in Newsreader Serif */}
+                        <div class="back__body">
+                          <blockquote class="back__quote">
+                            <p class="back__angle">{i.angle}</p>
+                          </blockquote>
+                        </div>
+
+                        {/* Back Footer Actions - Debloated & Clean */}
+                        <footer class="back__foot">
+                          <div class="back__actions">
+                            <button
+                              type="button"
+                              class="copy-angle-btn"
+                              data-copy={i.angle}
+                              title="Copy question for prep notes"
+                              aria-label="Copy interview question"
+                            >
+                              <svg class="copy-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                              </svg>
+                              <span class="copy-label">Copy</span>
+                            </button>
+
+                            <button
+                              type="button"
+                              class="practise-btn"
+                              data-id={storyId}
+                              title="Toggle practised status"
+                              aria-label="Mark story as practised"
+                            >
+                              <svg class="practise-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <path d="M3 8.5l3.5 3.5 6.5-7" />
+                              </svg>
+                              <span class="practise-txt">Practised</span>
+                            </button>
+                          </div>
+
+                          {i.source && (
+                            <a class="card__src" href={i.source} target="_blank" rel="noopener noreferrer">
+                              <span>{host(i.source)}</span>
+                              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <path d="M7 17L17 7H8M17 7v9" />
+                              </svg>
+                            </a>
+                          )}
+                        </footer>
+                      </div>
+
                     </div>
-                    <div class="angle__test" hidden>
-                      <p class="angle__prompt">What would they ask you about this?</p>
-                      <button type="button" class="linkish angle__reveal">Show the angle</button>
-                    </div>
-                  </div>
-
-                  {i.source && (
-                    <a class="card__src linkish" href={i.source} target="_blank" rel="noopener noreferrer">
-                      {host(i.source)} <span aria-hidden="true">↗</span>
-                    </a>
-                  )}
-                </article>
+                  </article>
+                </div>
               );
             })}
           </div>
@@ -179,219 +342,1022 @@ const host = (url: string | null) => {
     }
   </div>
 
-  <!-- 7. Empty search -->
+  {/* 4. Thoughtful Wabi-Sabi Empty State */}
   <div class="empty-news" id="noresults" hidden>
     <Crew who="oops" mood="shrug" class="empty-news__crew" />
-    <p>Nothing matches that. Try a company name, or <button type="button" class="linkish" id="reset">clear the search</button>.</p>
+    <div class="empty-news__text">
+      <h3>No briefings match that search</h3>
+      <p>Try searching for specific firms like <em>Tata</em>, <em>Blinkit</em>, <em>RBI</em>, or <button type="button" class="linkish" id="reset">clear the search</button>.</p>
+    </div>
   </div>
 </div>
 
 <style>
   .news-browser {
     width: 100%;
-    max-width: 100%;
-    min-width: 0;
-    margin-bottom: 3rem;
+    margin-bottom: 3.5rem;
   }
 
-  /* 2. Function doors */
+  /* ---------- 1. Function Doors (Segmented Panel Matching Homepage) ---------- */
   .doors {
-    width: 100%;
-    max-width: 100%;
-    min-width: 0;
-    display: grid; grid-template-columns: repeat(6, minmax(0, 1fr));
-    margin-bottom: 2rem; border-block: 1px solid var(--border);
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    border-block: 1px solid var(--border);
+    margin-top: 1.5rem;
+    margin-bottom: 2.5rem;
+    gap: 0;
   }
+
   .door {
-    font: inherit; color: inherit; text-align: left; cursor: pointer; background: none; border: 0;
-    display: flex; flex-direction: column; gap: .25rem;
-    padding: 1.1rem 1rem; position: relative;
+    font: inherit;
+    color: inherit;
+    text-align: left;
+    cursor: pointer;
+    background: none;
+    border: 0;
+    display: grid;
+    grid-template-columns: 2.5rem minmax(0, 1fr);
+    gap: .1rem .75rem;
+    align-items: center;
+    padding: 1.1rem 1rem;
+    position: relative;
+    border-radius: 0;
+    box-shadow: none;
+    transform: none;
     transition: background-color var(--dur-fast) var(--ease);
   }
-  .door + .door { box-shadow: inset 1px 0 0 var(--border); }
-  .door:hover, .door[aria-pressed='true'] { background: var(--tint); }
+
+  .door + .door {
+    box-shadow: inset 1px 0 0 var(--border);
+  }
+
+  .door:hover {
+    background-color: var(--tint);
+  }
+
+  .door[aria-pressed='true'] {
+    background-color: var(--tint);
+  }
+
   .door[aria-pressed='true']::after {
-    content: ''; position: absolute; left: 0; right: 0; bottom: -1px; height: 3px; background: var(--accent);
-  }
-  .door__label { font-size: 1.0625rem; font-weight: 800; letter-spacing: -.02em; line-height: 1.2; }
-  .door__n { margin-left: .4rem; font-size: .8125rem; font-weight: 600; letter-spacing: 0; color: var(--ink-soft); }
-  .door__ask { font-size: .8125rem; line-height: 1.35; color: var(--ink-soft); }
-
-  @media (max-width: 68rem) {
-    .doors { display: flex; overflow-x: auto; scroll-snap-type: x proximity; scrollbar-width: none; }
-    .doors::-webkit-scrollbar { display: none; }
-    .door { flex: 0 0 min(15.5rem, 66vw); scroll-snap-align: start; padding: .85rem .9rem; }
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -1px;
+    height: 3px;
+    background: var(--accent);
   }
 
-  /* 3. Toolbar */
-  .toolbar {
-    position: sticky; top: 0; z-index: 20;
-    background: var(--paper); border-bottom: 1px solid var(--border);
-    padding: .85rem 0; margin-bottom: 2.5rem;
-  }
-  .toolbar__row {
-    display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;
-  }
-  .toolbar__search { flex: 1 1 14rem; }
-  .toolbar__search input {
-    font: inherit; font-size: .9375rem; width: 100%; min-height: 2.75rem; padding: 0 1rem;
-    color: var(--ink); background: var(--card); border: 1px solid var(--border); border-radius: 10px;
-    transition: border-color var(--dur-fast) var(--ease);
-  }
-  .toolbar__search input::placeholder { color: var(--ink-soft); }
-  .toolbar__search input:focus-visible { outline: 2px solid var(--mizu); outline-offset: 1px; }
-  .toolbar__sort select {
-    font: inherit; font-size: .875rem; min-height: 2.75rem; padding: 0 .9rem;
-    color: var(--ink); background: var(--card); border: 1px solid var(--border); border-radius: 10px;
-    cursor: pointer;
-  }
-  .toolbar__sort select:focus-visible { outline: 2px solid var(--mizu); outline-offset: 1px; }
-  .toolbar__actions { display: flex; align-items: center; gap: .75rem; margin-left: auto; }
-  .practised-tally { font-size: .8125rem; font-weight: 600; color: var(--ink-soft); }
-
-  .sr-only {
-    position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
-    overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+  .door__mark {
+    grid-row: span 2;
+    color: var(--accent);
+    width: 2.5rem;
+    height: 2.5rem;
+    display: block;
+    --mark-size: 2.5rem;
   }
 
-  /* 4. Days */
-  .day {
-    display: grid; grid-template-columns: minmax(0, 1fr);
-    gap: 1.5rem; margin-bottom: 3.5rem;
-  }
-  .day__side {
-    border-left: 2px solid var(--ochre); padding-left: 1rem;
-  }
-  .day__label {
-    margin: 0; display: flex; flex-direction: column; gap: .25rem;
-  }
-  .day__label time {
-    font-family: var(--font); font-size: 1.25rem; font-weight: 800; line-height: 1.2;
-    letter-spacing: -.02em; color: var(--ink);
-  }
-  .day__count {
-    font-size: .875rem; font-weight: 600; color: var(--ink-soft); font-variant-numeric: tabular-nums;
+  .door__mark svg {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    display: block;
   }
 
-  @media (min-width: 64rem) {
-    .day {
-      grid-template-columns: 13.5rem minmax(0, 1fr);
-      gap: 2.5rem;
-    }
-    .day__side {
-      position: sticky; top: calc(2.75rem + 2rem); align-self: start;
-    }
-  }
-
-  .day__cards {
-    display: grid; grid-template-columns: minmax(0, 1fr); gap: 1.25rem;
-  }
-  @media (min-width: 48rem) {
-    .day__cards {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-  }
-  @media (min-width: 84rem) {
-    .day__cards {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
-  }
-
-  /* 5. Card */
-  .card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 14px 14px 14px 3px;
-    padding: 1.25rem 1.35rem 1.2rem;
-    display: flex; flex-direction: column;
-    min-width: 0;
-    max-width: 100%;
-    overflow-wrap: break-word;
-    word-break: break-word;
-    transition: border-color var(--dur-fast) var(--ease);
-  }
-  .card:hover {
-    border-color: var(--accent);
-  }
-  .card--lead {
-    grid-column: 1 / -1;
-  }
-  .card__meta {
-    display: flex; align-items: center; gap: .45rem; flex-wrap: wrap;
-    font-size: .8125rem; font-weight: 600; color: var(--ink-soft);
-    margin-bottom: .65rem;
-  }
-  .card__cat {
-    display: inline-flex; align-items: center; gap: .4rem; color: var(--ink);
-  }
-  .card__dot {
-    width: 7px; height: 7px; border-radius: 50%; background: var(--accent); flex-shrink: 0;
-  }
-  .card__sep { color: var(--ink-faint); }
-  .card__date { font-variant-numeric: tabular-nums; }
-
-  .card__h {
-    margin: 0 0 .65rem; font-family: var(--font); font-size: 1.125rem; font-weight: 700;
-    line-height: 1.25; color: var(--ink); letter-spacing: -.015em; text-wrap: pretty;
-  }
-  .card--lead .card__h {
-    font-family: var(--serif); font-size: clamp(1.625rem, 3vw, 2.25rem); font-weight: 500;
-    line-height: 1.2; letter-spacing: -.02em;
-  }
-  .card__sum {
-    font-size: .9375rem; line-height: 1.55; color: var(--ink-soft); margin: 0 0 1.1rem;
-  }
-  .card__angle {
-    margin-top: auto; padding: .9rem 1rem;
-    background: var(--tint);
-    border-left: 2px solid var(--ochre);
-    border-radius: 0 10px 10px 0;
-  }
-  .angle__label {
-    display: block; font-family: var(--font); font-size: .8125rem; font-weight: 700;
-    color: var(--ink); margin-bottom: .35rem; letter-spacing: -.01em;
-  }
-  .angle__text {
-    margin: 0; font-family: var(--serif); font-size: 1.0625rem; line-height: 1.45;
-    color: var(--ink); text-wrap: pretty;
-  }
-  .angle__prompt {
-    margin: 0 0 .5rem; font-family: var(--serif); font-size: 1.0625rem; font-style: italic;
+  .door__label {
+    font-size: 1.125rem;
+    font-weight: 800;
+    letter-spacing: -.02em;
+    line-height: 1.2;
     color: var(--ink);
   }
-  .angle__reveal {
-    font-size: .875rem; font-weight: 700;
-  }
-  .card__src {
-    margin-top: .9rem; font-size: .875rem; align-self: flex-start;
-    overflow-wrap: anywhere; word-break: break-word;
-  }
-  @media (max-width: 30rem) {
-    .card { padding: 1.1rem 1rem; }
+
+  .door__n {
+    margin-left: .4rem;
+    font-size: .8125rem;
+    font-weight: 600;
+    letter-spacing: 0;
+    color: var(--ink-soft);
   }
 
-  .q__flag { margin-left: .4rem; font-size: .8125rem; font-weight: 700; color: var(--ink); white-space: nowrap; }
-  .q__flag::before { content: ''; display: inline-block; width: 6px; height: 6px; margin-right: .35rem; background: var(--ochre); transform: rotate(45deg); vertical-align: 1px; }
-
-  /* 7. Empty search */
-  .empty-news {
-    margin: 3rem 0; font-size: 1rem; color: var(--ink-soft);
-    display: flex; align-items: center; gap: 1rem;
+  .door__ask {
+    font-size: .8125rem;
+    line-height: 1.35;
+    color: var(--ink-soft);
   }
-  .empty-news__crew { width: 4.5rem; height: 4.5rem; flex-shrink: 0; }
-  .empty-news p { margin: 0; }
 
-  .linkish {
-    font: inherit; font-size: .875rem; font-weight: 700; color: var(--ink); background: none; border: 0;
-    border-bottom: 1px solid var(--border); padding: 0 0 1px; cursor: pointer; text-decoration: none;
+  @media (max-width: 68rem) {
+    /* One swipeable row on tablet and mobile, exactly like the homepage */
+    .doors {
+      display: flex;
+      overflow-x: auto;
+      scroll-snap-type: x proximity;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+      border-block: 1px solid var(--border);
+      margin-top: 1rem;
+      margin-bottom: 2rem;
+    }
+    .doors::-webkit-scrollbar {
+      display: none;
+    }
+    .door {
+      flex: 0 0 min(16.5rem, 72vw);
+      scroll-snap-align: start;
+      padding: .85rem .95rem;
+    }
+    .door + .door {
+      box-shadow: inset 1px 0 0 var(--border);
+    }
+  }
+
+  /* ---------- 2. Modern Sticky Toolbar ---------- */
+  .toolbar {
+    position: sticky;
+    top: var(--nav-h, 3.35rem);
+    z-index: 25;
+    background: color-mix(in srgb, var(--paper) 92%, transparent);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid var(--border-soft);
+    border-radius: 12px;
+    padding: .75rem 1rem;
+    margin-bottom: 2.75rem;
+    box-shadow: 0 4px 20px var(--shadow);
+  }
+  .toolbar__row {
+    display: flex;
+    align-items: center;
+    gap: .85rem;
+    flex-wrap: wrap;
+  }
+  .toolbar__search {
+    flex: 1 1 16rem;
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+  .search-icon {
+    position: absolute;
+    left: .85rem;
+    width: 15px;
+    height: 15px;
+    color: var(--ink-faint);
+    pointer-events: none;
+  }
+  .toolbar__search input {
+    font: inherit;
+    font-size: .875rem;
+    width: 100%;
+    min-height: 2.5rem;
+    padding: 0 2.25rem 0 2.35rem;
+    color: var(--ink);
+    background: var(--card);
+    border: 1px solid var(--border-soft);
+    border-radius: 8px;
     transition: border-color var(--dur-fast) var(--ease);
   }
-  .linkish:hover { border-color: var(--ink); }
+  .toolbar__search input:focus-visible {
+    outline: none;
+    border-color: var(--ochre);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--ochre) 18%, transparent);
+  }
+  .search-kbd {
+    position: absolute;
+    right: .85rem;
+    font-size: .625rem;
+    font-weight: 700;
+    font-family: inherit;
+    padding: .15rem .4rem;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+    background: var(--paper-2);
+    color: var(--ink-faint);
+    pointer-events: none;
+    line-height: 1;
+  }
 
-  [hidden] { display: none !important; }
+  .toolbar__sort select {
+    font: inherit;
+    font-size: .8125rem;
+    font-weight: 600;
+    min-height: 2.5rem;
+    padding: 0 1rem;
+    color: var(--ink);
+    background: var(--card);
+    border: 1px solid var(--border-soft);
+    border-radius: 8px;
+    cursor: pointer;
+  }
+  .toolbar__sort select:focus-visible {
+    outline: none;
+    border-color: var(--ochre);
+  }
+
+  .toolbar__actions {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    margin-left: auto;
+  }
+  .test-toggle {
+    font: inherit;
+    font-size: .75rem;
+    font-weight: 700;
+    letter-spacing: .04em;
+    display: inline-flex;
+    align-items: center;
+    gap: .45rem;
+    padding: .45rem .85rem;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--card);
+    color: var(--ink);
+    cursor: pointer;
+    transition: all var(--dur-fast) var(--ease);
+  }
+  .test-toggle:hover {
+    border-color: var(--ochre);
+    background: color-mix(in srgb, var(--ochre) 8%, var(--card));
+  }
+  .test-toggle.is-active {
+    background: var(--ochre);
+    border-color: var(--ochre);
+    color: var(--on-solid, var(--paper));
+  }
+  .test-toggle__dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--ochre);
+  }
+  .test-toggle.is-active .test-toggle__dot {
+    background: currentColor;
+  }
+  .practised-tally {
+    font-size: .75rem;
+    font-weight: 700;
+    color: var(--moss);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* ---------- 3. Day Section & Balanced Card Grid ---------- */
+  .day-section {
+    margin-bottom: 3.5rem;
+    scroll-margin-top: 5rem;
+  }
+  .day-head {
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+  }
+  .day-head__dateline {
+    display: inline-flex;
+    align-items: center;
+    gap: .75rem;
+    flex-shrink: 0;
+  }
+  .day-head__dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--ochre);
+  }
+  .day-head__title {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 800;
+    letter-spacing: -.02em;
+    color: var(--ink);
+  }
+  .day-head__count {
+    font-size: .75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    color: var(--ink-faint);
+    background: color-mix(in srgb, var(--paper-2) 80%, transparent);
+    padding: .2rem .55rem;
+    border-radius: 999px;
+    border: 1px solid var(--border-soft);
+  }
+  .day-head__seam {
+    height: 1px;
+    flex: 1;
+    background: linear-gradient(90deg, var(--border), transparent 90%);
+  }
+
+  /* Balanced 2-Column Seamless Ceramic Tile Grid */
+  .briefings-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1px;
+    background: var(--border-soft);
+    border: 1px solid var(--border-soft);
+    border-radius: 12px;
+    overflow: hidden;
+    align-items: stretch;
+    box-shadow: 0 4px 20px var(--shadow);
+  }
+  @media (max-width: 58rem) {
+    .briefings-grid {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+
+  /* ---------- 4. Ceramic Tile & Pixel-Glitch Shatter Mechanics ---------- */
+  .card-scene {
+    min-height: 22.5rem;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    background: var(--card);
+    scroll-margin-top: 5.5rem;
+  }
+  .card-scene:target .card,
+  .card-scene.is-target-flash .card {
+    outline: 2px solid var(--ochre);
+    outline-offset: 3px;
+    animation: cardTargetPulse 1.8s var(--ease) both;
+  }
+  @keyframes cardTargetPulse {
+    0% { transform: scale(1.02); box-shadow: 0 0 24px color-mix(in srgb, var(--ochre) 45%, transparent); }
+    50% { transform: scale(1.008); box-shadow: 0 0 12px color-mix(in srgb, var(--ochre) 25%, transparent); }
+    100% { transform: none; box-shadow: none; }
+  }
+  .card-scene--lead {
+    grid-column: 1 / -1;
+    min-height: 20rem;
+  }
+
+  .card {
+    position: relative;
+    width: 100%;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+    user-select: none;
+    background: var(--card);
+    border: none;
+    padding: 0;
+    margin: 0;
+    outline: none;
+    text-align: left;
+    font: inherit;
+    color: inherit;
+    border-radius: 0;
+    overflow: hidden;
+    transition: background-color var(--dur-fast) var(--ease),
+                box-shadow var(--dur-med) var(--ease),
+                transform var(--dur-fast) var(--ease);
+  }
+
+  .card:hover {
+    background-color: color-mix(in srgb, var(--tint) 18%, var(--card));
+    box-shadow: 0 8px 24px -6px color-mix(in srgb, var(--tldr-bg) 32%, transparent),
+                inset 0 0 0 1px color-mix(in srgb, var(--accent) 32%, transparent);
+    transform: translateY(-2px);
+  }
+
+  .card:focus-visible {
+    outline: 2px solid var(--ochre);
+    outline-offset: -2px;
+  }
+
+  .card__stage {
+    position: relative;
+    width: 100%;
+    flex: 1;
+    display: grid;
+    grid-template-columns: 100%;
+    grid-template-rows: minmax(100%, auto);
+    border-radius: 0;
+  }
+
+  /* Physics-inspired specular glaze reflection shader */
+  .card__glaze-shader {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(
+      circle 340px at var(--mouse-x, 50%) var(--mouse-y, 30%),
+      color-mix(in srgb, var(--accent) 16%, transparent) 0%,
+      transparent 70%
+    );
+    opacity: 0;
+    transition: opacity var(--dur-fast) var(--ease);
+    mix-blend-mode: soft-light;
+    z-index: 6;
+  }
+  .card:hover .card__glaze-shader {
+    opacity: 1;
+  }
+
+  /* Wabi-Sabi Kintsugi Streak connecting adjacent tiles */
+  .tile-streak {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 5px;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 4;
+    opacity: 0.35;
+    transition: opacity var(--dur-med) var(--ease), filter var(--dur-med) var(--ease);
+  }
+  .tile-streak svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+  .tile-streak polyline {
+    fill: none;
+    stroke: var(--border);
+    stroke-width: 1.5;
+    stroke-linejoin: round;
+    transition: stroke var(--dur-med) var(--ease), filter var(--dur-med) var(--ease);
+  }
+  .card:hover .tile-streak,
+  .tile-streak.is-gold,
+  .card.is-flipped .tile-streak {
+    opacity: 1;
+  }
+  .card:hover .tile-streak polyline,
+  .tile-streak.is-gold polyline,
+  .card.is-flipped .tile-streak polyline {
+    stroke: var(--ochre);
+    filter: drop-shadow(0 0 4px color-mix(in srgb, var(--ochre) 65%, transparent));
+  }
+
+  /* Both Faces: Tactile 2D Ceramic Tile Transition (Grid Stacking for Dynamic Height) */
+  .card__face {
+    grid-area: 1 / 1 / 2 / 2;
+    width: 100%;
+    min-height: 100%;
+    border-radius: 0;
+    border: none;
+    display: flex;
+    flex-direction: column;
+    padding: 1.45rem 1.65rem 1.35rem;
+    box-sizing: border-box;
+  }
+
+  /* FRONT FACE */
+  .card__face--front {
+    background: var(--card);
+    z-index: 2;
+    opacity: 1;
+    pointer-events: auto;
+    visibility: visible;
+    transform: translateY(0);
+    transition: opacity 0.28s cubic-bezier(0.2, 0.8, 0.25, 1),
+                transform 0.28s cubic-bezier(0.2, 0.8, 0.25, 1),
+                visibility 0.28s;
+  }
+  .card__face--front::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(120% 90% at 0% 0%, var(--tint), transparent 60%);
+    opacity: .5;
+    pointer-events: none;
+    transition: opacity var(--dur-fast) var(--ease);
+  }
+  .card:hover .card__face--front::before {
+    opacity: .85;
+  }
+
+  /* BACK FACE */
+  .card__face--back {
+    background: color-mix(in srgb, var(--tint) 25%, var(--card));
+    z-index: 1;
+    opacity: 0;
+    pointer-events: none;
+    visibility: hidden;
+    transform: translateY(6px);
+    transition: opacity 0.3s cubic-bezier(0.2, 0.8, 0.25, 1),
+                transform 0.3s cubic-bezier(0.2, 0.8, 0.25, 1),
+                visibility 0.3s;
+  }
+  .card__face--back::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(130% 100% at 90% 10%, color-mix(in srgb, var(--accent) 22%, transparent), transparent 70%),
+                radial-gradient(100% 80% at 10% 90%, color-mix(in srgb, var(--ochre) 14%, transparent), transparent 70%);
+    pointer-events: none;
+  }
+
+  /* Active Revealed State (Hot Seat Mode) */
+  .card.is-flipped .card__face--front {
+    opacity: 0;
+    pointer-events: none;
+    visibility: hidden;
+    transform: translateY(-6px);
+    z-index: 1;
+  }
+  .card.is-flipped .card__face--back {
+    opacity: 1;
+    pointer-events: auto;
+    visibility: visible;
+    transform: translateY(0);
+    z-index: 2;
+  }
+  .card.is-flipped {
+    background-color: color-mix(in srgb, var(--tint) 25%, var(--card));
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 38%, transparent),
+                0 8px 24px -4px color-mix(in srgb, var(--tldr-bg) 25%, transparent);
+  }
+
+  /* Front Content */
+  .card__meta {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    font-size: .8125rem;
+    font-weight: 600;
+    color: var(--ink-soft);
+    margin-bottom: .75rem;
+    flex-wrap: wrap;
+    position: relative;
+    z-index: 1;
+  }
+  .card__cat {
+    display: inline-flex;
+    align-items: center;
+    gap: .4rem;
+    color: var(--ink);
+    font-weight: 700;
+  }
+  .card__dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--accent);
+    flex-shrink: 0;
+  }
+
+  .card__h {
+    margin: 0 0 .75rem;
+    font-size: 1.15rem;
+    font-weight: 700;
+    line-height: 1.32;
+    letter-spacing: -.016em;
+    color: var(--ink);
+    text-wrap: balance;
+    position: relative;
+    z-index: 1;
+  }
+
+  .card-scene--lead .card__h {
+    font-family: var(--serif);
+    font-size: clamp(1.4rem, 2.5vw, 1.95rem);
+    font-weight: 600;
+    line-height: 1.22;
+  }
+
+  .card__brief {
+    margin-bottom: 1.25rem;
+    flex: 1;
+    position: relative;
+    z-index: 1;
+  }
+  .card__sum {
+    font-size: .9375rem;
+    line-height: 1.62;
+    color: var(--ink-soft);
+    margin: 0;
+  }
+
+  .card__front-foot {
+    position: relative;
+    z-index: 1;
+    margin-top: auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: .75rem;
+    padding-top: .95rem;
+    border-top: 1px solid var(--border-soft);
+    flex-shrink: 0;
+  }
+
+  @keyframes cueBreathe {
+    0%, 100% { opacity: 0.55; transform: scale(0.9); }
+    50% { opacity: 1; transform: scale(1.15); box-shadow: 0 0 8px var(--ochre); }
+  }
+
+  /* Debloated Action Buttons */
+  .action-btn {
+    font: inherit;
+    font-size: .75rem;
+    font-weight: 700;
+    letter-spacing: .02em;
+    display: inline-flex;
+    align-items: center;
+    gap: .4rem;
+    padding: .35rem .75rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all var(--dur-fast) var(--ease);
+    border: 1px solid color-mix(in srgb, var(--accent) 35%, var(--border));
+    background: color-mix(in srgb, var(--accent) 8%, var(--card));
+    color: var(--ink);
+    margin-left: auto;
+  }
+  .action-btn:hover {
+    border-color: var(--accent);
+    background: var(--accent);
+    color: var(--on-solid, var(--paper));
+  }
+  .action-btn__icon {
+    width: 12px;
+    height: 12px;
+    transition: transform var(--dur-fast) var(--ease);
+  }
+  .action-btn--reveal {
+    border-color: color-mix(in srgb, var(--ochre) 35%, var(--border));
+    background: color-mix(in srgb, var(--ochre) 10%, var(--card));
+  }
+  .action-btn--reveal:hover {
+    border-color: var(--ochre);
+    background: var(--ochre);
+    color: var(--on-solid, var(--paper));
+  }
+  .action-btn__pulse {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--ochre);
+    box-shadow: 0 0 6px var(--ochre);
+    animation: cueBreathe 2.4s ease-in-out infinite;
+  }
+  .action-btn--reveal:hover .action-btn__pulse {
+    background: var(--on-solid, var(--paper));
+    box-shadow: 0 0 6px var(--on-solid, var(--paper));
+  }
+  .action-btn__arrow {
+    font-size: .8125rem;
+    transition: transform var(--dur-fast) var(--ease);
+  }
+  .action-btn--reveal:hover .action-btn__arrow {
+    transform: translateX(3px);
+  }
+  .action-btn--back:hover .action-btn__icon {
+    transform: translateX(-2px);
+  }
+
+  /* Back Face Details */
+  .back__watermark {
+    position: absolute;
+    right: -1rem;
+    bottom: -1rem;
+    width: 10.5rem;
+    height: 10.5rem;
+    opacity: 0.07;
+    pointer-events: none;
+    filter: blur(0.5px);
+  }
+
+  .back__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: .75rem;
+    margin-bottom: 1.25rem;
+    position: relative;
+    z-index: 1;
+  }
+  .back__tag {
+    display: inline-flex;
+    align-items: center;
+    gap: .45rem;
+    font-size: .75rem;
+    font-weight: 700;
+    letter-spacing: .02em;
+    color: var(--ink-soft);
+  }
+  .back__mode {
+    color: var(--accent);
+    font-weight: 800;
+  }
+  .back__sep {
+    color: var(--ink-faint);
+  }
+  .back__dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+
+  .back__body {
+    position: relative;
+    z-index: 1;
+    margin-bottom: 1.5rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .back__quote {
+    margin: 0;
+    padding: 0;
+    border: none;
+  }
+  .back__angle {
+    margin: 0;
+    font-family: var(--serif);
+    font-size: clamp(1.08rem, 1.45vw, 1.25rem);
+    line-height: 1.58;
+    letter-spacing: -.01em;
+    color: var(--ink);
+    text-wrap: pretty;
+  }
+
+  .back__foot {
+    position: relative;
+    z-index: 1;
+    margin-top: auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: .75rem;
+    flex-wrap: wrap;
+    padding-top: .95rem;
+    border-top: 1px solid var(--border-soft);
+    flex-shrink: 0;
+  }
+  .back__actions {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+  }
+
+  .copy-angle-btn,
+  .practise-btn {
+    font: inherit;
+    font-size: .5625rem;
+    font-weight: 700;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    background: color-mix(in srgb, var(--paper) 70%, transparent);
+    border: 1px solid var(--border);
+    color: var(--ink-faint);
+    padding: .25rem .5rem;
+    border-radius: 4px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: .3rem;
+    transition: all var(--dur-fast) var(--ease);
+  }
+  .copy-icon,
+  .practise-icon {
+    width: 10px;
+    height: 10px;
+  }
+  .copy-angle-btn:hover {
+    color: var(--ink);
+    border-color: var(--accent);
+    background: var(--paper);
+  }
+  .copy-angle-btn.is-copied {
+    background: var(--moss);
+    border-color: var(--moss);
+    color: var(--tldr-ink);
+  }
+
+  .practise-btn:hover {
+    color: var(--moss);
+    border-color: var(--moss);
+  }
+  .practise-btn.is-practised {
+    background: var(--moss);
+    border-color: var(--moss);
+    color: var(--tldr-ink);
+  }
+
+  /* Card Source Link */
+  .card__src {
+    display: inline-flex;
+    align-items: center;
+    gap: .35rem;
+    font-size: .6875rem;
+    font-weight: 700;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    text-decoration: none;
+    transition: color var(--dur-fast) var(--ease);
+  }
+  .card__src svg {
+    width: 11px;
+    height: 11px;
+    transition: transform var(--dur-fast) var(--ease);
+  }
+  .card__src:hover {
+    color: var(--accent);
+  }
+  .card__src:hover svg {
+    transform: translate(2px, -2px);
+  }
+
+  .q__flag {
+    margin-left: .35rem;
+    font-size: .75rem;
+    font-weight: 700;
+    color: var(--moss);
+    display: inline-flex;
+    align-items: center;
+    gap: .25rem;
+  }
+  .flag-check {
+    width: 12px;
+    height: 12px;
+  }
+
+  /* ---------- 5. Empty State ---------- */
+  .empty-news {
+    margin: 4rem 0;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 2.5rem;
+    max-width: 36rem;
+    margin-inline: auto;
+  }
+  .empty-news__crew {
+    width: 5rem;
+    height: 5rem;
+    flex-shrink: 0;
+  }
+  .empty-news__text h3 {
+    margin: 0 0 .35rem;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--ink);
+  }
+  .empty-news__text p {
+    margin: 0;
+    font-size: .875rem;
+    color: var(--ink-soft);
+    line-height: 1.55;
+  }
+
+  .linkish {
+    font: inherit;
+    font-size: .875rem;
+    font-weight: 700;
+    color: var(--ink);
+    background: none;
+    border: 0;
+    border-bottom: 1.5px solid var(--ochre);
+    padding: 0;
+    cursor: pointer;
+  }
+
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  /* ---------- Comprehensive Mobile UX Designthinking Pass ---------- */
+  @media (max-width: 48rem) {
+    .toolbar {
+      position: static;
+      top: auto;
+      padding: .65rem .75rem;
+      margin-bottom: 2rem;
+    }
+    .toolbar__row {
+      flex-direction: column;
+      align-items: stretch;
+      gap: .65rem;
+    }
+    .toolbar__search {
+      flex: 1 1 auto;
+      width: 100%;
+    }
+    .toolbar__search input {
+      min-height: 2.75rem;
+      font-size: .9375rem;
+    }
+    .search-kbd {
+      display: none;
+    }
+    .toolbar__actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      margin-left: 0;
+      gap: .5rem;
+    }
+    .toolbar__sort {
+      flex: 1;
+    }
+    .toolbar__sort select {
+      width: 100%;
+      min-height: 2.75rem;
+      font-size: .875rem;
+    }
+    .test-toggle {
+      flex: 1;
+      justify-content: center;
+      min-height: 2.75rem;
+      font-size: .8125rem;
+    }
+
+    /* Cards on Mobile */
+    .day-section {
+      margin-bottom: 2.5rem;
+    }
+    .day-head {
+      margin-bottom: 1.15rem;
+    }
+    .day-head__title {
+      font-size: 1.125rem;
+    }
+    .card-scene {
+      min-height: 28.5rem;
+    }
+    .card-scene--lead {
+      min-height: 28.5rem;
+    }
+    .card__face {
+      padding: 1.25rem 1.15rem 1rem;
+      border-radius: 0;
+    }
+    .back__body {
+      margin-bottom: 1rem;
+    }
+    .card__h {
+      font-size: 1.125rem;
+      line-height: 1.35;
+      margin-bottom: .65rem;
+    }
+    .card-scene--lead .card__h {
+      font-size: 1.25rem;
+    }
+    .card__sum {
+      font-size: .875rem;
+      line-height: 1.58;
+    }
+    .flip-btn {
+      min-height: 2.5rem;
+      padding: .4rem .85rem;
+      font-size: .75rem;
+    }
+    .back__angle {
+      font-size: 1.05rem;
+      line-height: 1.52;
+    }
+    .back__actions {
+      width: 100%;
+      justify-content: space-between;
+    }
+    .copy-angle-btn,
+    .practise-btn {
+      min-height: 2.35rem;
+      padding: .35rem .65rem;
+      font-size: .625rem;
+    }
+  }
+
+  [hidden] {
+    display: none !important;
+  }
 
   @media (prefers-reduced-motion: reduce) {
-    .door, .card, .toolbar__search input { transition: none; }
+    .card__flipper {
+      transition: none !important;
+      transform: none !important;
+    }
+    .card.is-flipped .card__face--front {
+      display: none;
+    }
+    .card.is-flipped .card__face--back {
+      display: flex;
+      transform: none;
+    }
+    .card__face--back {
+      transform: none;
+    }
   }
 </style>
 
@@ -399,17 +1365,18 @@ const host = (url: string | null) => {
   const browserEl = document.querySelector<HTMLElement>('[data-browser]');
   const q = document.getElementById('news-q') as HTMLInputElement | null;
   const sort = document.getElementById('news-sort') as HTMLSelectElement | null;
-  const testToggle = document.getElementById('test-toggle') as HTMLButtonElement | null;
+  const flipAllBtn = document.getElementById('flip-all-btn') as HTMLButtonElement | null;
   const tallyEl = document.getElementById('practised-tally');
   const noresults = document.getElementById('noresults');
   const resetBtn = document.getElementById('reset');
   const doors = [...document.querySelectorAll<HTMLButtonElement>('.door')];
   const archive = document.getElementById('news-archive');
-  const days = [...document.querySelectorAll<HTMLElement>('.day')];
+  const days = [...document.querySelectorAll<HTMLElement>('.day-section')];
+  const cardScenes = [...document.querySelectorAll<HTMLElement>('.card-scene')];
   const cards = [...document.querySelectorAll<HTMLElement>('.card')];
 
-  let currentCategory = 'all';
-  let testMode = false;
+  let currentCategory = browserEl?.dataset.initialCat ?? 'all';
+  let allFlipped = false;
 
   const store = {
     get<T>(key: string, fallback: T): T {
@@ -422,9 +1389,7 @@ const host = (url: string | null) => {
     set(key: string, value: unknown) {
       try {
         localStorage.setItem(key, JSON.stringify(value));
-      } catch {
-        // private mode
-      }
+      } catch {}
     },
   };
 
@@ -447,38 +1412,33 @@ const host = (url: string | null) => {
       const flag = card.querySelector<HTMLElement>('[data-flag]');
       if (flag) flag.hidden = !isPractised;
 
-      const angleContent = card.querySelector<HTMLElement>('.angle__content');
-      const angleTest = card.querySelector<HTMLElement>('.angle__test');
-
-      if (testMode) {
-        if (isPractised) {
-          if (angleContent) angleContent.hidden = false;
-          if (angleTest) angleTest.hidden = true;
-        } else {
-          if (angleContent) angleContent.hidden = true;
-          if (angleTest) angleTest.hidden = false;
-        }
-      } else {
-        if (angleContent) angleContent.hidden = false;
-        if (angleTest) angleTest.hidden = true;
+      const pBtn = card.querySelector<HTMLButtonElement>('.practise-btn');
+      if (pBtn) {
+        pBtn.classList.toggle('is-practised', isPractised);
+        const pTxt = pBtn.querySelector('.practise-txt');
+        if (pTxt) pTxt.textContent = isPractised ? 'Practised' : 'Mark Practised';
       }
     }
   };
 
-  const filterCards = () => {
+  const applyFilters = () => {
     const term = (q?.value ?? '').trim().toLowerCase();
     let visibleCount = 0;
 
-    for (const card of cards) {
-      const catMatch = currentCategory === 'all' || card.dataset.cat === currentCategory;
-      const termMatch = !term || (card.textContent ?? '').toLowerCase().includes(term);
-      const isVisible = catMatch && termMatch;
-      card.hidden = !isVisible;
+    for (const scene of cardScenes) {
+      const cat = scene.dataset.cat ?? '';
+      const matchesCat = currentCategory === 'all' || cat === currentCategory;
+      const text = scene.textContent?.toLowerCase() ?? '';
+      const matchesSearch = !term || text.includes(term);
+
+      const isVisible = matchesCat && matchesSearch;
+      scene.hidden = !isVisible;
       if (isVisible) visibleCount++;
     }
 
     for (const day of days) {
-      const hasVisible = [...day.querySelectorAll<HTMLElement>('.card')].some((c) => !c.hidden);
+      const dayScenes = [...day.querySelectorAll<HTMLElement>('.card-scene')];
+      const hasVisible = dayScenes.some((s) => !s.hidden);
       day.hidden = !hasVisible;
     }
 
@@ -491,10 +1451,12 @@ const host = (url: string | null) => {
 
     if (mode === 'new' || mode === 'old') {
       for (const day of days) {
-        const grid = day.querySelector('.day__cards')!;
-        cards
-          .filter((c) => c.dataset.date === day.dataset.date)
-          .forEach((c) => grid.appendChild(c));
+        const grid = day.querySelector('.briefings-grid');
+        if (grid) {
+          cardScenes
+            .filter((s) => s.dataset.date === day.dataset.date)
+            .forEach((s) => grid.appendChild(s));
+        }
       }
       [...days]
         .sort((a, b) =>
@@ -506,66 +1468,142 @@ const host = (url: string | null) => {
       return;
     }
 
-    // flatten into first day's grid for A-Z
+    // Headline A-Z
     const firstDay = days[0];
-    if (firstDay) {
-      const grid = firstDay.querySelector('.day__cards')!;
-      [...cards]
-        .sort((a, b) => (a.dataset.headline ?? '').localeCompare(b.dataset.headline ?? ''))
-        .forEach((c) => grid.appendChild(c));
-      archive.prepend(firstDay);
-    }
+    if (!firstDay) return;
+    const grid = firstDay.querySelector('.briefings-grid');
+    if (!grid) return;
+
+    [...cardScenes]
+      .sort((a, b) => (a.dataset.headline ?? '').localeCompare(b.dataset.headline ?? ''))
+      .forEach((s) => grid.appendChild(s));
+
+    archive.prepend(firstDay);
   };
 
-  doors.forEach((door) => {
-    door.addEventListener('click', () => {
-      currentCategory = door.dataset.door ?? 'all';
-      doors.forEach((d) => d.setAttribute('aria-pressed', String(d === door)));
-      filterCards();
-    });
-  });
+  // Tactile Tile Toggle Handler (Clean 2D Mode Switch)
+  const triggerCardToggle = (card: HTMLElement) => {
+    const isFlipped = card.classList.toggle('is-flipped');
+    card.setAttribute('aria-expanded', isFlipped ? 'true' : 'false');
+  };
 
-  if (q) q.addEventListener('input', filterCards);
-
-  if (sort) {
-    sort.addEventListener('change', () => {
-      reorderCards();
-      filterCards();
-    });
-  }
-
-  if (resetBtn) {
-    resetBtn.addEventListener('click', () => {
-      if (q) q.value = '';
-      const allDoor = doors.find((d) => d.dataset.door === 'all');
-      allDoor?.click();
-    });
-  }
-
-  if (testToggle) {
-    testToggle.hidden = false;
-    testToggle.addEventListener('click', () => {
-      testMode = !testMode;
-      testToggle.textContent = testMode ? 'Show the angles' : 'Test me: hide the angles';
-      updatePractisedUI();
-    });
-  }
-
-  // Handle reveal buttons
   cards.forEach((card) => {
-    const revealBtn = card.querySelector<HTMLButtonElement>('.angle__reveal');
-    revealBtn?.addEventListener('click', () => {
-      const id = card.dataset.id ?? '';
-      if (id) {
-        const practised = getPractised();
-        if (!practised.includes(id)) {
-          store.set('waibi:news:practised', [...practised, id]);
-        }
-        updatePractisedUI();
+    // Physical specular glaze reflection tracking
+    card.addEventListener('pointermove', (e) => {
+      const rect = card.getBoundingClientRect();
+      const x = ((e.clientX - rect.left) / rect.width) * 100;
+      const y = ((e.clientY - rect.top) / rect.height) * 100;
+      card.style.setProperty('--mouse-x', `${x.toFixed(1)}%`);
+      card.style.setProperty('--mouse-y', `${y.toFixed(1)}%`);
+    });
+
+    card.addEventListener('click', (e) => {
+      const target = e.target as HTMLElement;
+      // If user clicked inside an external link, copy button, or practise button, don't trigger flip
+      if (target.closest('a') || target.closest('.copy-angle-btn') || target.closest('.practise-btn')) {
+        return;
+      }
+      triggerCardToggle(card);
+    });
+
+    // Keyboard accessibility: Space or Enter triggers toggle
+    card.addEventListener('keydown', (e) => {
+      if (e.key === ' ' || e.key === 'Enter') {
+        const target = e.target as HTMLElement;
+        if (target.closest('a') || target.closest('button')) return;
+        e.preventDefault();
+        triggerCardToggle(card);
       }
     });
   });
 
+  // Flip All Button in Toolbar
+  flipAllBtn?.addEventListener('click', () => {
+    allFlipped = !allFlipped;
+    flipAllBtn.classList.toggle('is-active', allFlipped);
+    const label = flipAllBtn.querySelector('.test-toggle__text');
+    if (label) label.textContent = allFlipped ? 'Flip all: Story mode' : 'Flip all: Hot Seat mode';
+
+    cards.forEach((card, idx) => {
+      setTimeout(() => {
+        card.classList.toggle('is-flipped', allFlipped);
+        card.setAttribute('aria-expanded', allFlipped ? 'true' : 'false');
+      }, (idx % 6) * 35);
+    });
+  });
+
+  // Practise Button Click
+  document.addEventListener('click', (e) => {
+    const target = e.target as HTMLElement;
+    const pBtn = target.closest<HTMLButtonElement>('.practise-btn');
+    if (pBtn) {
+      e.stopPropagation();
+      const id = pBtn.dataset.id;
+      if (!id) return;
+      const list = getPractised();
+      const idx = list.indexOf(id);
+      if (idx === -1) {
+        list.push(id);
+      } else {
+        list.splice(idx, 1);
+      }
+      store.set('waibi:news:practised', list);
+      updatePractisedUI();
+    }
+  });
+
+  // Copy interview angle handler
+  document.addEventListener('click', (e) => {
+    const target = e.target as HTMLElement;
+    const btn = target.closest<HTMLButtonElement>('.copy-angle-btn');
+    if (!btn) return;
+    e.stopPropagation();
+    const textToCopy = btn.dataset.copy;
+    if (!textToCopy) return;
+
+    navigator.clipboard.writeText(textToCopy).then(() => {
+      btn.classList.add('is-copied');
+      const label = btn.querySelector('.copy-label');
+      if (label) label.textContent = 'Copied!';
+      setTimeout(() => {
+        btn.classList.remove('is-copied');
+        if (label) label.textContent = 'Copy Angle';
+      }, 1800);
+    });
+  });
+
+  doors.forEach((door) => {
+    door.addEventListener('click', () => {
+      currentCategory = door.dataset.door ?? 'all';
+      doors.forEach((d) => d.setAttribute('aria-pressed', d === door ? 'true' : 'false'));
+      applyFilters();
+    });
+  });
+
+  q?.addEventListener('input', applyFilters);
+  sort?.addEventListener('change', () => {
+    reorderCards();
+    applyFilters();
+  });
+
+  resetBtn?.addEventListener('click', () => {
+    if (q) q.value = '';
+    currentCategory = 'all';
+    doors.forEach((d) => d.setAttribute('aria-pressed', d.dataset.door === 'all' ? 'true' : 'false'));
+    applyFilters();
+  });
+
+  // Keyboard shortcut '/'
+  window.addEventListener('keydown', (e) => {
+    if (e.key === '/' && document.activeElement !== q && !(document.activeElement instanceof HTMLInputElement || document.activeElement instanceof HTMLTextAreaElement)) {
+      e.preventDefault();
+      q?.focus();
+      q?.select();
+    } else if (e.key === 'Escape' && document.activeElement === q) {
+      q?.blur();
+    }
+  });
+
+  applyFilters();
   updatePractisedUI();
-  filterCards();
 </script>

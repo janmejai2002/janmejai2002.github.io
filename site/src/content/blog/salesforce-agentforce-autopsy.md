@@ -110,14 +110,47 @@ Enterprise CRM databases contain untrusted external data: inbound customer email
 ### Schema Drift and Grounding Hallucinations
 Salesforce enterprise instances are customized software environments characterized by hundreds of custom fields, validation rules, and Apex triggers. When developers modify picklist values or enforce new required fields on the Case object without re-indexing the Data Cloud vector space, Atlas continues generating payloads conforming to the previous schema. The resulting API exceptions cause the agent to enter repetitive apologize-and-retry loops until tripping maximum execution depth limits.
 
-```text
-Atlas Circuit Breaker Threshold:
-[Turn 1: Tool Execution] ── (API Schema Exception) ──> [Atlas Self-Correction Loop]
-[Turn 2: Retry Action]   ── (Validation Failure)    ──> [Confidence Score Drops < 0.72]
-                                                            │
-                                                            v
-[Execution Ceiling Reached (3 turns)] ──> [Freeze State & Escalate to Omni-Channel]
-```
+<figure class="diagram">
+<svg viewBox="0 0 680 260" role="img" aria-labelledby="atlas-cb-title atlas-cb-desc">
+  <title id="atlas-cb-title">Salesforce Atlas Circuit Breaker &amp; Escalation Threshold</title>
+  <desc id="atlas-cb-desc">Three-stage circuit breaker lifecycle showing how schema exceptions and validation failures cause the agent to hit the 3-turn ceiling and escalate to human Omni-Channel support.</desc>
+  <g font-family="inherit">
+    <!-- Turn 1 -->
+    <rect x="20" y="20" width="180" height="60" rx="8" fill="var(--card)" stroke="var(--border)" stroke-width="1.5"/>
+    <text x="35" y="44" font-size="11" font-weight="700" fill="var(--ink)">Turn 1: Tool Execution</text>
+    <text x="35" y="62" font-size="9.5" fill="var(--ink-soft)">Apex / Flow mutation</text>
+    <path d="M 200 50 L 260 50" fill="none" stroke="var(--border)" stroke-width="1.5"/>
+    <polygon points="258,46 266,50 258,54" fill="var(--border)"/>
+    <rect x="270" y="20" width="170" height="60" rx="8" fill="var(--wash-ochre)" stroke="var(--border)" stroke-width="1"/>
+    <text x="355" y="44" font-size="11" font-weight="700" fill="var(--ink)" text-anchor="middle">Atlas Self-Correction</text>
+    <text x="355" y="62" font-size="9.5" fill="var(--ochre)" text-anchor="middle">API Schema Exception</text>
+    <!-- Turn 2 -->
+    <path d="M 355 80 L 355 110 L 200 110" fill="none" stroke="var(--border)" stroke-width="1.5"/>
+    <polygon points="202,106 194,110 202,114" fill="var(--border)"/>
+    <rect x="20" y="90" width="174" height="60" rx="8" fill="var(--card)" stroke="var(--border)" stroke-width="1.5"/>
+    <text x="35" y="114" font-size="11" font-weight="700" fill="var(--ink)">Turn 2: Retry Action</text>
+    <text x="35" y="132" font-size="9.5" fill="var(--ink-soft)">Validation failure</text>
+    <path d="M 194 120 L 260 120" fill="none" stroke="var(--border)" stroke-width="1.5"/>
+    <polygon points="258,116 266,120 258,124" fill="var(--border)"/>
+    <rect x="270" y="90" width="170" height="60" rx="8" fill="var(--wash-hanko)" stroke="var(--border)" stroke-width="1"/>
+    <text x="355" y="114" font-size="11" font-weight="700" fill="var(--hanko)" text-anchor="middle">Confidence Drops</text>
+    <text x="355" y="132" font-size="9.5" fill="var(--hanko)" text-anchor="middle">Intent score &lt; 0.72</text>
+    <!-- Turn 3: Hard Ceiling & Escalation -->
+    <path d="M 440 120 L 500 120" fill="none" stroke="var(--hanko)" stroke-width="1.5"/>
+    <polygon points="498,116 506,120 498,124" fill="var(--hanko)"/>
+    <rect x="510" y="30" width="150" height="180" rx="8" fill="var(--card)" stroke="var(--hanko)" stroke-width="2"/>
+    <rect x="510" y="30" width="150" height="32" rx="8" fill="var(--wash-hanko)"/>
+    <text x="585" y="52" font-size="11" font-weight="700" fill="var(--hanko)" text-anchor="middle">Circuit Breaker</text>
+    <text x="585" y="86" font-size="10.5" font-weight="600" fill="var(--ink)" text-anchor="middle">Ceiling Reached</text>
+    <text x="585" y="104" font-size="9.5" fill="var(--ink-soft)" text-anchor="middle">Max 3 execution turns</text>
+    <path d="M 530 120 L 640 120" stroke="var(--border)" stroke-width="1"/>
+    <text x="585" y="146" font-size="10.5" font-weight="700" fill="var(--hanko)" text-anchor="middle">Escalate to Human</text>
+    <text x="585" y="166" font-size="9.5" fill="var(--ink-soft)" text-anchor="middle">Omni-Channel Queue</text>
+    <text x="585" y="184" font-size="9" fill="var(--ink-soft)" text-anchor="middle">JSON state + summary</text>
+  </g>
+</svg>
+<figcaption>Salesforce Atlas execution ceiling: when retry confidence drops below 0.72 or reaches 3 turns, the circuit breaker freezes state and routes to a human agent.</figcaption>
+</figure>
 
 To manage these failures, Salesforce mandates an automated escalation path within the Agent Development Lifecycle. When intent confidence scores drop below 0.72, or when a tool invocation returns an unhandled exception, Atlas trips an internal circuit breaker. The agent freezes further side effects, serializes the conversational state into a structured JSON payload, attaches an automated three-sentence diagnostic summary, and dispatches the session to a human agent via Salesforce Omni-Channel routing.
 

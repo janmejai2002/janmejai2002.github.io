@@ -271,7 +271,9 @@ for (let i = 1; i < rows.length; i++) {
   const title = (r[idx.title] ?? '').trim();
   if (!title) continue;
 
-  if (existingTitles.has(title.toLowerCase())) {
+  const titleLower = title.toLowerCase();
+  const truncatedLower = title.slice(0, 70).toLowerCase();
+  if (existingTitles.has(titleLower) || existingTitles.has(truncatedLower)) {
     continue; // Already in Notion
   }
 

@@ -198,6 +198,46 @@ function normalizeProse(markdown) {
     return `\n${gfm.trim()}\n`;
   });
 
+  // 3. Collapse blank lines between markdown table rows so CommonMark doesn't break them into <p>
+  while (/(\|[^\n]+\|)\n[ \t]*\n(?=[ \t]*\|[^\n]+\|)/.test(result)) {
+    result = result.replace(/(\|[^\n]+\|)\n[ \t]*\n(?=[ \t]*\|[^\n]+\|)/g, '$1\n');
+  }
+
+  // 4. Sanitize uncompiled LaTeX math formulas into clean Unicode or formatted code blocks
+  result = result
+    .replace(/\$\$(?:\s*B_\{max\}[\s\S]*?|\s*B_\{?\\max\}?[\s\S]*?)\$\$/gi, () => {
+      return '\n> **Budget Guardrail Formula:** `B_max = min(L_saved × (1 - M_target), Sum(Token_Costs) + Infra_Cost)`\n';
+    })
+    .replace(/\$\$([\s\S]*?)\$\$/g, (_, math) => `\n\`${math.replace(/[\r\n]+/g, ' ').trim()}\`\n`)
+    .replace(/\\mathbb\{R\}\^\{[^}]+\}/g, 'R^|V|')
+    .replace(/\\in\s*\{0,\s*-\\infty\}\^\{[^}]+\}/g, 'in {0, -inf}^|V|')
+    .replace(/\\in\b/g, '∈')
+    .replace(/\\le\b/g, '≤')
+    .replace(/\\ge\b/g, '≥')
+    .replace(/\\approx\b/g, '≈')
+    .replace(/\\times\b/g, '×')
+    .replace(/\\cdot\b/g, '·')
+    .replace(/\\infty\b/g, '∞')
+    .replace(/-\\infty\b/g, '-∞')
+    .replace(/\\max\b/g, 'max')
+    .replace(/\\min\b/g, 'min')
+    .replace(/\\text\{([^}]+)\}/g, '$1')
+    .replace(/(?<![\$\w])\$([a-zA-Z0-9_+^={}()|\\ -]+)\$(?![\$\w])/g, (match, inner) => {
+      if (/^\s*\d+[\d,.]*\s*$/.test(inner)) return match; // skip currency
+      const clean = inner
+        .replace(/\\in\b/g, '∈')
+        .replace(/\\le\b/g, '≤')
+        .replace(/\\ge\b/g, '≥')
+        .replace(/\\approx\b/g, '≈')
+        .replace(/\\infty\b/g, '∞')
+        .replace(/\\cdot\b/g, '·')
+        .replace(/\\text\{([^}]+)\}/g, '$1')
+        .replace(/_\{([^}]+)\}/g, '_$1')
+        .replace(/[\\]/g, '')
+        .trim();
+      return `\`${clean}\``;
+    });
+
   return result;
 }
 
@@ -320,7 +360,7 @@ const existingIds = new Set(
 // nothing else — every automated check still runs.
 //
 // Names must match the Notion `Track` select exactly, before slugification.
-const AUTO_TRACKS = ['Talks', 'Case Studies', 'Basics'];
+const AUTO_TRACKS = ['Talks', 'Case Studies', 'Basics', 'Technical', 'Business'];
 
 async function fetchCheckPage(id) {
   try {
