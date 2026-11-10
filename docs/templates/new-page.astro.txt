@@ -1,0 +1,36 @@
+---
+// Copy to site/src/pages/<name>.astro. Replace the capitalised placeholders.
+// Full-bleed page with the dark plate, gold edge and paper body.
+import Base from '../layouts/Base.astro';
+import { plateEdge, EDGE_DEPTH } from '../lib/bowl';
+
+const edge = plateEdge('PAGE-SLUG');
+const clip = `polygon(0 0,100% 0,${[...edge].reverse().map(([x, d]) => `${x.toFixed(1)}% calc(100% - ${d.toFixed(1)}px)`).join(',')})`;
+const line = edge.map(([x, d]) => `${(x * 10).toFixed(0)},${(EDGE_DEPTH - d).toFixed(1)}`).join(' ');
+---
+
+<Base title="PAGE TITLE — wAIbi-sabi" description="MAX 160 CHARACTERS" section="SECTION" immersive>
+  <section class="pg-plate" style={`clip-path:${clip}`}>
+    <div class="wrap pg-plate__in">
+      <h1>ONE HEADING PER PAGE</h1>
+      <p>ONE SENTENCE ON WHAT THIS PAGE IS FOR.</p>
+    </div>
+  </section>
+  <svg class="pg-edge" viewBox={`0 0 1000 ${EDGE_DEPTH}`} preserveAspectRatio="none" aria-hidden="true">
+    <polyline points={line} vector-effect="non-scaling-stroke" />
+  </svg>
+
+  <div class="wrap pg-body">
+    <!-- Content. Reuse patterns listed in docs/DESIGN-SYSTEM.md. -->
+  </div>
+</Base>
+
+<style>
+  .pg-plate { position: relative; color: var(--tldr-ink); background: var(--tldr-bg); }
+  .pg-plate__in { padding-block: clamp(2rem, 4vw, 3.5rem) calc(22px + clamp(1.75rem, 3vw, 2.75rem)); }
+  .pg-plate h1 { margin: 0; font-size: clamp(2.125rem, 4.5vw, 3.75rem); font-weight: 800; line-height: 1.05; letter-spacing: -.035em; text-wrap: balance; }
+  .pg-plate p { margin: .85rem 0 0; max-width: 40rem; font-size: 1.0625rem; line-height: 1.55; color: var(--tldr-dim); }
+  .pg-edge { display: block; position: relative; width: 100%; height: 22px; margin-top: -22px; overflow: visible; pointer-events: none; }
+  .pg-edge polyline { fill: none; stroke: var(--ochre); stroke-width: 1.75; stroke-linejoin: miter; }
+  .pg-body { padding-top: clamp(2rem, 4vw, 3.5rem); }
+</style>

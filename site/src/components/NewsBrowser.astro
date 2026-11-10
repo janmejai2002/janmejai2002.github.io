@@ -1,6 +1,7 @@
 ---
+import Crew from './Crew.astro';
 
-type Item = {
+export type NewsItem = {
   headline: string;
   date: string;
   category: string;
@@ -9,34 +10,46 @@ type Item = {
   source: string | null;
 };
 
-const items = (Astro.props.items as Item[]).slice().sort((a, b) => b.date.localeCompare(a.date));
-const categories = [...new Set(items.map((i) => i.category))].sort();
+interface Props {
+  items: NewsItem[];
+  totalCount?: number;
+  isLeadDay?: boolean;
+}
+
+const { items, totalCount, isLeadDay = true } = Astro.props;
+
+const CATEGORY_META: Record<string, { accent: string; blurb: string }> = {
+  Consulting: { accent: 'hanko', blurb: 'Frameworks and client problems' },
+  Finance: { accent: 'ochre', blurb: 'Markets, deals and numbers' },
+  Marketing: { accent: 'mizu', blurb: 'Brands, pricing and consumers' },
+  Operations: { accent: 'moss', blurb: 'Supply chains and unit economics' },
+  'Product Management': { accent: 'indigo', blurb: 'Users, metrics and trade-offs' },
+};
+
+const categories = Object.keys(CATEGORY_META);
 const counts = Object.fromEntries(
   categories.map((c) => [c, items.filter((i) => i.category === c).length])
 );
 
-// Each function gets one of the six earths.
-const accentOf: Record<string, string> = {
-  Finance: 'moss',
-  Marketing: 'indigo',
-  Operations: 'ochre',
-  'Product Management': 'plum',
-  Consulting: 'hanko',
-};
-const accent = (c: string) => accentOf[c] ?? 'mizu';
+const byDate = items.reduce<Record<string, NewsItem[]>>((acc, i) => {
+  (acc[i.date] ??= []).push(i);
+  return acc;
+}, {});
+const dates = Object.keys(byDate).sort((a, b) => b.localeCompare(a));
 
-const latest = items[0]?.date;
-const oldest = items.at(-1)?.date;
+const fmtDate = (iso: string) =>
+  new Date(iso + 'T00:00:00Z').toLocaleDateString('en-IN', {
+    day: 'numeric',
+    month: 'short',
+    timeZone: 'UTC',
+  });
 
-const fmt = (iso: string) =>
-  new Date(iso + 'T00:00:00').toLocaleDateString('en-IN', { day: 'numeric', month: 'short' });
-
-const fmtLong = (iso: string) =>
-  new Date(iso + 'T00:00:00').toLocaleDateString('en-IN', {
+const fmtDay = (iso: string) =>
+  new Date(iso + 'T00:00:00Z').toLocaleDateString('en-IN', {
     weekday: 'long',
     day: 'numeric',
     month: 'long',
-    year: 'numeric',
+    timeZone: 'UTC',
   });
 
 const host = (url: string | null) => {
@@ -47,409 +60,439 @@ const host = (url: string | null) => {
     return null;
   }
 };
-
-const byDate = items.reduce<Record<string, Item[]>>((acc, i) => {
-  (acc[i.date] ??= []).push(i);
-  return acc;
-}, {});
-const dates = Object.keys(byDate).sort((a, b) => b.localeCompare(a));
-const slug = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-');
 ---
 
-  <div class="controls fade-up d2" role="region" aria-label="Filter and sort">
-    <div class="chips" role="group" aria-label="Filter by function">
-      <button class="chip is-on" data-cat="all" aria-pressed="true">
-        All <span class="chip__n">{items.length}</span>
-      </button>
-      {
-        categories.map((c) => (
+<div class="news-browser" data-browser>
+  <!-- 2. Function doors -->
+  <div class="doors" role="group" aria-label="Filter by function">
+    <button
+      type="button"
+      class="door door--all"
+      data-door="all"
+      aria-pressed="true"
+      style="--accent:var(--ink);--tint:var(--paper-2)"
+    >
+      <span class="door__label">All<span class="door__n">{items.length}</span></span>
+      <span class="door__ask">Everything, newest first</span>
+    </button>
+    {
+      categories.map((c) => {
+        const meta = CATEGORY_META[c];
+        return (
           <button
-            class="chip"
-            data-cat={c}
+            type="button"
+            class="door"
+            data-door={c}
             aria-pressed="false"
-            style={`--accent:var(--${accent(c)});--tint:var(--wash-${accent(c)})`}
+            style={`--accent:var(--${meta.accent});--tint:var(--wash-${meta.accent})`}
           >
-            {c} <span class="chip__n">{counts[c]}</span>
+            <span class="door__label">{c}<span class="door__n">{counts[c] ?? 0}</span></span>
+            <span class="door__ask">{meta.blurb}</span>
           </button>
-        ))
-      }
-    </div>
-
-    <div class="controls__row">
-      <label class="field">
-        <span class="sr-only">Search headlines, summaries and angles</span>
-        <svg class="field__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-          stroke-width="2" stroke-linecap="round" aria-hidden="true">
-          <circle cx="11" cy="11" r="7" /><path d="M20 20l-3.5-3.5" />
-        </svg>
-        <input type="search" id="q" placeholder="Search the archive…" autocomplete="off" />
-      </label>
-
-      <label class="field field--sort">
-        <span class="sr-only">Sort by</span>
-        <select id="sort">
-          <option value="new">Newest first</option>
-          <option value="old">Oldest first</option>
-          <option value="cat">Group by function</option>
-          <option value="az">Headline A–Z</option>
-        </select>
-      </label>
-    </div>
-
-    <p class="tally" id="tally" aria-live="polite"></p>
+        );
+      })
+    }
   </div>
 
-  <div id="archive">
+  <!-- 3. Toolbar -->
+  <div class="toolbar" role="region" aria-label="Filter and sort stories">
+    <div class="toolbar__row">
+      <div class="toolbar__search">
+        <label for="news-q" class="sr-only">Search stories</label>
+        <input type="search" id="news-q" placeholder="Search headlines, summaries and angles…" autocomplete="off" />
+      </div>
+      <div class="toolbar__sort">
+        <label for="news-sort" class="sr-only">Sort by</label>
+        <select id="news-sort">
+          <option value="new">Newest first</option>
+          <option value="old">Oldest first</option>
+          <option value="az">Headline A–Z</option>
+        </select>
+      </div>
+      <div class="toolbar__actions">
+        <button type="button" class="linkish test-toggle" id="test-toggle" hidden>Test me: hide the angles</button>
+        <span class="practised-tally" id="practised-tally" hidden></span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. Days & Cards -->
+  <div class="days" id="news-archive">
     {
-      dates.map((d) => (
-        <section class="day" data-date={d} style={`--n:${byDate[d].length}`}>
-          <h2 class="day__label">
-            <span class="day__dot" aria-hidden="true" />
-            <time datetime={d}>{fmtLong(d)}</time>
-            <span class="day__rule" aria-hidden="true" />
-            <span class="day__n">{byDate[d].length}</span>
-          </h2>
+      dates.map((d, dayIdx) => (
+        <section class="day" data-date={d}>
+          <div class="day__side">
+            <h2 class="day__label">
+              <time datetime={d}>{fmtDay(d)}</time>
+              <span class="day__count">{byDate[d].length} {byDate[d].length === 1 ? 'story' : 'stories'}</span>
+            </h2>
+          </div>
+          <div class="day__cards">
+            {byDate[d].map((i, cardIdx) => {
+              const isLead = isLeadDay && dayIdx === 0 && cardIdx === 0;
+              const meta = CATEGORY_META[i.category] ?? { accent: 'ink', blurb: '' };
+              const storyId = `${i.date}:${i.headline}`;
+              return (
+                <article
+                  class:list={['card', isLead && 'card--lead']}
+                  data-cat={i.category}
+                  data-date={i.date}
+                  data-headline={i.headline.toLowerCase()}
+                  data-id={storyId}
+                  style={`--accent:var(--${meta.accent});--tint:var(--wash-${meta.accent})`}
+                >
+                  <div class="card__meta">
+                    <span class="card__cat">
+                      <span class="card__dot" aria-hidden="true" />
+                      {i.category}
+                    </span>
+                    <span class="card__sep" aria-hidden="true">·</span>
+                    <time class="card__date" datetime={i.date}>{fmtDate(i.date)}</time>
+                    <span class="q__flag" data-flag hidden>Practised</span>
+                  </div>
 
-          <div class="cards">
-            {byDate[d].map((i) => (
-              <article
-                class="card"
-                data-cat={i.category}
-                data-date={i.date}
-                data-headline={i.headline.toLowerCase()}
-                style={`--accent:var(--${accent(i.category)});--tint:var(--wash-${accent(i.category)})`}
-              >
-                <div class="card__top">
-                  <span class="tag">
-                    <span class="tag__dot" aria-hidden="true" />
-                    {i.category}
-                  </span>
-                  <time class="card__date" datetime={i.date}>{fmt(i.date)}</time>
-                </div>
+                  <h3 class="card__h">{i.headline}</h3>
+                  <p class="card__sum">{i.summary}</p>
 
-                <h3 class="card__h">{i.headline}</h3>
-                <p class="card__sum">{i.summary}</p>
+                  <div class="card__angle">
+                    <div class="angle__content">
+                      <span class="angle__label">They will push on</span>
+                      <p class="angle__text">{i.angle}</p>
+                    </div>
+                    <div class="angle__test" hidden>
+                      <p class="angle__prompt">What would they ask you about this?</p>
+                      <button type="button" class="linkish angle__reveal">Show the angle</button>
+                    </div>
+                  </div>
 
-                <div class="card__angle">
-                  <span class="card__angle-k">Interview angle</span>
-                  <p>{i.angle}</p>
-                </div>
-
-                {i.source && (
-                  <a class="card__src" href={i.source} target="_blank" rel="noopener noreferrer">
-                    <span>{host(i.source)}</span>
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-                      stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                      <path d="M7 17L17 7M17 7H8M17 7v9" />
-                    </svg>
-                  </a>
-                )}
-              </article>
-            ))}
+                  {i.source && (
+                    <a class="card__src linkish" href={i.source} target="_blank" rel="noopener noreferrer">
+                      {host(i.source)} <span aria-hidden="true">↗</span>
+                    </a>
+                  )}
+                </article>
+              );
+            })}
           </div>
         </section>
       ))
     }
   </div>
 
-  <p class="noresults" id="noresults" hidden>
-    Nothing matches that. <button type="button" id="reset">Clear filters</button>
-  </p>
+  <!-- 7. Empty search -->
+  <div class="empty-news" id="noresults" hidden>
+    <Crew who="oops" mood="shrug" class="empty-news__crew" />
+    <p>Nothing matches that. Try a company name, or <button type="button" class="linkish" id="reset">clear the search</button>.</p>
+  </div>
+</div>
 
 <style>
-  /* ---------- Controls ---------- */
-  .controls {
-    position: sticky; top: var(--nav-h, 3.35rem); z-index: 30;
-    background: color-mix(in srgb, var(--paper) 94%, transparent);
-    backdrop-filter: blur(12px);
-    border-bottom: 1px solid var(--border);
-    padding: .9rem 0 .8rem; margin-bottom: 2.5rem;
+  .news-browser {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    margin-bottom: 3rem;
   }
 
-  .chips { display: flex; flex-wrap: wrap; gap: .4rem; margin-bottom: .8rem; }
+  /* 2. Function doors */
+  .doors {
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    display: grid; grid-template-columns: repeat(6, minmax(0, 1fr));
+    margin-bottom: 2rem; border-block: 1px solid var(--border);
+  }
+  .door {
+    font: inherit; color: inherit; text-align: left; cursor: pointer; background: none; border: 0;
+    display: flex; flex-direction: column; gap: .25rem;
+    padding: 1.1rem 1rem; position: relative;
+    transition: background-color var(--dur-fast) var(--ease);
+  }
+  .door + .door { box-shadow: inset 1px 0 0 var(--border); }
+  .door:hover, .door[aria-pressed='true'] { background: var(--tint); }
+  .door[aria-pressed='true']::after {
+    content: ''; position: absolute; left: 0; right: 0; bottom: -1px; height: 3px; background: var(--accent);
+  }
+  .door__label { font-size: 1.0625rem; font-weight: 800; letter-spacing: -.02em; line-height: 1.2; }
+  .door__n { margin-left: .4rem; font-size: .8125rem; font-weight: 600; letter-spacing: 0; color: var(--ink-soft); }
+  .door__ask { font-size: .8125rem; line-height: 1.35; color: var(--ink-soft); }
 
-  .chip {
-    font: inherit; font-size: .625rem; font-weight: 800; letter-spacing: .09em;
-    text-transform: uppercase; padding: .38rem .75rem; border-radius: 999px;
-    border: 1.5px solid var(--border); background: transparent; color: var(--ink-soft);
+  @media (max-width: 68rem) {
+    .doors { display: flex; overflow-x: auto; scroll-snap-type: x proximity; scrollbar-width: none; }
+    .doors::-webkit-scrollbar { display: none; }
+    .door { flex: 0 0 min(15.5rem, 66vw); scroll-snap-align: start; padding: .85rem .9rem; }
+  }
+
+  /* 3. Toolbar */
+  .toolbar {
+    position: sticky; top: 0; z-index: 20;
+    background: var(--paper); border-bottom: 1px solid var(--border);
+    padding: .85rem 0; margin-bottom: 2.5rem;
+  }
+  .toolbar__row {
+    display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;
+  }
+  .toolbar__search { flex: 1 1 14rem; }
+  .toolbar__search input {
+    font: inherit; font-size: .9375rem; width: 100%; min-height: 2.75rem; padding: 0 1rem;
+    color: var(--ink); background: var(--card); border: 1px solid var(--border); border-radius: 10px;
+    transition: border-color var(--dur-fast) var(--ease);
+  }
+  .toolbar__search input::placeholder { color: var(--ink-soft); }
+  .toolbar__search input:focus-visible { outline: 2px solid var(--mizu); outline-offset: 1px; }
+  .toolbar__sort select {
+    font: inherit; font-size: .875rem; min-height: 2.75rem; padding: 0 .9rem;
+    color: var(--ink); background: var(--card); border: 1px solid var(--border); border-radius: 10px;
     cursor: pointer;
-    /* Was `all`, which animated layout properties too and made a 221-chip
-       filter feel mushy. Name the three that actually change. */
-    transition: color var(--dur-fast) var(--ease),
-                border-color var(--dur-fast) var(--ease),
-                background var(--dur-fast) var(--ease);
-    display: inline-flex; align-items: center; gap: .4rem;
   }
-  .chip:hover {
-    border-color: var(--accent, var(--ink)); color: var(--ink);
-    background: color-mix(in srgb, var(--accent, var(--ink)) 8%, transparent);
-  }
-  .chip__n { font-variant-numeric: tabular-nums; opacity: .5; }
-  .chip.is-on {
-    background: var(--accent, var(--ink)); border-color: var(--accent, var(--ink));
-    color: var(--paper);
-  }
-  .chip.is-on .chip__n { opacity: .7; }
-  .chip[data-cat='all'].is-on { background: var(--solid); border-color: var(--solid); color: var(--on-solid); }
-
-  .controls__row { display: flex; gap: .5rem; flex-wrap: wrap; }
-  .field { flex: 1 1 12rem; display: block; position: relative; }
-  .field--sort { flex: 0 0 auto; }
-  .field__icon {
-    position: absolute; left: .7rem; top: 50%; transform: translateY(-50%);
-    width: 14px; height: 14px; color: var(--ink-faint); pointer-events: none;
-  }
-  .field input, .field select {
-    font: inherit; font-size: .875rem; width: 100%;
-    padding: .55rem .8rem; border: 1px solid var(--border); border-radius: 10px;
-    background: var(--card); color: var(--ink);
-    transition: border-color var(--dur-fast) var(--ease),
-                box-shadow var(--dur-fast) var(--ease);
-  }
-  .field input { padding-left: 2rem; }
-  .field input:hover, .field select:hover { border-color: var(--ink-faint); }
-  .field input:focus-visible, .field select:focus-visible {
-    outline: none; border-color: var(--mizu);
-    box-shadow: 0 0 0 3px color-mix(in srgb, var(--mizu) 18%, transparent);
-  }
-
-  .tally {
-    margin: .65rem 0 0; font-size: .625rem; font-weight: 700;
-    letter-spacing: .15em; text-transform: uppercase; color: var(--ink-faint);
-  }
+  .toolbar__sort select:focus-visible { outline: 2px solid var(--mizu); outline-offset: 1px; }
+  .toolbar__actions { display: flex; align-items: center; gap: .75rem; margin-left: auto; }
+  .practised-tally { font-size: .8125rem; font-weight: 600; color: var(--ink-soft); }
 
   .sr-only {
     position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
     overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
   }
 
-  /* ---------- Day groups ---------- */
+  /* 4. Days */
   .day {
-    margin-bottom: 2.75rem;
-    /* 33 groups / 221 cards — skip layout+paint for offscreen days.
-       The placeholder MUST scale with the card count: a flat estimate made a
-       21-card day claim the same height as a 2-card day, so the scroll position
-       lurched every time a group actually rendered. --n is the card count;
-       --card-h is the per-card height at this breakpoint. */
-    --card-h: 16.5rem;
-    content-visibility: auto;
-    contain-intrinsic-size: auto calc(var(--n, 4) * var(--card-h) + 3.5rem);
+    display: grid; grid-template-columns: minmax(0, 1fr);
+    gap: 1.5rem; margin-bottom: 3.5rem;
   }
-  @media (min-width: 768px) { .day { --card-h: 9rem; } }
-  @media (min-width: 1100px) { .day { --card-h: 6.5rem; } }
+  .day__side {
+    border-left: 2px solid var(--ochre); padding-left: 1rem;
+  }
   .day__label {
-    display: flex; align-items: center; gap: .75rem;
-    font-size: .625rem; font-weight: 800; letter-spacing: .15em;
-    text-transform: uppercase; color: var(--ink-faint); margin: 0 0 1.1rem;
+    margin: 0; display: flex; flex-direction: column; gap: .25rem;
   }
-  .day__dot { width: 5px; height: 5px; border-radius: 999px; background: var(--mizu); flex-shrink: 0; }
-  .day__rule { flex: 1; height: 1px; background: var(--border); }
-  .day__n { font-variant-numeric: tabular-nums; opacity: .7; }
-
-  /* The UA's `[hidden]{display:none}` loses to any author `display` rule of
-     equal specificity, so every element we hide via the hidden attribute has
-     to opt out explicitly. Without this the filter sets hidden and nothing
-     visibly changes. */
-  .card[hidden],
-  .day[hidden],
-  .day__label[hidden] { display: none !important; }
-
-  /* ---------- Cards ---------- */
-  .cards {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
-    gap: .9rem;
+  .day__label time {
+    font-family: var(--font); font-size: 1.25rem; font-weight: 800; line-height: 1.2;
+    letter-spacing: -.02em; color: var(--ink);
+  }
+  .day__count {
+    font-size: .875rem; font-weight: 600; color: var(--ink-soft); font-variant-numeric: tabular-nums;
   }
 
+  @media (min-width: 64rem) {
+    .day {
+      grid-template-columns: 13.5rem minmax(0, 1fr);
+      gap: 2.5rem;
+    }
+    .day__side {
+      position: sticky; top: calc(2.75rem + 2rem); align-self: start;
+    }
+  }
+
+  .day__cards {
+    display: grid; grid-template-columns: minmax(0, 1fr); gap: 1.25rem;
+  }
+  @media (min-width: 48rem) {
+    .day__cards {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @media (min-width: 84rem) {
+    .day__cards {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  /* 5. Card */
   .card {
-    position: relative; display: flex; flex-direction: column; overflow: hidden;
-    background: var(--card); border: 1px solid var(--border);
-    border-radius: 16px; padding: 1.2rem 1.3rem 1.1rem;
-    transition: transform var(--dur-fast) var(--ease),
-                box-shadow var(--dur-fast) var(--ease),
-                border-color var(--dur-fast) var(--ease);
-  }
-  /* the tint bleeds in from the top-left corner, like ink on paper */
-  .card::before {
-    content: ''; position: absolute; inset: 0;
-    background: radial-gradient(120% 90% at 0% 0%, var(--tint), transparent 62%);
-    opacity: .85; pointer-events: none;
-    transition: opacity var(--dur-fast) var(--ease);
-  }
-  /* accent spine, grows on hover */
-  .card::after {
-    content: ''; position: absolute; left: 0; top: 1.2rem; bottom: 1.2rem;
-    width: 3px; border-radius: 0 3px 3px 0; background: var(--accent);
-    transform: scaleY(.32); transform-origin: top;
-    transition: transform .55s var(--ease);
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px 14px 14px 3px;
+    padding: 1.25rem 1.35rem 1.2rem;
+    display: flex; flex-direction: column;
+    min-width: 0;
+    max-width: 100%;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    transition: border-color var(--dur-fast) var(--ease);
   }
   .card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 16px 34px var(--shadow);
-    border-color: color-mix(in srgb, var(--accent) 45%, var(--border));
+    border-color: var(--accent);
   }
-  .card:hover::after { transform: scaleY(1); }
-  .card:hover::before { opacity: 1; }
-  .card > * { position: relative; z-index: 1; }
-
-  .card__top {
-    display: flex; align-items: center; justify-content: space-between;
-    gap: .75rem; margin-bottom: .75rem;
+  .card--lead {
+    grid-column: 1 / -1;
   }
-  .tag {
-    display: inline-flex; align-items: center; gap: .4rem;
-    font-size: .5625rem; font-weight: 800; letter-spacing: .12em;
-    text-transform: uppercase; color: var(--accent);
+  .card__meta {
+    display: flex; align-items: center; gap: .45rem; flex-wrap: wrap;
+    font-size: .8125rem; font-weight: 600; color: var(--ink-soft);
+    margin-bottom: .65rem;
   }
-  .tag__dot { width: 5px; height: 5px; border-radius: 999px; background: var(--accent); }
-  .card__date {
-    font-size: .5625rem; font-weight: 800; letter-spacing: .1em;
-    text-transform: uppercase; color: var(--ink-faint);
-    font-variant-numeric: tabular-nums;
+  .card__cat {
+    display: inline-flex; align-items: center; gap: .4rem; color: var(--ink);
   }
+  .card__dot {
+    width: 7px; height: 7px; border-radius: 50%; background: var(--accent); flex-shrink: 0;
+  }
+  .card__sep { color: var(--ink-faint); }
+  .card__date { font-variant-numeric: tabular-nums; }
 
   .card__h {
-    font-size: 1.02rem; font-weight: 800; line-height: 1.32;
-    letter-spacing: -.012em; margin: 0 0 .55rem; color: var(--ink);
-    text-wrap: balance;
+    margin: 0 0 .65rem; font-family: var(--font); font-size: 1.125rem; font-weight: 700;
+    line-height: 1.25; color: var(--ink); letter-spacing: -.015em; text-wrap: pretty;
+  }
+  .card--lead .card__h {
+    font-family: var(--serif); font-size: clamp(1.625rem, 3vw, 2.25rem); font-weight: 500;
+    line-height: 1.2; letter-spacing: -.02em;
   }
   .card__sum {
-    font-size: .8125rem; line-height: 1.62; color: var(--ink-soft); margin: 0 0 1rem;
+    font-size: .9375rem; line-height: 1.55; color: var(--ink-soft); margin: 0 0 1.1rem;
+    display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden;
   }
-
-  /* the angle is the product — give it a seal-stamp treatment */
   .card__angle {
-    margin-top: auto; padding: .75rem .85rem;
-    background: color-mix(in srgb, var(--paper) 62%, transparent);
-    border: 1px solid var(--border-soft);
-    border-left: 2px solid var(--accent);
+    margin-top: auto; padding: .9rem 1rem;
+    background: var(--tint);
+    border-left: 2px solid var(--ochre);
     border-radius: 0 10px 10px 0;
   }
-  .card__angle-k {
-    display: block; font-size: .5rem; font-weight: 800; letter-spacing: .18em;
-    text-transform: uppercase; color: var(--accent); margin-bottom: .35rem;
+  .angle__label {
+    display: block; font-family: var(--font); font-size: .8125rem; font-weight: 700;
+    color: var(--ink); margin-bottom: .35rem; letter-spacing: -.01em;
   }
-  .card__angle p {
-    margin: 0; font-size: .8125rem; line-height: 1.55;
-    font-weight: 500; color: var(--ink);
+  .angle__text {
+    margin: 0; font-family: var(--serif); font-size: 1.0625rem; line-height: 1.45;
+    color: var(--ink); text-wrap: pretty;
   }
-
+  .angle__prompt {
+    margin: 0 0 .5rem; font-family: var(--serif); font-size: 1.0625rem; font-style: italic;
+    color: var(--ink);
+  }
+  .angle__reveal {
+    font-size: .875rem; font-weight: 700;
+  }
   .card__src {
-    display: inline-flex; align-items: center; gap: .3rem; margin-top: .85rem;
-    font-size: .5625rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase;
-    color: var(--ink-faint); text-decoration: none; align-self: flex-start;
-    transition: color .25s; max-width: 100%;
+    margin-top: .9rem; font-size: .875rem; align-self: flex-start;
+    overflow-wrap: anywhere; word-break: break-word;
   }
-  .card__src span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .card__src svg { width: 10px; height: 10px; flex-shrink: 0; transition: transform .25s; }
-  .card__src:hover { color: var(--accent); }
-  .card__src:hover svg { transform: translate(2px, -2px); }
-
-  .noresults { padding: 3rem 0; color: var(--ink-soft); font-size: .9375rem; }
-  .noresults button {
-    font: inherit; background: none; border: 0;
-    border-bottom: 1.5px solid var(--mizu); color: var(--ink); cursor: pointer; padding: 0;
+  @media (max-width: 30rem) {
+    .card { padding: 1.1rem 1rem; }
   }
 
-  @media (max-width: 640px) {
-    .controls { top: var(--nav-h, 3.2rem); padding-top: .75rem; }
-    .cards { grid-template-columns: 1fr; }
-    .day__label { gap: .5rem; }
-    .field--sort { flex: 1 1 100%; }
+  .q__flag { margin-left: .4rem; font-size: .8125rem; font-weight: 700; color: var(--ink); white-space: nowrap; }
+  .q__flag::before { content: ''; display: inline-block; width: 6px; height: 6px; margin-right: .35rem; background: var(--ochre); transform: rotate(45deg); vertical-align: 1px; }
 
-    /* touch targets: 25px chips fail the 44px minimum on a phone */
-    .chips {
-      gap: .4rem;
-      display: flex; flex-wrap: nowrap; overflow-x: auto;
-      scroll-snap-type: x proximity;
-      -webkit-overflow-scrolling: touch;
-      scrollbar-width: none;
-      margin-inline: calc(var(--gutter) * -1); padding-inline: var(--gutter);
-      /* The scrollbar is hidden, so nothing signalled that six categories
-         continue past the edge. Fade the trailing edge instead — and let the
-         mask fall away once you reach the end, so it reads as an affordance
-         rather than as decoration. */
-      -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - 2.5rem), transparent);
-      mask-image: linear-gradient(90deg, #000 calc(100% - 2.5rem), transparent);
-      transition: -webkit-mask-image var(--dur-fast) var(--ease),
-                  mask-image var(--dur-fast) var(--ease);
-    }
-    .chips[data-scroll-end] {
-      -webkit-mask-image: none;
-      mask-image: none;
-    }
-    .chips::-webkit-scrollbar { display: none; }
-    .chip {
-      min-height: 44px; padding: .5rem .9rem;
-      flex: 0 0 auto; scroll-snap-align: start;
-    }
-    .field input, .field select { min-height: 44px; }
+  /* 7. Empty search */
+  .empty-news {
+    margin: 3rem 0; font-size: 1rem; color: var(--ink-soft);
+    display: flex; align-items: center; gap: 1rem;
   }
+  .empty-news__crew { width: 4.5rem; height: 4.5rem; flex-shrink: 0; }
+  .empty-news p { margin: 0; }
+
+  .linkish {
+    font: inherit; font-size: .875rem; font-weight: 700; color: var(--ink); background: none; border: 0;
+    border-bottom: 1px solid var(--border); padding: 0 0 1px; cursor: pointer; text-decoration: none;
+    transition: border-color var(--dur-fast) var(--ease);
+  }
+  .linkish:hover { border-color: var(--ink); }
+
+  [hidden] { display: none !important; }
 
   @media (prefers-reduced-motion: reduce) {
-    .card::after { transform: scaleY(1); }
+    .door, .card, .toolbar__search input { transition: none; }
   }
 </style>
 
 <script>
-  const archive = document.getElementById('archive')!;
-  const q = document.getElementById('q') as HTMLInputElement;
-  const sort = document.getElementById('sort') as HTMLSelectElement;
-  const tally = document.getElementById('tally')!;
-  const noresults = document.getElementById('noresults')!;
-  const chips = [...document.querySelectorAll<HTMLButtonElement>('.chip')];
-  const days = [...archive.querySelectorAll<HTMLElement>('.day')];
-  const cards = [...archive.querySelectorAll<HTMLElement>('.card')];
+  const browserEl = document.querySelector<HTMLElement>('[data-browser]');
+  const q = document.getElementById('news-q') as HTMLInputElement | null;
+  const sort = document.getElementById('news-sort') as HTMLSelectElement | null;
+  const testToggle = document.getElementById('test-toggle') as HTMLButtonElement | null;
+  const tallyEl = document.getElementById('practised-tally');
+  const noresults = document.getElementById('noresults');
+  const resetBtn = document.getElementById('reset');
+  const doors = [...document.querySelectorAll<HTMLButtonElement>('.door')];
+  const archive = document.getElementById('news-archive');
+  const days = [...document.querySelectorAll<HTMLElement>('.day')];
+  const cards = [...document.querySelectorAll<HTMLElement>('.card')];
 
-  // Drop the trailing fade on the chip strip once it is scrolled to the end,
-  // so the hint disappears when there is nothing left to hint at. Mobile only —
-  // above 640px the strip wraps and never scrolls.
-  const chipStrip = document.querySelector<HTMLElement>('.chips');
-  if (chipStrip) {
-    const syncFade = () => {
-      const atEnd = chipStrip.scrollLeft + chipStrip.clientWidth >= chipStrip.scrollWidth - 2;
-      chipStrip.toggleAttribute('data-scroll-end', atEnd);
-    };
-    chipStrip.addEventListener('scroll', syncFade, { passive: true });
-    window.addEventListener('resize', syncFade);
-    syncFade();
-  }
+  let currentCategory = 'all';
+  let testMode = false;
 
-  let cat = 'all';
-
-  const apply = () => {
-    const term = q.value.trim().toLowerCase();
-    let shown = 0;
-
-    for (const card of cards) {
-      const okCat = cat === 'all' || card.dataset.cat === cat;
-      const okTerm = !term || (card.textContent ?? '').toLowerCase().includes(term);
-      const show = okCat && okTerm;
-      card.hidden = !show;
-      if (show) shown++;
-    }
-
-    for (const day of days) {
-      const any = [...day.querySelectorAll<HTMLElement>('.card')].some((c) => !c.hidden);
-      day.hidden = !any;
-    }
-
-    const grouped = sort.value === 'cat' || sort.value === 'az';
-    for (const day of days) {
-      day.querySelector('.day__label')!.toggleAttribute('hidden', grouped);
-    }
-
-    tally.textContent = `Showing ${shown} of ${cards.length}`;
-    noresults.hidden = shown > 0;
+  const store = {
+    get<T>(key: string, fallback: T): T {
+      try {
+        return (JSON.parse(localStorage.getItem(key) ?? 'null') as T) ?? fallback;
+      } catch {
+        return fallback;
+      }
+    },
+    set(key: string, value: unknown) {
+      try {
+        localStorage.setItem(key, JSON.stringify(value));
+      } catch {
+        // private mode
+      }
+    },
   };
 
-  const reorder = () => {
+  const getPractised = (): string[] => store.get<string[]>('waibi:news:practised', []);
+
+  const updatePractisedUI = () => {
+    const practised = getPractised();
+    if (tallyEl) {
+      if (practised.length > 0) {
+        tallyEl.textContent = `${practised.length} practised`;
+        tallyEl.hidden = false;
+      } else {
+        tallyEl.hidden = true;
+      }
+    }
+
+    for (const card of cards) {
+      const id = card.dataset.id ?? '';
+      const isPractised = practised.includes(id);
+      const flag = card.querySelector<HTMLElement>('[data-flag]');
+      if (flag) flag.hidden = !isPractised;
+
+      const angleContent = card.querySelector<HTMLElement>('.angle__content');
+      const angleTest = card.querySelector<HTMLElement>('.angle__test');
+
+      if (testMode) {
+        if (isPractised) {
+          if (angleContent) angleContent.hidden = false;
+          if (angleTest) angleTest.hidden = true;
+        } else {
+          if (angleContent) angleContent.hidden = true;
+          if (angleTest) angleTest.hidden = false;
+        }
+      } else {
+        if (angleContent) angleContent.hidden = false;
+        if (angleTest) angleTest.hidden = true;
+      }
+    }
+  };
+
+  const filterCards = () => {
+    const term = (q?.value ?? '').trim().toLowerCase();
+    let visibleCount = 0;
+
+    for (const card of cards) {
+      const catMatch = currentCategory === 'all' || card.dataset.cat === currentCategory;
+      const termMatch = !term || (card.textContent ?? '').toLowerCase().includes(term);
+      const isVisible = catMatch && termMatch;
+      card.hidden = !isVisible;
+      if (isVisible) visibleCount++;
+    }
+
+    for (const day of days) {
+      const hasVisible = [...day.querySelectorAll<HTMLElement>('.card')].some((c) => !c.hidden);
+      day.hidden = !hasVisible;
+    }
+
+    if (noresults) noresults.hidden = visibleCount > 0;
+  };
+
+  const reorderCards = () => {
+    if (!sort || !archive) return;
     const mode = sort.value;
 
     if (mode === 'new' || mode === 'old') {
-      // put every card back in its own day, then order the days
       for (const day of days) {
-        const grid = day.querySelector('.cards')!;
+        const grid = day.querySelector('.day__cards')!;
         cards
           .filter((c) => c.dataset.date === day.dataset.date)
           .forEach((c) => grid.appendChild(c));
@@ -464,41 +507,66 @@ const slug = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-');
       return;
     }
 
-    // flatten into the first day's grid for a continuous sorted run
-    const first = days[0];
-    const grid = first.querySelector('.cards')!;
-    [...cards]
-      .sort((a, b) =>
-        mode === 'cat'
-          ? a.dataset.cat!.localeCompare(b.dataset.cat!) ||
-            b.dataset.date!.localeCompare(a.dataset.date!)
-          : a.dataset.headline!.localeCompare(b.dataset.headline!)
-      )
-      .forEach((c) => grid.appendChild(c));
-    archive.prepend(first);
+    // flatten into first day's grid for A-Z
+    const firstDay = days[0];
+    if (firstDay) {
+      const grid = firstDay.querySelector('.day__cards')!;
+      [...cards]
+        .sort((a, b) => (a.dataset.headline ?? '').localeCompare(b.dataset.headline ?? ''))
+        .forEach((c) => grid.appendChild(c));
+      archive.prepend(firstDay);
+    }
   };
 
-  chips.forEach((chip) =>
-    chip.addEventListener('click', () => {
-      cat = chip.dataset.cat!;
-      chips.forEach((c) => {
-        const on = c === chip;
-        c.classList.toggle('is-on', on);
-        c.setAttribute('aria-pressed', String(on));
-      });
-      apply();
-    })
-  );
-
-  q.addEventListener('input', apply);
-  sort.addEventListener('change', () => {
-    reorder();
-    apply();
-  });
-  document.getElementById('reset')!.addEventListener('click', () => {
-    q.value = '';
-    chips[0].click();
+  doors.forEach((door) => {
+    door.addEventListener('click', () => {
+      currentCategory = door.dataset.door ?? 'all';
+      doors.forEach((d) => d.setAttribute('aria-pressed', String(d === door)));
+      filterCards();
+    });
   });
 
-  apply();
+  if (q) q.addEventListener('input', filterCards);
+
+  if (sort) {
+    sort.addEventListener('change', () => {
+      reorderCards();
+      filterCards();
+    });
+  }
+
+  if (resetBtn) {
+    resetBtn.addEventListener('click', () => {
+      if (q) q.value = '';
+      const allDoor = doors.find((d) => d.dataset.door === 'all');
+      allDoor?.click();
+    });
+  }
+
+  if (testToggle) {
+    testToggle.hidden = false;
+    testToggle.addEventListener('click', () => {
+      testMode = !testMode;
+      testToggle.textContent = testMode ? 'Show the angles' : 'Test me: hide the angles';
+      updatePractisedUI();
+    });
+  }
+
+  // Handle reveal buttons
+  cards.forEach((card) => {
+    const revealBtn = card.querySelector<HTMLButtonElement>('.angle__reveal');
+    revealBtn?.addEventListener('click', () => {
+      const id = card.dataset.id ?? '';
+      if (id) {
+        const practised = getPractised();
+        if (!practised.includes(id)) {
+          store.set('waibi:news:practised', [...practised, id]);
+        }
+        updatePractisedUI();
+      }
+    });
+  });
+
+  updatePractisedUI();
+  filterCards();
 </script>

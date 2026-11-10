@@ -2,7 +2,9 @@
 import Base from '../../layouts/Base.astro';
 import NewsBrowser from '../../components/NewsBrowser.astro';
 import NewsNav from '../../components/NewsNav.astro';
+import Crew from '../../components/Crew.astro';
 import { allNews, categories, catSlug, months, monthLabel } from '../../data/news-archive';
+import { plateEdge, EDGE_DEPTH } from '../../lib/bowl';
 
 export function getStaticPaths() {
   return [
@@ -28,6 +30,12 @@ export function getStaticPaths() {
 }
 
 const { heading, title, description, items } = Astro.props;
+
+const edge = plateEdge('news');
+const clip = `polygon(0 0,100% 0,${[...edge].reverse().map(([x, d]) => `${x.toFixed(1)}% calc(100% - ${d.toFixed(1)}px)`).join(',')})`;
+const line = edge.map(([x, d]) => `${(x * 10).toFixed(0)},${(EDGE_DEPTH - d).toFixed(1)}`).join(' ');
+
+const statText = `${items.length} ${items.length === 1 ? 'story' : 'stories'} in this archive · ${allNews.length} in the full archive`;
 ---
 
 <Base
@@ -40,12 +48,50 @@ const { heading, title, description, items } = Astro.props;
     { name: 'BSchool news', path: '/news/' },
     { name: heading },
   ]}
+  immersive
+  grain={false}
 >
-  <section class="hero fade-up d1" style="padding-bottom:1.75rem">
-    <span class="hanko">Archive</span>
-    <h1>{heading}</h1>
-    <p>{items.length} stories, each with the angle an interviewer is likely to push on.</p>
+  <section class="pg-plate" style={`clip-path:${clip}`}>
+    <div class="wrap pg-plate__in">
+      <div class="pg-plate__main">
+        <h1>{heading}</h1>
+        <p class="pg-plate__desc">{description}</p>
+        <p class="pg-plate__stat">{statText}</p>
+      </div>
+      <div class="pg-plate__crew on-plate" aria-hidden="true">
+        <span class="crew-say">I read the business pages so you can pretend you did.</span>
+        <Crew who="kiki" mood="listen" class="kiki-pic" />
+      </div>
+    </div>
   </section>
-  <NewsNav />
-  <NewsBrowser items={items} />
+  <svg class="pg-edge" viewBox={`0 0 1000 ${EDGE_DEPTH}`} preserveAspectRatio="none" aria-hidden="true">
+    <polyline points={line} vector-effect="non-scaling-stroke" />
+  </svg>
+
+  <div class="wrap pg-body">
+    <NewsBrowser items={items} totalCount={allNews.length} isLeadDay={false} />
+    <NewsNav />
+  </div>
 </Base>
+
+<style>
+  .pg-plate { position: relative; color: var(--tldr-ink); background: var(--tldr-bg); }
+  .pg-plate__in {
+    padding-block: clamp(2rem, 4vw, 3.5rem) calc(22px + clamp(1.75rem, 3vw, 2.75rem));
+    display: flex; justify-content: space-between; align-items: flex-end; gap: 2rem;
+  }
+  .pg-plate__main { max-width: 48rem; }
+  .pg-plate h1 { margin: 0; font-size: clamp(2.125rem, 4.5vw, 3.75rem); font-weight: 800; line-height: 1.05; letter-spacing: -.035em; text-wrap: balance; }
+  .pg-plate__desc { margin: .85rem 0 0; max-width: 40rem; font-size: 1.0625rem; line-height: 1.55; color: var(--tldr-dim); text-wrap: pretty; }
+  .pg-plate__stat { margin: .75rem 0 0; font-size: .9375rem; color: var(--tldr-dim); }
+  .pg-plate__crew { display: none; }
+  @media (min-width: 48rem) {
+    .pg-plate__crew {
+      display: flex; flex-direction: column; align-items: flex-end; gap: .75rem; flex-shrink: 0;
+    }
+  }
+  .kiki-pic { width: 7rem; height: 7rem; }
+  .pg-edge { display: block; position: relative; width: 100%; height: 22px; margin-top: -22px; overflow: visible; pointer-events: none; }
+  .pg-edge polyline { fill: none; stroke: var(--ochre); stroke-width: 1.75; stroke-linejoin: miter; }
+  .pg-body { padding-top: clamp(2rem, 4vw, 3.5rem); padding-bottom: 4rem; }
+</style>

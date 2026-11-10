@@ -1,0 +1,39 @@
+/* The crew's materials: a thin ink line over a loose wash. Every colour is a site
+   token, so the same drawing works on paper and on the dark plate. */
+.crew {
+  --crew-line: var(--ink);
+  --crew-gold: var(--ochre);
+  display: block; overflow: visible;
+}
+.crew-ink { fill: none; stroke: var(--crew-line); stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
+.crew-ink .k { fill: var(--crew-line); stroke: none; }
+.crew-ink .f { fill: var(--crew-line); }
+.crew-ink .gold-seam { stroke: var(--crew-gold); stroke-width: 2.4; }
+.crew-ink .gold-line { stroke: var(--crew-gold); stroke-width: 2.2; }
+.crew-ink .gold { fill: var(--crew-gold); }
+.crew-ink .wash-ink { fill: color-mix(in srgb, var(--crew-line) 26%, transparent); }
+.crew-ink .glass { fill: color-mix(in srgb, var(--mizu) 18%, transparent); }
+.crew-ink .drop { fill: color-mix(in srgb, var(--mizu) 55%, transparent); stroke-width: 1.2; }
+.crew-note { fill: var(--crew-line); stroke: none; font-family: var(--serif); font-style: italic; font-size: 13px; }
+.crew-note.big { font-size: 20px; }
+
+/* Watercolour: the filter wobbles the edge and lets paper show through the pigment. */
+.crew-wash { filter: url(#crew-wash); opacity: .62; }
+.crew-pool { filter: url(#crew-wash); opacity: .42; }
+.wash-mizu { fill: var(--mizu); }
+.wash-hanko { fill: var(--hanko); }
+.wash-moss { fill: var(--moss); }
+.wash-indigo { fill: var(--indigo); }
+.wash-plum { fill: var(--plum); }
+
+/* On the dark plate, in either theme. */
+.on-plate .crew, .crew.on-plate { --crew-line: var(--tldr-ink); }
+.on-plate .crew-wash { opacity: .78; }
+.on-plate .crew-pool { opacity: .5; }
+
+/* What a character says. */
+.crew-say {
+  display: inline-block; max-width: 15rem; padding: .4rem .7rem; position: relative;
+  font-family: var(--serif); font-style: italic; font-size: 1.0625rem; line-height: 1.25;
+  background: var(--paper); color: var(--ink); border: 1.25px solid var(--ink); border-radius: 12px 12px 12px 3px;
+}

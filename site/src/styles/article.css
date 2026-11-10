@@ -68,7 +68,11 @@
   line-height: 1.04; letter-spacing: -.035em; text-wrap: balance;
 }
 /* The credit sits in the left column of the brief, level with the summary. */
-.ahead__by { grid-column: 1; align-self: start; display: block; text-decoration: none; font-size: .9375rem; line-height: 1.45; color: var(--tldr-dim); }
+.ahead__crew { flex: none; width: 4.75rem; height: 4.75rem; margin-top: -.2rem; }
+.ahead__who { display: block; min-width: 0; }
+.ahead__who span { display: block; }
+.ahead__who em { display: block; margin-top: .35rem; font-family: var(--serif); font-size: 1rem; line-height: 1.25; color: var(--tldr-ink); }
+.ahead__by { grid-column: 1; align-self: start; display: flex; gap: .6rem; text-decoration: none; font-size: .9375rem; line-height: 1.45; color: var(--tldr-dim); }
 .ahead__by strong { display: block; color: var(--ochre); font-size: 1rem; font-weight: 600; }
 .ahead__by:hover strong { text-decoration: underline; text-underline-offset: 3px; }
 

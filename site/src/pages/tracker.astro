@@ -60,7 +60,13 @@ const reviewed = new Date(`${LAST_REVIEWED}T00:00:00Z`).toLocaleDateString('en-I
   .claim { padding: 1.4rem 0; border-top: 1px solid var(--border); }
   .claim header { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: .5rem; }
   .claim h2 { margin: 0; font-size: 1.2rem; }
-  .verdict { font-size: .75rem; font-weight: 800; color: var(--hanko); }
+  .verdict {
+    display: inline-flex; align-items: center; gap: .4rem;
+    font-size: .8125rem; font-weight: 700; color: var(--ink);
+  }
+  .verdict::before {
+    content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--hanko); flex-shrink: 0;
+  }
   .claim p { margin: .7rem 0 0; line-height: 1.6; font-size: .9375rem; }
   .links { display: flex; flex-wrap: wrap; gap: .4rem 1rem; font-size: .8125rem !important; }
 </style>

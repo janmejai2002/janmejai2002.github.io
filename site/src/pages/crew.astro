@@ -1,0 +1,37 @@
+---
+import Base from '../layouts/Base.astro';
+import Crew from '../components/Crew.astro';
+import { WHO, MOODS, CREW } from '../lib/crew';
+---
+
+<Base title="Meet the crew — wAIbi-sabi" description="The small pieces of pottery who run this site." section="Crew" wide>
+  <section class="hero">
+    <h1>Meet the crew</h1>
+    <p>Five pieces of pottery, one good brush, no adult supervision to speak of.</p>
+  </section>
+  <section class="sheet-grid">
+    {WHO.map((who) => (
+      <div class="sheet-row">
+        <h2>{CREW[who].name}</h2>
+        <p>{CREW[who].role}</p>
+        <div class="sheet-cells">
+          {MOODS.map((mood) => (
+            <figure>
+              <Crew who={who} mood={mood} />
+              <figcaption>{mood}</figcaption>
+            </figure>
+          ))}
+        </div>
+      </div>
+    ))}
+  </section>
+</Base>
+
+<style>
+  .sheet-grid { display: grid; gap: 2.5rem; margin-top: 1rem; }
+  .sheet-row h2 { margin: 0; font-size: 1.5rem; font-weight: 800; letter-spacing: -.02em; }
+  .sheet-row p { margin: .15rem 0 .75rem; color: var(--ink-soft); }
+  .sheet-cells { display: grid; grid-template-columns: repeat(auto-fill, minmax(6.5rem, 1fr)); gap: .5rem; }
+  figure { margin: 0; text-align: center; }
+  figcaption { font-size: .8125rem; color: var(--ink-soft); }
+</style>

@@ -187,6 +187,8 @@ The shift from cloud vector RAG to local-first search is not a retreat from arti
 
 - [Aider: "Building a better repository map with tree sitter"](https://aider.chat/2023/10/22/repomap.html)
 - [ripgrep project repository](https://github.com/BurntSushi/ripgrep)
+- [ast-grep: A CLI tool for code structural search, lint and rewriting](https://ast-grep.github.io/)
+- [LanceDB: Embedded vector database for AI](https://lancedb.com/)
 - [Akita on Rails: "Is RAG Dead? Long Context, Grep, and the End of the Mandatory Vector DB"](https://akitaonrails.com/en/2026/04/06/rag-is-dead-long-context/)
 - [Zilliz: the counter-argument against grep-only retrieval](https://zilliz.com/it/blog/why-im-against-claude-codes-grep-only-retrieval-it-just-burns-too-many-tokens)
 

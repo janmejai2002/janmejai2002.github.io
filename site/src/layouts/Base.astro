@@ -65,6 +65,8 @@ const year = new Date().getFullYear();
   </head>
   <body>
     {grain && <GrainField />}
+    {/* The crew's watercolour, shared by every drawing on the page. Not display:none, or filters stop resolving. */}
+    <svg width="0" height="0" style="position:absolute" aria-hidden="true"><filter id="crew-wash" x="-20%" y="-20%" width="140%" height="140%" color-interpolation-filters="sRGB"><feTurbulence type="fractalNoise" baseFrequency=".04" numOctaves="3" seed="4" result="big" /><feDisplacementMap in="SourceGraphic" in2="big" scale="7" xChannelSelector="R" yChannelSelector="G" result="edge" /><feTurbulence type="fractalNoise" baseFrequency=".022" numOctaves="2" seed="21" result="soft" /><feColorMatrix in="soft" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -2.6 2" result="pooling" /><feComposite in="edge" in2="pooling" operator="in" result="body" /><feTurbulence type="fractalNoise" baseFrequency="1.1" numOctaves="1" seed="9" result="fine" /><feColorMatrix in="fine" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -.55 1.14" result="paper" /><feComposite in="body" in2="paper" operator="in" result="toothed" /><feMorphology in="edge" operator="erode" radius="1.3" result="inner" /><feComposite in="edge" in2="inner" operator="out" result="rim" /><feMerge><feMergeNode in="toothed" /><feMergeNode in="rim" /></feMerge></filter></svg>
     <a class="skip" href="#main">Skip to content</a>
     {progress && <div id="reading-progress"></div>}
 

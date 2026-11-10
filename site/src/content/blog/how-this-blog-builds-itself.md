@@ -36,9 +36,9 @@ heroAlt: 'A ring of sixty evenly spaced tick marks enclosed by a single heavy ar
 
 </div>
 
-My entire editorial job is a dropdown with five values in it.
+On reviewed tracks, my entire editorial job is a dropdown with five values in it.
 
-Everything upstream of that dropdown — noticing an emerging shift in AI, checking it has not been covered, researching primary sources, and drafting the prose — runs on a clock without me. Everything downstream of it is an automated pull request, a quick human review, and a git push.
+Everything upstream of that dropdown — noticing an emerging shift in AI, checking it has not been covered, researching primary sources, and drafting the prose — runs on a clock without me. Everything downstream of it is an automated pull request, a quick human review, and a git push. (Unattended tracks like Talks, Case Studies, and Basics publish directly once System 1 asserts all character caps, schema contracts, and dual-theme SVG art tokens.)
 
 The interesting part is not that this is possible; plenty of developers have wired an LLM to a cron job. The interesting part is which decisions turned out to be worth keeping for a human, which architectural traps quietly destroy unattended systems, and how the pipeline evolved from a few brittle local scripts into a resilient, dual-engine cloud harness.
 
@@ -145,9 +145,9 @@ On the reviewed path, `daily-ai-seo-radar` fires at 07:10 and files candidate id
       <text x="0" y="524" font-size="10" opacity="0.5">the only</text>
       <text x="0" y="538" font-size="10" opacity="0.5">publisher</text>
       <rect x="140" y="484" width="322" height="64" rx="8" fill="var(--wash-hanko)" stroke="var(--border)"/>
-      <text x="154" y="505" font-size="12.5" font-weight="700">Review and publish</text>
-      <text x="154" y="523" font-size="11" opacity="0.72">No routine may write Approved. Nothing reaches</text>
-      <text x="154" y="539" font-size="11" opacity="0.72">the site without this step.</text>
+      <text x="154" y="505" font-size="12.5" font-weight="700">Review and publish (Reviewed Tracks)</text>
+      <text x="154" y="523" font-size="11" opacity="0.72">No routine may write Approved. Nothing on reviewed</text>
+      <text x="154" y="539" font-size="11" opacity="0.72">tracks reaches the site without this step.</text>
       <text x="486" y="508" font-size="11" font-weight="600">Production = Approved</text>
       <text x="486" y="526" font-size="11" opacity="0.65">Pipeline = Published,</text>
       <text x="486" y="542" font-size="11" opacity="0.65">Post URL, Publish Date</text>
@@ -155,14 +155,14 @@ On the reviewed path, `daily-ai-seo-radar` fires at 07:10 and files candidate id
     <text x="0" y="586" font-size="10.5" opacity="0.5">Every step above is enforced by prompt text in two markdown files. There is no orchestration engine.</text>
   </g>
 </svg>
-<figcaption>The lifecycle of one idea. The two teal bands are unattended; the two red bands are the only points a person touches.</figcaption>
+<figcaption>The lifecycle of one idea on reviewed tracks. The two teal bands are unattended; the two red bands are the only points a person touches.</figcaption>
 </figure>
 
 Three critical design details anchor this flow:
 
 1. **The rating is the entire gate.** There is no ticketing system, backlog grooming, or priority field. An idea moves forward strictly when a human selects 4 or 5 from the `Interest Rating` dropdown. Declining an idea with a 1 or 2 is equally valuable: the radar agent reads low-rated topics on its next run and avoids thematic neighbours. Declining an idea actively tunes future discovery.
 2. **The lock occurs before the work starts.** The writer marks the radar row `Drafting` immediately after instantiating the production row, before executing a single search query. Because pickup queries filter on `Status = 'Radar Idea'`, this atomic write prevents a concurrent four-hourly run from duplicating work. If locking were deferred until research finished, a race condition would permit parallel workers to double-draft.
-3. **`Approved` is unreachable by machine.** Every prompt file explicitly encodes this boundary. The system produces draft artifacts, not published posts. Human sign-off is architectural, not procedural.
+3. **`Approved` is unreachable by machine on reviewed tracks.** Every prompt file explicitly encodes this boundary. The system produces draft artifacts, not published posts on reviewed tracks. Human sign-off is architectural, not procedural.
 
 ## The Sleeping PC Trap & The Zero-Cost Serverless Bridge
 

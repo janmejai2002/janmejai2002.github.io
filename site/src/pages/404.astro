@@ -1,12 +1,18 @@
 ---
 import Base from '../layouts/Base.astro';
+import Crew from '../components/Crew.astro';
 ---
 
 <Base title="Not found — wAIbi-sabi" description="That page does not exist." section="404">
   <section class="hero fade-up d2">
+    <Crew who="oops" mood="panic" label="Oops, a small chipped cup, panicking with both arms in the air." class="nf-crew" />
     <span class="hanko">404</span>
     <h1>This page <span class="hl">does not exist</span></h1>
-    <p>The link may be stale, or the piece may have moved. The index has everything.</p>
+    <p>Oops was near it last. The link may be stale, or the piece may have moved. The index has everything.</p>
     <p style="margin-top:2rem"><a href="/" class="hanko" style="text-decoration:none">Back to index</a></p>
   </section>
 </Base>
+
+<style>
+  .nf-crew { width: 9rem; height: 9rem; margin-bottom: .75rem; }
+</style>

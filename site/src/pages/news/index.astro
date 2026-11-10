@@ -2,12 +2,35 @@
 import Base from '../../layouts/Base.astro';
 import NewsBrowser from '../../components/NewsBrowser.astro';
 import NewsNav from '../../components/NewsNav.astro';
+import Crew from '../../components/Crew.astro';
 import { allNews } from '../../data/news-archive';
+import { plateEdge, EDGE_DEPTH } from '../../lib/bowl';
 
 // The front page carries the last two weeks of publishing days. The full run
 // lives in the function and month archives, so no single page has to be 1.4 MB.
 const recentDates = new Set([...new Set(allNews.map((i) => i.date))].slice(0, 14));
 const items = allNews.filter((i) => recentDates.has(i.date));
+
+const edge = plateEdge('news');
+const clip = `polygon(0 0,100% 0,${[...edge].reverse().map(([x, d]) => `${x.toFixed(1)}% calc(100% - ${d.toFixed(1)}px)`).join(',')})`;
+const line = edge.map(([x, d]) => `${(x * 10).toFixed(0)},${(EDGE_DEPTH - d).toFixed(1)}`).join(' ');
+
+const todayIso = new Date().toISOString().slice(0, 10);
+const todayItems = allNews.filter((i) => i.date === todayIso);
+const latestDate = allNews[0]?.date;
+const latestItems = allNews.filter((i) => i.date === latestDate);
+const latestFmt = latestDate
+  ? new Date(latestDate + 'T00:00:00Z').toLocaleDateString('en-IN', {
+      day: 'numeric',
+      month: 'short',
+      timeZone: 'UTC',
+    })
+  : '';
+
+const statText =
+  todayItems.length > 0
+    ? `${todayItems.length} stories today · ${allNews.length} in the archive`
+    : `${latestItems.length} stories on ${latestFmt} · ${allNews.length} in the archive`;
 ---
 
 <Base
@@ -21,18 +44,52 @@ const items = allNews.filter((i) => recentDates.has(i.date));
     'WAT GD PI topics India',
   ]}
   pageType="CollectionPage"
+  immersive
+  grain={false}
 >
-  <section class="hero fade-up d1" style="padding-bottom:1.75rem">
-    <span class="hanko">Latest</span>
-    <h1>BSchool <span class="hl hl--ochre">News Archive</span></h1>
-    <p>
-      A daily business-news digest for Indian B-school placement prep. Every card carries the
-      story and the angle an interviewer is likely to push on.
-    </p>
-    <p class="meta" style="margin-top:1.25rem">
-      Latest {items.length} of {allNews.length} stories. Older stories are in the archives below.
-    </p>
+  <section class="pg-plate" style={`clip-path:${clip}`}>
+    <div class="wrap pg-plate__in">
+      <div class="pg-plate__main">
+        <h1>What will they ask you about today?</h1>
+        <p class="pg-plate__desc">
+          A daily business-news digest for Indian B-school interviews. Every story comes with the angle an interviewer is likely to push on.
+        </p>
+        <p class="pg-plate__stat">{statText}</p>
+      </div>
+      <div class="pg-plate__crew on-plate" aria-hidden="true">
+        <span class="crew-say">I read the business pages so you can pretend you did.</span>
+        <Crew who="kiki" mood="listen" class="kiki-pic" />
+      </div>
+    </div>
   </section>
-  <NewsNav />
-  <NewsBrowser items={items} />
+  <svg class="pg-edge" viewBox={`0 0 1000 ${EDGE_DEPTH}`} preserveAspectRatio="none" aria-hidden="true">
+    <polyline points={line} vector-effect="non-scaling-stroke" />
+  </svg>
+
+  <div class="wrap pg-body">
+    <NewsBrowser items={items} totalCount={allNews.length} isLeadDay={true} />
+    <NewsNav />
+  </div>
 </Base>
+
+<style>
+  .pg-plate { position: relative; color: var(--tldr-ink); background: var(--tldr-bg); }
+  .pg-plate__in {
+    padding-block: clamp(2rem, 4vw, 3.5rem) calc(22px + clamp(1.75rem, 3vw, 2.75rem));
+    display: flex; justify-content: space-between; align-items: flex-end; gap: 2rem;
+  }
+  .pg-plate__main { max-width: 48rem; }
+  .pg-plate h1 { margin: 0; font-size: clamp(2rem, 4.2vw, 3.25rem); font-weight: 800; line-height: 1.08; letter-spacing: -.035em; text-wrap: balance; }
+  .pg-plate__desc { margin: .85rem 0 0; max-width: 40rem; font-size: 1.0625rem; line-height: 1.55; color: var(--tldr-dim); text-wrap: pretty; }
+  .pg-plate__stat { margin: .75rem 0 0; font-size: .9375rem; color: var(--tldr-dim); }
+  .pg-plate__crew { display: none; }
+  @media (min-width: 48rem) {
+    .pg-plate__crew {
+      display: flex; flex-direction: column; align-items: flex-end; gap: .75rem; flex-shrink: 0;
+    }
+  }
+  .kiki-pic { width: 7rem; height: 7rem; }
+  .pg-edge { display: block; position: relative; width: 100%; height: 22px; margin-top: -22px; overflow: visible; pointer-events: none; }
+  .pg-edge polyline { fill: none; stroke: var(--ochre); stroke-width: 1.75; stroke-linejoin: miter; }
+  .pg-body { padding-top: clamp(2rem, 4vw, 3.5rem); padding-bottom: 4rem; }
+</style>

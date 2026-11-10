@@ -263,7 +263,7 @@ main.main--wide { max-width: none; }
   transition: color .25s; padding-bottom: .2rem; position: relative;
 }
 .topnav a:hover { color: var(--ink); }
-.topnav a[aria-current] { color: var(--mizu); }
+.topnav a[aria-current] { color: var(--ink); }
 .topnav a[aria-current]::after {
   content: ''; position: absolute; left: 0; right: 0; bottom: -1px;
   height: 2px; background: var(--mizu);
@@ -303,12 +303,12 @@ main.main--wide { max-width: none; }
 /* ---------- Bits ---------- */
 .hanko-pill, .hanko {
   display: inline-flex; align-items: center; border: 1.5px solid var(--hanko);
-  color: var(--hanko); font-size: .65rem; font-weight: 700; letter-spacing: .1em;
+  color: var(--ink); font-size: .65rem; font-weight: 700; letter-spacing: .1em;
   text-transform: uppercase; padding: .2rem .6rem; border-radius: 4px;
 }
 .hl {
   --hl: var(--mizu);
-  background: var(--hl); color: var(--paper);
+  background: var(--hl); color: var(--ink);
   padding: 0 .5rem; display: inline-block; line-height: 1.1;
 }
 .hl--ochre { --hl: var(--ochre); }
@@ -626,8 +626,8 @@ html:not(.js) .scroll-reveal { opacity: 1; transform: none; filter: none; }
   letter-spacing: -.028em; margin: 1.25rem 0 2rem;
 }
 .factgrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(12.5rem, 1fr)); gap: .85rem; margin: 2.5rem 0; }
-.fact { background: var(--tint, var(--card)); border: 1px solid var(--border); border-radius: 16px; padding: 1.15rem; }
-.fact__k { font-size: .5625rem; font-weight: 800; letter-spacing: .15em; text-transform: uppercase; color: var(--accent, var(--ink-faint)); margin-bottom: .45rem; }
+.fact { background: var(--tint, var(--card)); border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: 16px; padding: 1.15rem; }
+.fact__k { font-size: .5625rem; font-weight: 800; letter-spacing: .15em; text-transform: uppercase; color: var(--ink); margin-bottom: .45rem; }
 .fact__v { font-weight: 700; font-size: .9375rem; line-height: 1.4; color: var(--ink); }
 .fact__v span { display: block; font-weight: 400; color: var(--ink-faint); font-size: .8125rem; margin-top: .2rem; }
 

@@ -7,6 +7,8 @@ import { trackById } from '../data/tracks';
 import { topicsFor } from '../data/topics';
 import { plateEdge, EDGE_DEPTH } from '../lib/bowl';
 import { liveArt } from '../lib/art';
+import Crew from '../components/Crew.astro';
+import { pickCrew, CREW } from '../lib/crew';
 import '../styles/article.css';
 
 const { post, headings = [] } = Astro.props;
@@ -81,6 +83,9 @@ const prose = tldr ? rendered.replace(TLDR, '') : rendered;
 
 // The article's drawing as separate marks, so they can fly together on the plate.
 const art = liveArt(slug);
+
+// Who turns up on this piece, and what they make of it.
+const casting = pickCrew({ slug, title, question, keywords, track });
 
 // Each plate breaks in its own place, and the same place on every build.
 const headEdge = plateEdge(slug);
@@ -199,9 +204,13 @@ const related = [...candidates.slice(offset), ...candidates.slice(0, offset)].sl
         {
           tldr && (
             <div class="ahead__brief" data-brief>
-              <a class="ahead__by" href="/blog/how-this-blog-builds-itself/">
-                <strong>The wAIbi-sabi agentic team</strong>
-                <span>Beautifully unfinished. Occasionally supervised.</span>
+              <a class="ahead__by on-plate" href="/blog/how-this-blog-builds-itself/">
+                <Crew who={casting.who} mood={casting.mood} class="ahead__crew" />
+                <span class="ahead__who">
+                  <strong>The wAIbi-sabi agentic team</strong>
+                  <span>Beautifully unfinished. Occasionally supervised.</span>
+                  <em>“{casting.line}” {CREW[casting.who].name}</em>
+                </span>
               </a>
               <Fragment set:html={tldr} />
               {hiddenPoints > 0 && (

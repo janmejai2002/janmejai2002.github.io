@@ -51,13 +51,13 @@ Moving from an [A100 SXM4 80GB](https://awesomeagents.ai/hardware/nvidia-a100/) 
 
 ## What do keys and values actually represent?
 
-Understanding why is LLM generation memory bound requires inspecting what does KV cache actually store across steps. Inside each transformer layer, token embedding $x_t$ multiplies against weight matrices ($W_Q,W_K,W_V$) to produce three vectors:
+Understanding why is LLM generation memory bound requires inspecting what does KV cache actually store across steps. Inside each transformer layer, token embedding <em>x<sub>t</sub></em> multiplies against weight matrices (<em>W<sub>Q</sub></em>, <em>W<sub>K</sub></em>, <em>W<sub>V</sub></em>) to produce three vectors:
 
-- **Query ($Q_t$):** Search vector representing what current token $t$ looks for in prior tokens.
-- **Key ($K_t$):** Index label describing what context token $t$ holds, matched against queries via dot product ($Q_t K^T$).
-- **Value ($V_t$):** Payload vector holding token $t$'s semantic content, weighted by softmax scores to form the output.
+- **Query (<em>Q<sub>t</sub></em>):** Search vector representing what current token *t* looks for in prior tokens.
+- **Key (<em>K<sub>t</sub></em>):** Index label describing what context token *t* holds, matched against queries via dot product (<em>Q<sub>t</sub>K</em><sup>T</sup>).
+- **Value (<em>V<sub>t</sub></em>):** Payload vector holding token *t*'s semantic content, weighted by softmax scores to form the output.
 
-Because causal masking blocks future tokens, Key ($K_i$) and Value ($V_i$) vectors for past tokens $i<t$ stay fixed when token $t+1$ arrives. Without caching, generating token 1,000 requires re-multiplying all 999 prior tokens through $W_K$ and $W_V$, creating an $O(S^2)$ penalty. Having the KV cache explained from first principles clarifies the fix: the runtime appends each new $K_t$ and $V_t$ to an HBM buffer and streams that buffer into SRAM on every decode step.
+Because causal masking blocks future tokens, Key (<em>K<sub>i</sub></em>) and Value (<em>V<sub>i</sub></em>) vectors for past tokens <em>i</em> &lt; <em>t</em> stay fixed when token <em>t</em> + 1 arrives. Without caching, generating token 1,000 requires re-multiplying all 999 prior tokens through <em>W<sub>K</sub></em> and <em>W<sub>V</sub></em>, creating an <em>O</em>(<em>S</em><sup>2</sup>) penalty. Having the KV cache explained from first principles clarifies the fix: the runtime appends each new <em>K<sub>t</sub></em> and <em>V<sub>t</sub></em> to an HBM buffer and streams that buffer into SRAM on every decode step.
 
 ### The KV cache explained: vector flow across generation steps
 
@@ -75,7 +75,7 @@ STEP t=3 (Generating 4th token after prompt ["The", "GPU", "stalls"])
 [ON-CHIP SRAM] s = softmax((q_3 @ K_1..3^T)/sqrt(d_h)); o_3 = s @ V_1..3
 ```
 
-In Step $t=3$, query $q_3$ is a $1\times d_{\text{head}}$ vector, making $q_3 K^T$ a vector-matrix multiply (GEMV). Unlike matrix-matrix multiply (GEMM), GEMV reads each cached $k_i$ and $v_i$ from HBM, multiplies it once, and flushes it from SRAM.
+In Step <em>t</em> = 3, query <em>q</em><sub>3</sub> is a 1 × <em>d</em><sub>head</sub> vector, making <em>q</em><sub>3</sub><em>K</em><sup>T</sup> a vector-matrix multiply (GEMV). Unlike matrix-matrix multiply (GEMM), GEMV reads each cached <em>k<sub>i</sub></em> and <em>v<sub>i</sub></em> from HBM, multiplies it once, and flushes it from SRAM.
 
 ## Prefill vs. decode: the tale of two computational regimes
 

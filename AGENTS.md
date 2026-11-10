@@ -75,3 +75,9 @@ The following skills are configured in `.agents/skills/` and global config:
 
 - **Architecture diagram spec**: `docs/architecture.json`
 - **Rendered interactive HTML**: `docs/wAIbi-sabi-architecture.html`
+
+---
+
+## 6. Current handoff
+
+Before doing any work, read `docs/AGY-HANDOFF.md` and `docs/DESIGN-SYSTEM.md`. They override older docs on design. Do not commit or push unless the owner asks in the conversation.

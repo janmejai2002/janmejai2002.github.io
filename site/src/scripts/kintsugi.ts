@@ -216,6 +216,8 @@ const rgb = (value: string): [number, number, number] => {
 export interface Plate {
   /** Break claim n. `at` is a point in viewport px; omit to use its default. */
   strike(n: number, at?: { x: number; y: number }): void;
+  /** Where the last strike landed, in CSS px from the plate's top left. */
+  impactPx(): { x: number; y: number };
   durationToMend: number;
 }
 
@@ -537,5 +539,9 @@ export function createPlate({ plate, claims, reduced }: Options): Plate | null {
   matchMedia('(prefers-color-scheme: dark)').addEventListener('change', repaint);
 
   plate.classList.add('gl');
-  return { strike, durationToMend: MEND };
+  const impactPx = () => {
+    const box = plate.getBoundingClientRect();
+    return { x: impact.x * box.height, y: box.height - impact.y * box.height };
+  };
+  return { strike, impactPx, durationToMend: MEND };
 }

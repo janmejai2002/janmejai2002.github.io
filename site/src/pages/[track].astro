@@ -88,7 +88,12 @@ const dateOf = (d: Date) =>
 
   .theme__ask {
     margin: 0 0 .5rem; font-size: .8125rem; font-weight: 800;
-    letter-spacing: .02em; color: var(--accent);
+    letter-spacing: .02em; color: var(--ink);
+    display: inline-flex; align-items: center; gap: .45rem;
+  }
+  .theme__ask::before {
+    content: ''; width: 7px; height: 7px; border-radius: 50%;
+    background: var(--accent); flex-shrink: 0;
   }
   .theme h1 {
     margin: 0; font-size: clamp(2.2rem, 6vw, 3.4rem); font-weight: 800;
@@ -104,7 +109,7 @@ const dateOf = (d: Date) =>
   .qlist a {
     display: flex; flex-direction: column; gap: .4rem;
     padding: 1.5rem 1.6rem; border-radius: 18px; text-decoration: none;
-    border: 1px solid var(--border); background: var(--card);
+    border: 1px solid var(--border); border-left: 3px solid var(--accent); background: var(--card);
     position: relative; overflow: hidden;
     transition: transform .3s var(--ease), border-color .3s var(--ease);
   }
@@ -118,7 +123,7 @@ const dateOf = (d: Date) =>
 
   .qlist__q {
     margin: 0; font-family: var(--serif); font-size: 1.05rem; line-height: 1.5;
-    color: var(--accent);
+    color: var(--ink);
   }
   .qlist__t {
     margin: 0; font-size: 1.25rem; font-weight: 800; letter-spacing: -.015em;
@@ -149,10 +154,15 @@ const dateOf = (d: Date) =>
     text-transform: uppercase; color: var(--ink-faint);
   }
   .theme__others a {
+    display: inline-flex; align-items: center; gap: .4rem;
     font-size: .75rem; font-weight: 700; text-decoration: none;
-    color: var(--accent); border: 1px solid var(--border); border-radius: 999px;
+    color: var(--ink); border: 1px solid var(--border); border-radius: 999px;
     padding: .35rem .8rem;
     transition: border-color var(--dur-fast) var(--ease);
+  }
+  .theme__others a::before {
+    content: ''; width: 6px; height: 6px; border-radius: 50%;
+    background: var(--accent); flex-shrink: 0;
   }
   .theme__others a:hover { border-color: var(--accent); }
 

@@ -5,23 +5,69 @@ const current = (href: string) => (path === href ? 'page' : undefined);
 ---
 
 <nav class="newsnav" aria-label="News archives">
-  <p>
-    <span>By function</span>
-    {categories.map((c) => (
-      <a href={`/news/${catSlug(c)}/`} aria-current={current(`/news/${catSlug(c)}/`)}>{c}</a>
-    ))}
-  </p>
-  <p>
-    <span>By month</span>
-    {months.map((m) => (
-      <a href={`/news/${m}/`} aria-current={current(`/news/${m}/`)}>{monthLabel(m)}</a>
-    ))}
-  </p>
+  <div class="newsnav__group">
+    <span class="newsnav__label">By function:</span>
+    <div class="newsnav__links">
+      {categories.map((c) => (
+        <a class="linkish" href={`/news/${catSlug(c)}/`} aria-current={current(`/news/${catSlug(c)}/`)}>{c}</a>
+      ))}
+    </div>
+  </div>
+  <div class="newsnav__group">
+    <span class="newsnav__label">By month:</span>
+    <div class="newsnav__links">
+      {months.map((m) => (
+        <a class="linkish" href={`/news/${m}/`} aria-current={current(`/news/${m}/`)}>{monthLabel(m)}</a>
+      ))}
+    </div>
+  </div>
 </nav>
 
 <style>
-  .newsnav { margin: 0 0 2rem; font-size: .8125rem; }
-  .newsnav p { display: flex; flex-wrap: wrap; gap: .35rem .9rem; margin: 0 0 .5rem; }
-  .newsnav span { font-weight: 800; color: var(--ink-faint); }
-  .newsnav a[aria-current='page'] { font-weight: 800; color: var(--ink); }
+  .newsnav {
+    margin: 3rem 0 2rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    font-size: .875rem;
+  }
+  .newsnav__group {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: .5rem 1rem;
+  }
+  .newsnav__label {
+    font-weight: 700;
+    color: var(--ink-soft);
+  }
+  .newsnav__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .5rem 1.25rem;
+  }
+  .newsnav a[aria-current='page'] {
+    font-weight: 800;
+    color: var(--ink);
+    border-bottom: 2px solid var(--ochre);
+  }
+  .linkish {
+    font: inherit;
+    font-size: .875rem;
+    font-weight: 600;
+    color: var(--ink-soft);
+    background: none;
+    border: 0;
+    border-bottom: 1px solid var(--border);
+    padding: 0 0 1px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: color var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease);
+  }
+  .linkish:hover {
+    color: var(--ink);
+    border-color: var(--ink);
+  }
 </style>

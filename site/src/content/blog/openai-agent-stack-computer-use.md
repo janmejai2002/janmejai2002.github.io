@@ -55,6 +55,7 @@ Third, stateful websocket channels complicate backend autoscaling. Bi-directiona
 
 - [Latent Space: OpenAI DevDay 2026 episode](https://www.latent.space/p/devday-2026)
 - [36Kr: translated transcript of the Weinstein and Handa conversation](https://eu.36kr.com/en/p/4017229795299203)
+- [OpenAI Developer Documentation: Responses API & Websockets](https://platform.openai.com/docs/api-reference)
 
 <!--
 Artwork brief — from the writer routine. Draw per docs/ARTWORK.md,

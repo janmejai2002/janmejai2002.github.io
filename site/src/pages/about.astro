@@ -306,7 +306,7 @@ const papers = [
   .stat:hover { transform: translateY(-3px); }
   .stat__n {
     display: block; font-size: 1.75rem; font-weight: 800; letter-spacing: -.03em;
-    color: var(--accent); font-variant-numeric: tabular-nums; line-height: 1;
+    color: var(--ink); font-variant-numeric: tabular-nums; line-height: 1;
   }
   .stat__k {
     display: block; margin-top: .45rem; font-size: .5625rem; font-weight: 800;
@@ -318,13 +318,14 @@ const papers = [
   .sec__h {
     display: flex; align-items: center; gap: .7rem;
     font-size: .6875rem; font-weight: 800; letter-spacing: .16em; text-transform: uppercase;
-    color: var(--accent); margin: 0 0 1.25rem;
+    color: var(--ink); margin: 0 0 1.25rem;
   }
   .sec__icon {
     width: 1.9rem; height: 1.9rem; border-radius: 9px; flex-shrink: 0;
     display: inline-flex; align-items: center; justify-content: center;
     border: 1px solid var(--border);
     background: color-mix(in srgb, var(--accent) 12%, transparent);
+    color: var(--accent);
   }
   .sec__icon svg { width: 15px; height: 15px; }
   .sec > p { font-size: 1rem; line-height: 1.72; color: var(--ink-soft); margin: 0 0 1.5rem; }
@@ -338,7 +339,7 @@ const papers = [
   .bars__name { font-size: .875rem; font-weight: 700; color: var(--ink); }
   .bars__n {
     font-size: .625rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase;
-    color: var(--accent); font-variant-numeric: tabular-nums; white-space: nowrap;
+    color: var(--ink-soft); font-variant-numeric: tabular-nums; white-space: nowrap;
   }
   .bars__track {
     height: 7px; border-radius: 999px; margin: .5rem 0 .35rem;
@@ -379,7 +380,11 @@ const papers = [
     font-size: .5625rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase;
     padding: .22rem .5rem; border-radius: 5px;
   }
-  .paper__venue { color: var(--accent); background: color-mix(in srgb, var(--accent) 13%, transparent); }
+  .paper__venue {
+    color: var(--ink);
+    background: color-mix(in srgb, var(--accent) 10%, transparent);
+    border: 1px solid var(--accent);
+  }
   .paper__pub { color: var(--ink-faint); border: 1px solid var(--border); }
   .paper__if { color: var(--ink-faint); border: 1px solid var(--border); font-variant-numeric: tabular-nums; }
 
@@ -416,7 +421,7 @@ const papers = [
   @media (min-width: 620px) { .tl > li::before { left: calc(7.5rem - 5px); } }
   .tl__when {
     font-size: .625rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase;
-    color: var(--accent); display: block; margin-bottom: .35rem;
+    color: var(--ink-soft); display: block; margin-bottom: .35rem;
   }
   @media (min-width: 620px) {
     .tl__when {

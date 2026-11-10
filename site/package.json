@@ -4,7 +4,7 @@
   "version": "1.0.0",
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build && node scripts/check-build.mjs",
+    "build": "astro build && node scripts/check-build.mjs && node scripts/check-design.mjs",
     "images": "node scripts/make-images.mjs",
     "preview": "astro preview",
     "doctor": "node scripts/doctor.mjs",

@@ -470,7 +470,7 @@ const categoryCounts = Object.fromEntries(
     font-weight: 800;
     line-height: 1.05;
     letter-spacing: -.02em;
-    color: var(--m-accent, var(--mizu));
+    color: var(--ink);
     font-variant-numeric: tabular-nums;
   }
   .metric-card__lbl {
@@ -514,7 +514,6 @@ const categoryCounts = Object.fromEntries(
     letter-spacing: .15em;
     text-transform: uppercase;
     color: var(--ink-faint);
-    white-space: nowrap;
   }
   .sec-label__rule {
     height: 1px;
@@ -612,11 +611,22 @@ const categoryCounts = Object.fromEntries(
     margin-bottom: .6rem;
   }
   .proj__tag {
+    display: inline-flex;
+    align-items: center;
+    gap: .4rem;
     font-size: .625rem;
     font-weight: 800;
     letter-spacing: .15em;
     text-transform: uppercase;
-    color: var(--accent);
+    color: var(--ink);
+  }
+  .proj__tag::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    flex-shrink: 0;
   }
   .proj__category-badge {
     font-size: .5625rem;
@@ -667,6 +677,7 @@ const categoryCounts = Object.fromEntries(
     flex-direction: column;
     background: color-mix(in srgb, var(--paper) 70%, transparent);
     border: 1px solid var(--border-soft);
+    border-left: 2px solid var(--accent);
     padding: .45rem .85rem;
     border-radius: 8px;
     min-width: 5rem;
@@ -675,7 +686,7 @@ const categoryCounts = Object.fromEntries(
     font-size: 1.15rem;
     font-weight: 800;
     line-height: 1.1;
-    color: var(--accent);
+    color: var(--ink);
     font-variant-numeric: tabular-nums;
   }
   .stat-pill__lbl {
@@ -709,12 +720,24 @@ const categoryCounts = Object.fromEntries(
 
   .proj .body h3,
   .proj__sub-label {
+    display: flex;
+    align-items: center;
+    gap: .45rem;
     font-size: .6875rem;
     font-weight: 800;
     letter-spacing: .15em;
     text-transform: uppercase;
-    color: var(--accent);
+    color: var(--ink);
     margin: 1.75rem 0 .8rem;
+  }
+  .proj .body h3::before,
+  .proj__sub-label::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    flex-shrink: 0;
   }
   .proj__colA > p {
     font-size: .95rem;
@@ -731,13 +754,23 @@ const categoryCounts = Object.fromEntries(
     padding: .85rem 1rem;
   }
   .layer__k {
-    display: block;
+    display: flex;
+    align-items: center;
+    gap: .35rem;
     font-size: .5625rem;
     font-weight: 800;
     letter-spacing: .16em;
     text-transform: uppercase;
-    color: var(--accent);
+    color: var(--ink);
     margin-bottom: .3rem;
+  }
+  .layer__k::before {
+    content: '';
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--accent);
+    flex-shrink: 0;
   }
   .layer p { margin: 0; font-size: .84rem; line-height: 1.55; }
 
@@ -934,11 +967,22 @@ const categoryCounts = Object.fromEntries(
     flex-direction: column;
   }
   .inv-num {
+    display: inline-flex;
+    align-items: center;
+    gap: .35rem;
     font-size: .625rem;
     font-weight: 800;
     letter-spacing: .12em;
-    color: var(--plum);
+    color: var(--ink);
     margin-bottom: .5rem;
+  }
+  .inv-num::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--plum);
+    flex-shrink: 0;
   }
   .inv-item h4 {
     font-size: 1rem;

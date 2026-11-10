@@ -1,0 +1,24 @@
+---
+/** One crew member in one mood. The wash and ink come from styles/crew.css. */
+import { drawCrew, CREW_VIEW, type Who, type Mood } from '../lib/crew';
+import '../styles/crew.css';
+
+interface Props {
+  who: Who;
+  mood: Mood;
+  class?: string;
+  /** Spoken description, for the rare place the drawing carries meaning. */
+  label?: string;
+}
+const { who, mood, class: extra, label } = Astro.props;
+---
+
+<svg
+  class:list={['crew', `crew--${who}`, extra]}
+  viewBox={CREW_VIEW}
+  data-mood={mood}
+  role={label ? 'img' : undefined}
+  aria-label={label}
+  aria-hidden={label ? undefined : 'true'}
+  set:html={drawCrew(who, mood)}
+/>
