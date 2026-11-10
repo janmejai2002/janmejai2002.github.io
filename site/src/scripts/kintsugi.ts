@@ -288,8 +288,9 @@ export function getSeamTrajectory(
 }
 
 export interface Plate {
-  /** Break claim n. `at` is a point in viewport px; omit to use its default. */
-  strike(n: number, at?: { x: number; y: number }): void;
+  /** Break claim n. `at` is a point in viewport px; omit to use its default.
+   *  With `hold`, the crack stays open until setGoldProgress() fills it. */
+  strike(n: number, at?: { x: number; y: number }, hold?: boolean): void;
   /** Where the last strike landed, in CSS px from the plate's top left. */
   impactPx(): { x: number; y: number };
   durationToMend: number;
@@ -451,7 +452,8 @@ export function createPlate({ plate, claims, reduced }: Options): Plate | null {
     state.prog = maxR;
     state.jolt = 0;
     state.resid = 1;
-    state.gold = maxR;
+    // A held break keeps whatever gold has been poured so far.
+    state.gold = manualGoldRadius >= 0 ? manualGoldRadius : maxR;
     state.fade = 1;
   };
 
@@ -488,7 +490,7 @@ export function createPlate({ plate, claims, reduced }: Options): Plate | null {
   let t0 = 0;
   let raf = 0;
   let visible = true;
-  let queued: { n: number; at?: { x: number; y: number } } | null = null;
+  let queued: { n: number; at?: { x: number; y: number }; hold?: boolean } | null = null;
   let frames = 0;
   let frameStart = 0;
 
@@ -511,7 +513,7 @@ export function createPlate({ plate, claims, reduced }: Options): Plate | null {
   const OUT = 240;
   const MEND = 2700;
 
-  const begin = (n: number, at?: { x: number; y: number }) => {
+  const begin = (n: number, at?: { x: number; y: number }, hold = false) => {
     current = n;
     if (lowDpr && dpr !== lowDpr) {
       dpr = lowDpr;
@@ -520,7 +522,7 @@ export function createPlate({ plate, claims, reduced }: Options): Plate | null {
     seed = 1.3 + n * 4.17 + (at ? (at.x % 13) * 0.61 : 0);
     placeImpact(n, at);
     inscribe(n);
-    manualGoldRadius = -1;
+    manualGoldRadius = hold ? 0 : -1;
     state.prog = state.jolt = state.resid = state.gold = 0;
     state.fade = 0;
     phase = 'break';
@@ -537,7 +539,7 @@ export function createPlate({ plate, claims, reduced }: Options): Plate | null {
 
     if (phase === 'out') {
       state.fade = 1 - clamp01((now - t0) / OUT);
-      if (now - t0 >= OUT && queued) begin(queued.n, queued.at);
+      if (now - t0 >= OUT && queued) begin(queued.n, queued.at, queued.hold);
     } else if (phase === 'break') {
       const t = now - t0;
       state.fade = inOut(t / 260);
@@ -570,6 +572,7 @@ export function createPlate({ plate, claims, reduced }: Options): Plate | null {
 
   const rest = (n: number, at?: { x: number; y: number }) => {
     current = n;
+    manualGoldRadius = -1;
     seed = 1.3 + n * 4.17;
     placeImpact(n, at);
     inscribe(n);
@@ -577,12 +580,12 @@ export function createPlate({ plate, claims, reduced }: Options): Plate | null {
     draw(0);
   };
 
-  const strike = (n: number, at?: { x: number; y: number }) => {
+  const strike = (n: number, at?: { x: number; y: number }, hold = false) => {
     if (reduced) {
       rest(n, at);
       return;
     }
-    queued = { n, at };
+    queued = { n, at, hold };
     phase = 'out';
     t0 = performance.now();
     wake();

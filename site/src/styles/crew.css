@@ -32,11 +32,49 @@
 .on-plate .crew-wash { opacity: .78; }
 .on-plate .crew-pool { opacity: .5; }
 
-/* Restrained docket byline (replaces cartoon speech bubbles). */
-.crew-say {
-  display: inline-block; max-width: 16rem; padding: .3rem .65rem; position: relative;
-  font-family: var(--font-mono, monospace); font-size: .75rem; font-style: normal; line-height: 1.35;
-  letter-spacing: .02em;
-  background: var(--paper); color: var(--ink); border: 1px solid var(--border); border-radius: 2px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+/* ---------- characters who move (components/CrewActor.astro + lib/crew-actor.ts) ----------
+   Feet sit at (--x, --y) inside a positioned stage. Hidden until a moment needs them. */
+.actor {
+  --size: 84px;
+  position: absolute; left: 0; top: 0; width: var(--size); height: var(--size);
+  /* Feet at (--x, --y); a tilt pivots on the feet, so they lean with the ground. */
+  transform-origin: 0 0;
+  transform: translate(var(--x, -999px), var(--y, -999px)) rotate(var(--tilt, 0deg)) translate(-50%, -100%);
+  opacity: 0; visibility: hidden; pointer-events: none;
+  transition: opacity .3s var(--ease, ease), visibility 0s linear .3s;
+}
+.actor.on { opacity: 1; visibility: visible; transition: opacity .3s var(--ease, ease); }
+.actor__body { width: 100%; height: 100%; transform: scaleX(var(--face, 1)); transform-origin: 50% 100%; }
+.actor .crew { width: 100%; height: 100%; }
+.actor .crew-ink .k { transform: translate(var(--gx, 0), var(--gy, 0)); }
+.actor.walking .actor__body { animation: actor-step .22s ease-in-out infinite alternate; }
+.actor.tumbling .actor__body { animation: actor-tumble .56s cubic-bezier(.5, 0, .9, .6) both; }
+@keyframes actor-tumble { to { transform: scaleX(var(--face, 1)) rotate(-115deg); } }
+.actor.hop .actor__body { animation: actor-hop .42s cubic-bezier(.3, 1.6, .5, 1); }
+.actor.hit .crew-prop { transform-box: view-box; animation: actor-hammer .34s cubic-bezier(.6, 0, .9, .5) both; }
+.actor[data-mood='paint']:not(.walking) .crew-prop { animation: actor-brush .45s ease-in-out infinite alternate; }
+@keyframes actor-step { from { transform: scaleX(var(--face, 1)) translateY(0) rotate(-2deg); } to { transform: scaleX(var(--face, 1)) translateY(-6%) rotate(3deg); } }
+@keyframes actor-hop { 0% { transform: scaleX(var(--face, 1)) scale(1.12, .86); } 45% { transform: scaleX(var(--face, 1)) translateY(-14%) scale(.94, 1.06); } 100% { transform: scaleX(var(--face, 1)); } }
+@keyframes actor-hammer { from { transform: rotate(-58deg); } 82% { transform: rotate(48deg); } to { transform: rotate(40deg); } }
+@keyframes actor-brush { from { transform: rotate(-14deg); } to { transform: rotate(12deg); } }
+
+/* A seat: a fixed place in the layout where characters take turns. They
+   cross-fade in one grid cell, so the layout never moves when one leaves. */
+.seat__who { display: grid; flex: none; width: var(--seat, 3.5rem); height: var(--seat, 3.5rem); }
+.seat__who .actor { position: static; grid-area: 1 / 1; width: 100%; height: 100%; transform: none; }
+
+/* One voice at a time, set in the layout like any other line of text.
+   Serif, like every question on the site. Whatever it replaces is [data-quiet]. */
+[data-say] { display: none; }
+.is-speaking [data-say] { display: inline; animation: crew-line-in .35s var(--ease, ease) both; }
+.is-speaking [data-quiet] { display: none; }
+.crew-line { font-family: var(--serif); font-style: italic; font-size: 1.0625rem; line-height: 1.35; }
+.crew-line__who { font-family: var(--font); font-style: normal; font-weight: 700; font-size: .8125rem; margin-right: .2rem; }
+.crew-line__who::after { content: ':'; }
+@keyframes crew-line-in { from { opacity: 0; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .actor, .actor.on { transition: none; }
+  .is-speaking [data-say] { animation: none; }
+  .actor .actor__body, .actor .crew-prop { animation: none !important; }
 }

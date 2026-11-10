@@ -1,0 +1,25 @@
+---
+/**
+ * A character who can move and change mood on the page. Every mood it needs is
+ * drawn at build time and the browser only switches between them, so nothing
+ * is drawn on the client. Drive it with createCast() from lib/crew-actor.ts.
+ */
+import { drawCrew, CREW, CREW_VIEW, type Who, type Mood } from '../lib/crew';
+import '../styles/crew.css';
+
+interface Props {
+  who: Who;
+  moods: Mood[];
+  class?: string;
+}
+const { who, moods, class: extra } = Astro.props;
+const first = moods[0];
+---
+
+<div class:list={['actor', `actor--${who}`, extra]} data-actor={who} data-name={CREW[who].name} data-mood={first} aria-hidden="true">
+  <div class="actor__body">
+    {moods.map((m) => (
+      <svg class:list={['crew', `crew--${who}`]} viewBox={CREW_VIEW} data-m={m} style={m === first ? undefined : 'display:none'} set:html={drawCrew(who, m)} />
+    ))}
+  </div>
+</div>
