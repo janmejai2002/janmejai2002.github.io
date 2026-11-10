@@ -1,0 +1,54 @@
+{
+  "schema_version": 2,
+  "diagram_type": "workflow",
+  "meta": {
+    "title": "Branch Consolidation & Upgrade Workflow",
+    "animation": "trace",
+    "visual_preset": "signal-flow",
+    "quality_profile": "showcase",
+    "views": [
+      {
+        "id": "full-consolidation",
+        "label": "Consolidation path",
+        "focus": ["review_decisions", "commit_worktree", "switch_main", "merge_redesign", "build_gates", "push_deploy"],
+        "note": "Follow uncommitted upgrades through owner review, clean merge, test gates, and live deployment."
+      }
+    ],
+    "output": "docs/consolidation-workflow.html"
+  },
+  "lanes": [
+    { "id": "owner", "label": "Editorial Decisions" },
+    { "id": "worktree", "label": "Redesign Worktree" },
+    { "id": "repo", "label": "Main Workspace" },
+    { "id": "cloud", "label": "GitHub & Pages" }
+  ],
+  "phases": [
+    { "id": "phase_review", "label": "1. Review", "fromCol": 0, "toCol": 1 },
+    { "id": "phase_integrate", "label": "2. Integrate", "fromCol": 2, "toCol": 4, "variant": "emphasis" },
+    { "id": "phase_deploy", "label": "3. Deploy & Live", "fromCol": 5, "toCol": 5, "variant": "dashed" }
+  ],
+  "groups": [
+    { "id": "local_gates", "label": "Local verification gates", "lane": "repo", "fromCol": 3, "toCol": 4, "variant": "emphasis" }
+  ],
+  "mainPath": ["review_decisions", "commit_worktree", "switch_main", "merge_redesign", "build_gates", "push_deploy"],
+  "nodes": [
+    { "id": "review_decisions", "lane": "owner", "col": 0, "type": "frontend", "label": "Review Decisions", "sublabel": "5 items in report", "tag": "owner gate", "width": 132 },
+    { "id": "commit_worktree", "lane": "worktree", "col": 1, "type": "backend", "label": "Commit Upgrades", "sublabel": "stage + commit", "tag": "home-kintsugi", "width": 132 },
+    { "id": "switch_main", "lane": "repo", "col": 2, "type": "backend", "label": "Switch to Main", "sublabel": "clean working tree", "width": 132 },
+    { "id": "merge_redesign", "lane": "repo", "col": 3, "type": "backend", "label": "Merge Redesign", "sublabel": "zero conflicts", "tag": "fast forward", "width": 132 },
+    { "id": "build_gates", "lane": "repo", "col": 4, "type": "security", "label": "Run Build Gates", "sublabel": "build + design gate", "tag": "blocking", "width": 132 },
+    { "id": "push_deploy", "lane": "cloud", "col": 5, "type": "cloud", "label": "Push to Main", "sublabel": "deploy.yml to Pages", "tag": "live http 200", "width": 132 }
+  ],
+  "edges": [
+    { "from": "review_decisions", "to": "commit_worktree", "label": "approve", "variant": "emphasis" },
+    { "from": "commit_worktree", "to": "switch_main" },
+    { "from": "switch_main", "to": "merge_redesign" },
+    { "from": "merge_redesign", "to": "build_gates", "variant": "emphasis" },
+    { "from": "build_gates", "to": "push_deploy", "label": "all pass", "variant": "emphasis" }
+  ],
+  "cards": [
+    { "dot": "emerald", "title": "Zero Merge Conflicts", "items": ["The redesign branch branched from main at commit f124a8b", "Historical branches (feature/how-it-builds, homepage-review-fixes, notion/approved-articles) are already merged", "Consolidation into main is a clean fast-forward merge"] },
+    { "dot": "amber", "title": "Owner Decisions", "items": ["Confirm /crew/ noindex vs index status", "Check raw LaTeX handling in 4 articles", "Verify duplicate Klarna case study handling"] },
+    { "dot": "cyan", "title": "Automated Deployment", "items": ["npm run build enforces 43 article assertions (check-build.mjs) and design token compliance (check-design.mjs)", "Pushing main triggers deploy.yml and indexnow immediately"] }
+  ]
+}
