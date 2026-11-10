@@ -5,6 +5,7 @@ import TrackMark from '../components/TrackMark.astro';
 import Bowl from '../components/Bowl.astro';
 import { TRACKS } from '../data/tracks';
 import { CLAIMS } from '../data/claims';
+import { plateEdge, EDGE_DEPTH } from '../lib/bowl';
 
 const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
   (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
@@ -54,6 +55,11 @@ const claims = live.map(({ c, post }) => {
 });
 
 const INITIAL_ROWS = 8;
+
+// The same broken, gold-seamed edge the article plates have.
+const edge = plateEdge('home');
+const edgeClip = `polygon(0 0,100% 0,${[...edge].reverse().map(([x, d]) => `${x.toFixed(1)}% calc(100% - ${d.toFixed(1)}px)`).join(',')})`;
+const edgeLine = edge.map(([x, d]) => `${(x * 10).toFixed(0)},${(EDGE_DEPTH - d).toFixed(1)}`).join(' ');
 ---
 
 <Base
@@ -63,7 +69,7 @@ const INITIAL_ROWS = 8;
   wide
   immersive
 >
-  <section class="plate" aria-labelledby="thesis">
+  <section class="plate" aria-labelledby="thesis" style={`clip-path:${edgeClip}`}>
     <div class="wrap plate__in">
       <header class="plate__id">
         <h1 id="thesis">The models are never finished<span class="plate__caret" aria-hidden="true"></span></h1>
@@ -114,8 +120,16 @@ const INITIAL_ROWS = 8;
       </div>
     </div>
   </section>
+  <svg class="plate-edge" viewBox={`0 0 1000 ${EDGE_DEPTH}`} preserveAspectRatio="none" aria-hidden="true">
+    <polyline points={edgeLine} vector-effect="non-scaling-stroke" />
+  </svg>
 
   <section class="reader wrap" aria-labelledby="reader-h" id="writing">
+    <a class="again" data-again hidden href="/">
+      <span class="again__k">Pick up where you left off</span>
+      <span class="again__ask" data-again-ask></span>
+      <span class="again__at" data-again-at></span>
+    </a>
     <div class="reader__top">
       <h2 id="reader-h">What are you trying to work out?</h2>
       <div class="find">
@@ -165,6 +179,7 @@ const INITIAL_ROWS = 8;
               data-d={post.data.description}
               style={`--accent:var(--${t.accent})`}
               data-extra={n >= INITIAL_ROWS ? '' : undefined}
+              data-at={post.data.pubDate.valueOf()}
             >
               <a href={`/blog/${slugOf(post)}/`}>
                 <span class="q__ask">{post.data.question ?? post.data.title}</span>
@@ -360,6 +375,68 @@ const INITIAL_ROWS = 8;
 
   const state = { track: 'all', text: '', open: false };
 
+  /* ---------- what this reader has already done here ----------
+     All of it stays in their own browser. */
+  const store = {
+    get<T>(key: string, fallback: T): T {
+      try {
+        return (JSON.parse(localStorage.getItem(key) ?? 'null') as T) ?? fallback;
+      } catch {
+        return fallback;
+      }
+    },
+    set(key: string, value: unknown) {
+      try {
+        localStorage.setItem(key, JSON.stringify(value));
+      } catch {
+        // Private windows can refuse storage. Nothing depends on it.
+      }
+    },
+  };
+  const flag = (row: HTMLElement | undefined, text: string) => {
+    const meta = row?.querySelector('.q__meta');
+    if (!meta) return;
+    const el = document.createElement('span');
+    el.className = 'q__flag';
+    el.textContent = text;
+    meta.append(el);
+  };
+
+  // Finished pieces turn gold in the bowl.
+  const finished = store.get<string[]>('waibi:read', []).filter((s) => rowOf.has(s));
+  for (const s of shards) if (finished.includes(s.dataset.shard ?? '')) s.classList.add('read');
+  for (const slug of finished) flag(rowOf.get(slug), 'Read');
+  if (finished.length) {
+    const key = document.querySelector('.bowl__key');
+    if (key) key.append(` The gold ones are yours: ${finished.length} of ${rows.length} read.`);
+  }
+
+  // The piece they most recently left unfinished.
+  const leftOff = Object.keys((() => { try { return localStorage; } catch { return {}; } })())
+    .filter((k) => k.startsWith('waibi:place:'))
+    .map((k) => ({ slug: k.slice('waibi:place:'.length), ...store.get<{ id?: string; at?: number; ask?: string; section?: string }>(k, {}) }))
+    .filter((p) => p.id && p.ask && p.at && Date.now() - p.at < 45 * 864e5 && rowOf.has(p.slug))
+    .sort((a, b) => (b.at ?? 0) - (a.at ?? 0))[0];
+  const again = document.querySelector<HTMLAnchorElement>('[data-again]');
+  if (leftOff && again) {
+    again.href = `/blog/${leftOff.slug}/#${leftOff.id}`;
+    // A word joiner keeps names like GPT-4 on one line.
+    again.querySelector('[data-again-ask]')!.textContent = (leftOff.ask ?? '').replace(/-(?=\d)/g, '-⁠');
+    again.querySelector('[data-again-at]')!.textContent = leftOff.section ? `You were at: ${leftOff.section}` : '';
+    again.hidden = false;
+  }
+
+  // What is new since the last visit. A visit counts once it is six hours old,
+  // so a refresh does not wipe the markers.
+  const visit = store.get<{ at?: number; prev?: number }>('waibi:visit', {});
+  const now = Date.now();
+  if (!visit.at) store.set('waibi:visit', { at: now });
+  else if (now - visit.at > 6 * 36e5) store.set('waibi:visit', { at: now, prev: visit.at });
+  const since = visit.at && now - visit.at > 6 * 36e5 ? visit.at : visit.prev;
+  const fresh = since ? rows.filter((r) => Number(r.dataset.at) > since) : [];
+  for (const r of fresh) if (!finished.includes(r.dataset.q ?? '')) flag(r, 'New');
+  const newNote = fresh.length ? ` ${fresh.length} new since your last visit.` : '';
+
   const preview = (slug?: string, exploring = false) => {
     if (!slug) return;
     const row = rowOf.get(slug);
@@ -393,7 +470,7 @@ const INITIAL_ROWS = 8;
       const count = `${n} ${n === 1 ? 'question' : 'questions'}`;
       status.textContent = terms.length
         ? `${count} matching “${state.text.trim()}”.`
-        : (door?.dataset.blurb ?? 'Everything, newest first.');
+        : (door?.dataset.blurb ?? `Everything, newest first.${newNote}`);
     }
     if (reset) reset.hidden = state.track === 'all' && !terms.length;
     if (themeLink) {
@@ -519,33 +596,10 @@ const INITIAL_ROWS = 8;
 </script>
 
 <style is:global>
-  .shell--immersive { max-width: none; display: block; }
-  .main--immersive { padding: 0 0 4rem; max-width: none; }
 
-  /* The one measure every full-bleed band centres its content to. */
-  .wrap {
-    --wrap-pad: max(var(--gutter), env(safe-area-inset-left, 0px));
-    max-width: 88rem; margin-inline: auto; padding-inline: var(--wrap-pad);
-  }
-  .sr {
-    position: absolute; width: 1px; height: 1px; overflow: hidden;
-    clip-path: inset(50%); white-space: nowrap;
-  }
   [data-hint][hidden], [data-q][hidden], [data-none][hidden], [data-more][hidden],
-  [data-reset][hidden], [data-theme-link][hidden], [data-pause][hidden] { display: none !important; }
+  [data-reset][hidden], [data-theme-link][hidden], [data-pause][hidden], [data-again][hidden] { display: none !important; }
 
-  .main--immersive .topnav {
-    padding-inline: max(var(--gutter), calc((100% - 88rem) / 2 + var(--gutter)));
-    border-bottom: 0;
-  }
-  .topnav__mark {
-    font-size: 1.3rem; font-weight: 800; letter-spacing: -.02em;
-    color: var(--ink) !important; margin-right: 1.25rem; padding: 0 !important;
-  }
-  /* Same calming as the old masthead lockup: a real "i", so the caret does not
-     read as a stray cursor beside the nav links. */
-  .topnav__mark .wordmark__caret, .topnav__mark .wordmark__idot { display: none; }
-  .topnav__mark .wordmark__iglyph { display: inline; }
 
   /* ---------- the plate: dark glaze, so gold can read as gold ---------- */
   .plate {
@@ -554,9 +608,10 @@ const INITIAL_ROWS = 8;
       radial-gradient(70rem 34rem at 82% -8%, color-mix(in srgb, var(--mizu) 11%, transparent), transparent 70%),
       radial-gradient(56rem 32rem at 4% 108%, color-mix(in srgb, var(--plum) 16%, transparent), transparent 70%),
       var(--tldr-bg);
-    /* The plate itself breaks out of true where it meets the paper. */
-    clip-path: polygon(0 0, 100% 0, 100% 100%, 57.6% 100%, 56.9% calc(100% - 7px), 57.3% calc(100% - 11px), 56.4% calc(100% - 16px), 0 calc(100% - 16px));
   }
+  /* The break where the plate meets the paper, seamed in gold so it holds in dark too. */
+  .plate-edge { display: block; position: relative; width: 100%; height: 22px; margin-top: -22px; overflow: visible; pointer-events: none; }
+  .plate-edge polyline { fill: none; stroke: var(--ochre); stroke-width: 1.75; stroke-linejoin: miter; }
   .plate::before {
     content: ''; position: absolute; inset: 0; pointer-events: none; opacity: .5; mix-blend-mode: overlay;
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 240 240' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
@@ -675,6 +730,17 @@ const INITIAL_ROWS = 8;
 
   /* ---------- the reader's side ---------- */
   .reader { padding-top: clamp(2.75rem, 5vw, 4.5rem); }
+  /* Only for someone who has already started something here. */
+  .again {
+    display: block; margin-bottom: 2rem; padding: .25rem 0 .25rem 1.1rem; text-decoration: none;
+    border-left: 2px solid var(--ochre); max-width: 50rem;
+  }
+  .again__k { display: block; font-size: .875rem; font-weight: 700; color: var(--ink-soft); }
+  .again__ask { display: block; margin-top: .15rem; font-family: var(--serif); font-size: clamp(1.25rem, 2vw, 1.5625rem); font-weight: 500; line-height: 1.26; color: var(--ink); }
+  .again:hover .again__ask { text-decoration: underline; text-decoration-color: var(--ochre); text-underline-offset: .14em; }
+  .again__at { display: block; margin-top: .25rem; font-size: .875rem; color: var(--ink-soft); }
+  .q__flag { margin-left: .55rem; font-weight: 700; color: var(--ink); white-space: nowrap; }
+  .q__flag::before { content: ''; display: inline-block; width: 6px; height: 6px; margin-right: .35rem; background: var(--ochre); transform: rotate(45deg); vertical-align: 1px; }
   .reader__top { display: flex; align-items: end; justify-content: space-between; flex-wrap: wrap; gap: 1.25rem 3rem; }
   .reader h2 {
     margin: 0; font-size: clamp(1.875rem, 3.8vw, 3rem); font-weight: 800;
@@ -760,7 +826,7 @@ const INITIAL_ROWS = 8;
 
   .empty-q { margin: 1.5rem 0 0; font-size: 1rem; color: var(--ink-soft); }
   .more {
-    font: inherit; font-size: .9375rem; font-weight: 700; color: var(--paper); background: var(--ink);
+    font: inherit; font-size: .9375rem; font-weight: 700; color: var(--on-solid); background: var(--solid);
     border: 0; border-radius: 999px; min-height: 2.75rem; padding: 0 1.4rem; margin-top: 1.5rem; cursor: pointer;
   }
 
@@ -805,21 +871,17 @@ const INITIAL_ROWS = 8;
   }
   .bschool h2 { margin: 0; font-size: 1.375rem; font-weight: 800; letter-spacing: -.02em; }
   .bschool p { margin: .4rem 0 0; max-width: 36rem; font-size: 1rem; line-height: 1.55; color: var(--ink-soft); }
-  .bschool__go { font-size: .9375rem; font-weight: 700; text-decoration: none; color: var(--paper); background: var(--ink); padding: .75rem 1.3rem; border-radius: 999px; white-space: nowrap; }
+  .bschool__go { font-size: .9375rem; font-weight: 700; text-decoration: none; color: var(--on-solid); background: var(--solid); padding: .75rem 1.3rem; border-radius: 999px; white-space: nowrap; }
 
-  .main--immersive > footer {
-    margin-inline: auto; max-width: 88rem; margin-top: 3.5rem;
-    padding-inline: var(--gutter); border-top: 0;
-  }
-  .main--immersive > footer, .main--immersive .colophon { color: var(--ink-soft); }
 
   @media (max-width: 68rem) {
     .plate__id { grid-template-columns: 1fr; }
     .claim__mend { grid-template-columns: minmax(0, 1fr); }
     .claim__go { justify-self: start; margin-top: .4rem; }
-    .doors { grid-template-columns: minmax(0, 1fr); border-bottom: 0; }
-    .door { border-bottom: 1px solid var(--border); padding-inline: .25rem; }
-    .door + .door { box-shadow: none; }
+    /* One swipeable row, so the filters never push the questions off the screen. */
+    .doors { display: flex; overflow-x: auto; scroll-snap-type: x proximity; scrollbar-width: none; }
+    .doors::-webkit-scrollbar { display: none; }
+    .door { flex: 0 0 min(15.5rem, 66vw); scroll-snap-align: start; padding: .85rem .9rem; }
     .working__in { grid-template-columns: minmax(0, 1fr); }
   }
   @media (max-width: 60rem) {
@@ -828,16 +890,10 @@ const INITIAL_ROWS = 8;
     .pv { position: static; margin-top: 1.75rem; order: 1; max-width: 32rem; }
   }
   @media (max-width: 40rem) {
-    .main--immersive .topnav { position: static; flex-wrap: wrap; row-gap: .5rem; padding-bottom: .75rem; }
-    .topnav__mark { flex: 1 1 calc(100% - 4rem); margin: 0; }
-    .main--immersive .themetoggle { order: 1; }
-    .main--immersive .topnav a:not(.topnav__mark) { order: 2; }
-    .main--immersive .topnav__spacer { margin-left: 0; }
     .cue-pause { margin-left: 0; }
     .cue-hint { flex-basis: 100%; margin-left: 0; order: 9; }
     .lane { flex-wrap: wrap; }
     .lane__end { flex-basis: 100%; }
-    .plate { clip-path: polygon(0 0, 100% 0, 100% 100%, 62% 100%, 61% calc(100% - 7px), 61.4% calc(100% - 11px), 60.4% calc(100% - 16px), 0 calc(100% - 16px)); }
   }
 
   @media (prefers-reduced-motion: reduce) {

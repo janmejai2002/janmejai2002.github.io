@@ -318,7 +318,7 @@ export function createPlate({ plate, claims, reduced }: Options): Plate | null {
     const v = (n: string) => rgb(cs.getPropertyValue(n));
     gl.uniform3fv(U.uBg, v('--tldr-bg'));
     gl.uniform3fv(U.uInk, v('--tldr-ink'));
-    const a = v('--ochre');
+    const a = v('--gold');
     gl.uniform3f(U.uAu, Math.min(1, a[0] * 1.2), Math.min(1, a[1] * 1.14), Math.min(1, a[2] * 0.92));
     gl.uniform3fv(U.uMizu, v('--mizu'));
     gl.uniform3fv(U.uPlum, v('--plum'));

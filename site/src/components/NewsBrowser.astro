@@ -190,7 +190,7 @@ const slug = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-');
     color: var(--paper);
   }
   .chip.is-on .chip__n { opacity: .7; }
-  .chip[data-cat='all'].is-on { background: var(--ink); border-color: var(--ink); }
+  .chip[data-cat='all'].is-on { background: var(--solid); border-color: var(--solid); color: var(--on-solid); }
 
   .controls__row { display: flex; gap: .5rem; flex-wrap: wrap; }
   .field { flex: 1 1 12rem; display: block; position: relative; }

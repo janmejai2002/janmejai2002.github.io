@@ -22,7 +22,7 @@
   --paper-2: #EFEBE3;
   --ink: #1A2639;
   --ink-soft: rgba(26, 38, 57, 0.72);
-  --ink-faint: rgba(26, 38, 57, 0.42);
+  --ink-faint: rgba(26, 38, 57, 0.66);
   --border: #DCD4C7;
   --border-soft: rgba(26, 38, 57, 0.09);
   --stone: #E8E3D9;
@@ -46,6 +46,14 @@
 
   --noise-opacity: 0.04;
   --shadow: rgba(26, 38, 57, 0.10);
+  /* Fixed in both themes, so the fracture is the same gold everywhere. */
+  --gold: #C2913A;
+  --solid: var(--ink);
+  --on-solid: var(--paper);
+  --noise-colour: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  /* Colour noise reads as speckle on a dark ground, so dark gets it in grey. */
+  --noise-mono: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  --paper-noise: var(--noise-colour);
 
   --font: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
   --serif: 'Newsreader', ui-serif, Georgia, 'Times New Roman', serif;
@@ -61,7 +69,7 @@
     --paper-2: #1B1F26;
     --ink: #E9E5DC;
     --ink-soft: rgba(233, 229, 220, 0.70);
-    --ink-faint: rgba(233, 229, 220, 0.40);
+    --ink-faint: rgba(233, 229, 220, 0.58);
     --border: #2E343D;
     --border-soft: rgba(233, 229, 220, 0.10);
     --stone: #1E232B;
@@ -81,8 +89,12 @@
     --wash-plum: rgba(182, 148, 188, 0.10);
     --wash-indigo: rgba(133, 165, 208, 0.10);
 
-    --noise-opacity: 0.05;
+--noise-opacity: 0.05;
     --shadow: rgba(0, 0, 0, 0.45);
+    /* Re-skin, not inversion: a solid control is warm clay, not a cream slab. */
+    --solid: color-mix(in srgb, var(--ochre) 24%, var(--card));
+    --on-solid: var(--ink);
+    --paper-noise: var(--noise-mono);
   }
 }
 
@@ -93,7 +105,7 @@
   --paper-2: #1B1F26;
   --ink: #E9E5DC;
   --ink-soft: rgba(233, 229, 220, 0.70);
-  --ink-faint: rgba(233, 229, 220, 0.40);
+  --ink-faint: rgba(233, 229, 220, 0.58);
   --border: #2E343D;
   --border-soft: rgba(233, 229, 220, 0.10);
   --stone: #1E232B;
@@ -115,6 +127,9 @@
 
   --noise-opacity: 0.05;
   --shadow: rgba(0, 0, 0, 0.45);
+  --solid: color-mix(in srgb, var(--ochre) 24%, var(--card));
+  --on-solid: var(--ink);
+  --paper-noise: var(--noise-mono);
 }
 
 :root[data-theme='light'] { color-scheme: light; }
@@ -132,7 +147,7 @@ body {
   font-family: var(--font);
   color: var(--ink);
   background-color: var(--paper);
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  background-image: var(--paper-noise);
   -webkit-font-smoothing: antialiased;
   display: flex;
   justify-content: center;
@@ -165,7 +180,7 @@ img { max-width: 100%; height: auto; }
   border: 1px solid var(--border); display: flex; align-items: center;
   justify-content: center; transition: all .3s; text-decoration: none;
 }
-.rail__home:hover { background: var(--ink); color: var(--paper); transform: translateX(-2px); }
+.rail__home:hover { background: var(--solid); color: var(--on-solid); transform: translateX(-2px); }
 
 .vertical {
   writing-mode: vertical-rl; text-orientation: mixed; transform: rotate(180deg);
@@ -292,12 +307,18 @@ main.main--wide { max-width: none; }
   text-transform: uppercase; padding: .2rem .6rem; border-radius: 4px;
 }
 .hl {
-  background: var(--mizu); color: var(--paper);
+  --hl: var(--mizu);
+  background: var(--hl); color: var(--paper);
   padding: 0 .5rem; display: inline-block; line-height: 1.1;
 }
-.hl--ochre { background: var(--ochre); }
-.hl--plum { background: var(--plum); }
-.hl--moss { background: var(--moss); }
+.hl--ochre { --hl: var(--ochre); }
+.hl--plum { --hl: var(--plum); }
+.hl--moss { --hl: var(--moss); }
+/* A solid block of pigment glares on a dark page. There it becomes a stain. */
+:root[data-theme='dark'] .hl { background: color-mix(in srgb, var(--hl) 20%, var(--paper)); color: var(--hl); }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) .hl { background: color-mix(in srgb, var(--hl) 20%, var(--paper)); color: var(--hl); }
+}
 .meta {
   font-size: .625rem; font-weight: 700; letter-spacing: .15em;
   text-transform: uppercase; color: var(--ink-faint);
@@ -491,14 +512,14 @@ html:not(.js) .scroll-reveal { opacity: 1; transform: none; filter: none; }
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme='light']) {
-    --tldr-bg: #0D1015;
+    --tldr-bg: #0E1520;
     --tldr-ink: #E9E5DC;
     --tldr-dim: rgba(233, 229, 220, 0.56);
     --tldr-hair: rgba(233, 229, 220, 0.13);
   }
 }
 :root[data-theme='dark'] {
-  --tldr-bg: #0D1015;
+  --tldr-bg: #0E1520;
   --tldr-ink: #E9E5DC;
   --tldr-dim: rgba(233, 229, 220, 0.56);
   --tldr-hair: rgba(233, 229, 220, 0.13);
@@ -682,4 +703,42 @@ footer a:hover { color: var(--mizu); }
 
 :where(a, button, input, select, [tabindex]):focus-visible {
   outline: 2px solid var(--mizu); outline-offset: 3px; border-radius: 4px;
+}
+
+/* ---------- Full-bleed pages (the index and articles) ----------
+   No rail: the wordmark moves into the nav and bands run edge to edge, centred
+   on one shared measure. */
+.shell--immersive { max-width: none; display: block; }
+.main--immersive { padding: 0 0 4rem; max-width: none; }
+.wrap {
+  --wrap-pad: max(var(--gutter), env(safe-area-inset-left, 0px));
+  max-width: 88rem; margin-inline: auto; padding-inline: var(--wrap-pad);
+}
+.sr {
+  position: absolute; width: 1px; height: 1px; overflow: hidden;
+  clip-path: inset(50%); white-space: nowrap;
+}
+.main--immersive .topnav {
+  padding-inline: max(var(--gutter), calc((100% - 88rem) / 2 + var(--gutter)));
+  border-bottom: 0;
+}
+.topnav__mark {
+  font-size: 1.3rem; font-weight: 800; letter-spacing: -.02em;
+  color: var(--ink) !important; margin-right: 1.25rem; padding: 0 !important;
+}
+/* Same calming as the old masthead lockup: a real "i", so the caret does not
+   read as a stray cursor beside the nav links. */
+.topnav__mark .wordmark__caret, .topnav__mark .wordmark__idot { display: none; }
+.topnav__mark .wordmark__iglyph { display: inline; }
+.main--immersive > footer {
+  margin-inline: auto; max-width: 88rem; margin-top: 3.5rem;
+  padding-inline: var(--gutter); border-top: 0;
+}
+.main--immersive > footer, .main--immersive .colophon { color: var(--ink-soft); }
+@media (max-width: 40rem) {
+  .main--immersive .topnav { position: static; flex-wrap: wrap; row-gap: .5rem; padding-bottom: .75rem; }
+  .topnav__mark { flex: 1 1 calc(100% - 4rem); margin: 0; }
+  .main--immersive .themetoggle { order: 1; }
+  .main--immersive .topnav a:not(.topnav__mark) { order: 2; }
+  .main--immersive .topnav__spacer { margin-left: 0; }
 }
