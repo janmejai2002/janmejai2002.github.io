@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" role="img">
+  <title>LLMjacking Cloud Quota Siphon and Proxy Manifold</title>
+  <desc>An enterprise IAM vault fractures at a crimson hanko seal, siphoning token streams through a proxy manifold into a steep burn vector.</desc>
+  <defs><filter id="grain" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch"/></filter></defs>
+  <rect width="1600" height="900" fill="{{paper}}"/>
+  <path d="M120,160H1480M120,450H1480M120,740H1480M560,100V800M1040,100V800" stroke="{{border}}" stroke-width="1" stroke-dasharray="8,12" fill="none"/>
+  <path d="M160,280H596M644,280H680V600H160Z" stroke="{{ink}}" stroke-width="2.5" fill="none"/>
+  <path d="M220,350H500M220,420H440M220,490H530" stroke="{{ink}}" stroke-width="2" fill="none"/>
+  <path d="M620,272C720,190,840,190,980,250M620,280C740,280,860,310,980,350M620,288C730,370,850,420,980,450" stroke="{{ink}}" stroke-width="2" fill="none"/>
+  <rect x="980" y="210" width="108" height="290" fill="{{paper}}" stroke="{{ink}}" stroke-width="2.5"/>
+  <path d="M1004,250H1064M1004,350H1064M1004,450H1064" stroke="{{ink}}" stroke-width="2" fill="none"/>
+  <path d="M1088,350H1170L1230,490L1300,530L1370,640L1450,720" stroke="{{ink}}" stroke-width="3" fill="none"/>
+  <circle cx="620" cy="280" r="28" fill="{{hanko}}"/>
+  <circle cx="620" cy="280" r="20" fill="none" stroke="{{paper}}" stroke-width="2" stroke-dasharray="90,18"/>
+  <circle cx="1450" cy="720" r="9" fill="{{hanko}}"/>
+  <rect width="1600" height="900" filter="url(#grain)" opacity="0.055"/>
+</svg>

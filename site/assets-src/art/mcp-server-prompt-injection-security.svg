@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" role="img">
+  <title>MCP Schema Injection and MicroVM Containment Boundary</title>
+  <desc>An external JSON-RPC vector pierces an outer schema ring but halts at an inner mizu microVM containment ring.</desc>
+  <defs><filter id="grain" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch"/></filter></defs>
+  <rect width="1600" height="900" fill="{{paper}}"/>
+  <path d="M160,450H1440M920,80V820" stroke="{{border}}" stroke-width="1" stroke-dasharray="8,12" fill="none"/>
+  <rect x="120" y="320" width="280" height="260" fill="none" stroke="{{border}}" stroke-width="1.5"/>
+  <circle cx="920" cy="450" r="320" fill="none" stroke="{{border}}" stroke-width="1"/>
+  <path d="M920,170A280,280,0,1,1,664,356" fill="none" stroke="{{ink}}" stroke-width="3"/>
+  <path d="M650,412A280,280,0,0,1,884,172" fill="none" stroke="{{ink}}" stroke-width="2" stroke-dasharray="12,8"/>
+  <circle cx="920" cy="450" r="180" fill="{{paper}}" stroke="{{mizu}}" stroke-width="4"/>
+  <circle cx="920" cy="450" r="72" fill="{{ink}}"/>
+  <path d="M400,396L696,396L744,432" fill="none" stroke="{{mizu}}" stroke-width="3.5"/>
+  <circle cx="744" cy="432" r="9" fill="{{mizu}}"/>
+  <line x1="400" y1="504" x2="744" y2="504" stroke="{{ink}}" stroke-width="2"/>
+  <rect x="732" y="492" width="24" height="24" fill="{{paper}}" stroke="{{mizu}}" stroke-width="3"/>
+  <rect width="1600" height="900" filter="url(#grain)" opacity="0.055"/>
+</svg>
