@@ -62,6 +62,13 @@ const host = (url: string | null) => {
     return null;
   }
 };
+
+const toSlug = (str: string) =>
+  str
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/(^-|-$)/g, '')
+    .slice(0, 48);
 ---
 
 <div class="news-browser" data-browser data-initial-cat={initialCat}>
@@ -166,6 +173,7 @@ const host = (url: string | null) => {
               const storyId = `${i.date}:${i.headline}`;
               return (
                 <div
+                  id={`story-${toSlug(i.headline)}`}
                   class:list={['card-scene', isLead && 'card-scene--lead']}
                   data-cat={i.category}
                   data-date={i.date}
@@ -681,6 +689,18 @@ const host = (url: string | null) => {
     flex-direction: column;
     position: relative;
     background: var(--card);
+    scroll-margin-top: 5.5rem;
+  }
+  .card-scene:target .card,
+  .card-scene.is-target-flash .card {
+    outline: 2px solid var(--ochre);
+    outline-offset: 3px;
+    animation: cardTargetPulse 1.8s var(--ease) both;
+  }
+  @keyframes cardTargetPulse {
+    0% { transform: scale(1.02); box-shadow: 0 0 24px color-mix(in srgb, var(--ochre) 45%, transparent); }
+    50% { transform: scale(1.008); box-shadow: 0 0 12px color-mix(in srgb, var(--ochre) 25%, transparent); }
+    100% { transform: none; box-shadow: none; }
   }
   .card-scene--lead {
     grid-column: 1 / -1;

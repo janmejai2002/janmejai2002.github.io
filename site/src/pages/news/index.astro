@@ -17,8 +17,13 @@ const todayIso = new Date().toISOString().slice(0, 10);
 const todayItems = allNews.filter((i) => i.date === todayIso);
 const latestDate = allNews[0]?.date;
 const latestItems = allNews.filter((i) => i.date === latestDate);
-const latestFmt = latestDate
-  ? new Date(latestDate + 'T00:00:00Z').toLocaleDateString('en-IN', {
+
+const activeItems = todayItems.length > 0 ? todayItems : latestItems;
+const activeDate = todayItems.length > 0 ? todayIso : latestDate;
+
+const fullDateFmt = activeDate
+  ? new Date(activeDate + 'T00:00:00Z').toLocaleDateString('en-IN', {
+      weekday: 'long',
       day: 'numeric',
       month: 'short',
       year: 'numeric',
@@ -26,10 +31,49 @@ const latestFmt = latestDate
     })
   : '';
 
-const statText =
-  todayItems.length > 0
-    ? `${todayItems.length} stories today · ${allNews.length} in the archive`
-    : `${latestItems.length} stories on ${latestFmt} · ${allNews.length} in the archive`;
+// Category accent map for hotlist pills
+const CAT_ACCENTS: Record<string, string> = {
+  Consulting: 'hanko',
+  Finance: 'ochre',
+  Marketing: 'mizu',
+  Operations: 'moss',
+  'Product Management': 'plum',
+};
+
+// Generate clean topic labels for the hotlist
+function getPillLabel(headline: string): string {
+  if (headline.includes('BCG Finds AI Spend')) return 'AI Spend & ROI';
+  if (headline.includes('Blinkit Hits')) return 'Blinkit Dark Stores';
+  if (headline.includes('D2C Pre-Diwali')) return 'D2C Festive GMV';
+  if (headline.includes('OpenSea Mobile')) return 'OpenSea Mobile';
+  if (headline.includes('Public Cash Rises') || headline.includes('Currency-to-GDP')) return 'Currency-to-GDP';
+
+  const verbMatch = headline.match(
+    /^(.*?)\s+(?:Hits|Finds|Jumps|Launches|Rises|Falls|Seeks|Eyes|Cuts|Adds|Buys|Wins|Reports|Bags|Faces)\b/i
+  );
+  if (verbMatch && verbMatch[1].length <= 24) return verbMatch[1];
+
+  const words = headline.split(' ').slice(0, 3).join(' ');
+  return words.length > 22 ? words.slice(0, 22) + '…' : words;
+}
+
+// Slug generator matching NewsBrowser
+function toSlug(str: string): string {
+  return str
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/(^-|-$)/g, '')
+    .slice(0, 48);
+}
+
+const hotlist = activeItems.slice(0, 5).map((item) => ({
+  headline: item.headline,
+  label: getPillLabel(item.headline),
+  category: item.category,
+  accent: CAT_ACCENTS[item.category] ?? 'ochre',
+  targetId: `story-${toSlug(item.headline)}`,
+  rawId: `${item.date}:${item.headline}`,
+}));
 
 // AEO / GEO Structured Q&A entities for AI Search Engines (Perplexity, Gemini, ChatGPT Search)
 const faqEntities = allNews.slice(0, 15).map((i) => ({
@@ -49,7 +93,8 @@ const pageSchema = {
       '@id': 'https://janmejai2002.github.io/news/',
       url: 'https://janmejai2002.github.io/news/',
       name: 'BSchool Placement News & Interview Angles — wAIbi-sabi',
-      description: 'Daily business news curated for Indian B-school interviews (IIM, XLRI, FMS, SPJIMR). Every briefing pairs verified commercial developments across Finance, Consulting, Ops, Marketing, and Product with the exact counter-question interview panels ask.',
+      description:
+        'Daily business news curated for Indian B-school interviews (IIM, XLRI, FMS, SPJIMR). Every briefing pairs verified commercial developments across Finance, Consulting, Ops, Marketing, and Product with the exact counter-question interview panels ask.',
       isPartOf: { '@id': 'https://janmejai2002.github.io/#website' },
       about: [
         'MBA interview preparation India',
@@ -91,25 +136,88 @@ const pageSchema = {
   <section class="pg-plate" style={`clip-path:${clip}`} aria-labelledby="news-hero-heading">
     <div class="wrap pg-plate__in">
       <div class="pg-plate__main">
-        <h1 id="news-hero-heading">What will they ask you about today?</h1>
+        {/* Tactile Masthead Dateline & Hanko Seal */}
+        <div class="pg-plate__seal" role="status" aria-label="Briefing metadata">
+          <div class="seal-group">
+            <span class="hanko-mark">B-School Briefing</span>
+            <time class="seal-date" datetime={activeDate}>{fullDateFmt}</time>
+          </div>
+          <span class="seal-sep" aria-hidden="true">/</span>
+          <div class="seal-group">
+            <span class="seal-badge">
+              <span class="seal-dot" aria-hidden="true"></span>
+              <strong>{activeItems.length} fresh drills</strong> today
+            </span>
+            <span class="seal-depth">{allNews.length} interview angles catalogued</span>
+          </div>
+        </div>
+
+        {/* Editorial Masthead Headline */}
+        <h1 id="news-hero-heading" class="pg-plate__title">
+          What will they ask you about today?<span class="pg-plate__caret" aria-hidden="true"></span>
+        </h1>
+
+        {/* Refined Subtitle */}
         <p class="pg-plate__desc">
           A daily business-news digest for Indian B-school interviews. Every story comes with the angle an interviewer is likely to push on.
         </p>
-        <p class="pg-plate__stat">
-          <span class="stat-dot" aria-hidden="true"></span>
-          {statText}
-        </p>
+
+        {/* Today's Interview Hotlist */}
+        <div class="pg-hotlist" role="region" aria-label="Today's interview angles quick jump">
+          <span class="pg-hotlist__label">
+            <span class="pg-hotlist__icon" aria-hidden="true">⚡</span>
+            Today's Drills:
+          </span>
+          <div class="pg-hotlist__pills">
+            {hotlist.map((item) => (
+              <a
+                href={`#${item.targetId}`}
+                class="hotlist-pill"
+                data-story-anchor={item.targetId}
+                style={`--pill-accent:var(--${item.accent});--pill-wash:var(--wash-${item.accent})`}
+                title={`${item.category}: ${item.headline}`}
+              >
+                <span class="hotlist-pill__dot" aria-hidden="true"></span>
+                <span class="hotlist-pill__text">{item.label}</span>
+                <span class="hotlist-pill__arrow" aria-hidden="true">↓</span>
+              </a>
+            ))}
+          </div>
+        </div>
       </div>
-      <div class="pg-plate__crew on-plate" aria-hidden="true">
-        <span class="crew-say">I read the business pages so you can pretend you did.</span>
-        <Crew who="kiki" mood="listen" class="kiki-pic" />
+
+      {/* Mascot & Washi Speech Bubble Lockup */}
+      <div class="pg-plate__crew on-plate" id="kiki-lockup">
+        <button
+          type="button"
+          class="washi-bubble"
+          id="kiki-bubble"
+          aria-label="Kiki's B-school interview tip. Click to cycle tips."
+          title="Click to cycle interview pro-tips"
+        >
+          <span class="washi-bubble__body">
+            <span class="washi-bubble__mark" aria-hidden="true">KIKI</span>
+            <span class="washi-bubble__text" id="kiki-text">“I read the business pages so you can pretend you did.”</span>
+            <span class="washi-bubble__hint" aria-hidden="true">tap for tip ↺</span>
+          </span>
+          <span class="washi-bubble__tail" aria-hidden="true"></span>
+        </button>
+
+        <div class="kiki-pedestal" id="kiki-pedestal" role="img" aria-label="Kiki the pottery mascot">
+          <Crew who="kiki" mood="listen" class="kiki-pic kiki-pic--listen is-active" />
+          <Crew who="kiki" mood="happy" class="kiki-pic kiki-pic--happy" />
+          <Crew who="kiki" mood="proud" class="kiki-pic kiki-pic--proud" />
+          <Crew who="kiki" mood="sideeye" class="kiki-pic kiki-pic--sideeye" />
+          <div class="kiki-shadow" aria-hidden="true"></div>
+        </div>
       </div>
     </div>
   </section>
 
   {/* Kintsugi Gold Fracture Seam */}
   <svg class="pg-edge" viewBox={`0 0 1000 ${EDGE_DEPTH}`} preserveAspectRatio="none" aria-hidden="true">
-    <polyline points={line} vector-effect="non-scaling-stroke" />
+    <polyline points={line} class="pg-edge__glow" vector-effect="non-scaling-stroke" />
+    <polyline points={line} class="pg-edge__gold" vector-effect="non-scaling-stroke" />
   </svg>
 
   <div class="wrap pg-body">
@@ -118,110 +226,486 @@ const pageSchema = {
   </div>
 </Base>
 
+<script>
+  // Kiki pro-tips and interactive mood reactivity
+  const TIPS = [
+    '“I read the business pages so you can pretend you did.”',
+    '“When they ask about margins, blame supply chain unit economics.”',
+    '“Every case study is just a revenue tree in a trench coat.”',
+    '“Pause for three seconds, look thoughtful, then ask: \'Are we optimizing for margin or volume?\'”',
+    '“DCF is not accounting. It’s an exercise in creative optimism.”',
+  ];
+
+  const MOODS = ['listen', 'happy', 'proud', 'sideeye'];
+
+  let tipIdx = 0;
+  let moodIdx = 0;
+
+  const bubbleBtn = document.getElementById('kiki-bubble');
+  const quoteText = document.getElementById('kiki-text');
+  const pedestal = document.getElementById('kiki-pedestal');
+  const moodPics: Record<string, HTMLElement | null> = {
+    listen: document.querySelector('.kiki-pic--listen'),
+    happy: document.querySelector('.kiki-pic--happy'),
+    proud: document.querySelector('.kiki-pic--proud'),
+    sideeye: document.querySelector('.kiki-pic--sideeye'),
+  };
+
+  function setMood(name: string) {
+    Object.entries(moodPics).forEach(([k, el]) => {
+      if (!el) return;
+      el.classList.toggle('is-active', k === name);
+    });
+  }
+
+  function nextTip() {
+    tipIdx = (tipIdx + 1) % TIPS.length;
+    moodIdx = (moodIdx + 1) % MOODS.length;
+
+    // Bubble transition
+    if (quoteText) {
+      quoteText.classList.add('is-swapping');
+      setTimeout(() => {
+        quoteText.textContent = TIPS[tipIdx];
+        quoteText.classList.remove('is-swapping');
+      }, 150);
+    }
+
+    // Kiki mood shift & bounce
+    setMood(MOODS[moodIdx]);
+    if (pedestal) {
+      pedestal.classList.remove('is-bouncing');
+      void pedestal.offsetWidth;
+      pedestal.classList.add('is-bouncing');
+    }
+  }
+
+  bubbleBtn?.addEventListener('click', nextTip);
+  pedestal?.addEventListener('click', nextTip);
+
+  // Hover shift on Kiki
+  pedestal?.addEventListener('mouseenter', () => {
+    setMood('happy');
+  });
+  pedestal?.addEventListener('mouseleave', () => {
+    setMood(MOODS[moodIdx]);
+  });
+
+  // Hotlist pill click navigation & kintsugi card highlight
+  const pills = document.querySelectorAll<HTMLAnchorElement>('[data-story-anchor]');
+  pills.forEach((pill) => {
+    pill.addEventListener('click', (e) => {
+      const targetId = pill.getAttribute('data-story-anchor');
+      if (!targetId) return;
+      const targetEl = document.getElementById(targetId);
+      if (targetEl) {
+        e.preventDefault();
+        targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        targetEl.classList.remove('is-target-flash');
+        void targetEl.offsetWidth;
+        targetEl.classList.add('is-target-flash');
+        setTimeout(() => targetEl.classList.remove('is-target-flash'), 2200);
+      }
+    });
+  });
+</script>
+
 <style>
   /* ---------- Atmospheric Kintsugi Plate ---------- */
   .pg-plate {
     position: relative;
     color: var(--tldr-ink);
     background:
-      radial-gradient(60rem 30rem at 86% -10%, color-mix(in srgb, var(--ochre) 18%, transparent), transparent 70%),
-      radial-gradient(50rem 28rem at 2% 110%, color-mix(in srgb, var(--plum) 16%, transparent), transparent 70%),
+      radial-gradient(45rem 25rem at 88% 20%, color-mix(in srgb, var(--moss) 12%, transparent), transparent 70%),
+      radial-gradient(55rem 30rem at 15% -10%, color-mix(in srgb, var(--ochre) 16%, transparent), transparent 70%),
+      radial-gradient(48rem 28rem at 2% 115%, color-mix(in srgb, var(--plum) 18%, transparent), transparent 70%),
+      radial-gradient(35rem 20rem at 92% 105%, color-mix(in srgb, var(--ochre) 10%, transparent), transparent 60%),
       var(--tldr-bg);
+    overflow: hidden;
   }
+  .pg-plate::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: var(--paper-noise);
+    opacity: 0.7;
+    pointer-events: none;
+  }
+
   .pg-plate__in {
-    padding-block: clamp(2.25rem, 4.5vw, 3.75rem) calc(22px + clamp(1.75rem, 3vw, 2.75rem));
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    gap: 2rem;
-  }
-  .pg-plate__main {
-    max-width: 48rem;
-  }
-  .pg-plate h1 {
-    margin: 0;
-    font-size: clamp(2rem, 4.2vw, 3.25rem);
-    font-weight: 800;
-    line-height: 1.08;
-    letter-spacing: -.035em;
-    text-wrap: balance;
-  }
-  .pg-plate__desc {
-    margin: .85rem 0 0;
-    max-width: 40rem;
-    font-size: 1.0625rem;
-    line-height: 1.55;
-    color: var(--tldr-dim);
-    text-wrap: pretty;
-  }
-  .pg-plate__stat {
-    margin: .85rem 0 0;
-    font-size: .9375rem;
-    color: var(--tldr-dim);
-    display: flex;
+    padding-block: clamp(2.25rem, 4vw, 3.5rem) calc(22px + clamp(1.75rem, 3vw, 2.75rem));
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
     align-items: center;
-    gap: .5rem;
+    gap: clamp(2rem, 4vw, 3.5rem);
+    position: relative;
+    z-index: 1;
   }
-  .stat-dot {
+
+  .pg-plate__main {
+    max-width: 54rem;
+  }
+
+  /* Tactile Masthead Dateline & Hanko Seal */
+  .pg-plate__seal {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: .55rem .75rem;
+    font-size: .8125rem;
+    line-height: 1.4;
+    color: var(--tldr-dim);
+    margin-bottom: 1.15rem;
+  }
+  .seal-group {
+    display: inline-flex;
+    align-items: center;
+    gap: .55rem;
+    flex-wrap: wrap;
+  }
+  .hanko-mark {
+    display: inline-flex;
+    align-items: center;
+    font-family: var(--font);
+    font-size: .65rem;
+    font-weight: 800;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--hanko);
+    background: color-mix(in srgb, var(--hanko) 12%, transparent);
+    border: 1.25px solid color-mix(in srgb, var(--hanko) 60%, transparent);
+    padding: .2rem .55rem;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  }
+  .seal-sep {
+    color: color-mix(in srgb, var(--tldr-ink) 22%, transparent);
+    font-weight: 300;
+  }
+  .seal-date {
+    font-family: var(--font);
+    font-weight: 600;
+    color: var(--tldr-ink);
+  }
+  .seal-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: .45rem;
+    background: color-mix(in srgb, var(--ochre) 12%, transparent);
+    border: 1px solid color-mix(in srgb, var(--ochre) 35%, transparent);
+    color: var(--tldr-ink);
+    padding: .18rem .6rem;
+    border-radius: 999px;
+    font-size: .78125rem;
+    font-weight: 500;
+  }
+  .seal-dot {
     width: 6px;
     height: 6px;
     border-radius: 50%;
     background: var(--ochre);
+    box-shadow: 0 0 8px var(--ochre);
     display: inline-block;
   }
+  .seal-depth {
+    color: var(--tldr-dim);
+    font-size: .8125rem;
+  }
 
-  /* Ceramic Character Lockup */
+  /* Editorial Masthead Typography */
+  .pg-plate__title {
+    margin: 0;
+    font-family: var(--serif);
+    font-size: clamp(2.25rem, 4.2vw, 3.5rem);
+    font-weight: 500;
+    line-height: 1.08;
+    letter-spacing: -.025em;
+    color: var(--tldr-ink);
+    text-wrap: balance;
+  }
+  .pg-plate__caret {
+    display: inline-block;
+    width: .1em;
+    height: .75em;
+    margin-left: .16em;
+    background: var(--ochre);
+    vertical-align: -.04em;
+    animation: wordmark-blink 1.15s steps(1) infinite;
+  }
+
+  .pg-plate__desc {
+    margin: 1rem 0 0;
+    max-width: 42rem;
+    font-size: 1.0625rem;
+    line-height: 1.58;
+    color: var(--tldr-dim);
+    text-wrap: pretty;
+  }
+
+  /* Today's Interview Hotlist Strip */
+  .pg-hotlist {
+    margin-top: 1.6rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: .65rem 1rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--tldr-hair);
+  }
+  .pg-hotlist__label {
+    display: inline-flex;
+    align-items: center;
+    gap: .35rem;
+    font-size: .75rem;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--tldr-dim);
+    white-space: nowrap;
+  }
+  .pg-hotlist__icon {
+    color: var(--ochre);
+    font-size: .875rem;
+  }
+  .pg-hotlist__pills {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: .5rem;
+  }
+  .hotlist-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: .45rem;
+    background: color-mix(in srgb, var(--pill-wash, var(--paper-2)) 70%, transparent);
+    border: 1px solid color-mix(in srgb, var(--pill-accent, var(--border)) 35%, transparent);
+    color: var(--tldr-ink);
+    font-size: .8125rem;
+    font-weight: 500;
+    line-height: 1;
+    padding: .35rem .75rem;
+    border-radius: 999px;
+    text-decoration: none;
+    transition: all var(--dur-fast) var(--ease);
+    cursor: pointer;
+  }
+  .hotlist-pill:hover {
+    background: color-mix(in srgb, var(--pill-accent) 20%, transparent);
+    border-color: var(--pill-accent);
+    color: var(--tldr-ink);
+    transform: translateY(-1.5px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  }
+  .hotlist-pill__dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--pill-accent);
+    display: inline-block;
+  }
+  .hotlist-pill__arrow {
+    font-size: .75rem;
+    color: var(--tldr-dim);
+    transition: transform var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease);
+  }
+  .hotlist-pill:hover .hotlist-pill__arrow {
+    transform: translateY(1.5px);
+    color: var(--pill-accent);
+  }
+
+  /* Mascot & Washi Speech Bubble Lockup */
   .pg-plate__crew {
     display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: .85rem;
-    margin-top: 1.5rem;
-  }
-  .crew-say {
-    font-size: .8125rem;
-    line-height: 1.4;
-    background: color-mix(in srgb, var(--paper-2) 90%, transparent);
-    border: 1px solid var(--border-soft);
-    border-radius: 10px;
-    padding: .45rem .85rem;
-    color: var(--tldr-ink);
-    max-width: 20rem;
-    box-shadow: 0 4px 12px var(--shadow);
-  }
-  .kiki-pic {
-    width: 4.5rem;
-    height: 4.5rem;
-    flex-shrink: 0;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 1rem;
+    position: relative;
+    max-width: 24rem;
   }
 
+  /* Washi Paper Speech Balloon */
+  .washi-bubble {
+    appearance: none;
+    background: none;
+    border: none;
+    padding: 0;
+    margin: 0;
+    text-align: left;
+    font: inherit;
+    color: inherit;
+    cursor: pointer;
+    position: relative;
+    outline: none;
+    transition: transform var(--dur-fast) var(--ease);
+  }
+  .washi-bubble:hover {
+    transform: translateY(-2px);
+  }
+  .washi-bubble:focus-visible {
+    outline: 2px solid var(--ochre);
+    outline-offset: 4px;
+    border-radius: 12px;
+  }
+  .washi-bubble__body {
+    display: flex;
+    flex-direction: column;
+    gap: .4rem;
+    background: color-mix(in srgb, var(--paper) 95%, var(--card));
+    color: var(--ink);
+    border: 1.25px solid color-mix(in srgb, var(--ochre) 35%, var(--border));
+    border-radius: 14px 14px 4px 14px;
+    padding: .85rem 1.15rem;
+    box-shadow:
+      0 4px 20px rgba(0, 0, 0, 0.3),
+      0 1px 3px rgba(0, 0, 0, 0.15),
+      inset 0 1px 0 rgba(255, 255, 255, 0.15);
+    position: relative;
+  }
+  .washi-bubble__mark {
+    align-self: flex-start;
+    font-family: var(--font);
+    font-size: .625rem;
+    font-weight: 800;
+    letter-spacing: .14em;
+    color: var(--moss);
+    background: color-mix(in srgb, var(--moss) 14%, transparent);
+    padding: .1rem .4rem;
+    border-radius: 3px;
+    line-height: 1.2;
+  }
+  .washi-bubble__text {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: clamp(.9375rem, 1.15vw, 1.0625rem);
+    line-height: 1.4;
+    color: var(--ink);
+    margin: 0;
+    transition: opacity .2s ease, transform .2s ease;
+  }
+  .washi-bubble__text.is-swapping {
+    opacity: 0;
+    transform: translateY(3px);
+  }
+  .washi-bubble__hint {
+    align-self: flex-end;
+    font-family: var(--font);
+    font-size: .6875rem;
+    font-weight: 600;
+    letter-spacing: .04em;
+    color: var(--ochre);
+    opacity: .85;
+    transition: opacity var(--dur-fast) ease;
+  }
+  .washi-bubble:hover .washi-bubble__hint {
+    opacity: 1;
+    text-decoration: underline;
+  }
+  .washi-bubble__tail {
+    position: absolute;
+    bottom: -9px;
+    right: 3.75rem;
+    width: 16px;
+    height: 10px;
+    clip-path: polygon(0 0, 100% 0, 50% 100%);
+    background: color-mix(in srgb, var(--paper) 95%, var(--card));
+  }
+  .washi-bubble__tail::before {
+    content: '';
+    position: absolute;
+    inset: -1.25px;
+    clip-path: polygon(0 0, 100% 0, 50% 100%);
+    background: color-mix(in srgb, var(--ochre) 35%, var(--border));
+    z-index: -1;
+  }
+
+  /* Kiki Pedestal & Multi-Mood Canvas */
+  .kiki-pedestal {
+    position: relative;
+    width: 6.5rem;
+    height: 6.5rem;
+    margin-right: 1.25rem;
+    cursor: pointer;
+    transition: transform var(--dur-fast) var(--ease);
+  }
+  .kiki-pedestal:hover {
+    transform: translateY(-3px) scale(1.03);
+  }
+  :global(.kiki-pedestal .kiki-pic) {
+    width: 100% !important;
+    height: 100% !important;
+    position: absolute !important;
+    inset: 0 !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+    transition: opacity .25s ease, transform .25s var(--ease) !important;
+  }
+  :global(.kiki-pedestal .kiki-pic.is-active) {
+    opacity: 1 !important;
+    pointer-events: auto !important;
+  }
+  .kiki-pedestal.is-bouncing {
+    animation: kikiBounce .45s cubic-bezier(.34, 1.56, .64, 1);
+  }
+  @keyframes kikiBounce {
+    0% { transform: scale(1); }
+    35% { transform: scale(0.92, 1.1) translateY(-6px); }
+    70% { transform: scale(1.05, 0.96) translateY(2px); }
+    100% { transform: scale(1); }
+  }
+  .kiki-shadow {
+    position: absolute;
+    bottom: 2px;
+    left: 15%;
+    width: 70%;
+    height: 8px;
+    background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.45) 0%, transparent 75%);
+    border-radius: 50%;
+    pointer-events: none;
+  }
+
+  /* ---------- Responsive Ergonomics ---------- */
   @media (max-width: 48rem) {
     .pg-plate__in {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 1.5rem;
+      grid-template-columns: 1fr;
+      gap: 2rem;
+      padding-block: clamp(1.75rem, 5vw, 2.5rem) calc(22px + 1.5rem);
+    }
+    .pg-plate__title {
+      font-size: clamp(1.85rem, 6.5vw, 2.35rem);
+    }
+    .pg-plate__seal {
+      gap: .4rem .6rem;
+      font-size: .75rem;
+    }
+    .pg-hotlist {
+      margin-top: 1.25rem;
+      padding-top: 1rem;
+      gap: .5rem;
     }
     .pg-plate__crew {
       width: 100%;
-      justify-content: flex-start;
-    }
-  }
-
-  @media (min-width: 48rem) {
-    .pg-plate__crew {
-      flex-direction: column;
-      align-items: flex-end;
-      gap: .75rem;
-      margin-top: 0;
-      flex-shrink: 0;
-    }
-    .kiki-pic {
-      width: 7rem;
-      height: 7rem;
-    }
-    .crew-say {
-      font-size: .875rem;
       max-width: none;
+      flex-direction: row-reverse;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1.25rem;
+      margin-top: .5rem;
+    }
+    .washi-bubble {
+      flex: 1;
+    }
+    .washi-bubble__body {
+      border-radius: 12px 12px 12px 3px;
+      padding: .65rem .85rem;
+    }
+    .washi-bubble__tail {
+      display: none;
+    }
+    .kiki-pedestal {
+      width: 4.75rem;
+      height: 4.75rem;
+      margin-right: 0;
+      flex-shrink: 0;
     }
   }
 
@@ -234,8 +718,15 @@ const pageSchema = {
     margin-top: -22px;
     overflow: visible;
     pointer-events: none;
+    vertical-align: top;
   }
-  .pg-edge polyline {
+  .pg-edge polyline.pg-edge__glow {
+    fill: none;
+    stroke: color-mix(in srgb, var(--ochre) 40%, transparent);
+    stroke-width: 4;
+    filter: blur(1.5px);
+  }
+  .pg-edge polyline.pg-edge__gold {
     fill: none;
     stroke: var(--ochre);
     stroke-width: 1.75;
