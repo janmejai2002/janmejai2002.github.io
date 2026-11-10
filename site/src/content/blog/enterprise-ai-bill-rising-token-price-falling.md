@@ -1,7 +1,7 @@
 ---
 title: 'Token Prices Dropped 95 Percent While Enterprise AI Invoices Tripled'
 description: 'API token prices fell 95%, yet corporate AI bills tripled in 2026. Audit the 50x agentic loop multiplier, 70% hidden TCO, and FinOps budget caps.'
-pubDate: 2026-11-10
+pubDate: 2026-11-11
 track: business
 question: 'Why are our corporate AI software invoices tripling when per-token API prices fell 95%?'
 keywords:

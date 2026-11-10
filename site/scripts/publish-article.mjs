@@ -141,15 +141,21 @@ function liftArtworkSvg(markdown, warn, slug = null) {
       const artDir = join(here, '..', 'assets-src', 'art');
       if (existsSync(artDir)) {
         const existingFiles = readdirSync(artDir).filter((f) => f.endsWith('.svg') && f !== `${slug}.svg`);
-        const cleanSvg = svg.replace(/\s+/g, ' ').trim();
-        for (const f of existingFiles) {
-          try {
-            const existingContent = readFileSync(join(artDir, f), 'utf8').replace(/\s+/g, ' ').trim();
-            if (cleanSvg.length > 300 && existingContent.includes(cleanSvg.slice(100, 300))) {
-              reasons.push(`artwork geometry duplicates ${f}`);
-              break;
-            }
-          } catch {}
+        // Strip common defs/filters/paper boilerplate before checking geometry
+        const stripPreamble = (s) =>
+          s.replace(/<defs[\s\S]*?<\/defs>/gi, '').replace(/<rect\s+[^>]*fill="{{paper}}"[^>]*\/>/gi, '').replace(/\s+/g, ' ').trim();
+        const cleanGeo = stripPreamble(svg);
+        if (cleanGeo.length > 80) {
+          const sample = cleanGeo.slice(0, 180);
+          for (const f of existingFiles) {
+            try {
+              const existingGeo = stripPreamble(readFileSync(join(artDir, f), 'utf8'));
+              if (existingGeo.includes(sample)) {
+                reasons.push(`artwork geometry duplicates ${f}`);
+                break;
+              }
+            } catch {}
+          }
         }
       }
     }
@@ -174,26 +180,35 @@ function normalizeProse(markdown) {
     return svgBlock.split('\n').filter((l) => l.trim() !== '').join('\n');
   });
 
-  // 2. Convert ASCII box tables inside code blocks to standard GFM tables
+  // 2. Convert ASCII box tables inside code blocks to standard GFM tables ONLY if they are genuine tabular grids
   result = result.replace(/```(?:text)?\s*\n(\+[-=+]+\+[\s\S]*?\+[-=+]+\+)\s*```/g, (match, tableAscii) => {
+    // If it contains directional arrows or flow transitions, it is a diagram, not a table
+    if (/\b[vV\^]\b|-->|->|<-|\s+\|\s*\n\s+[vV]/.test(tableAscii)) {
+      return match;
+    }
     const lines = tableAscii.split('\n').map((l) => l.trim()).filter(Boolean);
     const rows = [];
     for (const line of lines) {
       if (line.startsWith('+') && line.endsWith('+')) continue; // separator line
       if (line.startsWith('|') && line.endsWith('|')) {
         const cells = line.slice(1, -1).split('|').map((c) => c.trim());
-        if (cells.length === 1 && rows.length === 0) continue; // title banner
         rows.push(cells);
+      } else {
+        // Any non-table line inside disqualifies it as a pure data table
+        return match;
       }
     }
     if (rows.length < 2) return match;
+    const colCount = rows[0].length;
+    if (colCount < 2) return match; // Single-column boxes are flow nodes, not data tables
+    // Ensure all rows have the same column count
+    if (!rows.every((r) => r.length === colCount)) return match;
+
     const header = rows[0];
     const dataRows = rows.slice(1);
-    const colCount = header.length;
     let gfm = `| ${header.join(' | ')} |\n| ${Array(colCount).fill('---').join(' | ')} |\n`;
     for (const row of dataRows) {
-      const padded = Array.from({ length: colCount }, (_, i) => row[i] ?? '');
-      gfm += `| ${padded.join(' | ')} |\n`;
+      gfm += `| ${row.join(' | ')} |\n`;
     }
     return `\n${gfm.trim()}\n`;
   });
@@ -479,7 +494,7 @@ for (const page of rows) {
     .split(',')
     .map((k) => k.trim())
     .filter(Boolean);
-  const pubDate = p['Draft Completed']?.date?.start ?? new Date().toISOString().slice(0, 10);
+  const pubDate = p['Publish Date']?.date?.start ?? new Date().toISOString().slice(0, 10);
 
   // Editorial theme. Notion holds it title-cased ("Technical"); the content
   // schema wants the lowercase id. Anything unset or unrecognised falls back to
@@ -533,7 +548,10 @@ for (const page of rows) {
   if (liftedArt.svg) {
     art = { svg: liftedArt.svg, alt: liftedArt.alt, label: 'routine artwork from Notion' };
   } else if (existsSync(svgFile)) {
-    note(id, title, `assets-src/art/${slug}.svg already exists — kept it; add heroImage/heroImageDark/heroAlt by hand.`);
+    const existingSvg = readFileSync(svgFile, 'utf8');
+    const existingAlt = liftedArt.alt || title;
+    art = { svg: existingSvg, alt: existingAlt, label: 'existing artwork from disk' };
+    note(id, title, `assets-src/art/${slug}.svg already exists — using it with hero fields.`);
   } else {
     art = { ...fallbackArt(slug, track), label: 'deterministic fallback art' };
   }

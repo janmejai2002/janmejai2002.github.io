@@ -1,9 +1,12 @@
 ---
 title: 'Shopify Sidekick Autopsy: The 40:1 Token Tax and the 96% Cost Cut'
 description: 'Shopify replaced a $27M frontier API tax on Sidekick with post-trained Nemotron MoE models, cutting GraphQL latency from 6.5s to 0.87s and costs by 96%.'
-pubDate: 2026-11-10
+pubDate: 2026-11-11
 track: case-studies
 question: 'Can self-hosted task-expert models replace frontier APIs to eliminate high token read costs and reduce query latency?'
+heroImage: '../../assets/art/shopify-sidekick-task-experts-autopsy-light.webp'
+heroImageDark: '../../assets/art/shopify-sidekick-task-experts-autopsy-dark.webp'
+heroAlt: 'Geometric schematic illustrating a dual-tier specialist split AI architecture with offset data columns and an interrupted flow vector in weathered moss green.'
 readingTime: '7 min read'
 notionId: '414ced67-050a-8184-88ed-d9dbd1ee5383'
 ---
@@ -24,27 +27,60 @@ notionId: '414ced67-050a-8184-88ed-d9dbd1ee5383'
 The technical architecture of Shopify Sidekick relies on a decoupled operational paradigm that Shopify Engineering terms the "Specialist Split." Instead of forcing a single frontier foundation model to execute conversational dialogue, merchant intent classification, API documentation lookup, and query synthesis, Sidekick splits responsibilities across two architectural tiers: a conversational frontier planner and self-hosted open-model task experts.
 
 
-|  | Gisting Prefix Compression Layer: 6,000 System Prompt Tokens -> 1,500 Gist |  |
-| --- | --- | --- |
-| +-----------------------------------------------------------------------------+ |  |  |
-|  |  |  |
-| v |  |  |
-| +-----------------------------------------------------------------------------+ |  |  |
-|  | In-House Post-Trained Weights: NVIDIA Nemotron 3.5 Lightning (MoE 3B / 30B) |  |
-|  | - SFT on 61,000 Healed Trajectories         - GRPO on Calibrated Rubric |  |
-| +-----------------------------------------------------------------------------+ |  |  |
-|  |  |  |
-| v |  |  |
-| +-----------------------------------------------------------------------------+ |  |  |
-|  | Serving Runtime: NVIDIA TensorRT-LLM on Dedicated Blackwell B200 / H200 Pods |  |
-| +-----------------------------------------------------------------------------+ |  |  |
-|  |  |  |
-| SHOPIFY CORE ADMIN GRAPHQL API |  |  |
-| - Storefront Schemas                     - Product / Inventory Catalog |  |  |
-| - Metafield Access Rules                 - Customer Segmentation Store |  |  |
-|  |  |  |
-| MERCHANT RESPONSE COMPOSITION LAYER |  |  |
-| - Frontier Model Synthesizes Final Conversational Summary with Data Rows |  |  |
+<figure class="diagram">
+<svg viewBox="0 0 720 540" role="img" aria-labelledby="shopify-arch-title shopify-arch-desc">
+  <title id="shopify-arch-title">Shopify Sidekick Specialist Split Architecture</title>
+  <desc id="shopify-arch-desc">Architecture showing how conversational planning is decoupled from token-heavy GraphQL query execution using self-hosted NVIDIA Nemotron MoE models and Gisting prefix compression.</desc>
+  <g font-family="inherit">
+    <!-- Tier 1: Merchant UI -->
+    <rect x="20" y="15" width="680" height="50" rx="8" fill="var(--card)" stroke="var(--border)" stroke-width="1.2"/>
+    <text x="360" y="37" font-size="12.5" font-weight="700" fill="var(--ink)" text-anchor="middle">Merchant Admin Surface</text>
+    <text x="360" y="53" font-size="10.5" fill="var(--ink-soft)" text-anchor="middle">Shopify Web Admin · Mobile App · Point of Sale (POS) UI</text>
+    <!-- Connector 1 -->
+    <line x1="360" y1="65" x2="360" y2="100" stroke="var(--border)" stroke-width="1.5"/>
+    <polygon points="356,98 360,105 364,98" fill="var(--ink-soft)"/>
+    <text x="375" y="86" font-size="10" fill="var(--ink-faint)">Natural language merchant prompt</text>
+    <!-- Tier 2: Frontier Planner -->
+    <rect x="20" y="105" width="680" height="56" rx="8" fill="var(--card)" stroke="var(--border)" stroke-width="1.2"/>
+    <text x="360" y="128" font-size="12.5" font-weight="700" fill="var(--ink)" text-anchor="middle">Frontier Conversational Planner</text>
+    <text x="360" y="146" font-size="10.5" fill="var(--ink-soft)" text-anchor="middle">High-Level Intent Parsing · Dialogue Management · Task Delegation Subagent Router</text>
+    <!-- Connector 2 -->
+    <line x1="360" y1="161" x2="360" y2="196" stroke="var(--moss)" stroke-width="1.8"/>
+    <polygon points="356,194 360,201 364,194" fill="var(--moss)"/>
+    <text x="375" y="182" font-size="10" font-weight="600" fill="var(--moss)">Dispatches 40:1 reading-heavy schema sub-task</text>
+    <!-- Tier 3: Specialist Task Expert -->
+    <rect x="20" y="201" width="680" height="154" rx="8" fill="var(--wash-moss)" stroke="var(--moss)" stroke-width="1.8"/>
+    <text x="35" y="224" font-size="11" font-weight="700" letter-spacing="0.05em" fill="var(--moss)" text-transform="uppercase">In-House Task Expert (96% Cost Cut Tier)</text>
+    <rect x="35" y="235" width="650" height="30" rx="4" fill="var(--card)" stroke="var(--border)" stroke-width="1"/>
+    <text x="45" y="254" font-size="10.5" font-weight="600" fill="var(--ink)">Gisting Prefix Compression:</text>
+    <text x="205" y="254" font-size="10.5" fill="var(--ink-soft)">6,000 system prompt tokens → 1,500 learned gist tokens (19% TTFT drop, 14% GPU capacity freed)</text>
+    <rect x="35" y="271" width="650" height="36" rx="4" fill="var(--card)" stroke="var(--border)" stroke-width="1"/>
+    <text x="45" y="287" font-size="10.5" font-weight="600" fill="var(--ink)">Post-Trained Weights:</text>
+    <text x="180" y="287" font-size="10.5" fill="var(--ink-soft)">NVIDIA Nemotron 3.5 Lightning (MoE 3B active / 30B total)</text>
+    <text x="45" y="300" font-size="9.5" fill="var(--moss)">Continual Flywheel: SFT on 61,000 healed trajectories + GRPO policy optimization on calibrated rubric</text>
+    <rect x="35" y="313" width="650" height="30" rx="4" fill="var(--card)" stroke="var(--border)" stroke-width="1"/>
+    <text x="45" y="332" font-size="10.5" font-weight="600" fill="var(--ink)">Dedicated Serving Runtime:</text>
+    <text x="215" y="332" font-size="10.5" fill="var(--ink-soft)">NVIDIA TensorRT-LLM on Blackwell B200 / Hopper H200 pods (0.87s median full latency)</text>
+    <!-- Connector 3 -->
+    <line x1="360" y1="355" x2="360" y2="390" stroke="var(--moss)" stroke-width="1.8"/>
+    <polygon points="356,388 360,395 364,388" fill="var(--moss)"/>
+    <text x="375" y="376" font-size="10" fill="var(--ink-faint)">Sub-second executable GraphQL query</text>
+    <!-- Tier 4: Shopify Core API -->
+    <rect x="20" y="395" width="680" height="52" rx="8" fill="var(--card)" stroke="var(--border)" stroke-width="1.2"/>
+    <text x="360" y="417" font-size="12" font-weight="700" fill="var(--ink)" text-anchor="middle">Shopify Core Admin GraphQL API</text>
+    <text x="360" y="434" font-size="10" fill="var(--ink-soft)" text-anchor="middle">Storefront Schemas · Inventory Catalog · Metafield Access Rules · Customer Segmentation Store</text>
+    <!-- Connector 4 -->
+    <line x1="360" y1="447" x2="360" y2="477" stroke="var(--border)" stroke-width="1.5"/>
+    <polygon points="356,475 360,482 364,475" fill="var(--ink-soft)"/>
+    <text x="375" y="466" font-size="10" fill="var(--ink-faint)">Raw JSON payload execution response</text>
+    <!-- Tier 5: Merchant Response Composition Layer -->
+    <rect x="20" y="482" width="680" height="46" rx="8" fill="var(--card)" stroke="var(--border)" stroke-width="1.2"/>
+    <text x="360" y="503" font-size="12" font-weight="700" fill="var(--ink)" text-anchor="middle">Merchant Response Composition Layer</text>
+    <text x="360" y="519" font-size="10" fill="var(--ink-soft)" text-anchor="middle">Frontier Model Synthesizes Final Conversational Summary with Data Rows</text>
+  </g>
+</svg>
+<figcaption>The Specialist Split: Shopify decouples conversational intent planning from high-throughput GraphQL execution via specialized in-house task experts.</figcaption>
+</figure>
 
 
 In this architecture, a commercial frontier model greets the merchant and plans multi-step operations. When the merchant requests data operations (such as inventory audits or customer segmentation), the frontier planner dispatches the task to the GraphQL subagent. The GraphQL subagent is context-heavy: it reads approximately 40 tokens of schema definitions and field documentation for every single token of GraphQL query it produces.
@@ -81,27 +117,53 @@ Deploying autonomous query generation over production commerce data revealed cri
 - **Store mutation blast radius**: In early autonomous prototypes, merchants asked Sidekick to execute broad inventory adjustments (such as applying bulk clearance discounts or updating SKU descriptions). Without deterministic isolation boundaries, the model occasionally misinterpreted ambiguous natural-language modifiers, applying discounts across entire catalog hierarchies rather than target seasonal collections.
 - **GraphQL schema drift across private apps**: While standard Shopify core resources maintain strict schema stability, third-party apps and merchant-defined metafields introduce unstructured schema variations. The task expert periodically attempted to query deprecated field names or private app namespaces, triggering syntax errors and cascading execution retries that consumed connection pool resources.
 
-```
-+-----------------------------------------------------------------------------------+
-|                        CALIBRATED FLYWHEEL REMEDIATION LOOP                       |
-+-----------------------------------------------------------------------------------+
-  Production Query Fails (GraphQL Syntax Error / Negative Merchant Feedback)
-    |
-    v
-  Trace Ingestion: Capture Complete Conversation Trajectory into Data Lake
-    |
-    v
-  Automated Judge Evaluation: GEPA / ACE Calibrated LLM Judge Scores Trajectory
-    |
-    v
-  Trajectory Healing: Specialized Agent Rewrites Defective Step into Ideal Output
-    |
-    v
-  Unanimous Consensus Gate: Verify Healed Trajectory Against Product Quality Rubric
-    |
-    v
-  Flywheel Retraining: Batch Supervised Fine-Tuning (SFT) + GRPO Policy Optimization
-```
+<figure class="diagram">
+<svg viewBox="0 0 720 380" role="img" aria-labelledby="flywheel-title flywheel-desc">
+  <title id="flywheel-title">Shopify Calibrated Flywheel Remediation Loop</title>
+  <desc id="flywheel-desc">Closed-loop pipeline where failed merchant queries are ingested, scored by calibrated LLM judges, healed by expert agents, validated via consensus gates, and fed into SFT and GRPO retraining.</desc>
+  <g font-family="inherit">
+    <rect x="15" y="10" width="690" height="355" rx="8" fill="var(--card)" stroke="var(--border)" stroke-width="1.2"/>
+    <text x="35" y="34" font-size="11" font-weight="700" letter-spacing="0.05em" fill="var(--ink-soft)" text-transform="uppercase">Calibrated Flywheel Remediation Loop</text>
+    <!-- Step 1 -->
+    <rect x="35" y="48" width="650" height="38" rx="6" fill="var(--paper)" stroke="var(--border)" stroke-width="1"/>
+    <text x="50" y="66" font-size="10.5" font-weight="700" fill="var(--hanko)">1. Production Failure Ingestion</text>
+    <text x="50" y="79" font-size="10" fill="var(--ink-soft)">GraphQL syntax error, merchant thumbs down, or refusal hallucination captured into data lake</text>
+    <!-- Connector -->
+    <path d="M 360 86 L 360 98" fill="none" stroke="var(--border)" stroke-width="1.5"/>
+    <polygon points="356,96 360,102 364,96" fill="var(--border)"/>
+    <!-- Step 2 -->
+    <rect x="35" y="102" width="650" height="38" rx="6" fill="var(--paper)" stroke="var(--border)" stroke-width="1"/>
+    <text x="50" y="120" font-size="10.5" font-weight="700" fill="var(--ink)">2. Automated Judge Evaluation (GEPA / ACE Scoring)</text>
+    <text x="50" y="133" font-size="10" fill="var(--ink-soft)">Calibrated LLM judge benchmarks defective conversation against production quality and refusal rubric</text>
+    <!-- Connector -->
+    <path d="M 360 140 L 360 152" fill="none" stroke="var(--border)" stroke-width="1.5"/>
+    <polygon points="356,150 360,156 364,150" fill="var(--border)"/>
+    <!-- Step 3 -->
+    <rect x="35" y="156" width="650" height="38" rx="6" fill="var(--paper)" stroke="var(--border)" stroke-width="1"/>
+    <text x="50" y="174" font-size="10.5" font-weight="700" fill="var(--moss)">3. Trajectory Healing via Teacher Model</text>
+    <text x="50" y="187" font-size="10" fill="var(--ink-soft)">Specialized agent rewrites defective trajectory into ideal execution step (including explicit polite refusals)</text>
+    <!-- Connector -->
+    <path d="M 360 194 L 360 206" fill="none" stroke="var(--border)" stroke-width="1.5"/>
+    <polygon points="356,204 360,210 364,204" fill="var(--border)"/>
+    <!-- Step 4 -->
+    <rect x="35" y="210" width="650" height="38" rx="6" fill="var(--wash-mizu)" stroke="var(--border)" stroke-width="1"/>
+    <text x="50" y="228" font-size="10.5" font-weight="700" fill="var(--mizu)">4. Unanimous Consensus Validation Gate</text>
+    <text x="50" y="241" font-size="10" fill="var(--ink-soft)">Multi-judge quorum verifies healed output passes syntax, schema boundaries, and safety constraints</text>
+    <!-- Connector -->
+    <path d="M 360 248 L 360 260" fill="none" stroke="var(--border)" stroke-width="1.5"/>
+    <polygon points="356,258 360,264 364,258" fill="var(--border)"/>
+    <!-- Step 5 -->
+    <rect x="35" y="264" width="650" height="42" rx="6" fill="var(--wash-moss)" stroke="var(--moss)" stroke-width="1.2"/>
+    <text x="50" y="282" font-size="10.5" font-weight="700" fill="var(--moss)">5. Continual Flywheel Retraining</text>
+    <text x="50" y="296" font-size="10" fill="var(--ink-soft)">Batch Supervised Fine-Tuning (SFT on 61k healed traces) + GRPO policy optimization via Megatron Bridge</text>
+    <!-- Return loop arrow -->
+    <path d="M 685 285 L 700 285 L 700 67 L 685 67" fill="none" stroke="var(--moss)" stroke-width="1.5" stroke-dasharray="4,4"/>
+    <polygon points="687,63 680,67 687,71" fill="var(--moss)"/>
+    <text x="695" y="180" font-size="9" fill="var(--moss)" text-anchor="middle" transform="rotate(90, 695, 180)">Surpasses frontier baseline (74.5 vs 73.0)</text>
+  </g>
+</svg>
+<figcaption>The Flywheel Loop: 61,000 healed trajectories trained the open task expert to master refusal boundaries and surpass frontier model accuracy.</figcaption>
+</figure>
 
 To resolve these failures, Shopify built a self-healing pipeline. Low-scoring production conversations are automatically extracted into a curation pool. A secondary agent rewrites the failed trajectory to produce the correct behavior (including polite refusals when queries ask for impossible data). When the healed example achieves a unanimous consensus score from a calibrated LLM judge, it appends to the training corpus. Over six successive training loops, the healed dataset accumulated 61,000 verified examples, driving the model's GraphQL benchmark score from an initial 37.7 to 74.5, officially surpassing the commercial frontier model's baseline score of 73.0.
 

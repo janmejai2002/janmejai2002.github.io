@@ -1,7 +1,7 @@
 ---
 title: 'LLMjacking Attacks Drain One Million Dollars from Enterprise Cloud AI'
 description: 'Threat group UNC6993 drains $100K/day and up to $1M per victim in stolen AI API key fraud. Learn how llmjacking enterprise cloud security controls stop it.'
-pubDate: 2026-11-10
+pubDate: 2026-11-11
 track: business
 question: 'How are cybercriminals draining enterprise cloud budgets via stolen AI API keys?'
 keywords:
@@ -52,23 +52,41 @@ Understanding `how attackers steal and resell enterprise llm access` requires ex
 
 Initial access targets long-lived AWS `AKIA` keys, GCP Service Account JSONs, and GitHub PATs. Per [Aviatrix Threat Research](https://aviatrix.ai/threat-research-center/llmjacking-attacks-enterprise-cloud-charges-unc6993-2026/), UNC6993 breached cloud hosts via over-permissioned Service Account keys, planted backdoor billing accounts, and used phishing portals capturing raw JSON session tokens to bypass MFA. Other groups exploit AI gateways via LiteLLM user ID rebinding ([`CVE-2026-40217`](https://securityonline.info/llmjacking-cloud-attacks-mandiant/)) and the LiteLLM PyPI supply-chain attack ([`CVE-2026-33634`](https://labs.cloudsecurityalliance.org/research/csa-research-note-llmjacking-evolved-offensive-agentic-20260/)).
 
-```
-1. HARVESTING: Leaked AWS AKIA keys, GCP Service Accounts, GitHub PATs, LiteLLM CVE-2026-40217
-       |
-       v
-2. STEALTH ENUMERATION:
-   -> Call InvokeModel with max_tokens_to_sample: -1 (ValidationException proves access at $0)
-   -> Call GetFoundationModelAvailability & PutFoundationModelEntitlement to activate models
-   -> Call DeleteModelInvocationLoggingConfiguration to blind CloudWatch/S3 prompt logs
-       |
-       v
-3. LLM MIXER POOLING: Load keys into oai-reverse-proxy, one-api, new-api, or gcli2api across regions
-       |
-       v
-4. RESALE & BURN ($100K+/day -> $1M invoice):
-   -> Storefronts (Jet Night at $60/mo; silver.inc) | Roleplay bots (Chub.ai / SillyTavern)
-   -> Hijacked coding CLIs (vibe.aiok.me) & offensive agent swarms (1,100 req/sec)
-```
+<figure class="diagram">
+<svg viewBox="0 0 720 310" role="img" aria-labelledby="llmjacking-title llmjacking-desc">
+  <title id="llmjacking-title">LLMjacking Attack and Compute Arbitrage Chain</title>
+  <desc id="llmjacking-desc">Attack stages showing key harvesting, stealth API validation, LLM mixer pooling, and illicit resale burning enterprise quotas.</desc>
+  <g font-family="inherit">
+    <rect x="15" y="10" width="690" height="285" rx="8" fill="var(--card)" stroke="var(--border)" stroke-width="1.2"/>
+    <text x="35" y="32" font-size="11" font-weight="700" letter-spacing="0.05em" fill="var(--ink-soft)" text-transform="uppercase">LLMjacking Exploitation &amp; Monetization Chain</text>
+    <!-- Stage 1 -->
+    <rect x="35" y="44" width="650" height="38" rx="6" fill="var(--paper)" stroke="var(--border)" stroke-width="1"/>
+    <text x="50" y="62" font-size="10.5" font-weight="700" fill="var(--hanko)">1. Credential Harvesting &amp; Initial Access</text>
+    <text x="50" y="74" font-size="9.5" fill="var(--ink-soft)">Exposed AWS AKIA keys, GCP Service Accounts, GitHub PATs, and LiteLLM gateway CVE-2026-40217</text>
+    <path d="M 360 82 L 360 94" fill="none" stroke="var(--border)" stroke-width="1.5"/>
+    <polygon points="356,92 360,98 364,92" fill="var(--border)"/>
+    <!-- Stage 2 -->
+    <rect x="35" y="98" width="650" height="48" rx="6" fill="var(--paper)" stroke="var(--border)" stroke-width="1"/>
+    <text x="50" y="115" font-size="10.5" font-weight="700" fill="var(--ochre)">2. Zero-Cost Stealth Enumeration</text>
+    <text x="50" y="128" font-size="9.5" fill="var(--ink-soft)">InvokeModel with max_tokens: -1 validates access without token cost · Enable all models via PutFoundationModelEntitlement</text>
+    <text x="50" y="139" font-size="9" fill="var(--hanko)">DeleteModelInvocationLoggingConfiguration blinds CloudWatch &amp; S3 audit trails</text>
+    <path d="M 360 146 L 360 158" fill="none" stroke="var(--border)" stroke-width="1.5"/>
+    <polygon points="356,156 360,162 364,156" fill="var(--border)"/>
+    <!-- Stage 3 -->
+    <rect x="35" y="162" width="650" height="40" rx="6" fill="var(--wash-mizu)" stroke="var(--border)" stroke-width="1"/>
+    <text x="50" y="179" font-size="10.5" font-weight="700" fill="var(--mizu)">3. LLM Mixer Aggregation</text>
+    <text x="50" y="193" font-size="9.5" fill="var(--ink-soft)">Stolen keys loaded into oai-reverse-proxy, one-api, and new-api multi-region proxy pools</text>
+    <path d="M 360 202 L 360 214" fill="none" stroke="var(--border)" stroke-width="1.5"/>
+    <polygon points="356,212 360,218 364,212" fill="var(--border)"/>
+    <!-- Stage 4 -->
+    <rect x="35" y="218" width="650" height="52" rx="6" fill="var(--wash-hanko)" stroke="var(--hanko)" stroke-width="1.2"/>
+    <text x="50" y="235" font-size="10.5" font-weight="700" fill="var(--hanko)">4. Compute Resale &amp; Quota Burn ($100K+/day → $1M Invoice)</text>
+    <text x="50" y="249" font-size="9.5" fill="var(--ink-soft)">Commercial illicit storefronts (Jet Night at $60/mo) · Uncensored roleplay bots (Chub.ai, SillyTavern)</text>
+    <text x="50" y="260" font-size="9" fill="var(--ink-soft)">High-concurrency offensive agent swarms &amp; illicit coding CLIs bursting at 1,100 requests/sec</text>
+  </g>
+</svg>
+<figcaption>The LLMjacking Kill Chain: Attackers harvest leaked cloud credentials, disable audit logging, and route traffic through illicit proxies to monetize victim quotas.</figcaption>
+</figure>
 
 Per [Sysdig](https://www.sysdig.com/blog/llmjacking-stolen-cloud-credentials-used-in-new-ai-attack), attackers test AWS Bedrock access by calling `InvokeModel` with `max_tokens_to_sample: -1` (returning `ValidationException` without billing tokens). [Permiso Security](https://permiso.io/blog/exploiting-hosted-models) observed scripts calling `GetFoundationModelAvailability` and `PutFoundationModelEntitlement` to activate models, while [Sysdig's follow-up report](https://www.sysdig.com/blog/growing-dangers-of-llmjacking) caught attackers calling `DeleteModelInvocationLoggingConfiguration` to wipe prompt logs before flooding `InvokeModelWithResponseStream`.
 

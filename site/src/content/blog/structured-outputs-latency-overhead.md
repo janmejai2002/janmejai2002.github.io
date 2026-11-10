@@ -1,7 +1,7 @@
 ---
 title: 'Grammar Constrained Decoding Imposes a 40% Logit Masking Penalty'
 description: 'Enforcing strict JSON schemas on 8B models adds a 25% to 45% token latency penalty via CPU-GPU logit masking. Compare XGrammar, Outlines, and llguidance.'
-pubDate: 2026-11-10
+pubDate: 2026-11-11
 track: technical
 question: 'Why does enforcing strict JSON schemas slow down small model token generation by 40%?'
 keywords:
@@ -33,19 +33,48 @@ Why does enforcing strict JSON schemas slow down small model token generation by
 
 This logit masking speed penalty hits eight-billion-parameter models hardest due to arithmetic intensity ratios. Serving a 70B model takes 25 to 40 ms of GPU high-bandwidth memory (HBM) reads per step, hiding 2 ms of host CPU parser work. On an 8B model like [Llama-3.1-8B-Instruct](https://arxiv.org/pdf/2411.15100) or [Qwen3-8B](https://blog.squeezebits.com/guided-decoding-performance-vllm-sglang) on an H100 with [PagedAttention](https://arxiv.org/abs/2309.06180), the forward pass takes 5.5 to 6.2 ms. Adding 2.0 to 3.8 ms of synchronous CPU automaton transitions and PCIe bitmask transfers inflates per-token latency by up to 45% in batched serving.
 
-```
-Unconstrained Decode (Llama-3.1-8B on H100, ~6.2ms TPOT):
-GPU:[===Forward(5.8ms)===][Sample(0.4ms)]
-CPU:[Idle/AsyncScheduling               ]
-
-Synchronous Constrained Decode (Non-Overlapped, ~9.8ms TPOT):
-GPU:[===Forward(5.8ms)===][STALL(3.4ms)][Mask+Sample(0.6ms)]
-CPU:[Idle                ][PDA+128kMask(2.9ms)][PCIe(0.5ms)]
-
-Overlapped Pipeline (SGLang + XGrammar Cached, ~6.8ms TPOT):
-GPU:[===ForwardStepN(5.8ms)===][ApplyMask+Sample(0.5ms)]
-CPU:[AsyncCache+120Dep(0.6ms) ][AsyncPCIeCopy(0.3ms)   ]
-```
+<figure class="diagram">
+<svg viewBox="0 0 720 270" role="img" aria-labelledby="timeline-title timeline-desc">
+  <title id="timeline-title">CPU-GPU Execution Timeline: Unconstrained vs Constrained Decoding</title>
+  <desc id="timeline-desc">Timeline comparison showing GPU forward pass stalls caused by synchronous CPU logit masking vs overlapped asynchronous pipelining in XGrammar.</desc>
+  <g font-family="inherit">
+    <rect x="15" y="10" width="690" height="245" rx="8" fill="var(--card)" stroke="var(--border)" stroke-width="1.2"/>
+    <!-- Track 1: Unconstrained -->
+    <text x="35" y="32" font-size="11" font-weight="700" fill="var(--ink)">1. Unconstrained Decode (~6.2ms TPOT)</text>
+    <rect x="35" y="40" width="340" height="22" rx="4" fill="var(--wash-mizu)" stroke="var(--mizu)" stroke-width="1"/>
+    <text x="205" y="55" font-size="9.5" font-weight="600" fill="var(--mizu)" text-anchor="middle">GPU Forward Pass (5.8ms)</text>
+    <rect x="380" y="40" width="40" height="22" rx="4" fill="var(--paper)" stroke="var(--border)" stroke-width="1"/>
+    <text x="400" y="55" font-size="9" fill="var(--ink-soft)" text-anchor="middle">Sample</text>
+    <text x="430" y="55" font-size="9.5" fill="var(--ink-faint)">CPU: Idle / Async Scheduling</text>
+    <!-- Track 2: Synchronous -->
+    <text x="35" y="92" font-size="11" font-weight="700" fill="var(--hanko)">2. Synchronous Constrained Decode (~9.8ms TPOT: +45% Stall)</text>
+    <rect x="35" y="100" width="340" height="22" rx="4" fill="var(--wash-mizu)" stroke="var(--mizu)" stroke-width="1"/>
+    <text x="205" y="115" font-size="9.5" font-weight="600" fill="var(--mizu)" text-anchor="middle">GPU Forward Pass (5.8ms)</text>
+    <rect x="380" y="100" width="180" height="22" rx="4" fill="var(--wash-hanko)" stroke="var(--hanko)" stroke-width="1"/>
+    <text x="470" y="115" font-size="9.5" font-weight="700" fill="var(--hanko)" text-anchor="middle">GPU Tensor STALL (3.4ms)</text>
+    <rect x="565" y="100" width="50" height="22" rx="4" fill="var(--paper)" stroke="var(--border)" stroke-width="1"/>
+    <text x="590" y="115" font-size="9" fill="var(--ink-soft)" text-anchor="middle">Mask+Sample</text>
+    <!-- CPU sub-row -->
+    <rect x="380" y="125" width="125" height="18" rx="3" fill="var(--card)" stroke="var(--border)" stroke-width="0.8"/>
+    <text x="442" y="138" font-size="8.5" fill="var(--ink-soft)" text-anchor="middle">CPU PDA Stack (2.9ms)</text>
+    <rect x="510" y="125" width="50" height="18" rx="3" fill="var(--card)" stroke="var(--border)" stroke-width="0.8"/>
+    <text x="535" y="138" font-size="8.5" fill="var(--ink-soft)" text-anchor="middle">PCIe (0.5ms)</text>
+    <!-- Track 3: Overlapped -->
+    <text x="35" y="172" font-size="11" font-weight="700" fill="var(--moss)">3. Overlapped Pipeline with XGrammar (~6.8ms TPOT)</text>
+    <rect x="35" y="180" width="340" height="22" rx="4" fill="var(--wash-moss)" stroke="var(--moss)" stroke-width="1"/>
+    <text x="205" y="195" font-size="9.5" font-weight="600" fill="var(--moss)" text-anchor="middle">GPU Forward Pass Step N (5.8ms)</text>
+    <rect x="380" y="180" width="60" height="22" rx="4" fill="var(--paper)" stroke="var(--border)" stroke-width="1"/>
+    <text x="410" y="195" font-size="9" fill="var(--ink-soft)" text-anchor="middle">Apply+Sample</text>
+    <!-- CPU sub-row concurrent -->
+    <rect x="180" y="205" width="120" height="18" rx="3" fill="var(--wash-moss)" stroke="var(--border)" stroke-width="0.8"/>
+    <text x="240" y="218" font-size="8.5" fill="var(--moss)" text-anchor="middle">Async Cache (0.6ms)</text>
+    <rect x="305" y="205" width="70" height="18" rx="3" fill="var(--wash-moss)" stroke="var(--border)" stroke-width="0.8"/>
+    <text x="340" y="218" font-size="8.5" fill="var(--moss)" text-anchor="middle">Async PCIe (0.3ms)</text>
+    <text x="385" y="218" font-size="8.5" fill="var(--ink-faint)">&lt;-- Pipelined concurrently with GPU forward pass</text>
+  </g>
+</svg>
+<figcaption>Execution Timeline: Synchronous logit masking forces GPU Tensor Cores to wait for CPU automaton evaluation. Asynchronous pipelining overlaps mask calculation with next-token forward passes.</figcaption>
+</figure>
 
 Engineers asking why does guided decoding slow down vllm trace the bottleneck to how logit processors hook into sampling. As shown in the [vLLM structured decoding analysis](https://vllm.ai/blog/2025-01-14-struct-decode-intro), running grammar transitions inside a synchronous logit processor puts CPU evaluation on the GPU critical path. In a batch of 32 requests where 4 require json schema agent inference, a synchronous processor blocks the other 28 unconstrained requests while the CPU builds bitmasks.
 
