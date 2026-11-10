@@ -29,18 +29,13 @@ name: Publish from Notion
 
 on:
   schedule:
-    # Every 30 minutes, offset off the hour so it is not competing with the
-    # thundering herd of :00 cron jobs.
-    #
-    # Treat this as best-effort, NOT as a 30-minute guarantee. GitHub
-    # deprioritises scheduled workflows on low-activity repositories: the
-    # observed cadence on this repo is roughly hourly at best, with real gaps of
-    # five hours and more. That is tolerable now that publishing is idempotent
-    # and unattended, but it is why the reactive trigger below matters.
+    # 4:45 AM & 4:55 AM IST (23:15 & 23:25 UTC) — Publishes after 3:00 AM Radar, 3:45 AM Writer, 4:30 AM Case Studies
+    - cron: '15,25 23 * * *'
+    # 1:15 PM & 1:45 PM IST (07:45 & 08:15 UTC) — Publishes after 1:00 PM IST Talks task
+    - cron: '45 7 * * *'
+    - cron: '15,25 8 * * *'
+    # Periodic fallback schedules
     - cron: '17,47 * * * *'
-    # A second entry on a different offset. Two independent schedules are
-    # throttled independently, so a skipped slot on one is often covered by the
-    # other. Cheap insurance: a run with no work exits in about fifteen seconds.
     - cron: '3,33 * * * *'
   workflow_dispatch:
   # Reactive trigger, and the one that should normally do the work. Anything

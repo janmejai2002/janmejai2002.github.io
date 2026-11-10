@@ -320,7 +320,7 @@ const existingIds = new Set(
 // nothing else — every automated check still runs.
 //
 // Names must match the Notion `Track` select exactly, before slugification.
-const AUTO_TRACKS = ['Talks', 'Case Studies', 'Basics'];
+const AUTO_TRACKS = ['Talks', 'Case Studies', 'Basics', 'Technical', 'Business'];
 
 async function fetchCheckPage(id) {
   try {
