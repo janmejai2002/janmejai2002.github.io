@@ -22,6 +22,8 @@ export interface ActorSpringConfig {
   damping?: number;   // Damping constant c (default ~18)
   mass?: number;      // Inertial mass m (default 1.0)
   maxSpeed?: number;  // Max translation velocity px/s (default 1400)
+  breathingFreq?: number;  // Phase frequency \omega_i in rad/s
+  breathingPhase?: number; // Phase offset \phi_i in radians
 }
 
 export interface ActorPhysicsState {
@@ -40,6 +42,9 @@ export interface ActorPhysicsState {
   targetScaleY: number;
   gazeX: number;
   gazeY: number;
+  headTilt: number;
+  breathingFreq: number;
+  breathingPhase: number;
   width: number;
   height: number;
   stiffness: number;
@@ -54,6 +59,7 @@ export class CrewPhysicsEngine {
   private actors = new Map<string, ActorPhysicsState>();
   private obstacles: Rect[] = [];
   private margin = 12;
+  private totalSimTime = 0;
 
   /** Registers or updates an actor in the physics world */
   public addActor(
@@ -63,6 +69,18 @@ export class CrewPhysicsEngine {
   ): ActorPhysicsState {
     const width = initial.width ?? 80;
     const height = initial.height ?? 80;
+
+    // Distinct phase-shifted breathing rhythms per character
+    const DEFAULT_BREATHING: Record<string, { freq: number; phase: number }> = {
+      oops:  { freq: 1.35, phase: 0.42 },
+      tsugi: { freq: 0.82, phase: 2.15 },
+      kiki:  { freq: 1.85, phase: 1.25 },
+      fude:  { freq: 1.12, phase: 3.75 },
+      uso:   { freq: 0.94, phase: 4.80 },
+    };
+
+    const breath = DEFAULT_BREATHING[id] ?? { freq: 1.0, phase: 0.0 };
+
     const actor: ActorPhysicsState = {
       id,
       x: initial.x,
@@ -79,6 +97,9 @@ export class CrewPhysicsEngine {
       targetScaleY: 1.0,
       gazeX: 0,
       gazeY: 0,
+      headTilt: 0,
+      breathingFreq: config.breathingFreq ?? breath.freq,
+      breathingPhase: config.breathingPhase ?? breath.phase,
       width,
       height,
       stiffness: config.stiffness ?? 190,
@@ -298,10 +319,19 @@ export class CrewPhysicsEngine {
         actor.y = Math.max(actor.height * 0.65, Math.min(stageBounds.height - 6, actor.y));
       } else {
         actor.y = Math.max(actor.height + 4, Math.min(stageBounds.height - 6, actor.y));
+        const resolved = this.clampToNegativeSpace(actor.x, actor.y, actor.width, actor.height, stageBounds, false);
+        if (resolved.x !== actor.x) {
+          actor.x = resolved.x;
+          actor.vx *= -0.2;
+        }
+        if (resolved.y !== actor.y) {
+          actor.y = resolved.y;
+          actor.vy *= -0.2;
+        }
       }
 
-      // 3. Dynamic squash-and-stretch
-      // When moving quickly, stretch in movement direction and compress along lateral
+      // 3. Dynamic squash-and-stretch & phase-shifted breathing
+      this.totalSimTime += step;
       const isMoving = speed > 35;
       actor.isWalking = isMoving;
 
@@ -311,9 +341,11 @@ export class CrewPhysicsEngine {
         actor.targetScaleX = 1.0 + Math.min(0.18, speed * 0.0003) - hop * 0.05;
         actor.targetScaleY = 1.0 - Math.min(0.15, speed * 0.00025) + hop * 0.07;
       } else {
-        actor.targetScaleX = 1.0;
-        actor.targetScaleY = 1.0;
+        // Individual phase-shifted breathing rhythm (\omega_i * t + \phi_i)
         actor.walkCycle = 0;
+        const breath = Math.sin(this.totalSimTime * actor.breathingFreq + actor.breathingPhase);
+        actor.targetScaleX = 1.0 - breath * 0.012;
+        actor.targetScaleY = 1.0 + breath * 0.018;
       }
 
       // Spring integration for scale (snappy squash recovery)
@@ -335,13 +367,17 @@ export class CrewPhysicsEngine {
       const gdy = pointer.y - faceWorldY;
       const dist = Math.hypot(gdx, gdy);
 
-      // Max eye pupil shift in SVG coordinates (~2.4px radius max, strictly <= 2.5px)
+      // Max eye pupil shift in SVG coordinates (~2.4px radius max, strictly <= 2.4px)
       const maxPupilShift = 2.4;
       const gazeStrength = Math.min(1.0, dist / 240);
       const angle = Math.atan2(gdy, gdx);
 
       const targetGazeX = Math.cos(angle) * maxPupilShift * gazeStrength;
       const targetGazeY = Math.sin(angle) * maxPupilShift * gazeStrength;
+
+      // Subtle responsive head tilt (-4deg to +4deg)
+      const targetTilt = Math.sin(angle) * 3.8 * gazeStrength;
+      actor.headTilt += (targetTilt - actor.headTilt) * Math.min(1.0, step * 8.0);
 
       // Sub-pixel smooth lerp to eliminate pupil jitter
       const gazeLerp = Math.min(1.0, step * 16.0);

@@ -1,0 +1,238 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Living Ceramic Terrarium & Playable Kintsugi Game Architecture",
+    "output": "kintsugi-terrarium-architecture.html",
+    "quality_profile": "showcase",
+    "views": [
+      {
+        "id": "full-engine",
+        "label": "End-to-End Game & ML Engine",
+        "focus": [
+          "browser_pointer",
+          "feature_pipeline",
+          "bayesian_brain",
+          "utility_engine",
+          "game_engine",
+          "voronoi_shader",
+          "crew_actors",
+          "dialogue_sm",
+          "fude_ledger",
+          "playwright_suite"
+        ],
+        "note": "Trace pointer input through feature extraction, Bayesian belief, utility action selection, game state, and Playwright verification."
+      },
+      {
+        "id": "decision-science",
+        "label": "Decision-Theoretic Cognitive Core",
+        "focus": [
+          "browser_pointer",
+          "feature_pipeline",
+          "bayesian_brain",
+          "utility_engine",
+          "dialogue_sm",
+          "crew_actors"
+        ],
+        "note": "Bayesian intent updates and Multi-Attribute Utility Theory (MAUT) eliminate tag spam while maximizing craft delight."
+      },
+      {
+        "id": "game-play",
+        "label": "Interactive Kintsugi Gameplay & Shader Sync",
+        "focus": [
+          "browser_pointer",
+          "game_engine",
+          "voronoi_shader",
+          "crew_actors",
+          "fude_ledger"
+        ],
+        "note": "Clicks propagate Voronoi fractures; player and Tsugi apply gold urushi lacquer with shader synchronisation."
+      }
+    ]
+  },
+  "components": [
+    {
+      "id": "browser_pointer",
+      "type": "frontend",
+      "label": "Pointer & Touch",
+      "sublabel": "Kinematics & Clicks",
+      "pos": [40, 80],
+      "size": [150, 52],
+      "tag": "Raw Input"
+    },
+    {
+      "id": "feature_pipeline",
+      "type": "backend",
+      "label": "Kinematic Tensor",
+      "sublabel": "vel, acc, jerk, curvature",
+      "pos": [260, 80],
+      "size": [150, 52],
+      "tag": "Sliding Buffer"
+    },
+    {
+      "id": "bayesian_brain",
+      "type": "backend",
+      "label": "Bayesian Filter",
+      "sublabel": "Posterior Belief b(s)",
+      "pos": [480, 80],
+      "size": [150, 52],
+      "tag": "Decision Science"
+    },
+    {
+      "id": "utility_engine",
+      "type": "security",
+      "label": "MAUT Selector",
+      "sublabel": "Expected Utility U(a, b)",
+      "pos": [700, 80],
+      "size": [150, 52],
+      "tag": "Intrusion Guard"
+    },
+    {
+      "id": "game_engine",
+      "type": "frontend",
+      "label": "Kintsugi Core",
+      "sublabel": "Fracture & Seam State",
+      "pos": [40, 230],
+      "size": [150, 52],
+      "tag": "Interactive Loop"
+    },
+    {
+      "id": "voronoi_shader",
+      "type": "cloud",
+      "label": "Voronoi Shader",
+      "sublabel": "uGold, Log-Polar Cracks",
+      "pos": [260, 230],
+      "size": [150, 52],
+      "tag": "GPU Glaze"
+    },
+    {
+      "id": "crew_actors",
+      "type": "frontend",
+      "label": "Ceramic Figurines",
+      "sublabel": "Tsugi, Oops, Kiki, Fude, Uso",
+      "pos": [480, 230],
+      "size": [150, 52],
+      "tag": "SVG Pottery"
+    },
+    {
+      "id": "dialogue_sm",
+      "type": "backend",
+      "label": "Narrative Engine",
+      "sublabel": "4 Story Arcs & Cooldowns",
+      "pos": [700, 230],
+      "size": [150, 52],
+      "tag": "wAIbi-sabi Lore"
+    },
+    {
+      "id": "fude_ledger",
+      "type": "database",
+      "label": "Fude Ledger",
+      "sublabel": "Repair Count & Streaks",
+      "pos": [40, 380],
+      "size": [150, 52],
+      "tag": "Local State"
+    },
+    {
+      "id": "playwright_suite",
+      "type": "security",
+      "label": "Playwright Suite",
+      "sublabel": "Multi-Viewport Motion Proof",
+      "pos": [480, 380],
+      "size": [150, 52],
+      "tag": "Headless Test"
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "Cognitive Core",
+      "wraps": ["browser_pointer", "feature_pipeline", "bayesian_brain", "utility_engine"]
+    },
+    {
+      "kind": "security-group",
+      "label": "Game & Craft Loop",
+      "wraps": ["game_engine", "voronoi_shader", "crew_actors", "dialogue_sm"]
+    },
+    {
+      "kind": "region",
+      "label": "Chronicle & Test",
+      "wraps": ["fude_ledger", "playwright_suite"]
+    }
+  ],
+  "connections": [
+    {
+      "id": "c1",
+      "from": "browser_pointer",
+      "to": "feature_pipeline",
+      "label": "kinematics",
+      "labelDy": 16
+    },
+    {
+      "id": "c2",
+      "from": "feature_pipeline",
+      "to": "bayesian_brain",
+      "label": "evidence",
+      "labelDy": 16
+    },
+    {
+      "id": "c3",
+      "from": "bayesian_brain",
+      "to": "utility_engine",
+      "label": "belief b(s)",
+      "labelDy": 16
+    },
+    {
+      "id": "c4",
+      "from": "browser_pointer",
+      "to": "game_engine",
+      "label": "strike",
+      "labelDx": 24,
+      "labelDy": 24
+    },
+    {
+      "id": "c5",
+      "from": "game_engine",
+      "to": "voronoi_shader",
+      "label": "fracture",
+      "labelDy": 16
+    },
+    {
+      "id": "c6",
+      "from": "voronoi_shader",
+      "to": "crew_actors",
+      "label": "seam coords",
+      "labelDy": 16
+    },
+    {
+      "id": "c7",
+      "from": "utility_engine",
+      "to": "dialogue_sm",
+      "label": "action",
+      "labelDx": 24,
+      "labelDy": 24
+    },
+    {
+      "id": "c8",
+      "from": "dialogue_sm",
+      "to": "crew_actors",
+      "label": "speech tag",
+      "labelDy": 16
+    },
+    {
+      "id": "c9",
+      "from": "game_engine",
+      "to": "fude_ledger",
+      "label": "record",
+      "labelDx": 24,
+      "labelDy": 24
+    },
+    {
+      "id": "c10",
+      "from": "crew_actors",
+      "to": "playwright_suite",
+      "label": "proof",
+      "labelDx": 24,
+      "labelDy": 24
+    }
+  ]
+}

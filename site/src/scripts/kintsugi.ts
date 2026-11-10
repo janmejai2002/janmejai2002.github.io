@@ -290,6 +290,10 @@ export interface Plate {
   getSeamTrajectory(count?: number): SeamPoint[];
   /** Couples uGold shader expansion to Tsugi's brush tip position */
   setGoldRadius(r: number): void;
+  /** Sets gold progress as a normalized 0..1 factor of max radius */
+  setGoldProgress(prog01: number): void;
+  /** Triggers a soundless golden luster wave across WebGL glaze */
+  triggerGoldLusterWave(): void;
   /** Maximum radius in shader units */
   getMaxRadius(): number;
   /** Rest to settled state */
@@ -636,6 +640,30 @@ export function createPlate({ plate, claims, reduced }: Options): Plate | null {
     state.gold = clampedR;
     wake();
   };
+  const setGoldProgress = (prog01: number) => {
+    const clamped = Math.max(0, Math.min(1.0, prog01));
+    setGoldRadius(clamped * maxR);
+  };
+  const triggerGoldLusterWave = () => {
+    state.gold = maxR * 1.15;
+    state.resid = 1.0;
+    state.jolt = 0.04;
+    wake();
+    const tStart = performance.now();
+    const pulseWave = (tNow: number) => {
+      const elapsed = tNow - tStart;
+      if (elapsed < 800) {
+        state.jolt = Math.max(0, 0.04 * (1.0 - elapsed / 800));
+        wake();
+        requestAnimationFrame(pulseWave);
+      } else {
+        state.jolt = 0;
+        state.gold = maxR;
+        wake();
+      }
+    };
+    requestAnimationFrame(pulseWave);
+  };
   const getMaxRadius = () => maxR;
   const settle = () => {
     manualGoldRadius = -1;
@@ -652,6 +680,8 @@ export function createPlate({ plate, claims, reduced }: Options): Plate | null {
     getSeed,
     getSeamTrajectory: getTrajectory,
     setGoldRadius,
+    setGoldProgress,
+    triggerGoldLusterWave,
     getMaxRadius,
     settle,
   };
