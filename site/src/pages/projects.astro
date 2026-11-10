@@ -1,24 +1,31 @@
 ---
 import Base from '../layouts/Base.astro';
+import { projects, PROJECT_CATEGORIES } from '../data/projects';
+
+const featuredProject = projects.find((p) => p.featured);
+const otherProjects = projects.filter((p) => !p.featured);
 ---
 
 <Base
-  title="Setups — wAIbi-sabi"
-  description="How I build with Claude, starting with this site: a Notion-controlled content pipeline, scheduled agents and a static Astro front end."
+  title="Projects & Setups — wAIbi-sabi"
+  description="Working systems and research by Janmejai Singh Minhas: autonomous AI publishing pipelines, frontier model red-teaming, credit risk RAG, bio-imaging, and sovereign edge computing."
   section="Setups"
   keywords={[
     'building with Claude Code',
-    'Notion content pipeline',
-    'Claude Code scheduled tasks',
-    'Astro blog automation',
+    'autonomous AI agent pipelines',
+    'frontier AI red teaming',
+    'Gray Swan Arena breaks',
+    'credit risk modelling RAG',
+    'medical computer vision research',
+    'Astro content architecture',
   ]}
 >
-  <section class="hero fade-up d1" style="padding-bottom:2rem">
-    <span class="hanko">Setups</span>
-    <h1>Things I built <span class="hl hl--plum">with Claude</span></h1>
+  <section class="hero fade-up d1" style="padding-bottom:1.5rem">
+    <span class="hanko">Setups & Research</span>
+    <h1>Systems built <span class="hl hl--plum">to work</span></h1>
     <p>
-      Each entry is a working system, not a demo — what it does, how the pieces fit, and
-      enough detail to rebuild it. Starting with the one you are reading.
+      Working systems, empirical research, and production pipelines — not throwaway demos.
+      What they do, how the components integrate, and the engineering decisions behind them.
     </p>
   </section>
 
@@ -26,163 +33,225 @@ import Base from '../layouts/Base.astro';
     <span></span><span></span><span></span><span></span><span></span><span></span>
   </div>
 
-  <article class="proj scroll-reveal" style="--accent:var(--mizu);--tint:var(--wash-mizu)">
-    <header class="proj__head">
-      <span class="proj__tag">01 · Live</span>
-      <h2>This site — a self-writing blog</h2>
-      <p class="proj__lede">
-        A Notion-controlled content pipeline feeding a static Astro site. Two scheduled
-        Claude Code agents do the research and drafting; I stay in the loop only where
-        judgement is actually needed.
-      </p>
-    </header>
-
-    {/* On wide screens the prose keeps its measure in the left column and the
-        pieces stand beside it as a rail — the card uses the page's width
-        instead of leaving half of it empty. On narrow screens the grid
-        collapses and the reading order is unchanged. */}
-    <div class="body proj__cols">
-      <div class="proj__colA">
-      <h3>What it does</h3>
-      <p>
-        Every morning an agent searches for what is moving in AI, checks it against
-        everything already covered, researches the two or three strongest angles, and writes
-        each one up as a 100-word pitch in a Notion database. I read the pitches, give each a
-        rating and any remarks. Anything I rate 4 or 5 gets picked up within four hours by a
-        second agent, which researches it properly and writes the full article. Drafts land
-        back in Notion for review. Nothing publishes itself.
-      </p>
-      </div>
-
-      <div class="proj__colB">
-      <h3>The pieces</h3>
-      <div class="stack">
-        <div class="layer">
-          <span class="layer__k">Control plane</span>
-          <p>
-            Two Notion databases. <strong>AI Blog OS Pipeline</strong> holds radar ideas —
-            title, 100-word pitch, SEO keywords, and the two fields that are mine alone:
-            Interest Rating and Remarks. <strong>Article Production</strong> holds anything
-            promoted to a full draft, related back to its source idea.
-          </p>
-        </div>
-        <div class="layer">
-          <span class="layer__k">Agents</span>
-          <p>
-            Two Claude Code scheduled tasks. <code>daily-ai-seo-radar</code> runs at 7:10am;
-            <code>ai-article-writer</code> runs every four hours and processes at most two
-            articles per run. Each task is a self-contained prompt — a fresh run has no
-            memory of the conversation that created it, so every instruction it needs lives
-            in the task itself.
-          </p>
-        </div>
-        <div class="layer">
-          <span class="layer__k">Skills</span>
-          <p>
-            <code>seo-topic-research</code> governs the research protocol and forbids
-            inventing search volumes or rankings. <code>viral-hooks</code> works the opening,
-            <code>storytelling</code> the through-line, and <code>anti-ai-writing</code> runs
-            as a mandatory final filter on every draft.
-          </p>
-        </div>
-        <div class="layer">
-          <span class="layer__k">Front end</span>
-          <p>
-            Astro 5, static output, no client framework. Content collections validate every
-            article's frontmatter against a schema — which has already caught a real bug, an
-            over-length meta description that would have been truncated in search results.
-            Sitemap, RSS, canonical URLs and JSON-LD are generated at build time.
-          </p>
-        </div>
-        <div class="layer">
-          <span class="layer__k">Archive</span>
-          <p>
-            The interview news archive is a third Notion database, pulled to local JSON by a
-            sync script and rendered as filterable cards. The site builds offline; Notion is
-            the source of truth, not a runtime dependency.
-          </p>
-        </div>
-      </div>
-      </div>
-
-      <div class="proj__colC">
-      <h3>What I would tell you before you copy it</h3>
-      <ul>
-        <li>
-          <strong>Put the human gate where judgement lives.</strong> The rating field is the
-          whole design. Research and drafting are cheap to automate; deciding what is worth
-          saying is not.
-        </li>
-        <li>
-          <strong>Write the guardrails into the task prompt.</strong> Mine forbid fabricated
-          metrics, require a real source for every time-sensitive claim, and explicitly allow
-          the agent to produce nothing on a quiet day. That last one matters more than it
-          sounds — without it, an agent will pad.
-        </li>
-        <li>
-          <strong>Let the schema be strict.</strong> Validation is the only thing standing
-          between an unattended pipeline and quiet degradation.
-        </li>
-        <li>
-          <strong>Watch the token cost of your setup.</strong> Skill and agent descriptions
-          are injected into every session and every sub-agent, so a large library multiplies
-          across a parallel run. Mine is deliberately trimmed, with the rest archived.
-        </li>
-      </ul>
-
-      <p class="proj__note">
-        <a href="/blog/how-this-blog-builds-itself/">The full walkthrough is here</a>, with four
-        architecture diagrams. They were derived from a NotebookLM notebook built on the actual
-        configuration files — both scheduled-task prompts, the skills, the build config and all
-        three Notion schemas — so they describe what the system does rather than what I remember
-        it doing.
-      </p>
-      </div>
-    </div>
-  </article>
-
-  {/* The two shorter entries sit side by side. They carry no long prose, so
-      holding them to the reading measure only wasted the width. */}
-  <div class="proj__pair">
-    <article class="proj proj--compact scroll-reveal" style="--accent:var(--hanko);--tint:var(--wash-hanko)">
-      <header class="proj__head">
-        <span class="proj__tag">02 · Ongoing</span>
-        <h2>Red teaming frontier models</h2>
-        <p class="proj__lede">
-          36 unique breaks on the Gray Swan Arena, mostly prompt injection and safeguard
-          evasion. Writing up the transferable patterns — the ones that are about system
-          design rather than any single model.
-        </p>
-      </header>
-    </article>
-
-    <article
-      class="proj proj--compact scroll-reveal"
-      style="--accent:var(--ochre);--tint:var(--wash-ochre);transition-delay:.09s"
-    >
-      <header class="proj__head">
-        <span class="proj__tag">03 · Live</span>
-        <h2>Interview News Archive</h2>
-        <p class="proj__lede">
-          A daily business-news digest for Indian B-school placement prep — 221 entries, each
-          paired with the angle an interviewer would actually push on.
-        </p>
-        <a class="proj__cta" href="/news/">
-          Browse it
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-            stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M5 12h14M13 6l6 6-6 6" />
-          </svg>
-        </a>
-      </header>
-    </article>
+  {/* Category Filter Pills */}
+  <div class="filter-bar fade-up d2" role="tablist" aria-label="Project categories">
+    {PROJECT_CATEGORIES.map((cat) => (
+      <button
+        type="button"
+        class={`filter-pill ${cat.id === 'all' ? 'is-active' : ''}`}
+        data-filter={cat.id}
+        role="tab"
+        aria-selected={cat.id === 'all' ? 'true' : 'false'}
+      >
+        {cat.label}
+      </button>
+    ))}
   </div>
+
+  {/* Flagship Featured Project */}
+  {featuredProject && (
+    <div class="project-entry" data-category={featuredProject.category}>
+      <article
+        class="proj proj--flagship scroll-reveal"
+        style={`--accent:${featuredProject.accent};--tint:${featuredProject.wash}`}
+      >
+        <header class="proj__head">
+          <div class="proj__meta-row">
+            <span class="proj__tag">{featuredProject.tag}</span>
+            <span class="proj__category-badge">{featuredProject.categoryLabel}</span>
+          </div>
+          <h2>{featuredProject.title}</h2>
+          <p class="proj__lede">{featuredProject.lede}</p>
+
+          {featuredProject.stats && (
+            <div class="proj__stats-strip">
+              {featuredProject.stats.map((s) => (
+                <div class="stat-pill">
+                  <span class="stat-pill__val">{s.value}</span>
+                  <span class="stat-pill__lbl">{s.label}</span>
+                </div>
+              ))}
+            </div>
+          )}
+        </header>
+
+        <div class="body proj__cols">
+          <div class="proj__colA">
+            <h3>What it does</h3>
+            <p>{featuredProject.whatItDoes}</p>
+
+            {featuredProject.stack && (
+              <div class="proj__stack-pills">
+                <span class="stack-label">Stack</span>
+                <div class="pill-group">
+                  {featuredProject.stack.map((st) => (
+                    <span class="tech-pill">{st}</span>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+
+          <div class="proj__colB">
+            <h3>The pieces</h3>
+            <div class="stack">
+              {featuredProject.pieces?.map((piece) => (
+                <div class="layer">
+                  <span class="layer__k">{piece.k}</span>
+                  <p>{piece.v}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div class="proj__colC">
+            <h3>What I would tell you before you copy it</h3>
+            <ul>
+              {featuredProject.takeaways?.map((t) => (
+                <li>
+                  <strong>{t.title}</strong> {t.text}
+                </li>
+              ))}
+            </ul>
+
+            {featuredProject.deepDiveLink && (
+              <p class="proj__note">
+                <a href={featuredProject.deepDiveLink.href}>
+                  {featuredProject.deepDiveLink.label}
+                </a>
+                {featuredProject.deepDiveLink.note && (
+                  <span> — {featuredProject.deepDiveLink.note}</span>
+                )}
+              </p>
+            )}
+          </div>
+        </div>
+      </article>
+    </div>
+  )}
+
+  {/* Modular Projects Grid */}
+  <section class="section-block">
+    <div class="section-head">
+      <h2 class="section-title">Systems & Research Portfolio</h2>
+      <p class="section-sub">
+        Explore ongoing AI safety research, specialized production systems, and applied clinical AI.
+      </p>
+    </div>
+
+    <div class="proj__grid">
+      {otherProjects.map((p, idx) => (
+        <div class="project-entry" data-category={p.category}>
+          <article
+            class="proj proj--card scroll-reveal"
+            style={`--accent:${p.accent};--tint:${p.wash};transition-delay:${idx * 0.05}s`}
+          >
+            <header class="proj__head">
+              <div class="proj__meta-row">
+                <span class="proj__tag">{p.tag}</span>
+                <span class="proj__category-badge">{p.categoryLabel}</span>
+              </div>
+              <h3 class="proj__card-title">{p.title}</h3>
+              <p class="proj__lede">{p.lede}</p>
+
+              {p.metrics && (
+                <div class="proj__stats-strip">
+                  {p.metrics.map((m) => (
+                    <div class="stat-pill">
+                      <span class="stat-pill__val">{m.value}</span>
+                      <span class="stat-pill__lbl">{m.label}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </header>
+
+            {p.highlights && (
+              <div class="proj__highlights">
+                <h4 class="proj__sub-label">Key Highlights</h4>
+                <ul>
+                  {p.highlights.map((h) => (
+                    <li>{h}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {p.stack && (
+              <div class="proj__stack-pills">
+                <div class="pill-group">
+                  {p.stack.map((st) => (
+                    <span class="tech-pill">{st}</span>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {p.links && p.links.length > 0 && (
+              <div class="proj__actions">
+                {p.links.map((lnk) => (
+                  <a
+                    class="proj__cta"
+                    href={lnk.href}
+                    target={lnk.external ? '_blank' : undefined}
+                    rel={lnk.external ? 'noopener noreferrer' : undefined}
+                  >
+                    <span>{lnk.label}</span>
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2.5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path d="M5 12h14M13 6l6 6-6 6" />
+                    </svg>
+                  </a>
+                ))}
+              </div>
+            )}
+          </article>
+        </div>
+      ))}
+    </div>
+  </section>
 </Base>
 
+<script is:inline>
+  (function () {
+    const pills = document.querySelectorAll('.filter-pill');
+    const items = document.querySelectorAll('.project-entry');
+
+    pills.forEach((pill) => {
+      pill.addEventListener('click', () => {
+        const cat = pill.getAttribute('data-filter');
+
+        pills.forEach((p) => {
+          p.classList.remove('is-active');
+          p.setAttribute('aria-selected', 'false');
+        });
+        pill.classList.add('is-active');
+        pill.setAttribute('aria-selected', 'true');
+
+        items.forEach((item) => {
+          const itemCat = item.getAttribute('data-category');
+          if (cat === 'all' || itemCat === cat) {
+            item.style.display = '';
+            item.classList.remove('is-hidden');
+          } else {
+            item.style.display = 'none';
+            item.classList.add('is-hidden');
+          }
+        });
+      });
+    });
+  })();
+</script>
+
 <style>
-  /* Matches the index: the palette stated once, drawing itself in. This bar
-     was static here and animated there, which read as two different sites. */
-  .rulebar { display: flex; gap: 3px; margin: 2.5rem 0 3rem; }
+  .rulebar { display: flex; gap: 3px; margin: 2rem 0 2.25rem; }
   .rulebar span {
     height: 3px; flex: 1; border-radius: 2px;
     transform-origin: left; animation: stretch .8s var(--ease) both;
@@ -195,52 +264,154 @@ import Base from '../layouts/Base.astro';
   .rulebar span:nth-child(6) { background: var(--indigo); animation-delay: .5s; }
   @keyframes stretch { from { transform: scaleX(0); } to { transform: scaleX(1); } }
 
+  /* Filter Bar */
+  .filter-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .5rem;
+    margin-bottom: 2.25rem;
+  }
+  .filter-pill {
+    appearance: none;
+    background: color-mix(in srgb, var(--paper) 70%, transparent);
+    border: 1px solid var(--border);
+    color: var(--ink-soft);
+    font-size: .6875rem;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    padding: .45rem .85rem;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: all var(--dur-fast) var(--ease);
+  }
+  .filter-pill:hover {
+    color: var(--ink);
+    border-color: var(--ink-soft);
+  }
+  .filter-pill.is-active {
+    background: var(--ink);
+    color: var(--paper);
+    border-color: var(--ink);
+  }
+
+  /* Base Project Card */
   .proj {
     border: 1px solid var(--border);
     border-left: 3px solid var(--accent);
     border-radius: 18px;
     background: var(--tint);
     padding: 1.75rem;
-    margin-bottom: 1.25rem;
-    /* The left rule thickens and the card lifts — the same language the index
-       track panels use, so an entry reads as reachable rather than inert. */
+    margin-bottom: 1.5rem;
     transition: transform var(--dur-fast) var(--ease),
                 border-left-width var(--dur-fast) var(--ease),
-                border-color var(--dur-fast) var(--ease);
+                border-color var(--dur-fast) var(--ease),
+                box-shadow var(--dur-fast) var(--ease);
   }
   .proj:hover, .proj:focus-within {
     transform: translateY(-3px);
     border-left-width: 5px;
     border-color: color-mix(in srgb, var(--accent) 40%, var(--border));
+    box-shadow: 0 12px 24px -10px color-mix(in srgb, var(--accent) 15%, transparent);
   }
-  @media (min-width: 768px) { .proj { padding: 2.25rem 2.5rem; } }
+  @media (min-width: 768px) {
+    .proj { padding: 2.25rem 2.5rem; }
+  }
 
-  /* Side-by-side for the entries that are a lede and nothing more. */
-  .proj__pair { display: grid; gap: 1.25rem; align-items: start; }
-  @media (min-width: 60rem) { .proj__pair { grid-template-columns: 1fr 1fr; } }
-  .proj--compact { max-width: none; margin-bottom: 0; height: 100%; }
-
+  .proj__meta-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: .5rem;
+    margin-bottom: .6rem;
+  }
   .proj__tag {
-    font-size: .625rem; font-weight: 800; letter-spacing: .15em;
-    text-transform: uppercase; color: var(--accent);
+    font-size: .625rem;
+    font-weight: 800;
+    letter-spacing: .15em;
+    text-transform: uppercase;
+    color: var(--accent);
   }
-  .proj__head h2 {
-    font-size: clamp(1.4rem, 3.5vw, 1.9rem); font-weight: 800; line-height: 1.15;
-    letter-spacing: -.02em; margin: .6rem 0 .75rem; text-wrap: balance;
+  .proj__category-badge {
+    font-size: .5625rem;
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    background: color-mix(in srgb, var(--paper) 80%, transparent);
+    padding: .2rem .55rem;
+    border-radius: 6px;
+    border: 1px solid var(--border-soft);
   }
-  .proj__lede { font-size: 1rem; line-height: 1.65; color: var(--ink-soft); margin: 0; }
 
+  .proj__head h2 {
+    font-size: clamp(1.4rem, 3.5vw, 1.9rem);
+    font-weight: 800;
+    line-height: 1.15;
+    letter-spacing: -.02em;
+    margin: .4rem 0 .75rem;
+    text-wrap: balance;
+  }
+  .proj__card-title {
+    font-size: clamp(1.2rem, 2.5vw, 1.45rem);
+    font-weight: 800;
+    line-height: 1.25;
+    letter-spacing: -.015em;
+    margin: .4rem 0 .65rem;
+    color: var(--ink);
+  }
+  .proj__lede {
+    font-size: .9375rem;
+    line-height: 1.6;
+    color: var(--ink-soft);
+    margin: 0;
+  }
+
+  /* Stats Bar */
+  .proj__stats-strip {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .75rem;
+    margin: 1.25rem 0 .5rem;
+    padding-top: 1rem;
+    border-top: 1px dashed color-mix(in srgb, var(--accent) 25%, var(--border));
+  }
+  .stat-pill {
+    display: flex;
+    flex-direction: column;
+    background: color-mix(in srgb, var(--paper) 70%, transparent);
+    border: 1px solid var(--border-soft);
+    padding: .45rem .85rem;
+    border-radius: 8px;
+    min-width: 5rem;
+  }
+  .stat-pill__val {
+    font-size: 1.15rem;
+    font-weight: 800;
+    line-height: 1.1;
+    color: var(--accent);
+    font-variant-numeric: tabular-nums;
+  }
+  .stat-pill__lbl {
+    font-size: .5625rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    color: var(--ink-soft);
+    margin-top: .15rem;
+  }
+
+  /* Flagship 3-Column Prose / Rails */
   .proj .body { margin-top: 2rem; }
-  /* Prose holds its measure in the left column; the pieces rail stands beside
-     it and spans both rows. Below 60rem the grid collapses to the original
-     single-column reading order (what it does → pieces → advice). */
-  .proj__head { max-width: var(--measure); }
   .proj__colA, .proj__colC { max-width: var(--measure); min-width: 0; }
   .proj__colB { min-width: 0; }
   .proj__colB h3:first-child { margin-top: 2.25rem; }
+
   @media (min-width: 60rem) {
     .proj__cols {
-      display: grid; column-gap: 3rem;
+      display: grid;
+      column-gap: 3rem;
       grid-template-columns: minmax(0, var(--measure)) minmax(16rem, 1fr);
       grid-template-areas: 'a b' 'c b';
       align-items: start;
@@ -250,44 +421,187 @@ import Base from '../layouts/Base.astro';
     .proj__colC { grid-area: c; }
     .proj__colA h3:first-child, .proj__colB h3:first-child { margin-top: 0; }
   }
-  .proj .body h3 {
-    font-size: .6875rem; font-weight: 800; letter-spacing: .15em; text-transform: uppercase;
-    color: var(--accent); margin: 2.25rem 0 .9rem;
+
+  .proj .body h3,
+  .proj__sub-label {
+    font-size: .6875rem;
+    font-weight: 800;
+    letter-spacing: .15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 1.75rem 0 .8rem;
   }
-  .proj__colA > p, .proj__colC > p:not(.proj__note) { font-size: 1rem; font-weight: 400; margin: 0 0 1.25rem; }
+  .proj__colA > p, .proj__colC > p:not(.proj__note) {
+    font-size: .9375rem;
+    line-height: 1.65;
+    font-weight: 400;
+    margin: 0 0 1.25rem;
+  }
 
   .stack { display: grid; gap: .6rem; }
   .layer {
     background: color-mix(in srgb, var(--paper) 60%, transparent);
     border: 1px solid var(--border-soft);
-    border-radius: 12px; padding: .9rem 1.1rem;
+    border-radius: 12px;
+    padding: .85rem 1rem;
   }
   .layer__k {
-    display: block; font-size: .5625rem; font-weight: 800; letter-spacing: .16em;
-    text-transform: uppercase; color: var(--accent); margin-bottom: .35rem;
+    display: block;
+    font-size: .5625rem;
+    font-weight: 800;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: .3rem;
   }
-  .layer p { margin: 0; font-size: .875rem; line-height: 1.6; }
+  .layer p { margin: 0; font-size: .84rem; line-height: 1.55; }
+
+  .proj__colC ul {
+    margin: 0 0 1.5rem;
+    padding-left: 1.25rem;
+    font-size: .9rem;
+    line-height: 1.6;
+    color: var(--ink);
+  }
+  .proj__colC ul li { margin-bottom: .6rem; }
 
   .proj__note {
-    margin-top: 2rem; padding: .9rem 1.1rem; border-radius: 12px;
+    margin-top: 1.5rem;
+    padding: .85rem 1.1rem;
+    border-radius: 12px;
     background: color-mix(in srgb, var(--paper) 60%, transparent);
     border: 1px dashed var(--border);
-    font-size: .8125rem; line-height: 1.6; color: var(--ink-soft);
+    font-size: .8125rem;
+    line-height: 1.6;
+    color: var(--ink-soft);
+  }
+  .proj__note a {
+    font-weight: 700;
+    color: var(--ink);
+    text-decoration: underline;
+    text-decoration-color: var(--accent);
   }
 
+  /* Portfolio Section Head */
+  .section-block { margin-top: 3.5rem; }
+  .section-head { margin-bottom: 2rem; max-width: var(--measure); }
+  .section-title {
+    font-size: clamp(1.3rem, 3vw, 1.75rem);
+    font-weight: 800;
+    letter-spacing: -.02em;
+    margin: 0 0 .5rem;
+  }
+  .section-sub {
+    font-size: .9375rem;
+    line-height: 1.6;
+    color: var(--ink-soft);
+    margin: 0;
+  }
+
+  /* Modular Portfolio Grid */
+  .proj__grid {
+    display: grid;
+    gap: 1.5rem;
+    grid-template-columns: 1fr;
+  }
+  @media (min-width: 48rem) {
+    .proj__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      align-items: stretch;
+    }
+  }
+  .proj--card {
+    height: 100%;
+    margin-bottom: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .proj__highlights {
+    margin-top: 1.25rem;
+    flex-grow: 1;
+  }
+  .proj__highlights ul {
+    margin: 0;
+    padding-left: 1.15rem;
+    font-size: .84rem;
+    line-height: 1.55;
+    color: var(--ink-soft);
+  }
+  .proj__highlights ul li {
+    margin-bottom: .5rem;
+  }
+
+  /* Tech Stack Pills */
+  .proj__stack-pills { margin: 1.25rem 0 .5rem; }
+  .stack-label {
+    display: block;
+    font-size: .5625rem;
+    font-weight: 800;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin-bottom: .4rem;
+  }
+  .pill-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .4rem;
+  }
+  .tech-pill {
+    font-size: .625rem;
+    font-weight: 600;
+    letter-spacing: .04em;
+    color: var(--ink);
+    background: color-mix(in srgb, var(--paper) 80%, transparent);
+    border: 1px solid var(--border-soft);
+    padding: .25rem .55rem;
+    border-radius: 6px;
+  }
+
+  /* Actions / CTA */
+  .proj__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .75rem;
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px dashed color-mix(in srgb, var(--accent) 25%, var(--border));
+  }
   .proj__cta {
-    display: inline-flex; align-items: center; gap: .45rem; margin-top: 1.1rem;
-    font-size: .625rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase;
-    text-decoration: none; color: var(--paper); background: var(--ink);
-    padding: .6rem 1rem; border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    gap: .45rem;
+    font-size: .625rem;
+    font-weight: 800;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--paper);
+    background: var(--ink);
+    padding: .55rem .95rem;
+    border-radius: 999px;
+    transition: transform var(--dur-fast) var(--ease), background var(--dur-fast) var(--ease);
+  }
+  .proj__cta svg {
+    width: 12px;
+    height: 12px;
     transition: transform var(--dur-fast) var(--ease);
   }
-  .proj__cta svg { width: 12px; height: 12px; transition: transform var(--dur-fast) var(--ease); }
-  .proj__cta:hover { transform: translateY(-2px); }
-  .proj__cta:hover svg { transform: translateX(3px); }
+  .proj__cta:hover {
+    transform: translateY(-2px);
+    background: var(--accent);
+  }
+  .proj__cta:hover svg {
+    transform: translateX(3px);
+  }
+
+  .is-hidden { display: none !important; }
 
   @media (prefers-reduced-motion: reduce) {
     .rulebar span { animation: none; transform: none; }
     .proj:hover, .proj:focus-within, .proj__cta:hover { transform: none; }
+    .proj__cta svg { transition: none; }
   }
 </style>

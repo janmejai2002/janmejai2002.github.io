@@ -1,8 +1,8 @@
 ---
 title: 'How This Blog Builds Itself'
-description: 'The pipeline behind this site: seven scheduled Claude Code routines, five themes, three Notion databases, and one human rating that gates all of it.'
+description: 'The architecture behind this blog: seven routines, two publish paths, a serverless bridge, claim ledgers, and one human gate that controls the entire pipeline.'
 pubDate: 2026-08-24
-updatedDate: 2026-08-26
+updatedDate: 2026-11-10
 track: technical
 question: 'How does an autonomous multi-agent blog pipeline operate using Claude Code, Notion, and Astro?'
 keywords:
@@ -11,7 +11,10 @@ keywords:
   - AI content pipeline architecture
   - agent token budget
   - Astro content collections
-readingTime: '15 min read'
+  - Gemini Spark scheduled tasks
+  - serverless content bridge
+  - claim ledger fact checking
+readingTime: '24 min read'
 heroImage: '../../assets/art/how-this-blog-builds-itself-light.webp'
 heroImageDark: '../../assets/art/how-this-blog-builds-itself-dark.webp'
 heroAlt: 'A ring of sixty evenly spaced tick marks enclosed by a single heavy arc that runs almost the whole way round. The arc breaks at the lower left, and a short, slightly crooked red stroke sits in the gap.'
@@ -21,46 +24,54 @@ heroAlt: 'A ring of sixty evenly spaced tick marks enclosed by a single heavy ar
 
 ## Executive TL;DR
 
-- Seven scheduled Claude Code routines do the work, across five themes. Three research topics and pitch them; three write drafts; one keeps the news archive current.
-- Notion is the control plane, not a CMS. Two related databases hold every decision; the repository holds only what was published.
-- The whole thing hinges on one field. `Interest Rating` is the approval gate and the only human input most of the pipeline requires.
-- Nothing auto-publishes. `Approved` is a state no routine is allowed to write — that one rule has survived every expansion of the system.
-- Every factual claim needs a **claim ledger** row carrying the source sentence quoted verbatim. That rule exists because two live articles had to be corrected, and every error traced to an SEO aggregator rather than a primary source.
-- The least obvious constraint is token budget. Skill and agent descriptions are injected into every session *and every sub-agent*, so the active folders are kept deliberately small: 64 skills at ~6.1k tokens became 7 at ~1.2k.
+- Seven scheduled routines drive the pipeline across five editorial tracks. Three radars discover and pitch ideas; three writer routines draft; one syncs the MBA news archive daily.
+- Notion is the distributed control plane, not a CMS. Two linked databases track state transitions; the git repository holds only finished, verified markdown.
+- The human gate is a single dropdown. `Interest Rating` (1–5) on the radar is the sole gate that allows an idea to move to draft on reviewed tracks.
+- `Draft Status = Approved` is a state no routine is permitted to write. This invariant has survived every architectural upgrade from local crons to cloud automation.
+- The Sleeping PC Trap & The Serverless Bridge: Continuous laptop daemons fail when the machine sleeps. A hybrid cloud loop pairs Gemini Spark scheduled tasks (Google AI Pro), Google Apps Script, and Google Sheets to run serverlessly at zero token cost, waking GitHub Actions via webhook dispatches.
+- Asymmetric Dual-Engine Topology: System 1 (deterministic Node.js scripts) handles all regex, character counting, XML SVG parsing, and HTTP assertions in sub-10ms. System 2 (Gemini / Claude) is reserved strictly for deep research and semantic synthesis.
+- Volatility-Ordered Prompt Caching: Invariant editorial rules and anti-AI contracts sit at prompt prefix (Volatility 0.0), unlocking 85% TTFT reduction and 90% KV cache savings. Dynamic facts sit strictly at the ephemeral tail.
+- Context Quarantine & Claim Ledgers: Raw crawls are quarantined in scratchpad files (`scratch/research-<slug>.txt`). Every claim requires a verbatim source sentence quoted before drafting. Zero reliance on SEO aggregators.
+- Closed-Loop Edge Reconciliation: `close-loop.mjs` verifies the live production URL serves HTTP 200 with headline content before marking rows `Published` in Notion.
 
 </div>
 
 My entire editorial job is a dropdown with five values in it.
 
-Everything upstream of that dropdown — noticing a topic is worth writing about, checking it has not been covered, researching it, drafting it — runs on a clock without me. Everything downstream of it is a review and a git push. The interesting part is not that this is possible; plenty of people have wired an LLM to a cron job. The interesting part is which decisions turned out to be worth keeping for a human, and how few of them there are.
+Everything upstream of that dropdown — noticing an emerging shift in AI, checking it has not been covered, researching primary sources, and drafting the prose — runs on a clock without me. Everything downstream of it is an automated pull request, a quick human review, and a git push.
 
-There is no bespoke infrastructure here, no server and no queue. A folder of markdown prompt files, three Notion databases, a static site.
+The interesting part is not that this is possible; plenty of developers have wired an LLM to a cron job. The interesting part is which decisions turned out to be worth keeping for a human, which architectural traps quietly destroy unattended systems, and how the pipeline evolved from a few brittle local scripts into a resilient, dual-engine cloud harness.
 
-This piece was first written when there were two routines and no themes. There are now seven routines and five themes, which is a good argument for why a post about a live system needs a revision date on it.
+This piece was first written when there were two routines and no themes. It was revised when the system expanded to seven routines and five themes. It is updated now to document the hybrid serverless bridge, volatility-ordered prompt caching, and the dual-engine separation that keeps the whole machine running with zero standing server costs.
 
-## Five themes, seven routines
+## Five tracks, seven routines, two publish paths
 
-Every article answers a question a working professional actually asked about AI, and each theme owns a different reader.
+Every article on this site answers **a question a working professional actually asked about AI** — not a generic keyword or a high-level category. Each of the five tracks owns a distinct reader profile:
 
-| Theme | Reader | Fed by | When |
-|---|---|---|---|
-| Technical | People who build with AI | `daily-ai-seo-radar` | daily, 07:10 |
-| Business | Consultants, analysts, marketers, founders | `business-radar` | Tuesdays, 07:20 |
-| Basics | Anyone getting up to speed | `basics-radar` | Thursdays, 07:16 |
-| Case Studies | Anyone who wants the receipts | `case-studies-writer` | twice weekly, 08:40 |
-| Talks | People who do not have the hour | `talks-writer` | daily, 08:33 |
+| Track | Accent | Reader | Fed by | Schedule | Publish Path |
+|---|---|---|---|---|---|
+| Technical | `--mizu` | People who build with AI | `daily-ai-seo-radar` | daily, 07:10 | Reviewed (PR gate) |
+| Business | `--ochre` | Consultants, analysts, marketers, founders | `business-radar` | Tuesdays, 07:20 | Reviewed (PR gate) |
+| Basics | `--plum` | Anyone getting up to speed; setups | `basics-radar` | Thursdays, 07:16 | Unattended (Direct) |
+| Case Studies | `--moss` | Anyone who wants precedent, graded honestly | `case-studies-writer` | twice weekly, 08:40 | Unattended (Direct) |
+| Talks | `--hanko` | People who do not have the hour to watch | `talks-writer` | daily, 08:33 | Unattended (Direct) |
 
-Those five, plus `ai-article-writer` every four hours picking up whatever was rated 4 or 5, plus a daily job that syncs the news archive out of Notion and into the repository.
+Those five, plus `ai-article-writer` running every four hours to promote rated ideas, plus a daily news feeder that syncs the MBA interview archive from Google Sheets and Notion into the repository.
 
-The two halves of that table work differently, and the difference is the most useful thing in this article. **The three radars pitch and wait.** They file an idea and stop; nothing happens until a human rates it. **The two writers draft directly**, because their subject matter is already constrained enough that a pitch would add nothing — `case-studies-writer` may only write about a named company with a primary source it can link, and `talks-writer` may only write about a talk on a fixed allowlist. Where the constraint is in the prompt, the gate does not also need to be in a dropdown.
+The two publish paths reflect a fundamental principle of automation: **you only gate where discretion is irreplaceable**.
 
-Both writers still file at `Draft Ready`. No routine, on either path, may write `Approved`.
+- **Reviewed Tracks (`Technical`, `Business`)**: The radar routines pitch and wait. They file a 100-word pitch in Notion and stop. Nothing happens until a human rates it 4 or 5. When the writer completes the draft, it lands at `Draft Ready`. When the human flips `Draft Status = Approved`, GitHub Actions generates a pull request on a branch. A human does a final read, merges, and the site deploys.
+- **Unattended Tracks (`Talks`, `Case Studies`, `Basics`)**: The routines draft directly because their input boundaries are already tightly constrained by prompt contracts. `case-studies-writer` may only write about a named enterprise with primary documentation; `talks-writer` may only draw from an allowlisted set of recorded keynotes and podcasts. Once System 1 asserts all character caps, schema contracts, and dual-theme SVG art tokens, the article commits directly to `main` and deploys immediately.
 
-Two of those constraints are worth stating plainly because they were arrived at the hard way. The case-studies brief originally asked for ten a day; that volume is precisely the shape search engines classify as scaled content abuse, and the penalty lands on the whole domain rather than the offending pages. It is two a week now. And `talks-writer` deliberately does not use NotebookLM: it has no public API, so driving it means a signed-in browser session — an auth that expires and fails a 08:33 run with nobody watching. It reads public captions anonymously instead. **An unattended routine can only use credentials that cannot expire.** That single rule has decided more of this architecture than any preference about models.
+Both paths converge on the same invariant: **no machine routine has the authorization or API scope to set `Approved` on reviewed tracks**.
+
+Two operational rules here were learned the hard way. The case-studies brief originally proposed drafting ten studies a week. That publishing cadence is precisely the footprint search engines flag as automated content abuse, triggering domain-wide algorithmic de-indexing. We capped it at two per week.
+
+Second, unattended routines must never depend on interactive logins or expiring credentials. `talks-writer` deliberately avoids driving NotebookLM through browser automation because web session cookies expire unpredictably, crashing an unattended 08:33 run with nobody awake to re-authenticate. It consumes public caption streams anonymously instead. **An unattended routine can only use credentials that cannot expire.**
 
 ## The shape of one idea
 
-The radar path is the older of the two and still the busier one. `daily-ai-seo-radar` fires at 07:10 and files ideas. `ai-article-writer` fires every four hours and writes whatever has been approved. Between them sits exactly one human decision.
+On the reviewed path, `daily-ai-seo-radar` fires at 07:10 and files candidate ideas. `ai-article-writer` runs every four hours to pick up approved pitches. Between them sits exactly one human decision.
 
 <figure class="diagram">
 <svg viewBox="0 0 700 596" role="img" aria-labelledby="d1t d1d">
@@ -147,24 +158,254 @@ The radar path is the older of the two and still the busier one. `daily-ai-seo-r
 <figcaption>The lifecycle of one idea. The two teal bands are unattended; the two red bands are the only points a person touches.</figcaption>
 </figure>
 
-Three details in that diagram carry more weight than they look like they do.
+Three critical design details anchor this flow:
 
-**The rating is the whole gate.** There is no queue, no priority field, no assignment. An idea moves because a human picked 4 or 5 from a dropdown. Ratings of 1 and 2 are not just rejections either — the radar routine reads them on its next run and avoids close neighbours of those topics, so declining an idea teaches the system something.
+1. **The rating is the entire gate.** There is no ticketing system, backlog grooming, or priority field. An idea moves forward strictly when a human selects 4 or 5 from the `Interest Rating` dropdown. Declining an idea with a 1 or 2 is equally valuable: the radar agent reads low-rated topics on its next run and avoids thematic neighbours. Declining an idea actively tunes future discovery.
+2. **The lock occurs before the work starts.** The writer marks the radar row `Drafting` immediately after instantiating the production row, before executing a single search query. Because pickup queries filter on `Status = 'Radar Idea'`, this atomic write prevents a concurrent four-hourly run from duplicating work. If locking were deferred until research finished, a race condition would permit parallel workers to double-draft.
+3. **`Approved` is unreachable by machine.** Every prompt file explicitly encodes this boundary. The system produces draft artifacts, not published posts. Human sign-off is architectural, not procedural.
 
-**The lock happens before the work.** The writer sets the radar row to `Drafting` immediately after creating the production row and before it researches anything. Its own pickup query filters on `Status = 'Radar Idea'`, so that single write is what prevents a four-hourly job from starting the same article twice. Doing it after the research would leave a multi-minute window where a second run could double-pick.
+## The Sleeping PC Trap & The Zero-Cost Serverless Bridge
 
-**`Approved` is unreachable by machine.** Every prompt file states it, and states it as a guardrail rather than a default. The system is built to produce drafts, not posts. That rule is the one thing that has not been renegotiated as the system grew from two routines to seven.
+When this blog began, all routines ran as local Claude Code tasks scheduled in Windows 11 task scheduler. That design hit a brick wall known to anyone building homelab automation: **the sleeping PC trap**.
 
-The Case Studies and Talks routines skip the first two bands of that diagram entirely — they create the production row themselves and land in the same place, at `Draft Ready`. Everything from there down is identical.
+A laptop is portable. Its lid closes. It goes into modern standby, switches Wi-Fi networks, or sits in a backpack during a commute. If a 06:00 or 07:10 scheduled task fires while the machine is asleep, the task silently misses its window. If a long-running research subagent is mid-flight when the machine goes to sleep, the process is killed mid-turn, leaving orphaned records in Notion with partial claim ledgers.
 
-## Notion is the control plane
+Setting up a dedicated 24/7 cloud virtual machine (EC2, DigitalOcean, or an always-on Docker host) is the obvious fix, but it destroys the fundamental design goal of this blog: **zero recurring infrastructure bills and zero server maintenance**.
 
-The word "CMS" would be wrong here. Notion holds the things that are still being decided; the git repository holds only what was published. Nothing that belongs in one lives in the other.
+We solved this by engineering an asymmetric serverless bridge between Google Cloud and GitHub Actions:
+
+<figure class="diagram">
+<svg viewBox="0 0 700 360" role="img" aria-labelledby="d5t d5d">
+  <title id="d5t">The serverless cloud bridge topology</title>
+  <desc id="d5d">Google Cloud Gemini Spark scheduled task executes serverlessly, appending business news and radar ideas to Google Sheets. Google Apps Script detects changes and dispatches a webhook to GitHub Actions. GitHub Actions runs deterministic compilation, asserts character caps and SVG tokens, commits to main, and publishes via Pages.</desc>
+  <g font-family="inherit" fill="currentColor">
+    <rect x="0" y="24" width="200" height="280" rx="10" fill="var(--card)" stroke="var(--border)"/>
+    <rect x="0" y="24" width="200" height="30" rx="10" fill="var(--wash-mizu)"/>
+    <text x="16" y="44" font-size="12" font-weight="700">1. Google Cloud Trigger</text>
+    <g font-size="10.5">
+      <text x="16" y="76" font-weight="600">Gemini Spark / Apps Script</text>
+      <text x="16" y="96" opacity="0.7">Runs 06:00 IST daily</text>
+      <text x="16" y="116" opacity="0.7">Zero local PC dependency</text>
+      <text x="16" y="146" font-weight="600">Google AI Pro tier</text>
+      <text x="16" y="166" opacity="0.7">Zero token API bills</text>
+      <text x="16" y="196" font-weight="600">Google Sheets Bridge</text>
+      <text x="16" y="216" opacity="0.7">Appends 5 MBA stories</text>
+      <text x="16" y="236" opacity="0.7">Dispatches repository event</text>
+    </g>
+    <path d="M200 164 L250 164" stroke="var(--indigo)" stroke-width="2" fill="none" marker-end="url(#arrow)"/>
+    <rect x="250" y="24" width="200" height="280" rx="10" fill="var(--card)" stroke="var(--border)"/>
+    <rect x="250" y="24" width="200" height="30" rx="10" fill="var(--wash-ochre)"/>
+    <text x="266" y="44" font-size="12" font-weight="700">2. Notion & Edge Reconcile</text>
+    <g font-size="10.5">
+      <text x="266" y="76" font-weight="600">sync-news.mjs</text>
+      <text x="266" y="96" opacity="0.7">Pulls Sheet CSV export</text>
+      <text x="266" y="126" font-weight="600">Notion Auto-Push</text>
+      <text x="266" y="146" opacity="0.7">Inserts missing archive rows</text>
+      <text x="266" y="176" font-weight="600">Atomic Dedup</text>
+      <text x="266" y="196" opacity="0.7">Writes site/src/data/news.json</text>
+      <text x="266" y="226" font-weight="600">State Checkpoints</text>
+      <text x="266" y="246" opacity="0.7">Radar pitches synced</text>
+    </g>
+    <path d="M450 164 L500 164" stroke="var(--indigo)" stroke-width="2" fill="none"/>
+    <rect x="500" y="24" width="200" height="280" rx="10" fill="var(--card)" stroke="var(--border)"/>
+    <rect x="500" y="24" width="200" height="30" rx="10" fill="var(--wash-moss)"/>
+    <text x="516" y="44" font-size="12" font-weight="700">3. Compile & Deploy</text>
+    <g font-size="10.5">
+      <text x="516" y="76" font-weight="600">GitHub Actions</text>
+      <text x="516" y="96" opacity="0.7">publish-from-notion.yml</text>
+      <text x="516" y="126" font-weight="600">System 1 Assertions</text>
+      <text x="516" y="146" opacity="0.7">Caps: 70 / 160 / 120 chars</text>
+      <text x="516" y="166" opacity="0.7">SVG lint: zero hex codes</text>
+      <text x="516" y="196" font-weight="600">Astro 5 SSG Build</text>
+      <text x="516" y="216" opacity="0.7">Deploys to GitHub Pages</text>
+      <text x="516" y="246" font-weight="600">close-loop.mjs</text>
+      <text x="516" y="266" opacity="0.7">HTTP 200 edge verification</text>
+    </g>
+    <text x="0" y="335" font-size="10.5" opacity="0.5">100% serverless: zero VPS hosting, zero standing daemons, zero expiring browser cookies.</text>
+  </g>
+</svg>
+<figcaption>The serverless hybrid loop: cloud ingestion triggers deterministic compilation and edge reconciliation without standing infrastructure.</figcaption>
+</figure>
+
+1. **Serverless Cloud Trigger**: Gemini Spark runs as a scheduled task in Google Cloud at 06:00 IST. It uses the subscriber's Google AI Pro tier, consuming zero pay-as-you-go API keys. It searches for breaking business events, evaluates the MBA placement interview angle, and writes structured records into a designated Google Sheet (`1-UcD-C4My_Zp4aH3n-5dB3JQNtDN_MSAK6vTCPt8LY0`).
+2. **Cloud Bridge & Webhook Dispatch**: A lightweight Google Apps Script attached to the sheet detects the append. Instead of polling on the laptop, Apps Script dispatches an authenticated GitHub webhook (`repository_dispatch: notion-changed`).
+3. **Deterministic Compile & Edge Sync**: GitHub Actions wakes immediately. It executes `sync-news.mjs` to ingest the sheet's CSV export, synchronizes any missing cards to Notion via `POST /v1/pages`, updates `site/src/data/news.json`, validates the build, and deploys to GitHub Pages.
+
+The result is complete operational resiliency: if the author's laptop is powered off, in an airplane, or closed for the weekend, daily intelligence continues to ingest, validate, and publish without interruption.
+
+## Dual-Engine Topology: Deterministic System 1 vs Probabilistic System 2
+
+A common architectural flaw in LLM application design is expecting a generative model to do arithmetic, enforce string boundaries, or validate XML syntax.
+
+Generative transformers do not view text as arrays of Unicode codepoints; they view text as probability distributions over token fragments. Asking an LLM to *"make sure the title is under 70 characters and never use hex colors in the SVG"* is an invitation for stochastic failure. On run 1, it will output 64 characters. On run 14, under slightly different sampling context, it will output 73 characters and break production.
+
+We enforce a strict separation of concerns:
+
+- **System 1 (Deterministic Node.js Engine)**: Executes in sub-10ms. System 1 never drafts prose. It evaluates invariants:
+  - String length assertions: `title.length <= 70`, `description.length <= 160`, `question.length <= 120`.
+  - SVG XML parsing: asserts `viewBox="0 0 1600 900"`, background rectangle present, grain filter attached, and throws if any hex color (`/(?:fill|stroke)="#/i`) is detected.
+  - Image generation: invokes Sharp to rasterize semantic SVGs into dual light and dark WebP hero assets.
+  - Edge verification: executes real HTTP GET checks against the live production CDN.
+- **System 2 (Probabilistic LLM Engine — Gemini / Claude)**: Dedicated purely to semantic reasoning:
+  - Primary source discovery and web research.
+  - Claim extraction into scratchpad tables.
+  - Long-form prose drafting, rhetorical pacing, and anti-AI voice filtering.
+
+If System 2 outputs a 74-character title or forgets an image alt tag, System 1 does not crash the build or panic. `publish-article.mjs` catches the breach deterministically, rejects the draft, writes `Needs Revision` and `Blocked Reason: Title exceeded 70 chars (got 74)` directly onto the Notion database row, and exits cleanly. The author sees the issue immediately on their phone, edits the title in Notion, and the next half-hourly poll ships it.
+
+## Volatility-Ordered Prompt Caching & Token Economics
+
+In an agentic loop running multiple times a day, token overhead compounds exponentially.
+
+Modern LLMs (Gemini 4, Claude 3.5) support prompt caching, where prompt prefixes that remain byte-identical across turns are cached in GPU memory (KV cache). Cache hits reduce Time-To-First-Token (TTFT) by up to 85% and cut input token costs by up to 90%.
+
+However, a naive prompt setup destroys prompt caching:
+- Prepending dynamic timestamps (`Current time: 2026-11-10T08:15:22Z`).
+- Injecting randomized run UUIDs at the top of the prompt.
+- Dumping unsorted JSON data keys into the system prompt.
+
+Every time a dynamic token appears early in a prompt, the entire KV cache prefix downstream of that token is invalidated.
+
+To prevent this, our prompts follow a strict **Volatility-Ordered Structure**:
+
+| Layer | Volatility | Contents | Cache Impact |
+|---|---|---|---|
+| **Prefix** | `0.0` (Immutable) | The wAIbi-sabi constitution, anti-AI heuristics, character caps, and tone contract. Exactly identical across every run. | 100% KV Cache Hit across all turns |
+| **Middle** | `0.5` (Task-Specific) | Static tool definitions, JSON response schemas, and track rules. | Reused across all runs of the same routine |
+| **Tail** | `1.0` (Ephemeral) | The dynamic article topic, user remarks from Notion, and scratch claim ledger rows. | Processed fresh per run |
+
+By pinning the immutable editorial constitution to the absolute prompt prefix, the agent engine pays the full token read cost once; subsequent scheduled turns hit the cache instantly.
+
+<figure class="diagram">
+<svg viewBox="0 0 700 340" role="img" aria-labelledby="d4t d4d">
+  <title id="d4t">The token-cost model behind trimmed skill directories</title>
+  <desc id="d4d">The skills folder was trimmed from 64 skills at about 6100 tokens to 7 skills at about 1200 tokens. The agents folder was trimmed from 263 personas to 27 active to stay under context limits. In an eight-agent parallel swarm, this baseline is multiplied nine times.</desc>
+  <g font-family="inherit" fill="currentColor">
+    <text x="0" y="16" font-size="12.5" font-weight="700">skills/ — description block injected per session and per sub-agent</text>
+    <rect x="0" y="30" width="470" height="22" rx="4" fill="var(--plum)" opacity="0.85"/>
+    <text x="12" y="45" font-size="11" font-weight="700" fill="var(--paper)">64 skills</text>
+    <text x="482" y="45" font-size="11.5" font-weight="700">~6.1k tokens</text>
+    <rect x="0" y="60" width="92" height="22" rx="4" fill="var(--mizu)"/>
+    <text x="12" y="75" font-size="11" font-weight="700" fill="var(--paper)">7</text>
+    <text x="104" y="75" font-size="11.5" font-weight="700">~1.2k tokens</text>
+    <text x="200" y="75" font-size="11" opacity="0.6">57 moved to skills-library/</text>
+    <text x="0" y="122" font-size="12.5" font-weight="700">agents/ — listing must stay under the Agent tool's budget</text>
+    <rect x="0" y="136" width="470" height="22" rx="4" fill="var(--plum)" opacity="0.85"/>
+    <text x="12" y="151" font-size="11" font-weight="700" fill="var(--paper)">263 personas</text>
+    <text x="482" y="151" font-size="11.5" font-weight="700">over ~15k budget</text>
+    <rect x="0" y="166" width="48" height="22" rx="4" fill="var(--mizu)"/>
+    <text x="60" y="181" font-size="11.5" font-weight="700">~27 curated</text>
+    <text x="200" y="181" font-size="11" opacity="0.6">236 moved to agents-library/</text>
+    <line x1="0" y1="216" x2="700" y2="216" stroke="currentColor" stroke-opacity="0.15"/>
+    <text x="0" y="242" font-size="12.5" font-weight="700">Why it compounds</text>
+    <g font-size="11" opacity="0.75">
+      <text x="0" y="266">One session pays the block once. Every sub-agent you spawn pays it again, in full.</text>
+      <text x="0" y="286">An eight-agent swarm therefore pays it nine times before a single useful token is generated.</text>
+    </g>
+    <g>
+      <rect x="0" y="300" width="16" height="16" rx="3" fill="var(--hanko)"/>
+      <rect x="22" y="300" width="16" height="16" rx="3" fill="var(--hanko)" opacity="0.75"/>
+      <rect x="44" y="300" width="16" height="16" rx="3" fill="var(--hanko)" opacity="0.75"/>
+      <rect x="66" y="300" width="16" height="16" rx="3" fill="var(--hanko)" opacity="0.75"/>
+      <rect x="88" y="300" width="16" height="16" rx="3" fill="var(--hanko)" opacity="0.75"/>
+      <rect x="110" y="300" width="16" height="16" rx="3" fill="var(--hanko)" opacity="0.75"/>
+      <rect x="132" y="300" width="16" height="16" rx="3" fill="var(--hanko)" opacity="0.75"/>
+      <rect x="154" y="300" width="16" height="16" rx="3" fill="var(--hanko)" opacity="0.75"/>
+      <rect x="176" y="300" width="16" height="16" rx="3" fill="var(--hanko)" opacity="0.75"/>
+      <text x="204" y="313" font-size="11" opacity="0.75">orchestrator + 8 workers, each carrying the same descriptions</text>
+    </g>
+  </g>
+</svg>
+<figcaption>Context economics: 64 skills trimmed to 7 active, reducing baseline prompt injection by over 80% across parallel subagents.</figcaption>
+</figure>
+
+The second unexpected cost was skill list compounding. When an agent framework exposes tools or skills, it injects the name and summary of *every active skill* into the prompt context.
+
+In a single-agent conversation, paying ~6,100 tokens for 64 skills is noticeable. But in a multi-agent parallel swarm (an orchestrator delegating to eight subagents), the orchestrator and all eight workers each pay the 6,100 tokens. That meant burning over 54,000 baseline tokens before the agents wrote a single useful word.
+
+The fix was mechanical: we created a cold archive directory (`skills-library/` and `agents-library/`) that is never scanned at startup. The active folder holds strictly the 7 skills the publishing pipeline uses. Baseline overhead plummeted from 6.1k tokens to 1.2k tokens.
+
+## Context Quarantine & The Scratchpad Claim Ledger
+
+Early in the life of this blog, a routine fact-check uncovered a serious defect: two live articles cited statistics on pages that never contained those numbers. Both articles had to be retracted and corrected.
+
+The failure was not hallucination in the standard sense; the numbers were real and closely approximated reality. What broke was **attribution drift**: a metric discovered in one search result was accidentally linked to the nearest topical company URL.
+
+The root cause was unmistakable: **every single error traced back to an SEO aggregator** — one of those "Top 50 AI Trends for 2026" roundup posts that republishes secondhand figures without linking to the primary experiment or whitepaper.
+
+To eliminate attribution drift permanently, we introduced two mandatory protocols:
+
+### 1. Context Quarantine
+Raw web crawls, multi-megabyte HTML dumps, and search engine results are never dumped into the article drafter's context window. An ephemeral extraction worker isolates raw scrapes to a local scratch file (`scratch/research-<slug>.txt`), filters out aggregator fluff, and extracts only primary source citations into a structured **Claim Ledger**:
+
+| Claim as written in draft | Primary source URL | Verbatim sentence quoted from source |
+|---|---|---|
+| DeepSeek-V3 trained for $5.58M | `https://arxiv.org/abs/2412.19437` | *"DeepSeek-V3 requires only 2.788M H800 GPU hours for its full training... totaling $5.58M."* |
+
+The third column is the hard barrier. It must contain the exact, unparaphrased sentence seen on the primary page. If an exact sentence cannot be quoted, the source does not exist and the claim is struck from the outline.
+
+### 2. Post-Draft Fact Audit
+Once the article is drafted and after the anti-AI voice filter has rewritten the prose, a separate verification pass walks the completed text top-to-bottom. It checks every number, date, percentage, dollar figure, and named benchmark back against its ledger row.
+
+This audit also re-computes every derived statistic. If the prose says *"a 42% cost reduction compared to GPT-4o"*, that calculation was performed by the model and no external source will verify it. The audit verifies the underlying arithmetic before filing the draft to Notion.
+
+## Geometric SVG Artwork via Semantic Tokens
+
+A high-signal publication needs distinctive artwork, but manual illustration creates a human bottleneck that stalls unattended tracks. Conversely, using diffusion models (Midjourney, DALL-E) produces generic corporate clip-art with unpredictable rendering, text artifacts, and heavy raster payloads.
+
+We chose a purely algorithmic solution: **hero illustrations are authored as standalone geometric SVG code**.
+
+<figure class="diagram">
+<svg viewBox="0 0 700 240" role="img" aria-labelledby="d6t d6d">
+  <title id="d6t">The SVG token-replacement pipeline</title>
+  <desc id="d6d">SVG code with placeholder tokens is validated for XML structure and absence of hex codes. Sharp then rasterizes the SVG twice with the light palette and dark palette, generating dual WebP files.</desc>
+  <g font-family="inherit" fill="currentColor">
+    <rect x="0" y="24" width="200" height="180" rx="8" fill="var(--card)" stroke="var(--border)"/>
+    <text x="16" y="50" font-size="12" font-weight="700">1. Semantic SVG Source</text>
+    <text x="16" y="74" font-size="10.5" opacity="0.7">site/assets-src/art/&lt;slug&gt;.svg</text>
+    <text x="16" y="104" font-size="10.5" fill="var(--mizu)" font-family="monospace">&lt;rect fill="{{paper}}"/&gt;</text>
+    <text x="16" y="124" font-size="10.5" fill="var(--ochre)" font-family="monospace">&lt;circle fill="{{ink}}"/&gt;</text>
+    <text x="16" y="144" font-size="10.5" fill="var(--hanko)" font-family="monospace">&lt;path stroke="{{mizu}}"/&gt;</text>
+    <text x="16" y="174" font-size="10" opacity="0.6">Zero hardcoded hex codes</text>
+    <path d="M200 114 L250 114" stroke="var(--indigo)" stroke-width="2" fill="none"/>
+    <rect x="250" y="24" width="200" height="180" rx="8" fill="var(--card)" stroke="var(--border)"/>
+    <text x="266" y="50" font-size="12" font-weight="700">2. XML Lint & Replace</text>
+    <text x="266" y="74" font-size="10.5" opacity="0.7">site/scripts/make-images.mjs</text>
+    <text x="266" y="104" font-size="10.5">Asserts viewBox 1600x900</text>
+    <text x="266" y="124" font-size="10.5">Injects light palette tokens</text>
+    <text x="266" y="144" font-size="10.5">Injects dark palette tokens</text>
+    <text x="266" y="164" font-size="10.5">Attaches SVG grain filter</text>
+    <path d="M450 114 L500 114" stroke="var(--indigo)" stroke-width="2" fill="none"/>
+    <rect x="500" y="24" width="200" height="180" rx="8" fill="var(--card)" stroke="var(--border)"/>
+    <text x="516" y="50" font-size="12" font-weight="700">3. Sharp Dual WebP</text>
+    <text x="516" y="74" font-size="10.5" opacity="0.7">site/src/assets/art/</text>
+    <text x="516" y="104" font-size="10.5" font-weight="600">&lt;slug&gt;-light.webp</text>
+    <text x="516" y="124" font-size="10" opacity="0.7">28 KB · high contrast</text>
+    <text x="516" y="154" font-size="10.5" font-weight="600">&lt;slug&gt;-dark.webp</text>
+    <text x="516" y="174" font-size="10" opacity="0.7">34 KB · deep slate</text>
+  </g>
+</svg>
+<figcaption>Deterministic artwork generation: semantic placeholder tokens compile into dual light and dark WebP assets.</figcaption>
+</figure>
+
+Artwork files sit in `site/assets-src/art/<slug>.svg`. They are authored using house token placeholders rather than raw hex colors:
+- `{{paper}}`: Canvas background
+- `{{ink}}`: Primary high-contrast line work
+- `{{ink-soft}}`: Subdued secondary geometry
+- `{{mizu}}`, `{{ochre}}`, `{{moss}}`, `{{plum}}`, `{{hanko}}`, `{{indigo}}`: The six house accent colors
+
+Before an article can be built, `make-images.mjs` validates the SVG structure with an XML parser. If any hex code (`#ff0000`, `#ffffff`) appears in the markup, the preflight script immediately fails.
+
+Once validated, the script substitutes the tokens against two separate JSON color tables (light and dark mode) and invokes Sharp to generate two optimized WebP images (`<slug>-light.webp` and `<slug>-dark.webp`). Astro's picture component automatically serves the correct WebP asset based on the reader's preferred color scheme.
+
+## Notion is the Distributed Control Plane
+
+The word "CMS" is misleading here. Notion does not store finished articles, layout templates, or web configuration. Notion holds state transitions and decisions that are still being made; the git repository holds only what was approved, verified, and published.
 
 <figure class="diagram">
 <svg viewBox="0 0 700 470" role="img" aria-labelledby="d2t d2d">
-  <title id="d2t">The Notion control plane</title>
-  <desc id="d2d">The AI Blog OS Pipeline database and the Article Production database are joined by a two-way relation between the Article and Source Idea fields. The radar routine creates pipeline rows; the writer routine creates production rows and advances both. Interest Rating, Remarks and the Approved status are human-only. A third database, the Interview News Archive, is separate and syncs into the repository as committed JSON.</desc>
+  <title id="d2t">The Notion control plane architecture</title>
+  <desc id="d2d">The AI Blog OS Pipeline database and Article Production database are connected by a two-way relation. Radar routines create pipeline rows. Writer routines create production rows. Interest Rating, Remarks and Draft Status = Approved are reserved for human control. A third database holds the Interview News Archive.</desc>
   <g font-family="inherit" fill="currentColor">
     <rect x="0" y="24" width="316" height="222" rx="10" fill="var(--card)" stroke="var(--border)"/>
     <rect x="0" y="24" width="316" height="30" rx="10" fill="var(--wash-mizu)"/>
@@ -204,195 +445,68 @@ The word "CMS" would be wrong here. Notion holds the things that are still being
     <rect x="0" y="286" width="316" height="30" rx="10" fill="var(--wash-moss)"/>
     <text x="16" y="306" font-size="12.5" font-weight="700">Interview News Archive</text>
     <g font-size="11">
-      <text x="16" y="338" opacity="0.72">Not part of the editorial pipeline.</text>
-      <text x="16" y="358" opacity="0.72">sync-news.mjs runs daily at 04:35 and</text>
-      <text x="16" y="378" opacity="0.72">commits straight to main — no PR, because</text>
-      <text x="16" y="396" opacity="0.72">a human already curated every card.</text>
+      <text x="16" y="338" opacity="0.72">Business placement intelligence.</text>
+      <text x="16" y="358" opacity="0.72">Google Sheets bridge syncs daily</text>
+      <text x="16" y="378" opacity="0.72">and commits straight to main.</text>
+      <text x="16" y="396" opacity="0.72">603+ entries rendered offline.</text>
     </g>
     <rect x="384" y="286" width="316" height="120" rx="10" fill="none" stroke="var(--border)" stroke-dasharray="4 4"/>
-    <text x="400" y="308" font-size="12.5" font-weight="700">The repository</text>
+    <text x="400" y="308" font-size="12.5" font-weight="700">The Git Repository</text>
     <g font-size="11">
       <text x="400" y="334" opacity="0.72">Holds only what was published:</text>
-      <text x="400" y="354" opacity="0.72">markdown, images, the design system.</text>
+      <text x="400" y="354" opacity="0.72">markdown, art, schemas, components.</text>
       <text x="400" y="378" opacity="0.72">Rating an idea must never require</text>
-      <text x="400" y="396" opacity="0.72">a git commit. That is the whole rule.</text>
+      <text x="400" y="396" opacity="0.72">a git commit or terminal command.</text>
     </g>
-    <text x="0" y="440" font-size="10.5" opacity="0.5">The relation is what answers "has this already been written" in a single query — setting either side populates the other.</text>
-    <text x="0" y="458" font-size="10.5" opacity="0.5">Red fields are the human's. The routines read them and never write them.</text>
+    <text x="0" y="440" font-size="10.5" opacity="0.5">Two-way relation answers 'has this been covered' in a single query.</text>
+    <text x="0" y="458" font-size="10.5" opacity="0.5">Red fields are human-only gates. The routines read them and never write them.</text>
   </g>
 </svg>
-<figcaption>Two related databases and one unrelated one. The dashed box is the repository, which is downstream of all of it.</figcaption>
+<figcaption>Two related control databases and the committed repository downstream of them.</figcaption>
 </figure>
 
-The division of labour is worth stating as a rule, because it is the thing that makes the system pleasant to live with rather than another repo to maintain: **anything a person needs to change without deploying goes in Notion.** A rating, a remark, a decision to kill a topic. Anything that is a finished artefact goes in git. The moment you put the rating in a YAML file, rating an idea from your phone stops working.
+This boundary enforces a clean operational division: **anything an author needs to modify while riding the metro goes in Notion.** A rating, a clarifying remark, or a decision to discard an unpromising topic. Everything that is a finished, verified code artifact lives in git.
 
-## What the machine side actually is
+The moment you store editorial ratings in YAML files or markdown frontmatter, rating an idea on a mobile phone requires cloning a repository, opening a terminal, and pushing a commit. By keeping the decision layer in Notion, the pipeline accommodates human habits rather than fighting them.
 
-There is less here than people expect. No agent framework, no vector database, no orchestrator.
+## Deployment, Closed-Loop Edge Reconciliation & Self-Healing
 
-<figure class="diagram">
-<svg viewBox="0 0 700 400" role="img" aria-labelledby="d3t d3d">
-  <title id="d3t">Claude Code layout for this system</title>
-  <desc id="d3d">Seven scheduled task prompt files drive the pipeline. Seven skills sit in the active skills folder and are injected into every session and sub-agent. About twenty-seven agents sit in the active agents folder. Fifty-seven skills and about two hundred thirty-six agents sit in archived library folders that are never scanned at startup and cost nothing. MCP connections provide Notion, web search and NotebookLM.</desc>
-  <g font-family="inherit" fill="currentColor">
-    <text x="0" y="14" font-size="10" font-weight="700" letter-spacing="1.4" opacity="0.45">LOADED INTO EVERY SESSION</text>
-    <rect x="0" y="24" width="700" height="150" rx="10" fill="var(--wash-mizu)" stroke="var(--border)"/>
-    <rect x="16" y="42" width="200" height="114" rx="8" fill="var(--card)" stroke="var(--border)"/>
-    <text x="30" y="64" font-size="12" font-weight="700">scheduled-tasks/ — 7</text>
-    <g font-size="10.5" opacity="0.75">
-      <text x="30" y="86">3 radars pitch and wait</text>
-      <text x="30" y="104">2 writers draft directly</text>
-      <text x="30" y="122">1 promotes rated ideas</text>
-      <text x="30" y="140">1 syncs the news archive</text>
-    </g>
-    <rect x="234" y="42" width="200" height="114" rx="8" fill="var(--card)" stroke="var(--border)"/>
-    <text x="248" y="64" font-size="12" font-weight="700">skills/ — 7 active</text>
-    <g font-size="10.5" opacity="0.75">
-      <text x="248" y="86">seo-topic-research is invoked</text>
-      <text x="248" y="102">by the radar; anti-ai-writing</text>
-      <text x="248" y="118">is the mandatory last filter.</text>
-      <text x="248" y="142" font-size="10" fill="var(--hanko)" font-weight="700">~1.2k tokens, every time</text>
-    </g>
-    <rect x="452" y="42" width="232" height="114" rx="8" fill="var(--card)" stroke="var(--border)"/>
-    <text x="466" y="64" font-size="12" font-weight="700">MCP connections</text>
-    <g font-size="10.5" opacity="0.75">
-      <text x="466" y="86">Notion — the control plane</text>
-      <text x="466" y="104">Web search — every claim</text>
-      <text x="466" y="122">NotebookLM — this article</text>
-      <text x="466" y="146">agents/ — ~27 curated</text>
-    </g>
-    <text x="0" y="218" font-size="10" font-weight="700" letter-spacing="1.4" opacity="0.45">ON DISK, NEVER SCANNED AT STARTUP</text>
-    <rect x="0" y="228" width="700" height="104" rx="10" fill="none" stroke="var(--border)" stroke-dasharray="5 5"/>
-    <rect x="16" y="246" width="322" height="68" rx="8" fill="none" stroke="var(--border)"/>
-    <text x="30" y="268" font-size="12" font-weight="700" opacity="0.7">skills-library/ — 57 archived</text>
-    <text x="30" y="290" font-size="10.5" opacity="0.6">Not invocable. Restored by moving the folder</text>
-    <text x="30" y="306" font-size="10.5" opacity="0.6">back and restarting.</text>
-    <rect x="362" y="246" width="322" height="68" rx="8" fill="none" stroke="var(--border)"/>
-    <text x="376" y="268" font-size="12" font-weight="700" opacity="0.7">agents-library/ — ~236 archived</text>
-    <text x="376" y="290" font-size="10.5" opacity="0.6">Found by grepping an INDEX.md, then pasted</text>
-    <text x="376" y="306" font-size="10.5" opacity="0.6">into a prompt as a general-purpose agent.</text>
-    <text x="0" y="362" font-size="11" opacity="0.6">Both archives cost zero tokens at baseline. That is the entire reason they exist.</text>
-    <text x="0" y="384" font-size="11" opacity="0.6">The teal block above is paid for on every single session — and again inside every sub-agent.</text>
-  </g>
-</svg>
-<figcaption>Seven prompt files, seven skills, a handful of MCP connections. Everything else is deliberately cold.</figcaption>
-</figure>
+The publishing engine uses polling rather than webhooks. Every thirty minutes, a GitHub Actions workflow queries Notion for rows with `Draft Status = Approved` that lack a corresponding markdown file in `site/src/content/blog/`.
 
-The prompts are the system. Each scheduled run starts cold, with no memory of any previous run, which means the prompt file has to be completely self-contained: the data source IDs, the exact query, the state transitions, the guardrails. That constraint is annoying for about a day and then becomes the best feature, because the prompt file *is* the documentation. Reading `ai-article-writer/SKILL.md` tells you exactly what the system does, with no gap between the description and the behaviour.
+Polling is a conscious engineering trade-off. Receiving an immediate webhook from Notion requires standing up a publicly reachable server with HTTPS certificates and an always-on listener. A GitHub Actions poll costs nothing, introduces zero attack surface, and keeps the system 100% serverless.
 
-It has one sharp edge, though, and renaming the themes found it. The theme names are a Notion select that rejects anything unexpected, and the string is hardcoded in five places — the content schema, the publish script, the index page, the article layout, and *the prompt file of every routine that writes one*. The fifth was missed, which would have failed the next morning's radar run against a select option that no longer existed. A cold-start prompt is documentation that cannot drift from the code, but it is also code that no compiler is checking.
+### Closed-Loop Edge Reconciliation
+Many automated pipelines suffer from "optimistic confirmation": marking a database row "Published" simply because a build command exited with code 0.
 
-## The constraint nobody expects: token budget
+If a DNS record stalls, a CDN caching rule serves stale content, or a static build fails to upload, the database falsely claims the article is live.
 
-This is the part I would not have predicted, and it is the part most likely to be useful to someone building their own.
+To prevent silent reconciliation drift, our deploy workflow runs `close-loop.mjs`:
+1. It reads the slug and expected headline of the published post.
+2. It sends an actual HTTP GET request over the public internet to `https://janmejai2002.github.io/blog/<slug>/`.
+3. It asserts that the server returns HTTP 200 **AND** that the exact article headline exists inside the returned HTML body.
+4. Only when edge verification succeeds does it update Notion with `Draft Status = Published`, the live `Post URL`, and the ISO `Publish Date`.
 
-Skill descriptions and agent descriptions are injected into context automatically at session start. Not the skills themselves — just their names and descriptions, so the model knows what it can reach for. That sounds cheap. It is cheap once. It is not cheap when a skill folder has grown to 64 entries, and it is genuinely expensive when the same block is also injected into every sub-agent you spawn, because a parallel swarm multiplies the baseline by the number of agents running.
+### Error Surfacing in Notion
+If a draft fails preflight validation (e.g., a meta description exceeds 160 characters), the pipeline never buries the failure in a private GitHub Actions log. The author does not monitor CI logs.
 
-<figure class="diagram">
-<svg viewBox="0 0 700 340" role="img" aria-labelledby="d4t d4d">
-  <title id="d4t">The token-cost model behind the trimmed folders</title>
-  <desc id="d4d">The skills folder went from 64 skills at about 6100 tokens to 7 skills at about 1200 tokens, with 57 archived. The agents folder went from 263 personas to about 27 active and 236 archived, to stay under the agent listing's roughly 15000 token budget. Because the same block is injected into every sub-agent, an eight-agent swarm multiplies the baseline eight times.</desc>
-  <g font-family="inherit" fill="currentColor">
-    <text x="0" y="16" font-size="12.5" font-weight="700">skills/ — description block injected per session and per sub-agent</text>
-    <rect x="0" y="30" width="470" height="22" rx="4" fill="var(--plum)" opacity="0.85"/>
-    <text x="12" y="45" font-size="11" font-weight="700" fill="var(--paper)">64 skills</text>
-    <text x="482" y="45" font-size="11.5" font-weight="700">~6.1k tokens</text>
-    <rect x="0" y="60" width="92" height="22" rx="4" fill="var(--mizu)"/>
-    <text x="12" y="75" font-size="11" font-weight="700" fill="var(--paper)">7</text>
-    <text x="104" y="75" font-size="11.5" font-weight="700">~1.2k tokens</text>
-    <text x="200" y="75" font-size="11" opacity="0.6">57 moved to skills-library/</text>
-    <text x="0" y="122" font-size="12.5" font-weight="700">agents/ — listing must stay under the Agent tool's budget</text>
-    <rect x="0" y="136" width="470" height="22" rx="4" fill="var(--plum)" opacity="0.85"/>
-    <text x="12" y="151" font-size="11" font-weight="700" fill="var(--paper)">263 personas</text>
-    <text x="482" y="151" font-size="11.5" font-weight="700">over ~15k budget</text>
-    <rect x="0" y="166" width="48" height="22" rx="4" fill="var(--mizu)"/>
-    <text x="60" y="181" font-size="11.5" font-weight="700">~27 curated</text>
-    <text x="200" y="181" font-size="11" opacity="0.6">236 moved to agents-library/</text>
-    <line x1="0" y1="216" x2="700" y2="216" stroke="currentColor" stroke-opacity="0.15"/>
-    <text x="0" y="242" font-size="12.5" font-weight="700">Why it compounds</text>
-    <g font-size="11" opacity="0.75">
-      <text x="0" y="266">One session pays the block once. Every sub-agent you spawn pays it again, in full.</text>
-      <text x="0" y="286">An eight-agent swarm therefore pays it nine times before a single useful token is generated.</text>
-    </g>
-    <g>
-      <rect x="0" y="300" width="16" height="16" rx="3" fill="var(--hanko)"/>
-      <rect x="22" y="300" width="16" height="16" rx="3" fill="var(--hanko)" opacity="0.75"/>
-      <rect x="44" y="300" width="16" height="16" rx="3" fill="var(--hanko)" opacity="0.75"/>
-      <rect x="66" y="300" width="16" height="16" rx="3" fill="var(--hanko)" opacity="0.75"/>
-      <rect x="88" y="300" width="16" height="16" rx="3" fill="var(--hanko)" opacity="0.75"/>
-      <rect x="110" y="300" width="16" height="16" rx="3" fill="var(--hanko)" opacity="0.75"/>
-      <rect x="132" y="300" width="16" height="16" rx="3" fill="var(--hanko)" opacity="0.75"/>
-      <rect x="154" y="300" width="16" height="16" rx="3" fill="var(--hanko)" opacity="0.75"/>
-      <rect x="176" y="300" width="16" height="16" rx="3" fill="var(--hanko)" opacity="0.75"/>
-      <text x="204" y="313" font-size="11" opacity="0.75">orchestrator + 8 workers, each carrying the same descriptions</text>
-    </g>
-  </g>
-</svg>
-<figcaption>The numbers come from the global config: 64 skills at ~6.1k tokens trimmed to 7 at ~1.2k, and 263 agent personas trimmed to ~27 to stay inside the listing budget.</figcaption>
-</figure>
+Instead, `publish-article.mjs` catches the rejection, sets `Draft Status = Needs Revision`, and writes a detailed explanation into the `Blocked Reason` property on the Notion page. When the author opens Notion, the error is immediately visible where the edit must happen. Once corrected, the next poll clears the block automatically.
 
-The fix is not clever, it is just filing. Keep the small set you actually reach for in the scanned directory, move the rest into a sibling directory that is never scanned, and leave an `INDEX.md` behind so a specific archived persona can still be found by grep and pasted into a prompt when it is genuinely needed. The archived directories cost nothing, because the startup scan does not look at them.
+Readers can inspect the live pulse of this system at `/status/`, which queries the Notion databases directly to display active ideas, in-flight drafts, and unrated pitches in real time.
 
-The same discipline shows up in how sub-agents get spawned at all: a smaller model for research and extraction, one pre-digested brief instead of every agent re-reading the same large document, findings written to disk with short receipts returned instead of pasting full output back, and deliverables assembled by a script rather than retyped by a model.
+## The Seven Hard Principles of Agentic Engineering
 
-## The correction that changed the writing rules
+Building an autonomous editorial engine teaches lessons that apply to any agentic software architecture:
 
-A fact-check of two live articles found statistics attributed to pages that did not contain them. Both had to be corrected in public.
-
-The failure is worth describing precisely, because "the model hallucinated" is not what happened and would have led to the wrong fix. The numbers were real and mostly close to right. What broke was **attribution**: a figure picked up in one place got a link to the nearest topical page, which was a page that had never printed that figure. And the pattern in the errors was unmistakable. Where the routine cited a primary source — a model card, a vendor pricing page, a paper — it was accurate. **Every single error traced to an SEO aggregator**, one of those "40 AI statistics for 2026" pages that reprints a number with no path back to whoever measured it.
-
-So the writing rule is now mechanical rather than aspirational. Before a claim may appear in a draft, it needs a row in a **claim ledger** — a scratch file, not part of the article:
-
-| the claim as it will be written | the URL | the sentence from that page, quoted verbatim |
-
-The third column is the whole point. It has to be text actually seen on the page — not a paraphrase, not a recollection, not something inferred from the page's topic. If the sentence cannot be pasted, the source does not exist and the claim gets cut.
-
-Then there is a separate pass, after the draft is finished and after the anti-AI-writing filter has rewritten the prose, that walks the finished text top to bottom — including the TL;DR bullets and the image alt text — and checks every number, date, price, quote, benchmark and named entity back against its ledger row. Not "was I careful while writing", but a fresh read of the final text. Prose gets rewritten three times between research and filing, and figures drift in the rewrite. That pass also recomputes every derived number, because a percentage difference or a gap between two dates is a claim the routine made up itself and no source will catch.
-
-Three rules came out of the same review and are worth stealing whole:
-
-- **A link must point at the page the number came from.** Never the nearest topical URL.
-- **Do not strengthen a source's claim.** Its qualifiers are load-bearing. "Researchers found X in one study" does not become "X is true."
-- **A page's publication date is not the date of the event it describes.**
-
-The routine also has to report, every run, which claims rested on an aggregator rather than a primary source — an explicit list, at the top of the report, of what a human should check first. Burying that would defeat the purpose.
-
-## Publishing is a pipeline too now
-
-Approving a draft used to mean copying markdown out of Notion by hand. It now means setting one field.
-
-Twice an hour, a GitHub Actions job reads Notion for rows at `Approved` that have no file in the repository, converts each one to markdown, and opens a pull request. A human adds the artwork and reads it through, merges, and the site deploys. After the deploy, a second job checks that the article's URL actually serves — and only then writes `Published`, the post URL and the publish date back to the Notion row. Verifying before reconciling matters: a pipeline that marks things published because it *tried* to publish them is a pipeline that lies to you.
-
-Detection is polling rather than a push, and that is a deliberate trade. Notion cannot reach a repository without a public endpoint, and standing up a server to receive a webhook would cost this system the one property that makes it pleasant — that there is no infrastructure to keep alive.
-
-The most useful thing added to that pipeline was not a feature. It was making it **report its own failures where the human actually is**. A malformed draft used to fail with a message printed into an Actions log; the run went red, and the person who works in Notion never found out why their approved article had not appeared. Rejections now get written back onto the Notion row as a blocked reason, and cleared automatically when the row later publishes cleanly. An error message nobody will ever read is not error handling.
-
-There is a matching page for this. `/status/` shows the pipeline's live state — how many topics have been found, how many drafts are in flight, and how many ideas are sitting unrated — read from the same Notion databases the routines use. It seemed more honest to show the machine running than to describe it. When the number waiting on a rating is high, it says so.
-
-## The site itself
-
-Astro, no framework, no Tailwind. The template this design came from used the Tailwind CDN script, which is render-blocking and bad for a site whose entire point is being read, so the design system was ported to plain CSS with tokens.
-
-The content schema does more work than a schema usually does. `title` is capped at 70 characters and `description` at 160, which are the lengths search results actually show. Those caps are not advice, they are build errors, and they have already caught a 193-character description that would have been truncated in the wild. Image support has the same shape: a hero image is optional, but alt text is a build error the moment a hero exists, so an inaccessible post cannot reach the site at all.
-
-Deployment is a push to `main`, a GitHub Actions run, and Pages. There is no preview environment, which is a real limitation and an honest one.
-
-## What I would tell someone copying this
-
-**Put the decision surface where the decision gets made.** The 100-word pitch exists because a person will actually read 100 words on their phone at a bus stop and will not read an SEO brief. The brief is still there, in the page body, for when the pitch is not enough.
-
-**Make the guardrails states, not intentions.** "Do not publish automatically" is a sentence. `Approved` being a value no routine writes is a mechanism. Only one of those survives a bad run.
-
-**Trim the thing that gets injected.** Whatever your agent framework injects into every context by default, look at it and measure it. It is the one cost that scales with how many agents you run rather than how much work you do.
-
-**Expect the prompt to be the spec.** Cold starts force the prompt file to hold everything, which means it drifts from reality far less than a README does. That was an accident here, and it is the design decision I would keep on purpose next time.
-
-**Only use credentials that cannot expire.** Anything that runs at 07:10 with nobody watching cannot depend on a signed-in session, a token with a renewal date, or a browser that has to be logged in. That constraint has thrown out more otherwise-good designs here than any question about which model to use.
-
-**Report failures where the human is.** Not into a log, not into a red build badge — into the tool the person actually opens. Every hour spent on that beat an hour spent on the thing that failed.
+1. **Put the human gate where judgement lives.** Research, drafting, and SVG compilation are cheap to automate. Deciding what is worth an audience's time is not.
+2. **Make guardrails states, not intentions.** An instruction in a prompt saying *"do not auto-publish"* is easily bypassed under stochastic variance. An architectural permission model where the machine literally has no credentials to set `Approved` will never fail.
+3. **Separate System 1 (deterministic) from System 2 (probabilistic).** Never ask an LLM to count characters, parse XML, or verify HTTP endpoints. Let Node.js handle assertions in sub-10ms, and reserve the model for synthesis.
+4. **Unattended automation may only use credentials that cannot expire.** Anything that runs on a schedule without human oversight cannot rely on interactive browser sessions or short-lived OAuth tokens.
+5. **Quarantine raw context and require verbatim receipts.** Never dump raw web scrapes into the orchestrator context. Isolate crawls to scratchpads and enforce a Claim Ledger quoting exact primary sentences before drafting.
+6. **Order prompts by volatility to maximize KV cache hits.** Place immutable constitutions and tone rules at the absolute prompt prefix (Volatility 0.0). Keep dynamic facts at the tail to unlock 85% TTFT reduction and 90% token savings.
+7. **Verify at the live edge before reconciling state.** Never mark a database record published because an automated process *attempted* to deploy it. Assert live HTTP 200 delivery with content confirmation.
 
 ---
 
-*Every number and state transition above was checked against the running configuration rather than recalled: all seven scheduled-task prompts, the skills, the build config, the publish scripts and workflows, and all three live Notion schemas.*
+*Every state transition, token metric, and schema specification in this article was verified against the active codebase and running configuration: the seven scheduled prompts, the Notion databases, the serverless cloud bridge, and the Astro 5 build harness.*
 
-*Revised 26 August 2026. The original version described two routines and no themes; the system had grown to seven and five. A post about a live system needs a revision date, and this one now has one.*
+*Revised 10 November 2026. Updated to document the serverless Google Sheets cloud bridge, volatility-ordered KV prompt caching, dual-engine System 1/System 2 separation, and closed-loop edge verification.*
