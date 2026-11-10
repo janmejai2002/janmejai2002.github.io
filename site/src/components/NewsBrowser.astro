@@ -222,13 +222,6 @@ const toSlug = (str: string) =>
                               {host(i.source)}
                             </span>
                           )}
-
-                          {/* Persistent Invitation Affordance */}
-                          <span class="card__cue" aria-hidden="true" title="Click tile to reveal Hot Seat angle">
-                            <span class="card__cue-dot" />
-                            <span class="card__cue-txt">Hot Seat</span>
-                            <span class="card__cue-arrow">→</span>
-                          </span>
                         </div>
 
                         {/* Headline */}
@@ -976,43 +969,6 @@ const toSlug = (str: string) =>
     padding-top: .95rem;
     border-top: 1px solid var(--border-soft);
     flex-shrink: 0;
-  }
-
-  /* Invitation Affordance Pill in Card Meta */
-  .card__cue {
-    margin-left: auto;
-    display: inline-flex;
-    align-items: center;
-    gap: .35rem;
-    font-size: .6875rem;
-    font-weight: 700;
-    letter-spacing: .03em;
-    color: var(--ochre);
-    background: color-mix(in srgb, var(--ochre) 8%, transparent);
-    border: 1px solid color-mix(in srgb, var(--ochre) 28%, transparent);
-    padding: .15rem .5rem;
-    border-radius: 999px;
-    transition: all var(--dur-fast) var(--ease);
-  }
-  .card__cue-dot {
-    width: 5px;
-    height: 5px;
-    border-radius: 50%;
-    background: var(--ochre);
-    box-shadow: 0 0 5px var(--ochre);
-    animation: cueBreathe 2.4s ease-in-out infinite;
-  }
-  .card__cue-arrow {
-    font-size: .75rem;
-    transition: transform var(--dur-fast) var(--ease);
-  }
-  .card:hover .card__cue {
-    background: color-mix(in srgb, var(--ochre) 18%, transparent);
-    border-color: var(--ochre);
-    color: var(--ink);
-  }
-  .card:hover .card__cue-arrow {
-    transform: translateX(2px);
   }
 
   @keyframes cueBreathe {
