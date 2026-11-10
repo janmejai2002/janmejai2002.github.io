@@ -46,29 +46,62 @@ Moving from an [A100 SXM4 80GB](https://awesomeagents.ai/hardware/nvidia-a100/) 
 
 ## What do keys and values actually represent?
 
-Understanding why is LLM generation memory bound requires inspecting what does KV cache actually store across steps. Inside each transformer layer, token embedding $x_t$ multiplies against weight matrices ($W_Q,W_K,W_V$) to produce three vectors:
+Understanding why is LLM generation memory bound requires inspecting what does KV cache actually store across steps. Inside each transformer layer, token embedding x_t multiplies against weight matrices (W_Q, W_K, W_V) to produce three vectors:
 
-- **Query ($Q_t$):** Search vector representing what current token $t$ looks for in prior tokens.
-- **Key ($K_t$):** Index label describing what context token $t$ holds, matched against queries via dot product ($Q_t K^T$).
-- **Value ($V_t$):** Payload vector holding token $t$'s semantic content, weighted by softmax scores to form the output.
+- **Query (Q_t):** Search vector representing what current token t looks for in prior tokens.
+- **Key (K_t):** Index label describing what context token t holds, matched against queries via dot product (Q_t · K^T).
+- **Value (V_t):** Payload vector holding token t's semantic content, weighted by softmax scores to form the output.
 
-Because causal masking blocks future tokens, Key ($K_i$) and Value ($V_i$) vectors for past tokens $i<t$ stay fixed when token $t+1$ arrives. Without caching, generating token 1,000 requires re-multiplying all 999 prior tokens through $W_K$ and $W_V$, creating an $O(S^2)$ penalty. Having the KV cache explained from first principles clarifies the fix: the runtime appends each new $K_t$ and $V_t$ to an HBM buffer and streams that buffer into SRAM on every decode step.
+Because causal masking blocks future tokens, Key (K_i) and Value (V_i) vectors for past tokens i < t stay fixed when token t + 1 arrives. Without caching, generating token 1,000 requires re-multiplying all 999 prior tokens through W_K and W_V, creating an O(S²) penalty. Having the KV cache explained from first principles clarifies the fix: the runtime appends each new K_t and V_t to an HBM buffer and streams that buffer into SRAM on every decode step.
 
 ### The KV cache explained: vector flow across generation steps
 
-```
-STEP t=3 (Generating 4th token after prompt ["The", "GPU", "stalls"])
-[Token t=3: "stalls"] --(W_Q)--> [Query q_3] (1x128, stays in SRAM)
-                      --(W_K)--> [Key   k_3] --+--> Append to HBM KV Cache
-                      --(W_V)--> [Value v_3] --+
-                                               v
-+--- OFF-CHIP HBM KV CACHE (Streamed across 3.35 TB/s bus every token) ---+
-| Keys   K_1..3: [k_1("The") | k_2("GPU") | k_3("stalls")]                |
-| Values V_1..3: [v_1("The") | v_2("GPU") | v_3("stalls")]                |
-+-------------------------------------------------------------------------+
-                                               v
-[ON-CHIP SRAM] s = softmax((q_3 @ K_1..3^T)/sqrt(d_h)); o_3 = s @ V_1..3
-```
+<figure class="diagram">
+<svg viewBox="0 0 680 340" role="img" aria-labelledby="kv-flow-title kv-flow-desc">
+  <title id="kv-flow-title">KV Cache Vector Dataflow During Token Generation Step t=3</title>
+  <desc id="kv-flow-desc">Dataflow diagram showing incoming token projection into query, key, and value vectors, appending keys and values to off-chip HBM KV cache, and streaming into on-chip SRAM for softmax attention calculation.</desc>
+  <g font-family="inherit">
+    <!-- Step Header -->
+    <rect x="10" y="10" width="660" height="34" rx="6" fill="var(--wash-mizu)" stroke="var(--border)" stroke-width="1"/>
+    <text x="25" y="32" font-size="11.5" font-weight="700" fill="var(--mizu)">STEP t=3: Generating 4th token after prompt [&quot;The&quot;, &quot;GPU&quot;, &quot;stalls&quot;]</text>
+    <!-- Token Input -->
+    <rect x="10" y="60" width="130" height="90" rx="8" fill="var(--card)" stroke="var(--border)" stroke-width="1.5"/>
+    <text x="75" y="88" font-size="11" font-weight="700" fill="var(--ink)" text-anchor="middle">Token t=3</text>
+    <rect x="25" y="102" width="100" height="26" rx="4" fill="var(--paper)" stroke="var(--border)" stroke-width="1"/>
+    <text x="75" y="119" font-size="11.5" font-weight="700" fill="var(--mizu)" text-anchor="middle">&quot;stalls&quot;</text>
+    <!-- Projections -->
+    <!-- W_Q -> Query q_3 -->
+    <path d="M 140 85 L 210 85" fill="none" stroke="var(--border)" stroke-width="1.5"/>
+    <polygon points="208,81 216,85 208,89" fill="var(--border)"/>
+    <rect x="220" y="66" width="170" height="38" rx="6" fill="var(--card)" stroke="var(--mizu)" stroke-width="1.2"/>
+    <text x="232" y="84" font-size="10.5" font-weight="700" fill="var(--ink)">Query q_3 (W_Q)</text>
+    <text x="232" y="96" font-size="9" fill="var(--mizu)">1×128 · Stays in On-Chip SRAM</text>
+    <!-- W_K / W_V -> HBM Append -->
+    <path d="M 140 125 L 210 125" fill="none" stroke="var(--border)" stroke-width="1.5"/>
+    <polygon points="208,121 216,125 208,129" fill="var(--border)"/>
+    <rect x="220" y="112" width="170" height="38" rx="6" fill="var(--card)" stroke="var(--border)" stroke-width="1.2"/>
+    <text x="232" y="129" font-size="10.5" font-weight="700" fill="var(--ink)">Key k_3 &amp; Value v_3</text>
+    <text x="232" y="142" font-size="9" fill="var(--ink-soft)">Appended to HBM Buffer</text>
+    <!-- Arrow to HBM Cache -->
+    <path d="M 390 131 L 430 131 L 430 180" fill="none" stroke="var(--mizu)" stroke-width="1.5"/>
+    <polygon points="426,178 430,186 434,178" fill="var(--mizu)"/>
+    <!-- Off-chip HBM KV Cache Card -->
+    <rect x="10" y="176" width="660" height="76" rx="8" fill="var(--card)" stroke="var(--border)" stroke-width="1.5"/>
+    <rect x="10" y="176" width="660" height="24" rx="8" fill="var(--wash-mizu)"/>
+    <text x="25" y="193" font-size="10" font-weight="700" letter-spacing="0.05em" fill="var(--mizu)" text-transform="uppercase">Off-Chip HBM KV Cache (Streamed across 3.35 TB/s Bus Every Token)</text>
+    <text x="25" y="222" font-size="10" font-family="monospace" fill="var(--ink)">Keys   K_1..3: [ k_1(&quot;The&quot;) | k_2(&quot;GPU&quot;) | k_3(&quot;stalls&quot;) ]</text>
+    <text x="25" y="240" font-size="10" font-family="monospace" fill="var(--ink)">Values V_1..3: [ v_1(&quot;The&quot;) | v_2(&quot;GPU&quot;) | v_3(&quot;stalls&quot;) ]</text>
+    <!-- Stream to SRAM Attention -->
+    <path d="M 340 252 L 340 274" fill="none" stroke="var(--mizu)" stroke-width="1.5"/>
+    <polygon points="336,272 340,280 344,272" fill="var(--mizu)"/>
+    <!-- On-chip SRAM Softmax -->
+    <rect x="10" y="278" width="660" height="46" rx="8" fill="var(--card)" stroke="var(--mizu)" stroke-width="1.5"/>
+    <text x="25" y="297" font-size="10.5" font-weight="700" fill="var(--ink)">ON-CHIP SRAM ATTENTION COMPUTATION:</text>
+    <text x="25" y="314" font-size="10.5" font-family="monospace" fill="var(--mizu)">s = softmax((q_3 @ K_1..3^T) / √d_h);   o_3 = s @ V_1..3  →  Emits Token 4</text>
+  </g>
+</svg>
+<figcaption>Step t=3 attention dataflow: projecting the new token, appending to HBM, and streaming past keys and values into SRAM.</figcaption>
+</figure>
 
 In Step `t=3`, query `q_3` is a `1 × d_head` vector, making `q_3 @ K^T` a vector-matrix multiply (GEMV). Unlike matrix-matrix multiply (GEMM), GEMV reads each cached `k_i` and `v_i` from HBM, multiplies it once, and flushes it from SRAM.
 

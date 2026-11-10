@@ -46,8 +46,10 @@ Every article written under this standard must follow a strict modular structure
 - **The Answer-First Subsection Rule**: The first sentence directly under every `H2` must deliver the bottom-line takeaway before presenting background analysis or supporting context.
 - **Self-Contained Chunks**: Each subsection must make complete logical sense if extracted in isolation by a RAG retrieval pipeline. Avoid dangling referents (e.g., "As mentioned above" or "This system").
 
-### 2.4 Structural Data Elements (Markdown Tables & Ordered Steps)
-- Whenever comparing 2+ options, tools, or concepts: **Provide a Markdown Table** with explicit column headers (`Feature | Option A | Option B | Practical Verdict`).
+### 2.4 Structural Data Elements (Markdown Tables, Diagrams & Math)
+- Whenever comparing 2+ options, tools, or concepts: **Provide a Markdown Table** with explicit column headers (`Feature | Option A | Option B | Practical Verdict`). **Critical**: Tables must have continuous rows with *zero blank lines* in between so markdown compiles into styled `<table>` elements.
+- **Architectural Diagrams**: **Never emit ASCII box-drawing flowcharts** (`┌─┐`, `+---+`, `[Client] ──> [Server]`) in code blocks. Author diagrams as native `<figure class="diagram"><svg viewBox="0 0 W H" ...>` using wAIbi-sabi CSS tokens (`var(--card)`, `var(--border)`, `var(--ink)`, `var(--ink-soft)`, and track accents like `var(--mizu)` or `var(--ochre)`). *Rule*: Zero blank lines inside the `<svg>` tag so CommonMark does not split the HTML block.
+- **Formulas and Equations**: **Never emit raw LaTeX math** (`$...$`, `$$...$$`, `\sqrt`, `\frac`, `\approx`, `\sum`). Astro does not run client-side LaTeX compilers, causing dollar signs and backslashes to leak into prose as broken glitches. Use clean Unicode symbols and inline code (`cos(θ) = (A · B) / (‖A‖ × ‖B‖)`, `‖A‖ = √(1² + 2² + 2²) = 3.0`, `P_i = exp(z_i / T) / ∑ exp(z_j / T)`) or styled code cards.
 - Whenever describing a sequence: **Provide a numbered list** with imperative active verbs (`1. Download...`, `2. Configure...`).
 - Whenever detailing specifications: Use bulleted attribute-value pairs (`- Latency: < 15ms`).
 

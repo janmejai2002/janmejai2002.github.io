@@ -99,28 +99,44 @@ Autonomous agent runtimes like Aider introduced a cleaner primitive: the algorit
 
 Instead of paying third-party APIs to chunk and embed source files, Aider uses Tree-sitter parsers locally to build an Abstract Syntax Tree (AST) for every file in the project. Tree-sitter extracts every function declaration, class definition, method signature, and exported interface.
 
-```text
-                  ┌────────────────────────┐
-                  │ Source Code Repository │
-                  └───────────┬────────────┘
-                              │
-                    Tree-sitter Parsing
-                              │
-                              ▼
-                  ┌────────────────────────┐
-                  │ Symbol Definition Graph│
-                  └───────────┬────────────┘
-                              │
-                    Personalized PageRank
-                              │
-                              ▼
-                  ┌────────────────────────┐
-                  │ 1,024-Token Repo Map   │
-                  │ (Signatures & Context) │
-                  └───────────┬────────────┘
-                              │
-                     Injected into Agent
-```
+<figure class="diagram">
+<svg viewBox="0 0 680 370" role="img" aria-labelledby="repomap-title repomap-desc">
+  <title id="repomap-title">Aider Repository Map Structural Pipeline</title>
+  <desc id="repomap-desc">Pipeline illustrating how source files are parsed with Tree-sitter into a symbol definition graph, ranked with Personalized PageRank, and compressed into a 1,024-token repository map for agent context injection.</desc>
+  <g font-family="inherit">
+    <!-- Step 1: Source Code Repository -->
+    <rect x="180" y="20" width="320" height="56" rx="8" fill="var(--card)" stroke="var(--border)" stroke-width="1.5"/>
+    <circle cx="205" cy="48" r="4.5" fill="var(--mizu)"/>
+    <text x="345" y="44" font-size="13" font-weight="700" fill="var(--ink)" text-anchor="middle">Source Code Repository</text>
+    <text x="345" y="62" font-size="11" fill="var(--ink-soft)" text-anchor="middle">Raw project files &amp; local git tree</text>
+    <!-- Transition 1 -->
+    <path d="M 340 76 L 340 130" fill="none" stroke="var(--border)" stroke-width="1.5"/>
+    <polygon points="336,128 340,136 344,128" fill="var(--border)"/>
+    <rect x="245" y="90" width="190" height="24" rx="6" fill="var(--wash-mizu)" stroke="var(--border)" stroke-width="1"/>
+    <text x="340" y="106" font-size="11" font-weight="600" fill="var(--mizu)" text-anchor="middle">Tree-sitter AST Parsing</text>
+    <!-- Step 2: Symbol Definition Graph -->
+    <rect x="180" y="136" width="320" height="56" rx="8" fill="var(--card)" stroke="var(--border)" stroke-width="1.5"/>
+    <circle cx="205" cy="164" r="4.5" fill="var(--mizu)"/>
+    <text x="345" y="160" font-size="13" font-weight="700" fill="var(--ink)" text-anchor="middle">Symbol Definition Graph</text>
+    <text x="345" y="178" font-size="11" fill="var(--ink-soft)" text-anchor="middle">Extracted declarations, signatures &amp; imports</text>
+    <!-- Transition 2 -->
+    <path d="M 340 192 L 340 246" fill="none" stroke="var(--border)" stroke-width="1.5"/>
+    <polygon points="336,244 340,252 344,244" fill="var(--border)"/>
+    <rect x="245" y="206" width="190" height="24" rx="6" fill="var(--wash-mizu)" stroke="var(--border)" stroke-width="1"/>
+    <text x="340" y="222" font-size="11" font-weight="600" fill="var(--mizu)" text-anchor="middle">Personalized PageRank</text>
+    <!-- Step 3: 1,024-Token Repo Map -->
+    <rect x="180" y="252" width="320" height="60" rx="8" fill="var(--card)" stroke="var(--mizu)" stroke-width="1.5"/>
+    <circle cx="205" cy="282" r="4.5" fill="var(--mizu)"/>
+    <text x="345" y="276" font-size="13" font-weight="700" fill="var(--ink)" text-anchor="middle">1,024-Token Repo Map</text>
+    <text x="345" y="295" font-size="11" fill="var(--ink-soft)" text-anchor="middle">Ranked call hierarchies &amp; interface signatures</text>
+    <!-- Output Arrow -->
+    <path d="M 340 312 L 340 342" fill="none" stroke="var(--border)" stroke-width="1.5"/>
+    <polygon points="336,340 340,348 344,340" fill="var(--border)"/>
+    <text x="340" y="360" font-size="11" font-weight="600" fill="var(--ink-soft)" text-anchor="middle">Injected directly into Agent Context</text>
+  </g>
+</svg>
+<figcaption>The Aider repository map pipeline: transforming raw project files into an exact, ranked structural map.</figcaption>
+</figure>
 
 Aider constructs an internal directed graph connecting symbol definitions to their references across the entire codebase. When an agent receives a prompt, Aider executes a personalized PageRank algorithm over this graph, ranking which files and interfaces are structurally most relevant to the user request.
 

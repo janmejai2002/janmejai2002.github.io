@@ -34,15 +34,55 @@ Before the [Model Context Protocol (MCP)](https://www.anthropic.com/news/model-c
 
 Whenever an API schema changed, every client wrapper broke independently.
 
-```
-Without MCP (N × M fragmentation):
-[Claude Desktop] ──┬──> [Custom GitHub API Client]
-[Cursor Editor]   ──┼──> [Custom Postgres Driver]
-[Zed / CLI]       ──┴──> [Custom Slack Bot]
-
-With MCP (Open USB-C standard for AI):
-[Any AI Host / Client] ── JSON-RPC 2.0 ──> [Standard MCP Server] ──> [Data Source]
-```
+<figure class="diagram">
+<svg viewBox="0 0 680 300" role="img" aria-labelledby="mcp-title mcp-desc">
+  <title id="mcp-title">Model Context Protocol Architecture Comparison</title>
+  <desc id="mcp-desc">Comparison showing how N x M brittle custom integrations are replaced by an open JSON-RPC 2.0 protocol connecting any AI client to standardized MCP servers and enterprise data sources.</desc>
+  <g font-family="inherit">
+    <!-- Panel 1: Without MCP -->
+    <rect x="10" y="10" width="660" height="130" rx="8" fill="var(--card)" stroke="var(--border)" stroke-width="1.2"/>
+    <text x="25" y="32" font-size="11" font-weight="700" letter-spacing="0.05em" fill="var(--ink-soft)" text-transform="uppercase">Without MCP: N × M Fragmentation</text>
+    <!-- Clients -->
+    <rect x="25" y="46" width="130" height="24" rx="4" fill="var(--paper)" stroke="var(--border)" stroke-width="1"/>
+    <text x="90" y="62" font-size="10.5" font-weight="600" fill="var(--ink)" text-anchor="middle">Claude Desktop</text>
+    <rect x="25" y="76" width="130" height="24" rx="4" fill="var(--paper)" stroke="var(--border)" stroke-width="1"/>
+    <text x="90" y="92" font-size="10.5" font-weight="600" fill="var(--ink)" text-anchor="middle">Cursor Editor</text>
+    <rect x="25" y="106" width="130" height="24" rx="4" fill="var(--paper)" stroke="var(--border)" stroke-width="1"/>
+    <text x="90" y="122" font-size="10.5" font-weight="600" fill="var(--ink)" text-anchor="middle">Zed / CLI</text>
+    <!-- Brittle connections -->
+    <path d="M 155 58 L 475 58 M 155 58 L 475 88 M 155 88 L 475 58 M 155 88 L 475 88 M 155 88 L 475 118 M 155 118 L 475 88 M 155 118 L 475 118" fill="none" stroke="var(--border)" stroke-width="1" stroke-dasharray="3,3"/>
+    <!-- Custom servers -->
+    <rect x="475" y="46" width="180" height="24" rx="4" fill="var(--paper)" stroke="var(--border)" stroke-width="1"/>
+    <text x="565" y="62" font-size="10.5" font-weight="600" fill="var(--ink-soft)" text-anchor="middle">Custom GitHub Client</text>
+    <rect x="475" y="76" width="180" height="24" rx="4" fill="var(--paper)" stroke="var(--border)" stroke-width="1"/>
+    <text x="565" y="92" font-size="10.5" font-weight="600" fill="var(--ink-soft)" text-anchor="middle">Custom Postgres Driver</text>
+    <rect x="475" y="106" width="180" height="24" rx="4" fill="var(--paper)" stroke="var(--border)" stroke-width="1"/>
+    <text x="565" y="122" font-size="10.5" font-weight="600" fill="var(--ink-soft)" text-anchor="middle">Custom Slack Bot</text>
+    <!-- Panel 2: With MCP -->
+    <rect x="10" y="156" width="660" height="124" rx="8" fill="var(--card)" stroke="var(--mizu)" stroke-width="1.5"/>
+    <text x="25" y="178" font-size="11" font-weight="700" letter-spacing="0.05em" fill="var(--mizu)" text-transform="uppercase">With MCP: N + M Open Standard</text>
+    <!-- Unified Host -->
+    <rect x="25" y="196" width="150" height="64" rx="6" fill="var(--wash-mizu)" stroke="var(--border)" stroke-width="1"/>
+    <text x="100" y="224" font-size="12" font-weight="700" fill="var(--ink)" text-anchor="middle">Any AI Host</text>
+    <text x="100" y="244" font-size="10" fill="var(--ink-soft)" text-anchor="middle">Claude, Cursor, Zed, CLI</text>
+    <!-- Arrow 1 -->
+    <path d="M 175 228 L 225 228" fill="none" stroke="var(--mizu)" stroke-width="1.5"/>
+    <polygon points="223,224 231,228 223,232" fill="var(--mizu)"/>
+    <!-- Protocol badge -->
+    <rect x="235" y="208" width="155" height="40" rx="6" fill="var(--card)" stroke="var(--border)" stroke-width="1"/>
+    <text x="312" y="226" font-size="10.5" font-weight="700" fill="var(--ink)" text-anchor="middle">JSON-RPC 2.0</text>
+    <text x="312" y="240" font-size="9.5" fill="var(--mizu)" text-anchor="middle">stdio / Streamable HTTP</text>
+    <!-- Arrow 2 -->
+    <path d="M 390 228 L 440 228" fill="none" stroke="var(--mizu)" stroke-width="1.5"/>
+    <polygon points="438,224 446,228 438,232" fill="var(--mizu)"/>
+    <!-- Standard MCP Server -->
+    <rect x="450" y="196" width="205" height="64" rx="6" fill="var(--wash-mizu)" stroke="var(--border)" stroke-width="1"/>
+    <text x="552" y="224" font-size="12" font-weight="700" fill="var(--ink)" text-anchor="middle">Standard MCP Server</text>
+    <text x="552" y="244" font-size="10" fill="var(--ink-soft)" text-anchor="middle">GitHub, Postgres, Slack, Drive</text>
+  </g>
+</svg>
+<figcaption>The Model Context Protocol standardizes AI tooling: replacing bespoke N × M client drivers with a unified JSON-RPC protocol.</figcaption>
+</figure>
 
 MCP standardizes this relationship by turning every external system into a lightweight server that speaks a unified protocol, reducing the ecosystem complexity from N × M custom integrations to N + M standardized connectors.
 

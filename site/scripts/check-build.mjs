@@ -99,6 +99,24 @@ function check(path, html) {
       fail('contains unrendered markdown table syntax inside <p> — ensure table rows have no blank lines in between');
     }
   }
+
+  // 10. Visual flows and architectures must be authored as semantic <figure class="diagram"><svg>
+  // rather than raw ASCII art flowcharts inside code blocks.
+  if (/^blog[\\/].+[\\/]index\.html$/.test(rel)) {
+    for (const code of body.match(/<pre[^>]*>[\s\S]*?<\/pre>/g) ?? []) {
+      if (/[┌├┬┴┐┘┼]/.test(code) || /\[.+\]\s*(?:──+|-->)\s*\[.+\]/.test(code)) {
+        fail('contains an ASCII diagram inside a code block — convert to a semantic <figure class="diagram"><svg> element');
+      }
+    }
+  }
+
+  // 11. No uncompiled LaTeX math commands leaking into article body prose.
+  // Formulas should be written in clean Unicode/HTML or dedicated formula cards.
+  if (/^blog[\\/].+[\\/]index\.html$/.test(rel)) {
+    if (/(?:\\sqrt|\\frac|\\approx|\\sum|\\cdot|\$\$(?!\s*\$)|(?<![\$\w])\$[a-zA-Z_]\w*\$(?![\$\w]))/.test(body)) {
+      fail('contains uncompiled LaTeX math syntax in prose — write in clean Unicode/code blocks instead');
+    }
+  }
 }
 
 walk(dist);

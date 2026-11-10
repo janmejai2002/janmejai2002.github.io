@@ -19,9 +19,9 @@ notionId: '414ced67-050a-8156-8454-d2453acfbc77'
 
 ## Executive TL;DR
 
-- **Models calculate probabilities, never finished sentences:** Every time an AI generates text, its neural network outputs raw unnormalized scores called logits ($z_i$) across its vocabulary of $100,000+$ subword tokens, per the [Hugging Face Transformers Generation Guide](https://huggingface.co/docs/transformers/main_classes/text_generation).
-- **Temperature reshapes the probability curve before sampling:** Dividing each logit by temperature ($T$) inside the softmax function $P_i=\frac{\exp(z_i/T)}{\sum_j\exp(z_j/T)}$ sharpens selection toward greedy argmax as $T\to 0$ and flattens the curve across lower-ranked words as $T>1.0$ ([Holtzman et al., ICLR 2020](https://arxiv.org/abs/1904.09751)).
-- **Top-P (nucleus sampling) slices off the noisy long tail:** Introduced by [Ari Holtzman et al. (arXiv:1904.09751)](https://arxiv.org/abs/1904.09751), `top_p` sorts tokens by descending probability and keeps only the smallest core set whose cumulative mass reaches threshold $p$, blocking thousands of near-zero words from derailing coherence.
+- **Models calculate probabilities, never finished sentences:** Every time an AI generates text, its neural network outputs raw unnormalized scores called logits (zᵢ) across its vocabulary of 100,000+ subword tokens, per the [Hugging Face Transformers Generation Guide](https://huggingface.co/docs/transformers/main_classes/text_generation).
+- **Temperature reshapes the probability curve before sampling:** Dividing each logit by temperature (T) inside the softmax function (`Pᵢ = exp(zᵢ / T) / ∑ exp(zⱼ / T)`) sharpens selection toward greedy argmax as T → 0 and flattens the curve across lower-ranked words as T > 1.0 ([Holtzman et al., ICLR 2020](https://arxiv.org/abs/1904.09751)).
+- **Top-P (nucleus sampling) slices off the noisy long tail:** Introduced by [Ari Holtzman et al. (arXiv:1904.09751)](https://arxiv.org/abs/1904.09751), `top_p` sorts tokens by descending probability and keeps only the smallest core set whose cumulative mass reaches threshold `p`, blocking thousands of near-zero words from derailing coherence.
 - **API providers warn against tuning both knobs at once:** Both the [OpenAI Chat Completions Reference](https://developers.openai.com/api/reference/resources/chat/subresources/completions/methods/create) and [Anthropic Claude Docs](https://platform.claude.com/docs/en/cli-sdks-libraries/libraries/openai-sdk) instruct developers to modify either `temperature` or `top_p` alone, and Anthropic deprecated manual sampling overrides in [Claude API version 2026-10-21](https://platform.claude.com/docs/en/about-claude/model-deprecations).
 - **Zero temperature does not guarantee 100% GPU determinism:** Even at `temperature = 0`, parallel matrix reductions and Mixture-of-Experts (MoE) batch routing introduce floating-point non-associativity that can flip tie-breaker tokens across runs ([Thinking Machines Lab](https://thinkingmachines.ai/blog/defeating-nondeterminism-in-llm-inference/); [arXiv:2609.25624](https://arxiv.org/html/2609.25624v1)).
 
@@ -34,19 +34,21 @@ Open any AI playground and you see `temperature` next to `top_p`. Most guides ca
 To build an accurate `how ai sampling works mental model`, picture ordering dinner at a bistro with a 50-item menu where every dish has a crowd rating from past orders:
 
 - **Greedy Regular (`temperature = 0`):** Always picks the #1 dish (the house burger), giving identical meals every night.
-- **Roulette Diner (`temperature = 1.0`):** Spins a wheel weighted by past orders ($64\%$ burger, $24\%$ short ribs, $9\%$ risotto).
+- **Roulette Diner (`temperature = 1.0`):** Spins a wheel weighted by past orders (64% burger, 24% short ribs, 9% risotto).
 - **Daredevil Tourist (`temperature = 2.0`):** Flattens the wheel so the #1 burger and #50 squid-ink gelatin share similar odds.
-- **Quality Bouncer (`top_p = 0.90`):** Sums top dishes from #1 down until they cover $90\%$ of diner votes and crosses off the rest.
+- **Quality Bouncer (`top_p = 0.90`):** Sums top dishes from #1 down until they cover 90% of diner votes and crosses off the rest.
 
-On a prompt like `"The espresso tasted "`, transformer layers output unnormalized scores called **logits** ($z_i$) across the vocabulary ([Hugging Face Generation Guide](https://huggingface.co/docs/transformers/main_classes/text_generation)), and the sampler converts those logits into a token choice.
+On a prompt like `"The espresso tasted "`, transformer layers output unnormalized scores called **logits** (zᵢ) across the vocabulary ([Hugging Face Generation Guide](https://huggingface.co/docs/transformers/main_classes/text_generation)), and the sampler converts those logits into a token choice.
 
 ## The probability curve: how temperature reshapes word selection
 
-Having `llm temperature and top p explained` from first principles starts with the **softmax function**, adapted from Ludwig Boltzmann's statistical mechanics equations. Raw logits can be any real number ($+4.0$ or $-1.0$). To turn them into probabilities summing to $1.0$ ($100\%$), the engine divides each logit $z_i$ by temperature $T$ before exponentiating ([Holtzman et al., ICLR 2020](https://arxiv.org/html/1904.09751v2)):
+Having `llm temperature and top p explained` from first principles starts with the **softmax function**, adapted from Ludwig Boltzmann's statistical mechanics equations. Raw logits can be any real number (+4.0 or -1.0). To turn them into probabilities summing to 1.0 (100%), the engine divides each logit zᵢ by temperature T before exponentiating ([Holtzman et al., ICLR 2020](https://arxiv.org/html/1904.09751v2)):
 
-$$P_i=\frac{\exp(z_i/T)}{\sum_{j=1}^{V}\exp(z_j/T)}$$
+```
+P_i = exp(z_i / T) / ∑ exp(z_j / T)
+```
 
-Because $T$ sits in the denominator inside an exponential, small changes in $T$ reshape the gaps between candidate words. Trace a five-token vocabulary completing `"The espresso tasted "` with raw logits `"rich"` ($z_1=4.0$), `"bitter"` ($z_2=3.0$), `"fruity"` ($z_3=2.0$), `"burnt"` ($z_4=1.0$), and `"purple"` ($z_5=-1.0$):
+Because T sits in the denominator inside an exponential, small changes in T reshape the gaps between candidate words. Trace a five-token vocabulary completing `"The espresso tasted "` with raw logits `"rich"` (z₁ = 4.0), `"bitter"` (z₂ = 3.0), `"fruity"` (z₃ = 2.0), `"burnt"` (z₄ = 1.0), and `"purple"` (z₅ = -1.0):
 
 | Token | Logit (z_i) | Low (T=0.2) | Baseline (T=1.0) | High (T=2.0) | Cum. Mass (T=1.0) | Status at `top_p=0.90` (T=1.0) |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
@@ -56,7 +58,7 @@ Because $T$ sits in the denominator inside an exponential, small changes in $T$ 
 | `"burnt"` | 1.0 | <0.01% | 3.19% | 9.79% | 99.57% | Pruned (0.00%) |
 | `"purple"` | -1.0 | 0.00% | 0.43% | 3.60% | 100.00% | Pruned (0.00%) |
 
-At $T=1.0$, dividing by $1.0$ preserves the native distribution (`"rich"` at $64.11\%$). Dropping to $T=0.2$ multiplies logits by $5$ ($20, 15, 10, 5, -5$), so $\exp(20)$ dominates and `"rich"` absorbs $99.33\%$. Raising to $T=2.0$ halves every logit ($2.0, 1.5, 1.0, 0.5, -0.5$), causing `"purple"` to jump eightfold from $0.43\%$ to $3.60\%$.
+At T = 1.0, dividing by 1.0 preserves the native distribution (`"rich"` at 64.11%). Dropping to T = 0.2 multiplies logits by 5 (20, 15, 10, 5, -5), so exp(20) dominates and `"rich"` absorbs 99.33%. Raising to T = 2.0 halves every logit (2.0, 1.5, 1.0, 0.5, -0.5), causing `"purple"` to jump eightfold from 0.43% to 3.60%.
 
 ```
 T = 0.2 (Cold / Focused: Top token absorbs 99.3% mass)
@@ -79,17 +81,17 @@ T = 2.0 (Hot / Flattened: Long-tail noise surges >8x)
   "purple" (z=-1.) |## 3.6%  <-- Hallucination risk spikes
 ```
 
-Even `temperature = 0` is not $100\%$ deterministic on GPU clusters ([Anthropic Docs](https://platform.claude.com/docs/en/build-with-claude/working-with-messages); [Thinking Machines Lab](https://thinkingmachines.ai/blog/defeating-nondeterminism-in-llm-inference/)): IEEE 754 floating-point non-associativity ($(a+b)+c\neq a+(b+c)$) across dynamic GPU batches nudges tied logits by $10^{-6}$ ([arXiv:2609.25624](https://arxiv.org/html/2609.25624v1)), and Mixture-of-Experts (MoE) batch buffer routing can flip tie-breakers.
+Even `temperature = 0` is not 100% deterministic on GPU clusters ([Anthropic Docs](https://platform.claude.com/docs/en/build-with-claude/working-with-messages); [Thinking Machines Lab](https://thinkingmachines.ai/blog/defeating-nondeterminism-in-llm-inference/)): IEEE 754 floating-point non-associativity (`(a + b) + c ≠ a + (b + c)`) across dynamic GPU batches nudges tied logits by 10⁻⁶ ([arXiv:2609.25624](https://arxiv.org/html/2609.25624v1)), and Mixture-of-Experts (MoE) batch buffer routing can flip tie-breakers.
 
 ## Trimming the long tail: why top-p prevents hallucinated gibberish
 
-Why does high temperature cause hallucinations across a $128,000$-token vocabulary? Even when $120,000$ tail tokens hold $0.0005\%$ each, their combined mass equals $60\%$. Drawing one off-topic token like `"purple"` feeds `"The espresso tasted purple"` back into context, compounding into a hallucination spiral.
+Why does high temperature cause hallucinations across a 128,000-token vocabulary? Even when 120,000 tail tokens hold 0.0005% each, their combined mass equals 60%. Drawing one off-topic token like `"purple"` feeds `"The espresso tasted purple"` back into context, compounding into a hallucination spiral.
 
-Early systems pruned this tail via **Top-K sampling** ([Fan et al., arXiv:1805.04833](https://arxiv.org/abs/1805.04833)), keeping a fixed number $K$ of tokens. Fixed $K$ fails when context certainty shifts: after `"I walked into the kitchen and saw a "`, $K=10$ cuts valid nouns; after `"The capital of France is "`, $K=50$ admits $49$ bad tokens alongside `"Paris"`.
+Early systems pruned this tail via **Top-K sampling** ([Fan et al., arXiv:1805.04833](https://arxiv.org/abs/1805.04833)), keeping a fixed number K of tokens. Fixed K fails when context certainty shifts: after `"I walked into the kitchen and saw a "`, K = 10 cuts valid nouns; after `"The capital of France is "`, K = 50 admits 49 bad tokens alongside `"Paris"`.
 
-[Ari Holtzman et al. (ICLR 2020, arXiv:1904.09751)](https://arxiv.org/abs/1904.09751) solved this with **Top-P (nucleus) sampling**. Any `nucleus sampling beginner guide` follows one dynamic rule: sort tokens from highest to lowest probability, sum them cumulatively, and stop as soon as the sum reaches $p$. Answering `what does top p 0.9 actually mean`: in our table at $T=1.0$, `"rich"` ($64.11\%$), `"bitter"` ($23.59\%$), and `"fruity"` ($8.68\%$) sum to $96.38\%\ge 90\%$. The engine keeps those three, zeroes out `"burnt"` and `"purple"`, and re-normalizes the three survivors.
+[Ari Holtzman et al. (ICLR 2020, arXiv:1904.09751)](https://arxiv.org/abs/1904.09751) solved this with **Top-P (nucleus) sampling**. Any `nucleus sampling beginner guide` follows one dynamic rule: sort tokens from highest to lowest probability, sum them cumulatively, and stop as soon as the sum reaches threshold `p`. Answering `what does top p 0.9 actually mean`: in our table at T = 1.0, `"rich"` (64.11%), `"bitter"` (23.59%), and `"fruity"` (8.68%) sum to 96.38% ≥ 90%. The engine keeps those three, zeroes out `"burnt"` and `"purple"`, and re-normalizes the three survivors.
 
-Modern local engines also support **Min-P sampling** ([Nguyen et al., ICLR 2025 Oral, arXiv:2407.01082](https://arxiv.org/abs/2407.01082)) in [Hugging Face GenerationConfig](https://huggingface.co/docs/transformers/main_classes/text_generation). Comparing `temperature vs top p plain english` against Min-P, `min_p` sets a relative floor against the top token's probability $p_{\max}$: $\text{Threshold}=\text{min\_p}\times p_{\max}$. At `min_p = 0.10` and $p_{\max}=64.11\%$, tokens below $6.41\%$ are dropped, preserving coherence even at $T=1.3$ ([arXiv:2407.01082](https://arxiv.org/html/2407.01082v8)).
+Modern local engines also support **Min-P sampling** ([Nguyen et al., ICLR 2025 Oral, arXiv:2407.01082](https://arxiv.org/abs/2407.01082)) in [Hugging Face GenerationConfig](https://huggingface.co/docs/transformers/main_classes/text_generation). Comparing `temperature vs top p plain english` against Min-P, `min_p` sets a relative floor against the top token's probability `p_max`: `Threshold = min_p × p_max`. At `min_p = 0.10` and `p_max = 64.11%`, tokens below 6.41% are dropped, preserving coherence even at T = 1.3 ([arXiv:2407.01082](https://arxiv.org/html/2407.01082v8)).
 
 Why do API providers warn against tuning both `temperature` and `top_p`? Because engines divide logits by `temperature` **first** and apply `top_p` **second** ([Hugging Face Docs](https://huggingface.co/docs/transformers/main_classes/text_generation)). The [OpenAI API Reference](https://developers.openai.com/api/reference/resources/completions/methods/create) advises changing only one, while the [Claude OpenAI SDK Guide](https://platform.claude.com/docs/en/cli-sdks-libraries/libraries/openai-sdk) returns a `400` error if both are passed and deprecated manual sampling on newest reasoning models in [API version 2026-10-21](https://platform.claude.com/docs/en/build-with-claude/working-with-messages).
 
