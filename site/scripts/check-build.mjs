@@ -77,8 +77,17 @@ function check(path, html) {
   // 7. Every article opens with the Executive TL;DR plate. The writer prompt
   // requires it, the generator now blocks without it, and this is the backstop
   // that keeps both honest. (rel is dist-relative, e.g. blog/<slug>/index.html.)
-  if (/^blog[\\/].+[\\/]index\.html$/.test(rel) && !html.includes('class="tldr"')) {
-    fail('article has no Executive TL;DR plate (<div class="tldr">)');
+  // 7. Every article opens with the Executive TL;DR plate. The writer prompt
+  // requires it, the generator now blocks without it, and this is the backstop
+  // that keeps both honest. (rel is dist-relative, e.g. blog/<slug>/index.html.)
+  if (/^blog[\\/].+[\\/]index\.html$/.test(rel)) {
+    if (!html.includes('class="tldr"')) {
+      fail('article has no Executive TL;DR plate (<div class="tldr">)');
+    }
+    // 7b. Every article must have hero artwork
+    if (!html.includes('class="plateart"')) {
+      fail('article has no hero artwork (<figure class="plateart">)');
+    }
   }
 
   // 8. No multi-column ASCII tables inside code blocks in article prose.
@@ -88,6 +97,15 @@ function check(path, html) {
     for (const code of body.match(/<pre[^>]*>[\s\S]*?<\/pre>/g) ?? []) {
       if (/\+[-=]{3,}(\+[-=]{3,})+\+/.test(code) && /\|[^|\n]+\|[^|\n]+\|/.test(code)) {
         fail('contains a multi-column ASCII table inside a code block — convert to a standard GFM Markdown table');
+      }
+    }
+  }
+
+  // 8b. Rendered <table> elements must not contain corrupted ASCII flowchart or box artifacts
+  if (/^blog[\\/].+[\\/]index\.html$/.test(rel)) {
+    for (const tbl of body.match(/<table[^>]*>[\s\S]*?<\/table>/g) ?? []) {
+      if (/\+[-=]{5,}|\b[vV]\b.*?\+[-=]+|<td>\s*\+\s*<\/td>/.test(tbl)) {
+        fail('contains corrupted ASCII diagram/box artifacts inside a <table> — convert flowcharts to <figure class="diagram"><svg>');
       }
     }
   }
@@ -104,7 +122,12 @@ function check(path, html) {
   // rather than raw ASCII art flowcharts inside code blocks.
   if (/^blog[\\/].+[\\/]index\.html$/.test(rel)) {
     for (const code of body.match(/<pre[^>]*>[\s\S]*?<\/pre>/g) ?? []) {
-      if (/[┌├┬┴┐┘┼]/.test(code) || /\[.+\]\s*(?:──+|-->)\s*\[.+\]/.test(code)) {
+      if (
+        /[┌├┬┴┐┘┼]/.test(code) ||
+        /\[.+\]\s*(?:──+|-->)\s*\[.+\]/.test(code) ||
+        /\+[-=]{8,}\+[\s\S]*?\|\s*\n\s+[vV]/.test(code) ||
+        /\d+\.\s+[A-Z\s]+:[\s\S]*?\|\s*\n\s+[vV]/.test(code)
+      ) {
         fail('contains an ASCII diagram inside a code block — convert to a semantic <figure class="diagram"><svg> element');
       }
     }
