@@ -36,3 +36,4 @@ publish-manifest.json
 # Temporary scratch and staging drafts
 /drafts/
 /scratch/
+.playwright-mcp/
