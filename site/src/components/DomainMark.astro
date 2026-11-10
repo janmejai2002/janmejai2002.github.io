@@ -102,9 +102,10 @@ const { domain, class: className } = Astro.props;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 2.25rem;
-    height: 2.25rem;
+    width: var(--mark-size, 3.25rem);
+    height: var(--mark-size, 3.25rem);
     flex-shrink: 0;
+    color: var(--accent, currentColor);
   }
   .mark-svg {
     width: 100%;

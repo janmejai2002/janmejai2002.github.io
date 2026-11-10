@@ -65,7 +65,7 @@ const host = (url: string | null) => {
 ---
 
 <div class="news-browser" data-browser data-initial-cat={initialCat}>
-  {/* 1. Function Doors with Bespoke Animated Geometric Domain Marks */}
+  {/* 1. Function Doors with Heroic Bespoke Animated Geometric Domain Marks */}
   <div class="doors" role="group" aria-label="Filter by functional domain">
     <button
       type="button"
@@ -74,14 +74,16 @@ const host = (url: string | null) => {
       aria-pressed={initialCat === 'all' ? 'true' : 'false'}
       style="--accent:var(--ink);--tint:var(--paper-2)"
     >
-      <div class="door__top">
+      <div class="door__seal" aria-hidden="true">
         <DomainMark domain="all" class="door__mark" />
-        <div class="door__titles">
-          <span class="door__label">All Tracks</span>
-          <span class="door__n">{items.length}</span>
-        </div>
       </div>
-      <span class="door__ask">Everything, chronological stream</span>
+      <div class="door__content">
+        <div class="door__head">
+          <span class="door__label">All Tracks</span>
+          <span class="door__count-badge">{items.length}</span>
+        </div>
+        <span class="door__blurb">Everything, newest first</span>
+      </div>
     </button>
 
     {
@@ -96,14 +98,16 @@ const host = (url: string | null) => {
             aria-pressed={isSelected ? 'true' : 'false'}
             style={`--accent:var(--${meta.accent});--tint:var(--wash-${meta.accent})`}
           >
-            <div class="door__top">
+            <div class="door__seal" aria-hidden="true">
               <DomainMark domain={c as any} class="door__mark" />
-              <div class="door__titles">
-                <span class="door__label">{c}</span>
-                <span class="door__n">{counts[c] ?? 0}</span>
-              </div>
             </div>
-            <span class="door__ask">{meta.blurb}</span>
+            <div class="door__content">
+              <div class="door__head">
+                <span class="door__label">{c}</span>
+                <span class="door__count-badge">{counts[c] ?? 0}</span>
+              </div>
+              <span class="door__blurb">{meta.blurb}</span>
+            </div>
           </button>
         );
       })
@@ -367,40 +371,63 @@ const host = (url: string | null) => {
     margin-bottom: 3.5rem;
   }
 
-  /* ---------- 1. Function Doors ---------- */
+  /* ---------- 1. Function Doors (Heroic Ceramic Mon Seals) ---------- */
   .doors {
     display: grid;
     grid-template-columns: repeat(6, minmax(0, 1fr));
-    gap: .5rem;
-    margin-bottom: 2.5rem;
+    gap: .75rem;
+    margin-bottom: 2.75rem;
   }
+  @media (max-width: 80rem) {
+    .doors {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: .85rem;
+    }
+  }
+  @media (max-width: 48rem) {
+    .doors {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: .65rem;
+    }
+  }
+  @media (max-width: 23rem) {
+    .doors {
+      grid-template-columns: minmax(0, 1fr);
+    }
+  }
+
   .door {
     font: inherit;
     color: inherit;
     text-align: left;
     cursor: pointer;
-    background: color-mix(in srgb, var(--card) 65%, transparent);
+    background: color-mix(in srgb, var(--card) 75%, transparent);
     border: 1px solid var(--border-soft);
-    border-radius: 12px;
-    padding: .95rem .95rem .85rem;
+    border-radius: 14px;
+    padding: 1.1rem 1rem 1rem;
     display: flex;
     flex-direction: column;
-    gap: .45rem;
+    gap: .85rem;
     position: relative;
     overflow: hidden;
     transition: transform var(--dur-fast) var(--ease),
                 border-color var(--dur-fast) var(--ease),
-                background-color var(--dur-fast) var(--ease);
+                background-color var(--dur-fast) var(--ease),
+                box-shadow var(--dur-fast) var(--ease);
   }
   .door:hover {
-    transform: translateY(-2px);
+    transform: translateY(-3px);
     border-color: var(--accent);
-    background: var(--tint);
+    background: color-mix(in srgb, var(--tint) 60%, var(--card));
+    box-shadow: 0 8px 24px var(--shadow);
+  }
+  .door:active {
+    transform: translateY(-1px) scale(0.99);
   }
   .door[aria-pressed='true'] {
     background: var(--tint);
     border-color: var(--accent);
-    box-shadow: 0 4px 16px var(--shadow);
+    box-shadow: 0 6px 20px color-mix(in srgb, var(--accent) 18%, transparent);
   }
   .door[aria-pressed='true']::after {
     content: '';
@@ -408,61 +435,96 @@ const host = (url: string | null) => {
     left: 0;
     right: 0;
     bottom: 0;
-    height: 3px;
+    height: 3.5px;
     background: var(--accent);
   }
 
-  .door__top {
+  /* Ceramic Seal: Prominent, tactile display of the kinetic geometric mark */
+  .door__seal {
+    width: 3.5rem;
+    height: 3.5rem;
+    border-radius: 12px;
+    background: color-mix(in srgb, var(--accent) 12%, var(--card));
+    border: 1px solid color-mix(in srgb, var(--accent) 32%, var(--border));
     display: flex;
     align-items: center;
-    gap: .65rem;
+    justify-content: center;
+    transition: all var(--dur-fast) var(--ease);
+    flex-shrink: 0;
+    box-shadow: inset 0 1px 3px rgba(255, 255, 255, 0.05),
+                0 2px 8px rgba(0, 0, 0, 0.1);
   }
-  .door__titles {
+  .door:hover .door__seal,
+  .door[aria-pressed='true'] .door__seal {
+    background: color-mix(in srgb, var(--accent) 22%, var(--card));
+    border-color: var(--accent);
+    transform: scale(1.06);
+    box-shadow: 0 4px 14px color-mix(in srgb, var(--accent) 30%, transparent);
+  }
+  .door__mark {
+    --mark-size: 2.75rem;
+    width: var(--mark-size);
+    height: var(--mark-size);
+    display: block;
+  }
+
+  .door__content {
     display: flex;
     flex-direction: column;
+    gap: .25rem;
     min-width: 0;
   }
+  .door__head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: .4rem;
+  }
   .door__label {
-    font-size: .9375rem;
+    font-size: 1.0625rem;
     font-weight: 800;
     letter-spacing: -.02em;
-    line-height: 1.15;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    line-height: 1.2;
+    color: var(--ink);
   }
-  .door__n {
+  .door__count-badge {
     font-size: .6875rem;
-    font-weight: 700;
+    font-weight: 800;
     font-variant-numeric: tabular-nums;
     color: var(--accent);
-    opacity: .9;
+    background: color-mix(in srgb, var(--accent) 14%, var(--card));
+    padding: .15rem .5rem;
+    border-radius: 999px;
+    border: 1px solid color-mix(in srgb, var(--accent) 28%, transparent);
+    flex-shrink: 0;
   }
-  .door__ask {
-    font-size: .6875rem;
+  .door__blurb {
+    font-size: .75rem;
     line-height: 1.35;
     color: var(--ink-soft);
   }
 
-  @media (max-width: 72rem) {
-    .doors {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
-  }
-  @media (max-width: 44rem) {
-    .doors {
-      display: flex;
-      flex-wrap: nowrap;
-      overflow-x: auto;
-      scroll-snap-type: x proximity;
-      scrollbar-width: none;
-      margin-inline: calc(var(--gutter) * -0.5);
-      padding-inline: calc(var(--gutter) * 0.5);
-    }
-    .doors::-webkit-scrollbar { display: none; }
+  @media (max-width: 48rem) {
     .door {
-      flex: 0 0 min(16rem, 72vw);
-      scroll-snap-align: start;
+      padding: .95rem .85rem .85rem;
+      gap: .65rem;
+    }
+    .door__seal {
+      width: 3rem;
+      height: 3rem;
+    }
+    .door__mark {
+      --mark-size: 2.25rem;
+    }
+    .door__label {
+      font-size: .9375rem;
+    }
+    .door__blurb {
+      font-size: .6875rem;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
     }
   }
 
@@ -1191,6 +1253,112 @@ const host = (url: string | null) => {
     clip: rect(0 0 0 0);
     white-space: nowrap;
     border: 0;
+  }
+
+  /* ---------- Comprehensive Mobile UX Designthinking Pass ---------- */
+  @media (max-width: 48rem) {
+    .toolbar {
+      padding: .65rem .75rem;
+      margin-bottom: 2rem;
+    }
+    .toolbar__row {
+      flex-direction: column;
+      align-items: stretch;
+      gap: .65rem;
+    }
+    .toolbar__search {
+      flex: 1 1 auto;
+      width: 100%;
+    }
+    .toolbar__search input {
+      min-height: 2.75rem;
+      font-size: .9375rem;
+    }
+    .search-kbd {
+      display: none;
+    }
+    .toolbar__actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      margin-left: 0;
+      gap: .5rem;
+    }
+    .toolbar__sort {
+      flex: 1;
+    }
+    .toolbar__sort select {
+      width: 100%;
+      min-height: 2.75rem;
+      font-size: .875rem;
+    }
+    .test-toggle {
+      flex: 1;
+      justify-content: center;
+      min-height: 2.75rem;
+      font-size: .8125rem;
+    }
+
+    /* Cards on Mobile */
+    .day-section {
+      margin-bottom: 2.5rem;
+    }
+    .day-head {
+      margin-bottom: 1.15rem;
+    }
+    .day-head__title {
+      font-size: 1.125rem;
+    }
+    .card-scene {
+      min-height: 26rem;
+    }
+    .card-scene--lead {
+      min-height: 26rem;
+    }
+    .card__face {
+      padding: 1.25rem 1.15rem 1.15rem;
+      border-radius: 12px;
+    }
+    .card__edge-peek {
+      top: 10px;
+      font-size: .5rem;
+      padding: .15rem .45rem;
+    }
+    .card__host {
+      margin-right: 4.8rem;
+    }
+    .card__h {
+      font-size: 1.125rem;
+      line-height: 1.35;
+      margin-bottom: .65rem;
+    }
+    .card-scene--lead .card__h {
+      font-size: 1.25rem;
+    }
+    .card__sum {
+      font-size: .875rem;
+      line-height: 1.58;
+    }
+    .flip-btn {
+      min-height: 2.5rem;
+      padding: .4rem .85rem;
+      font-size: .75rem;
+    }
+    .back__angle {
+      font-size: 1.05rem;
+      line-height: 1.52;
+    }
+    .back__actions {
+      width: 100%;
+      justify-content: space-between;
+    }
+    .copy-angle-btn,
+    .practise-btn {
+      min-height: 2.35rem;
+      padding: .35rem .65rem;
+      font-size: .625rem;
+    }
   }
 
   [hidden] {
