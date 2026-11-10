@@ -1,3 +1,5 @@
+> **Superseded 2026-11-11.** The engine described here was removed. See `docs/CREW.md` for how the crew work now.
+
 # wAIbi-sabi: Playable Kintsugi Terrarium & Narrative Crew Engine
 ## Comprehensive Specification, Decision Science Architecture, and Autonomous `/goal` Blueprint
 

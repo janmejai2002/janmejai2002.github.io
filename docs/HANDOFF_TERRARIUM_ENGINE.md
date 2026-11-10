@@ -1,3 +1,5 @@
+> **Superseded 2026-11-11.** The engine described here was removed. See `docs/CREW.md` for how the crew work now.
+
 # Handoff: wAIbi-sabi 5-Crew Machine Learning Terrarium Engine
 
 **Date**: November 11, 2026  

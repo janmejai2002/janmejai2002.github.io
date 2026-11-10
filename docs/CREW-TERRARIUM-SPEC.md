@@ -1,3 +1,5 @@
+> **Superseded 2026-11-11.** The engine described here was removed. See `docs/CREW.md` for how the crew work now.
+
 # wAIbi-sabi: The Living Ceramic Terrarium & Kinetic Crew Engine
 ## Specification, Architecture & Autonomous `/goal` Build Blueprint
 
