@@ -168,17 +168,11 @@ Local-first tools operate on the files checked out on the immediate filesystem. 
 Engineering teams should not treat code retrieval as an either-or dogma. Production architectures assign specific retrieval tools to matching query intents:
 
 | Use Case | Recommended Tool | Latency | Token Cost per Query |
-
 |---|---|---|---|
-
 | Finding exact symbols, constants, error codes | `ripgrep` (`rg`) | 4ms - 15ms | 0 (local process) |
-
 | Refactoring patterns and AST structures | `ast-grep` (`sg`) | 8ms - 30ms | 0 (local process) |
-
 | Global codebase orientation and call hierarchies | Aider Repo Map (Tree-sitter) | 20ms - 50ms | ~1,024 tokens |
-
 | Fuzzy natural language queries on local repos | `zvec-grep` / LanceDB | 15ms - 45ms | 0 (in-process) |
-
 | Multi-repo documentation wikis (Notion, Confluence) | Hosted Vector RAG | 250ms - 800ms | External SaaS API |
 
 The shift from cloud vector RAG to local-first search is not a retreat from artificial intelligence; it is an architectural correction. Software engineering requires mathematical precision, immediate feedback, and structural awareness. By shifting the first three layers of retrieval directly onto the developer machine, coding agents gain the speed and accuracy necessary to build real software.

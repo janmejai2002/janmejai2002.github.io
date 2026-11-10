@@ -111,14 +111,10 @@ To capture both exact tokens and semantic meaning, production RAG pipelines fuse
 $$\text{RRF\_Score}(d)=\frac{1}{60+r_{\text{BM25}}(d)}+\frac{1}{60+r_{\text{Vector}}(d)}$$
 
 | Retrieval Method | Core Mechanism | Primary Strength | Failure Mode | Index & Latency (1M Docs) |
-
 | :--- | :--- | :--- | :--- | :--- |
-
 | **BM25 Lexical** ([Robertson, 2009](https://www.staff.city.ac.uk/~sbrp622/papers/foundations_bm25_review.pdf)) | Sparse TF-IDF saturation | Exact SKUs, error codes, zero GPU cost | Zero hits on synonyms (`"puppy"` vs `"dog"`) | Inverted index (`1-3ms` CPU) |
-
 | **Dense Vectors** ([OpenAI](https://developers.openai.com/api/docs/guides/embeddings) / [SBERT](https://arxiv.org/abs/1908.10084)) | Cosine similarity over `256`-`3,072` floats | Paraphrases, cross-lingual ([MIRACL `54.9%`](https://openai.com/index/new-embedding-models-and-api-updates/)) | Smears SKUs, fails on `"not"` negations | [HNSW (arXiv:1603.09320)](https://arxiv.org/abs/1603.09320) in [`pgvector`](https://github.com/pgvector/pgvector) (`2-8ms`) |
-
-| **Hybrid + RRF** ([Cormack, 2009](https://cormack.uwaterloo.ca/cormacksigir09-rrf.pdf)) | Rank sum $\sum\frac{1}{60+r_i(d)}$ | Captures exact SKUs and paraphrases | Doubles index footprint | Inverted + [HNSW](https://github.com/pgvector/pgvector) (`5-12ms`) |
+| **Hybrid + RRF** ([Cormack, 2009](https://cormack.uwaterloo.ca/cormacksigir09-rrf.pdf)) | Reciprocal Rank Fusion (RRF) rank sum | Captures exact SKUs and paraphrases | Doubles index footprint | Inverted + [HNSW](https://github.com/pgvector/pgvector) (`5-12ms`) |
 
 ## Sources
 

@@ -48,19 +48,13 @@ $$P_i=\frac{\exp(z_i/T)}{\sum_{j=1}^{V}\exp(z_j/T)}$$
 
 Because $T$ sits in the denominator inside an exponential, small changes in $T$ reshape the gaps between candidate words. Trace a five-token vocabulary completing `"The espresso tasted "` with raw logits `"rich"` ($z_1=4.0$), `"bitter"` ($z_2=3.0$), `"fruity"` ($z_3=2.0$), `"burnt"` ($z_4=1.0$), and `"purple"` ($z_5=-1.0$):
 
-| Token | Logit ($z_i$) | Low ($T=0.2$) | Baseline ($T=1.0$) | High ($T=2.0$) | Cum. Mass ($T=1.0$) | Status at `top_p=0.90` ($T=1.0$) |
-
+| Token | Logit (z_i) | Low (T=0.2) | Baseline (T=1.0) | High (T=2.0) | Cum. Mass (T=1.0) | Status at `top_p=0.90` (T=1.0) |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-
-| `"rich"` | $4.0$ | $99.33\%$ | $64.11\%$ | $43.87\%$ | $64.11\%$ | Kept ($66.52\%$ re-norm) |
-
-| `"bitter"` | $3.0$ | $0.67\%$ | $23.59\%$ | $26.61\%$ | $87.70\%$ | Kept ($24.48\%$ re-norm) |
-
-| `"fruity"` | $2.0$ | $<0.01\%$ | $8.68\%$ | $16.14\%$ | $96.38\%$ | Kept ($9.00\%$ re-norm) |
-
-| `"burnt"` | $1.0$ | $<0.01\%$ | $3.19\%$ | $9.79\%$ | $99.57\%$ | Pruned ($0.00\%$) |
-
-| `"purple"` | $-1.0$ | $0.00\%$ | $0.43\%$ | $3.60\%$ | $100.00\%$ | Pruned ($0.00\%$) |
+| `"rich"` | 4.0 | 99.33% | 64.11% | 43.87% | 64.11% | Kept (66.52% re-norm) |
+| `"bitter"` | 3.0 | 0.67% | 23.59% | 26.61% | 87.70% | Kept (24.48% re-norm) |
+| `"fruity"` | 2.0 | <0.01% | 8.68% | 16.14% | 96.38% | Kept (9.00% re-norm) |
+| `"burnt"` | 1.0 | <0.01% | 3.19% | 9.79% | 99.57% | Pruned (0.00%) |
+| `"purple"` | -1.0 | 0.00% | 0.43% | 3.60% | 100.00% | Pruned (0.00%) |
 
 At $T=1.0$, dividing by $1.0$ preserves the native distribution (`"rich"` at $64.11\%$). Dropping to $T=0.2$ multiplies logits by $5$ ($20, 15, 10, 5, -5$), so $\exp(20)$ dominates and `"rich"` absorbs $99.33\%$. Raising to $T=2.0$ halves every logit ($2.0, 1.5, 1.0, 0.5, -0.5$), causing `"purple"` to jump eightfold from $0.43\%$ to $3.60\%$.
 
@@ -104,19 +98,12 @@ Why do API providers warn against tuning both `temperature` and `top_p`? Because
 When selecting a `temperature setting for coding vs writing`, tune one primary knob (`temperature` on cloud APIs, or `min_p` locally) and leave `top_p = 1.0`:
 
 | Workflow | `temperature` | `top_p` | Local `min_p` | Rationale & Failure Mode Prevented |
-
 | :--- | :--- | :--- | :--- | :--- |
-
 | **Code & SQL Generation** | `0.0` - `0.2` | `1.0` | `0.0` | Maximizes syntax accuracy ([OpenAI Docs](https://developers.openai.com/api/reference/resources/completions/methods/create)); stops broken schemas. |
-
 | **Data Extraction / JSON** | `0.0` | `1.0` | `0.0` | Locks greedy argmax so enum labels and figures stay reproducible. |
-
 | **RAG & Factual Q&A** | `0.1` - `0.3` | `1.0` | `0.05` | Anchors answers to retrieved chunks while avoiding repetition loops. |
-
 | **Technical Docs** | `0.4` - `0.6` | `1.0` | `0.08` | Balances natural sentence rhythm with factual precision. |
-
-| **Customer Chatbots** | `0.7` - `0.8` | `1.0` | `0.10` | Warm phrasing while pruning sub-$1\%$ tail noise ([Holtzman, 2020](https://arxiv.org/abs/1904.09751)). |
-
+| **Customer Chatbots** | `0.7` - `0.8` | `1.0` | `0.10` | Warm phrasing while pruning sub-1% tail noise ([Holtzman, 2020](https://arxiv.org/abs/1904.09751)). |
 | **Creative Ideation** | `1.0` - `1.3` | `0.92` | `0.10` - `0.15` | Surfaces fresh metaphors while [Min-P (arXiv:2407.01082)](https://arxiv.org/abs/2407.01082) blocks gibberish. |
 
 This PyTorch snippet implements the three-step sampling pipeline:

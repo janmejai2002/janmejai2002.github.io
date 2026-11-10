@@ -91,6 +91,14 @@ function check(path, html) {
       }
     }
   }
+
+  // 9. Markdown tables must be authored as continuous rows without blank lines,
+  // so Astro renders them into <table> rather than raw paragraph text.
+  if (/^blog[\\/].+[\\/]index\.html$/.test(rel)) {
+    if (/<p>\s*\|(?:[^|\n]+\|){2,}\s*<\/p>/.test(body)) {
+      fail('contains unrendered markdown table syntax inside <p> — ensure table rows have no blank lines in between');
+    }
+  }
 }
 
 walk(dist);

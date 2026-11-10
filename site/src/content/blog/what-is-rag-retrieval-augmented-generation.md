@@ -48,7 +48,7 @@ This U-shaped performance curve (primacy and recency bias) affects both standard
 
 ## What are RAG's cost and latency trade-offs?
 
-Beyond accuracy, transformer attention imposes steep economic costs. Standard multi-head self-attention scales with quadratic computational complexity $O(n^2)$ relative to sequence length. As analyzed by [Redis AI benchmarks](https://redis.io/blog/rag-vs-large-context-window-ai-apps/), doubling context length roughly quadruples the attention compute overhead, driving up time-to-first-token (TTFT) and per-query API costs.
+Beyond accuracy, transformer attention imposes steep economic costs. Standard multi-head self-attention scales with quadratic computational complexity `O(n²)` relative to sequence length. As analyzed by [Redis AI benchmarks](https://redis.io/blog/rag-vs-large-context-window-ai-apps/), doubling context length roughly quadruples the attention compute overhead, driving up time-to-first-token (TTFT) and per-query API costs.
 
 Under long-context prompting, every single request pays the full input token cost for the entire window on every turn. In contrast, RAG retrieves only a targeted subset of relevant passages (typically 2,000–4,000 tokens), keeping input token consumption flat regardless of how large the underlying knowledge repository grows.
 
@@ -56,8 +56,8 @@ Under long-context prompting, every single request pays the full input token cos
 
 | Architecture | Best For | Failure Mode | Cost per Turn |
 | :--- | :--- | :--- | :--- |
-| **Pure Long-Context Prompting** | Holistic synthesis across a single book or file | High latency (TTFT > 3s), "Lost in the Middle" bias | Scales with total repository size ($O(n)$ dollars) |
-| **Standard Vector RAG** | Fact lookup across 100k+ documents | Chunk boundary truncation, misses global relationships | Flat cost ($2k–4k$ tokens per turn) |
+| **Pure Long-Context Prompting** | Holistic synthesis across a single book or file | High latency (TTFT > 3s), "Lost in the Middle" bias | Scales with total repository size (`O(n)` tokens) |
+| **Standard Vector RAG** | Fact lookup across 100k+ documents | Chunk boundary truncation, misses global relationships | Flat cost (2,000–4,000 tokens per turn) |
 | **Hybrid RAG + Re-ranking** | Enterprise search with verifiable attribution | Slight pipeline complexity (vector DB + BM25) | Optimal balance of speed and precision |
 
 ## Frequently Asked Questions

@@ -36,15 +36,10 @@ To see why memory bandwidth vs compute in LLM serving favors bandwidth, picture 
 The [Roofline performance model](https://doi.org/10.1145/1498765.1498785) formalizes this via arithmetic intensity: FLOPs executed per byte transferred across the memory bus. Dividing peak compute by peak bandwidth defines a GPU's ridge point. Per [NVIDIA H100 Tensor Core GPU specs](https://www.nvidia.com/en-us/data-center/h100/), the SXM5 delivers 989 TFLOPS dense FP16 compute and 3.35 TB/s HBM3 bandwidth, setting a ridge point of 295.2 FLOPs/byte. Kernels below 295 FLOPs/byte hit the memory roof before reaching peak compute.
 
 | GPU Accelerator | VRAM | Bandwidth | Dense FP16 | Ridge Point | Batch-1 Decode (8B FP16) |
-
 | :--- | :--- | :--- | :--- | :--- | :--- |
-
 | [NVIDIA RTX 4090](https://images.nvidia.com/aem-dam/Solutions/geforce/ada/nvidia-ada-gpu-architecture.pdf) | 24GB GDDR6X | 1,008GB/s | 165.2 TFLOPS | 163.9 FLOP/B | ~63.0 tok/s |
-
 | [NVIDIA A100 SXM4](https://awesomeagents.ai/hardware/nvidia-a100/) | 80GB HBM2e | 2,039GB/s | 312.0 TFLOPS | 153.0 FLOP/B | ~127.4 tok/s |
-
 | [NVIDIA H100 PCIe](https://www.thundercompute.com/blog/nvidia-h100-specs-full-guide) | 80GB HBM2e | 2,000GB/s | 756.0 TFLOPS | 378.0 FLOP/B | ~125.0 tok/s |
-
 | [NVIDIA H100 SXM5](https://www.nvidia.com/en-us/data-center/h100/) | 80GB HBM3 | 3,350GB/s | 989.0 TFLOPS | 295.2 FLOP/B | ~209.4 tok/s |
 
 Moving from an [A100 SXM4 80GB](https://awesomeagents.ai/hardware/nvidia-a100/) to an [H100 PCIe 80GB](https://www.thundercompute.com/blog/nvidia-h100-specs-full-guide) more than doubles FP16 compute (312 to 756 TFLOPS), yet batch-1 decode speed for a 16GB model stays flat (~127.4 vs. ~125.0 tok/s) because both share ~2.0 TB/s bandwidth. Streaming 16GB at 3,350 GB/s on an H100 SXM5 caps batch-1 speed at 209.4 tok/s.
@@ -75,7 +70,7 @@ STEP t=3 (Generating 4th token after prompt ["The", "GPU", "stalls"])
 [ON-CHIP SRAM] s = softmax((q_3 @ K_1..3^T)/sqrt(d_h)); o_3 = s @ V_1..3
 ```
 
-In Step $t=3$, query $q_3$ is a $1\times d_{\text{head}}$ vector, making $q_3 K^T$ a vector-matrix multiply (GEMV). Unlike matrix-matrix multiply (GEMM), GEMV reads each cached $k_i$ and $v_i$ from HBM, multiplies it once, and flushes it from SRAM.
+In Step `t=3`, query `q_3` is a `1 × d_head` vector, making `q_3 @ K^T` a vector-matrix multiply (GEMV). Unlike matrix-matrix multiply (GEMM), GEMV reads each cached `k_i` and `v_i` from HBM, multiplies it once, and flushes it from SRAM.
 
 ## Prefill vs. decode: the tale of two computational regimes
 

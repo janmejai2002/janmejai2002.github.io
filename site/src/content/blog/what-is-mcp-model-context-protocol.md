@@ -30,7 +30,7 @@ notionId: '3ceced67-050a-81dd-9b51-c0775482d320'
 
 ## What problem does MCP solve?
 
-Before the [Model Context Protocol (MCP)](https://www.anthropic.com/news/model-context-protocol), connecting an AI agent to an external system required custom, bespoke glue code for every combination of client and tool. If you had 5 AI interfaces (Claude Desktop, Cursor, Zed, LangChain, custom CLI) and 10 enterprise data sources (GitHub, Postgres, Slack, Jira, Google Drive), engineering teams had to build and maintain 50 separate integration pipelines ($N \times M$).
+Before the [Model Context Protocol (MCP)](https://www.anthropic.com/news/model-context-protocol), connecting an AI agent to an external system required custom, bespoke glue code for every combination of client and tool. If you had 5 AI interfaces (Claude Desktop, Cursor, Zed, LangChain, custom CLI) and 10 enterprise data sources (GitHub, Postgres, Slack, Jira, Google Drive), engineering teams had to build and maintain 50 separate integration pipelines (an N × M integration bottleneck).
 
 Whenever an API schema changed, every client wrapper broke independently.
 
@@ -44,7 +44,7 @@ With MCP (Open USB-C standard for AI):
 [Any AI Host / Client] ── JSON-RPC 2.0 ──> [Standard MCP Server] ──> [Data Source]
 ```
 
-MCP standardizes this relationship by turning every external system into a lightweight server that speaks a unified protocol, reducing the ecosystem complexity from $N \times M$ custom integrations to $N + M$ standardized connectors.
+MCP standardizes this relationship by turning every external system into a lightweight server that speaks a unified protocol, reducing the ecosystem complexity from N × M custom integrations to N + M standardized connectors.
 
 ## The Architecture: Hosts, Clients, and Servers
 

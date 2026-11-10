@@ -48,13 +48,9 @@ Blanket cynicism, however, misses where narrow, bounded AI agents genuinely succ
 When [Salesforce introduced Flex Credits](https://www.salesforce.com/news/press-releases/2025/05/15/agentforce-flexible-pricing-news/), it noted 90% of CIOs struggle to drive value due to unpredictable AI costs. Comparing the three dominant pricing models highlights the margin trade-offs:
 
 | Pricing Model | Vendor Benchmark & Rate | Billing Unit | Buyer Margin Risk |
-
 | :--- | :--- | :--- | :--- |
-
 | **Per-Seat** | [M365 Copilot](https://www.microsoft.com/en-us/copilot/blog/copilot-studio/scale-your-agentout-with-confidence-introducing-copilot-credit-pre-purchase-plan/) ($30/mo); [Zendesk Copilot](https://www.zendesk.com/pricing/contact-center/) ($50/mo); [Agentforce](https://pluno.ai/blog/salesforce-agentforce-pricing) ($125/mo) | Named seat/mo | **Shelfware:** Fixed contracts bill full price when adoption lags. |
-
 | **Per-Action / Chat** | [Agentforce](https://www.salesforce.com/news/press-releases/2025/05/15/agentforce-flexible-pricing-news/) ($2.00/chat or $0.10/action; $500/100K credits); [Copilot Studio](https://www.microsoft.com/en-us/copilot/blog/copilot-studio/scale-your-agent-rollout-with-confidence-introducing-copilot-credit-pre-purchase-plan/) ($200/25K credits or $0.01/msg) | API calls, writes, chats | **Token burn:** Retries on dirty CRM fields burn credits without resolving tasks. |
-
 | **Outcome-Based** | [Zendesk AI](https://www.zendesk.com/blog/ai/agentic-ai/outcome-based-pricing/) ($1.50/verified outcome; [$1.50-$2.00 overage](https://corepiper.com/blog/zendesk-ai-agent-pricing-2026/)); [Sierra AI](https://sierra.ai/blog/outcome-based-pricing-for-ai-agents) (Outcome fee atop [$150K+ floor](https://www.getmacha.com/blog/sierra-ai-pricing-explained)) | Verified resolved ticket | **Attribution disputes:** Vendors bill after a 2-to-72-hour quiet window, even if users call support. |
 
 Outcome pricing looks safe because [Sierra](https://sierra.ai/blog/outcome-based-pricing-for-ai-agents) and [Zendesk](https://www.zendesk.com/blog/ai/agentic-ai/outcome-based-pricing/) waive fees on escalations, yet attribution disputes arise. [Zendesk's billing rules](https://www.zendesk.com/blog/ai/agentic-ai/outcome-based-pricing/) mark a chat resolved after an LLM check and a 2-hour messaging (or 72-hour email) quiet window. If an unhelped user calls phone support 3 hours later, the vendor still bills a resolution unless logs are reconciled.
@@ -87,13 +83,9 @@ Applying the [Automaton transition productivity discount](https://automatonagenc
 Architecture review boards should classify every proposed agent across three readiness tiers before funding production:
 
 | Readiness Tier | Data Hygiene & Context Layer | Governance & Escalation Gates | Unit Economics & Enterprise AI Agent ROI |
-
 | :--- | :--- | :--- | :--- |
-
 | **Tier 1: Production** | Canonical APIs (>98% complete); entity graph; zero raw PDFs. | Circuit breakers; credit caps; kill switch; RBAC logs. | Cost/outcome <30% of human baseline; payback <=6 mos; positive `HNROI` at 2x retries. |
-
 | **Tier 2: Shadow Pilot** | Partial CRM cleanup (85%-97% complete); read-only DB access. | HITL approval for writes; weekly log audits. | Payback 6-12 mos; spend capped via prepaid packs ([$200 Copilot Studio pack](https://www.microsoft.com/en-us/copilot/blog/copilot-studio/scale-your-agent-rollout-with-confidence-introducing-copilot-credit-pre-purchase-plan/)). |
-
 | **Tier 3: Freeze/Cut** | Silos; >15% duplicate CRM IDs; raw document dumps. | No supervision plan ([36% gap in WRITER survey](https://writer.com/blog/enterprise-ai-adoption-2026/)); no rollback. | Uncapped PayGo billing; undefined human baseline; payback >18 mos. |
 
 In [PwC's 2026 CEO Survey](https://www.pwc.com/gx/en/news-room/press-releases/2026/pwc-2026-global-ceo-survey.html), only 25% of CEOs reported disciplined processes to stop underperforming projects. Enforce four sequential kill gates:

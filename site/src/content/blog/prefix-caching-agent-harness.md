@@ -46,9 +46,11 @@ Building a cache-stable runtime requires designing around how inference engines 
 
 Built on [PagedAttention (Kwon et al., SOSP 2023)](https://arxiv.org/abs/2309.06180), [vLLM APC](https://docs.vllm.ai/en/stable/design/prefix_caching/) partitions GPU KV memory into [16-token blocks](https://docs.vllm.ai/en/stable/design/prefix_caching/) and hashes each full block via `sha256` (default since v0.11, alongside `sha256_cbor` and `xxhash`):
 
-$$\text{Hash}_k=\text{SHA256}(\text{Hash}_{k-1}\parallel\text{Tokens}_{k}\parallel\text{Salt})$$
+```
+Hash_k = SHA256(Hash_{k-1} || Tokens_k || Salt)
+```
 
-Because $\text{Hash}_k$ hashes $\text{Hash}_{k-1}$, mutating one token in Block 0 invalidates $\text{Hash}_1\dots\text{Hash}_n$. [SGLang RadixAttention](https://www.lmsys.org/blog/2024-01-17-sglang/) maps token prefixes in a CPU radix tree to paged GPU tensors for [up to 5x higher ReAct throughput](https://www.lmsys.org/blog/2024-01-17-sglang/), yet a root mutation still splits the upper radix node.
+Because `Hash_k` hashes `Hash_{k-1}`, mutating one token in Block 0 invalidates `Hash_1 ... Hash_n`. [SGLang RadixAttention](https://www.lmsys.org/blog/2024-01-17-sglang/) maps token prefixes in a CPU radix tree to paged GPU tensors for [up to 5x higher ReAct throughput](https://www.lmsys.org/blog/2024-01-17-sglang/), yet a root mutation still splits the upper radix node.
 
 Commercial endpoints enforce strict hierarchical serialization. Per [Anthropic's Prompt Caching specification](https://platform.claude.com/docs/en/build-with-claude/prompt-caching), prompts concatenate three layers in fixed order: `tools` -> `system` -> `messages`.
 
@@ -77,15 +79,17 @@ Four failure modes trigger a prompt caching latency spike in production:
 
 To prevent context engineering prefix invalidation, separate tool visibility from per-turn availability. Lock the complete tool catalog into Tier 1 (the static root prefix) and gate per-turn execution using request metadata or logit masks.
 
-Cumulative input cost $C(N)$ across $N$ agent steps with static prefix $P$, per-step observation $d$, base input price $p_{b}$, write multiplier $w$, read multiplier $r$, and prefix survival rate $h\in[0,1]$ follows:
+Cumulative input cost `C(N)` across `N` agent steps with static prefix `P`, per-step observation `d`, base input price `p_b`, write multiplier `w`, read multiplier `r`, and prefix survival rate `h` (where `0 <= h <= 1`) follows:
 
-$$C(N)=p_{b}\left[Pw+\sum_{k=2}^{N}\left(h[(P+(k-2)d)r+dw]+(1-h)(P+(k-1)d)w\right)\right]$$
+```
+C(N) = p_b * [ P*w + sum_{k=2..N}( h * ((P + (k-2)*d)*r + d*w) + (1-h)*(P + (k-1)*d)*w ) ]
+```
 
-Using [Anthropic's verified pricing multipliers](https://platform.claude.com/docs/en/build-with-claude/prompt-caching) ($w=1.25$ for 5-minute TTL, $w=2.0$ for 1-hour TTL, $r=0.10$ on Claude Sonnet 4.6 at $p_{b}=\$3.00/\text{MTok}$), the claude prompt caching 5m break-even turn count $N_{\text{be}}=1+(w-1)/(1-r)$ is 1.28 requests (2 turns) for the 5-minute TTL and 2.11 requests (3 turns) for the 1-hour TTL. From 5 to 50 steps ($P=15\text{K},d=2\text{K}$), a stable runtime ($h=1$) on Sonnet 4.6 costs $0.09 (5 steps), $0.58 (30 steps), and $1.31 (50 steps), while a dynamic-tool runtime ($h=0$) paying $1.25\text{x}$ write fees costs $0.36, $4.89, and $12.00.
+Using [Anthropic's verified pricing multipliers](https://platform.claude.com/docs/en/build-with-claude/prompt-caching) (`w = 1.25` for 5-minute TTL, `w = 2.0` for 1-hour TTL, `r = 0.10` on Claude Sonnet 4.6 at `p_b = $3.00/MTok`), the Claude prompt caching 5m break-even turn count `N_be = 1 + (w - 1) / (1 - r)` is 1.28 requests (2 turns) for the 5-minute TTL and 2.11 requests (3 turns) for the 1-hour TTL. From 5 to 50 steps (`P = 15k, d = 2k`), a stable runtime (`h = 1`) on Sonnet 4.6 costs $0.09 (5 steps), $0.58 (30 steps), and $1.31 (50 steps), while a dynamic-tool runtime (`h = 0`) paying 1.25x write fees costs $0.36, $4.89, and $12.00.
 
 This math exposes three traps where caching hurts unit economics:
 
-- **Unstable prefixes with explicit writes:** When $h=0$, paying $1.25\text{x}$ or $2.0\text{x}$ write surcharges without reading from cache inflates token costs by **25% to 100%** over uncached calls.
+- **Unstable prefixes with explicit writes:** When `h = 0`, paying 1.25x or 2.0x write surcharges without reading from cache inflates token costs by **25% to 100%** over uncached calls.
 - **The 5-minute request-start clock:** Anthropic measures the [5-minute TTL from request start](https://platform.claude.com/docs/en/build-with-claude/prompt-caching), so a 4-minute reasoning stream plus a 90-second tool call expires the cache mid-step.
 - **GPU HBM eviction thrashing:** Pinning KV blocks under [vLLM's LRU policy](https://docs.vllm.ai/en/stable/design/prefix_caching/) shrinks free memory for active decoding. When working sets overflow GPU VRAM, [vLLM recomputes evicted prefixes](https://docs.lmcache.ai/getting_started/benchmarking.html) unless paired with CPU RAM offloading via [LMCache (`LMCacheMPConnector`)](https://docs.lmcache.ai/getting_started/benchmarking.html).
 
@@ -119,31 +123,23 @@ On self-hosted [vLLM](https://docs.vllm.ai/en/stable/features/automatic_prefix_c
 
 ## Production benchmarks and cache-aware runtime architecture matrix
 
-This matrix compares a 30-step trajectory ($P=15\text{K}$, $d=2\text{K}$, 1.305M input tokens) across [Anthropic](https://platform.claude.com/docs/en/build-with-claude/prompt-caching), [OpenAI](https://developers.openai.com/cookbook/examples/prompt_caching_201), [vLLM + LMCache](https://docs.lmcache.ai/getting_started/benchmarking.html), and [SGLang](https://www.lmsys.org/blog/2024-01-17-sglang/):
+This matrix compares a 30-step trajectory (`P = 15k, d = 2k`, 1.305M input tokens) across [Anthropic](https://platform.claude.com/docs/en/build-with-claude/prompt-caching), [OpenAI](https://developers.openai.com/cookbook/examples/prompt_caching_201), [vLLM + LMCache](https://docs.lmcache.ai/getting_started/benchmarking.html), and [SGLang](https://www.lmsys.org/blog/2024-01-17-sglang/):
 
 | Runtime | Pattern | Hit Rate | Mean TTFT | 30-Step Cost | Operational Trade-off |
-
 | :--- | :--- | :--- | :--- | :--- | :--- |
-
 | **[Sonnet 4.6](https://platform.claude.com/docs/en/build-with-claude/prompt-caching)** | Dynamic tool RAG | 0% | 2,840ms | $4.89 | 1,024-tok min; mutating `tools` busts all layers. |
-
 | **[Sonnet 4.6](https://platform.claude.com/docs/en/build-with-claude/prompt-caching)** | Frozen + `5m` breakpoints | 94.4% | 590ms | $0.58 | 1.25x write ($3.75/M), 0.10x read ($0.30/M); 2-turn break-even. |
-
 | **[Sonnet 5.5](https://platform.claude.com/docs/en/build-with-claude/prompt-caching)** | Frozen + top-level auto | 94.4% | 510ms | $0.24 | 512-tok min; 0.05x read ($0.10/M); mid-turn `system` appends. |
-
 | **[GPT-5.2](https://developers.openai.com/cookbook/examples/prompt_caching_201)** | Unsharded + pruning | 12.0% | 2,150ms | $2.03 | 1,024-tok min, 128-tok steps; overflows >15 RPM. |
-
 | **[GPT-5.2](https://developers.openai.com/cookbook/examples/prompt_caching_201)** | `prompt_cache_key` + `allowed_tools` | 87.0% | 710ms | $0.49 | Zero write fee; 90% discount; [hit rate rose 60% to 87%](https://developers.openai.com/cookbook/examples/prompt_caching_201). |
-
 | **[vLLM + LMCache](https://docs.lmcache.ai/getting_started/benchmarking.html)** | `LMCacheMPConnector` offload | 90%+ | [185ms (-75.6%)](https://docs.lmcache.ai/getting_started/benchmarking.html) | [13.79s vs 23.47s](https://docs.lmcache.ai/getting_started/benchmarking.html) | [16-token SHA-256 blocks](https://docs.vllm.ai/en/stable/design/prefix_caching/); CPU offload stops LRU thrashing. |
-
 | **[SGLang Radix](https://www.lmsys.org/blog/2024-01-17-sglang/)** | Radix-tree KV reuse | 85%+ | -80% TTFT | [5x throughput](https://www.lmsys.org/blog/2024-01-17-sglang/) | 1-token radix page granularity; LRU leaf eviction. |
 
 For vllm prefix cache miss debugging and API cost control, enforce three rules:
 
 1. **Alert on read ratios:** Monitor `cache_read_input_tokens` on [Anthropic](https://platform.claude.com/docs/en/build-with-claude/prompt-caching) and `cached_tokens` on [OpenAI](https://developers.openai.com/cookbook/examples/prompt_caching_201) to keep cached reads above **85%** by turn 4.
 1. **Compact in chunks:** Replace sliding-window truncation with [OpenAI `retention_ratio: 0.7`](https://developers.openai.com/cookbook/examples/prompt_caching_201) or [Claude Code `/compact`](https://code.claude.com/docs/en/prompt-caching) so root offsets stay fixed across 20+ turns.
-1. **Skip one-shot writes:** Omit `cache_control` on single-turn calls ($N=1$) to avoid 25% to 100% write surcharges.
+1. **Skip one-shot writes:** Omit `cache_control` on single-turn calls (`N = 1`) to avoid 25% to 100% write surcharges.
 
 ## Sources
 
