@@ -18,8 +18,10 @@ export interface Props {
   /** Composition pages (the index) drop the reading-column cap and use the
    *  full shell. Article pages must not set this — prose needs --measure. */
   wide?: boolean;
+  /** The index only: no rail, full-bleed sections, wordmark in the nav. */
+  immersive?: boolean;
 }
-const { progress = false, section, wide = false, ...seo } = Astro.props;
+const { progress = false, section, wide = false, immersive = false, ...seo } = Astro.props;
 const path = Astro.url.pathname;
 // Labels only — the routes stay put so nothing already published breaks.
 const nav = [
@@ -55,27 +57,30 @@ const year = new Date().getFullYear();
     <a class="skip" href="#main">Skip to content</a>
     {progress && <div id="reading-progress"></div>}
 
-    <div class="shell">
-      <aside class="rail fade-up">
-        {/* Only a way *back* — on the index itself it would point at the current
-            page, so it is left out there. */}
-        {path !== '/' && (
-          <a class="rail__home" href="/" aria-label="Back to index">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-              stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M19 12H5M12 19l-7-7 7-7" />
-            </svg>
-          </a>
-        )}
-        {/* plain: vertical writing-mode rotates inline boxes, so the drawn
-            crack and caret would land sideways — the rail gets the type-only
-            face. */}
-        <span class="vertical"><Wordmark plain /></span>
-        <span class="vertical vertical--foot">{section ?? 'Applied AI'}</span>
-      </aside>
+    <div class:list={['shell', immersive && 'shell--immersive']}>
+      {!immersive && (
+        <aside class="rail fade-up">
+          {/* Only a way *back* — on the index itself it would point at the current
+              page, so it is left out there. */}
+          {path !== '/' && (
+            <a class="rail__home" href="/" aria-label="Back to index">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M19 12H5M12 19l-7-7 7-7" />
+              </svg>
+            </a>
+          )}
+          {/* plain: vertical writing-mode rotates inline boxes, so the drawn
+              crack and caret would land sideways — the rail gets the type-only
+              face. */}
+          <span class="vertical"><Wordmark plain /></span>
+          <span class="vertical vertical--foot">{section ?? 'Applied AI'}</span>
+        </aside>
+      )}
 
-      <main id="main" class={wide ? 'main--wide' : undefined}>
+      <main id="main" class:list={[wide && 'main--wide', immersive && 'main--immersive']}>
         <nav class="topnav fade-up d1" aria-label="Primary">
+          {immersive && <a class="topnav__mark" href="/"><Wordmark /></a>}
           {nav.map((n) => (
             <a href={n.href} aria-current={path === n.href ? 'page' : undefined}>{n.label}</a>
           ))}
@@ -106,7 +111,7 @@ const year = new Date().getFullYear();
           </span>
           <span class="colophon">
             Written by a human and an automated system, working in the open.
-            Built with Astro and four dependencies; no cookies. The
+            Built with Astro and five dependencies; no cookies. The
             imperfections are left in on purpose.
           </span>
         </footer>

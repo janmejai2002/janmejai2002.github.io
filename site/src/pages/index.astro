@@ -1,30 +1,59 @@
 ---
 import { getCollection } from 'astro:content';
-import Wordmark from '../components/Wordmark.astro';
 import Base from '../layouts/Base.astro';
-// The five themes live in src/data/tracks.ts — the door copy, the accents,
-// and the ids, shared with the theme pages and the article layout.
+import TrackMark from '../components/TrackMark.astro';
+import Bowl from '../components/Bowl.astro';
 import { TRACKS } from '../data/tracks';
+import { CLAIMS } from '../data/claims';
 
 const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
   (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
 );
 
-const counts = Object.fromEntries(
-  TRACKS.map((t) => [t.id, posts.filter((p) => p.data.track === t.id).length])
-);
-const accentOf = Object.fromEntries(TRACKS.map((t) => [t.id, t.accent]));
-const labelOf = Object.fromEntries(TRACKS.map((t) => [t.id, t.label]));
-
-const featured = posts.slice(0, 3);
-// The three "Latest" cards repeat as the top rows of the full table right below
-// them. Mark those rows so the "Everything" view can drop them — they stay in
-// the DOM and reappear the moment a single theme is filtered, so per-theme
-// counts still line up.
-const featuredIds = new Set(featured.map((p) => p.id));
 const slugOf = (p: (typeof posts)[number]) => p.id.replace(/\.md$/, '');
 const dateOf = (d: Date) =>
   d.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+const trackOf = Object.fromEntries(TRACKS.map((t) => [t.id, t]));
+const counts = Object.fromEntries(
+  TRACKS.map((t) => [t.id, posts.filter((p) => p.data.track === t.id).length])
+);
+
+/* The same zigzag for every claim, moved to that claim's seam. One shape drives
+   the two clip-paths and the drawn line, so the pieces always meet on it. */
+const JAG = [
+  [1.2, 0],
+  [-0.9, 18],
+  [1.6, 41],
+  [-1.4, 63],
+  [0.7, 82],
+  [-0.5, 100],
+];
+const seamOf = (x: number) => JAG.map(([dx, y]) => [+(x + dx).toFixed(2), y] as const);
+// A renamed or retired post drops out of the hero instead of failing the build:
+// publishing is automated, and one stale slug must never be able to block it.
+const live = CLAIMS.flatMap((c) => {
+  const post = posts.find((p) => slugOf(p) === c.slug);
+  if (!post) console.warn(`claims.ts: skipping missing post ${c.slug}`);
+  return post ? [{ c, post }] : [];
+});
+if (!live.length) throw new Error('claims.ts: no claim points at a published post');
+const claims = live.map(({ c, post }) => {
+  const pts = seamOf(c.seam);
+  const edge = pts.map(([x, y]) => `${x}% ${y}%`);
+  const first = pts[0][0];
+  const last = pts[pts.length - 1][0];
+  return {
+    ...c,
+    href: `/blog/${c.slug}/`,
+    accent: trackOf[post.data.track].accent,
+    track: trackOf[post.data.track].label,
+    line: pts.map(([x, y]) => `${x},${y}`).join(' '),
+    left: `polygon(-4% -25%, ${first}% -25%, ${edge.join(', ')}, ${last}% 125%, -4% 125%)`,
+    right: `polygon(104% -25%, ${first}% -25%, ${edge.join(', ')}, ${last}% 125%, 104% 125%)`,
+  };
+});
+
+const INITIAL_ROWS = 8;
 ---
 
 <Base
@@ -32,599 +61,788 @@ const dateOf = (d: Date) =>
   description="wAIbi-sabi: an applied-AI journal on the systems that are never finished. What benchmarks leave out, what breaks in production, and what the research says past the abstract."
   section="Applied AI"
   wide
+  immersive
 >
-  {/* Centred masthead. A stranger should know what this is from one screen. */}
-  <section class="mast fade-up d1">
-    <span class="mast__mark"><Wordmark /></span>
-    <h1 aria-label="The models are never finished">The models are<br /><span class="hl">never finished</span></h1>
-    <p class="mast__lede">
-      Writing about AI that shows its working — what the benchmarks leave out, what breaks
-      in production, and which parts do not hold up.
-    </p>
-  </section>
+  <section class="plate" aria-labelledby="thesis">
+    <div class="wrap plate__in">
+      <header class="plate__id">
+        <h1 id="thesis">The models are never finished<span class="plate__caret" aria-hidden="true"></span></h1>
+        <p>
+          Writing about AI that shows its working: what the benchmarks leave out, what breaks
+          in production, and which parts do not hold up.
+        </p>
+      </header>
 
-  <div class="rulebar fade-up d2" aria-hidden="true">
-    <span></span><span></span><span></span><span></span><span></span><span></span>
-  </div>
-
-  <section class="tracks" aria-labelledby="tracks-h">
-    <div class="sec">
-      <h2 class="sec__t" id="tracks-h">What's here</h2>
-      <span class="sec__r" aria-hidden="true"></span>
-    </div>
-
-    <div class="tracks__grid">
-      {
-        TRACKS.map((t, n) => (
-          <article
-            class="track scroll-reveal"
-            data-track-card={t.id}
-            style={`transition-delay:${n * 90}ms;--accent:var(--${t.accent});--tint:var(--wash-${t.accent})`}
-          >
-            {/* Each mark is a complete order with exactly one break in it. The
-                break closes on hover — the drawing finishes when you reach for
-                it. See docs/ARTWORK.md. */}
-            <div class="track__art" aria-hidden="true">
-              {t.id === 'technical' && (
-                <svg viewBox="0 0 120 120" fill="none">
-                  <circle class="ring" cx="60" cy="60" r="34" stroke="currentColor" stroke-width="1.5" pathLength="100" />
-                  <circle cx="60" cy="60" r="2.5" fill="currentColor" />
-                  <path d="M60 12v10M108 60H98M60 108V98M12 60h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+      <div class="stage" data-stage>
+        <div class="claims" data-claims>
+          {claims.map((c, n) => (
+            <div class:list={['claim', n === 0 && 'on', n === 0 && 'play']} data-claim={n} data-seam={c.seam}>
+              <span class="claim__k">Claimed</span>
+              <span class="claim__said">
+                <span class="sr">{c.claim}</span>
+                <span class="claim__pc claim__pc--l" style={`clip-path:${c.left}`} aria-hidden="true">{c.claim}</span>
+                <span class="claim__pc claim__pc--r" style={`clip-path:${c.right}`} aria-hidden="true">{c.claim}</span>
+                <svg class="claim__seam" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+                  <polyline points={c.line} vector-effect="non-scaling-stroke" />
                 </svg>
-              )}
-              {t.id === 'business' && (
-                <svg viewBox="0 0 120 120" fill="none">
-                  <g class="grid" fill="currentColor">
-                    {[26, 47, 68, 89].map((y) =>
-                      [26, 47, 68, 89].map((x) => <circle cx={x} cy={y} r="2.5" />)
-                    )}
-                  </g>
-                  <circle class="stray" cx="89" cy="26" r="2.5" fill="currentColor" />
-                </svg>
-              )}
-              {/* Case Studies: measured bars. One overshoots the baseline —
-                  the outlier result everybody quotes and nobody replicates. */}
-              {t.id === 'case-studies' && (
-                <svg viewBox="0 0 120 120" fill="none">
-                  <g stroke="currentColor" stroke-width="7" stroke-linecap="butt">
-                    <path d="M22 96V74" />
-                    <path d="M44 96V60" />
-                    <path d="M66 96V80" />
-                    <path class="stray" d="M88 96V38" />
-                  </g>
-                  <path d="M10 96h100" stroke="currentColor" stroke-width="1.5" />
-                </svg>
-              )}
-              {/* Talks: arcs radiating from a point. The outermost stops
-                  short — not everything said travels. */}
-              {t.id === 'talks' && (
-                <svg viewBox="0 0 120 120" fill="none">
-                  <g stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
-                    <path class="arc a1" d="M34 96a34 34 0 0 1 52 0" pathLength="100" />
-                    <path class="arc a2" d="M22 78a52 52 0 0 1 76 0" pathLength="100" />
-                    <path class="arc a3" d="M10 60a68 68 0 0 1 100 0" pathLength="100" />
-                  </g>
-                  <circle cx="60" cy="103" r="3" fill="currentColor" />
-                </svg>
-              )}
-              {/* Basics: steps up out of a single point. The top step is
-                  unfinished, because getting up to speed never quite ends. */}
-              {t.id === 'basics' && (
-                <svg viewBox="0 0 120 120" fill="none">
-                  <g stroke="currentColor" stroke-width="1.5" stroke-linecap="square">
-                    <path class="arc a1" d="M14 98h26v-22" pathLength="100" />
-                    <path class="arc a2" d="M40 76h26v-22" pathLength="100" />
-                    <path class="arc a3" d="M66 54h26v-22" pathLength="100" />
-                  </g>
-                  <circle cx="14" cy="98" r="3" fill="currentColor" />
-                </svg>
-              )}
-            </div>
-
-            <p class="track__ask">{t.ask}</p>
-            <h3 class="track__label">{t.label}</h3>
-            <p class="track__blurb">{t.blurb}</p>
-
-            {/* An empty theme is growth in progress, not a dead end — the
-                routines are already feeding it. Own the incompleteness; the
-                site's whole thesis is that unfinished is a state, not a
-                failure. */}
-            <button type="button" class="track__cta" data-filter={t.id} aria-pressed="false">
-              <span>{counts[t.id] > 0 ? t.cta : 'Still taking root'}</span>
-              <span class="track__count">
-                {counts[t.id] > 0
-                  ? `${counts[t.id]} ${counts[t.id] === 1 ? 'post' : 'posts'}`
-                  : 'first post soon'}
               </span>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-                stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <path d="M5 12h14M13 6l6 6-6 6" />
-              </svg>
-            </button>
-
-            {/* The setups and projects belong with the learning material, but
-                they keep their own page — already indexed, and not an article
-                stream. Link across rather than duplicating it. */}
-            {t.id === 'basics' && (
-              <a class="track__aside" href="/projects/">
-                Or see the setups and projects I have built →
-              </a>
-            )}
-          </article>
-        ))
-      }
-    </div>
-  </section>
-
-  {
-    featured.length > 0 && (
-      <section class="featured" aria-labelledby="featured-h">
-        {/* "Latest", because that is what these are — the three newest. Calling
-            an automatic slice "Featured" would claim a curation that is not
-            happening. */}
-        <div class="sec">
-          <h2 class="sec__t" id="featured-h">Latest</h2>
-          <span class="sec__r" aria-hidden="true" />
+              <span class="claim__mend">
+                <span class="claim__k claim__k--gold">What the article found</span>
+                <span class="claim__fix">{c.mend}</span>
+                <a class="claim__go" href={c.href}>Read the {c.track.toLowerCase()} piece <span aria-hidden="true">→</span></a>
+              </span>
+            </div>
+          ))}
         </div>
-        <ol class="featured__grid">
-          {featured.map((post, n) => {
-            const a = accentOf[post.data.track];
-            return (
-              <li
-                class="scroll-reveal"
-                style={`transition-delay:${n * 70}ms;--accent:var(--${a});--tint:var(--wash-${a})`}
-              >
-                <a href={`/blog/${slugOf(post)}/`}>
-                  <span class="featured__n" aria-hidden="true">
-                    {String(n + 1).padStart(2, '0')}
-                  </span>
-                  <span class="featured__track">{labelOf[post.data.track]}</span>
-                  <h3>{post.data.title}</h3>
-                  <p>{post.data.description}</p>
-                  <span class="featured__meta">
-                    <time datetime={post.data.pubDate.toISOString()}>
-                      {dateOf(post.data.pubDate)}
-                    </time>
-                    {post.data.readingTime && <span>{post.data.readingTime}</span>}
-                  </span>
-                </a>
-              </li>
-            );
-          })}
-        </ol>
-      </section>
-    )
-  }
 
-  <section class="archive" id="writing" aria-labelledby="archive-h">
-    <div class="sec">
-      <h2 class="sec__t" id="archive-h"><span data-archive-label>Everything</span></h2>
-      <span class="sec__r" aria-hidden="true"></span>
-      <div class="sortby">
-        <span class="sortby__k">Sort by</span>
-        <button type="button" class="pill is-on" data-sort="date" aria-pressed="true">Most recent</button>
-        <button type="button" class="pill" data-sort="title" aria-pressed="false">Title</button>
+        <div class="cues" data-cues>
+          {claims.map((c, n) => (
+            <button
+              type="button"
+              class:list={['cue', n === 0 && 'cue--on']}
+              data-cue={n}
+              aria-pressed={n === 0 ? 'true' : 'false'}
+              style={`--accent:var(--${c.accent})`}
+            >
+              <span class="cue__dot" aria-hidden="true"></span>{c.subject}
+              <span class="cue__bar" aria-hidden="true"></span>
+            </button>
+          ))}
+          <span class="cue-hint" data-hint hidden><span class="cue-hint__fine">Click the plate to break the next claim</span><span class="cue-hint__touch">Tap the plate to break the next claim</span></span>
+          <button type="button" class="cue-pause" data-pause>Pause</button>
+        </div>
       </div>
-      <button type="button" class="reset" data-filter="all" hidden>Show everything</button>
-      <a class="themelink" data-theme-link href="/" hidden>This theme's own page →</a>
     </div>
-
-    {
-      posts.length === 0 ? (
-        <p class="postlist__none">No posts published yet.</p>
-      ) : (
-        <table class="ptable">
-          <thead>
-            <tr>
-              <th scope="col">Theme</th>
-              <th scope="col">Title</th>
-              <th scope="col" class="num">Read</th>
-              <th scope="col" class="num">Published</th>
-            </tr>
-          </thead>
-          <tbody>
-            {posts.map((post) => (
-              <tr
-                data-track={post.data.track}
-                data-title={post.data.title.toLowerCase()}
-                data-date={post.data.pubDate.toISOString()}
-                data-featured={featuredIds.has(post.id) ? '' : undefined}
-                style={`--accent:var(--${accentOf[post.data.track]})`}
-              >
-                <td class="ptable__track">
-                  <span class="dot" aria-hidden="true" />
-                  {labelOf[post.data.track]}
-                </td>
-                <th scope="row">
-                  <a href={`/blog/${slugOf(post)}/`}>{post.data.title}</a>
-                  {post.data.question && <span class="ptable__q">{post.data.question}</span>}
-                </th>
-                <td class="num">{post.data.readingTime ?? '—'}</td>
-                <td class="num">
-                  <time datetime={post.data.pubDate.toISOString()}>{dateOf(post.data.pubDate)}</time>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      )
-    }
-
-    <p class="postlist__none" hidden>
-      Nothing published here yet — this theme is still taking root. The writing
-      routines are already researching it.
-    </p>
   </section>
 
-  <section class="plug scroll-reveal">
+  <section class="reader wrap" aria-labelledby="reader-h" id="writing">
+    <div class="reader__top">
+      <h2 id="reader-h">What are you trying to work out?</h2>
+      <div class="find">
+        <label for="find-q">Search {posts.length} questions</label>
+        <div class="find__box">
+          <input id="find-q" type="search" autocomplete="off" placeholder="cost, latency, Klarna…" data-find />
+          <kbd aria-hidden="true">/</kbd>
+        </div>
+      </div>
+    </div>
+
+    <div class="doors" role="group" aria-label="Filter by what you are here for">
+      {TRACKS.map((t) => (
+        <button
+          type="button"
+          class="door"
+          data-door={t.id}
+          data-label={t.label}
+          data-blurb={t.blurb}
+          aria-pressed="false"
+          style={`--accent:var(--${t.accent});--tint:var(--wash-${t.accent})`}
+        >
+          <span class="door__mark"><TrackMark id={t.id} /></span>
+          <span class="door__label">{t.label}<span class="door__n">{counts[t.id]}</span></span>
+          <span class="door__ask">{t.ask}</span>
+        </button>
+      ))}
+    </div>
+
+    <div class="status">
+      <p class="status__text" data-status aria-live="polite">Everything, newest first.</p>
+      <button type="button" class="linkish" data-reset hidden>Show everything</button>
+      <a class="linkish" data-theme-link href="/" hidden>This theme's own page →</a>
+    </div>
+
+    <div class="shelf">
+      <ol class="qs" data-qs>
+        {posts.map((post, n) => {
+          const t = trackOf[post.data.track];
+          const hay = `${post.data.question ?? ''} ${post.data.title} ${post.data.description} ${t.label}`.toLowerCase();
+          return (
+            <li
+              class="q"
+              data-q={slugOf(post)}
+              data-track={post.data.track}
+              data-hay={hay}
+              data-d={post.data.description}
+              style={`--accent:var(--${t.accent})`}
+              data-extra={n >= INITIAL_ROWS ? '' : undefined}
+            >
+              <a href={`/blog/${slugOf(post)}/`}>
+                <span class="q__ask">{post.data.question ?? post.data.title}</span>
+                <span class="q__title">{post.data.title}</span>
+                <span class="q__meta">
+                  <span class="q__dot" aria-hidden="true"></span>{t.label}
+                  {post.data.readingTime && <span> · {post.data.readingTime.replace(' read', '')}</span>}
+                  <span> · <time datetime={post.data.pubDate.toISOString()}>{dateOf(post.data.pubDate)}</time></span>
+                </span>
+              </a>
+            </li>
+          );
+        })}
+      </ol>
+
+      <aside class="pv"><Bowl posts={posts} /></aside>
+    </div>
+
+    <p class="empty-q" data-none hidden>
+      No question matches that yet. Try a broader word, or <button type="button" class="linkish" data-clear>clear the search</button>.
+    </p>
+    <button type="button" class="more" data-more hidden></button>
+  </section>
+
+  <section class="working" aria-labelledby="working-h">
+    <div class="wrap working__in">
+      <div class="working__text">
+        <h2 id="working-h">You should know how this gets made.</h2>
+        <p>
+          Scheduled routines find the topics, research them, draft them and draw the art. A
+          person decides which of those parts get to reach you.
+        </p>
+        <a class="linkish" href="/blog/how-this-blog-builds-itself/">How this blog builds itself →</a>
+      </div>
+
+      <div class="flow" role="img" aria-label="Topics are found, researched and drafted by routines. Technical and Business pieces then wait for a human sign-off. Talks, Case Studies and Basics publish on their own.">
+        <ol class="flow__steps" aria-hidden="true">
+          <li>Found</li>
+          <li>Researched</li>
+          <li>Drafted</li>
+        </ol>
+        <div class="flow__lanes" aria-hidden="true">
+          <div class="lane lane--human">
+            <span class="lane__seal">Human<br />sign-off</span>
+            <span class="lane__who">Technical, Business</span>
+            <span class="lane__end">Published</span>
+          </div>
+          <div class="lane">
+            <span class="lane__who">Talks, Case Studies, Basics</span>
+            <span class="lane__end">Published</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="author">
+        <h3>Janmejai Singh Minhas</h3>
+        <p>
+          I build machine learning systems that have to work outside a notebook, and I break
+          other people's. Medical imaging, credit risk models at American Express, and
+          red-teaming frontier models, where I rank #352 on Gray Swan.
+        </p>
+        <a class="linkish" href="/about/">More about me →</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap bschool">
     <div>
-      <span class="meta" style="color:var(--ochre)">Also here</span>
       <h2>BSchool News Archive</h2>
       <p>
-        A daily business-news digest for Indian B-school placement prep — each story paired
-        with the angle an interviewer is likely to push on.
+        A daily business-news digest for Indian B-school placement prep. Each story comes with
+        the angle an interviewer is likely to push on.
       </p>
     </div>
-    <a href="/news/" class="plug__cta">
-      Browse the archive
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-        stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-        <path d="M5 12h14M13 6l6 6-6 6" />
-      </svg>
-    </a>
+    <a href="/news/" class="bschool__go">Browse the archive <span aria-hidden="true">→</span></a>
   </section>
 </Base>
 
 <script>
-  // Filter and sort the archive table. Attribute toggling and DOM reordering
-  // only — every row stays in the document, so the page is complete for
-  // crawlers and works as a plain table without JS.
-  const tbody = document.querySelector<HTMLElement>('.ptable tbody');
-  const rows = [...document.querySelectorAll<HTMLElement>('.ptable tbody tr')];
-  const ctas = [...document.querySelectorAll<HTMLButtonElement>('[data-filter]')];
-  const sorts = [...document.querySelectorAll<HTMLButtonElement>('[data-sort]')];
-  const panels = [...document.querySelectorAll<HTMLElement>('[data-track-card]')];
-  const none = document.querySelector<HTMLElement>('.postlist__none[hidden]');
-  const label = document.querySelector<HTMLElement>('[data-archive-label]');
-  const reset = document.querySelector<HTMLElement>('.reset');
-  const themeLink = document.querySelector<HTMLAnchorElement>('[data-theme-link]');
-  const LABELS: Record<string, string> = {
-    technical: 'Technical',
-    business: 'Business',
-    basics: 'Basics',
-    'case-studies': 'Case Studies',
-    talks: 'Talks',
-  };
+  import { createPlate } from '../scripts/kintsugi';
 
-  const apply = (want: string, scroll = false) => {
-    let shown = 0;
-    for (const row of rows) {
-      // "Everything" drops the rows already shown as Latest cards; a single
-      // theme shows all of its rows, featured ones included.
-      const on =
-        want === 'all' ? !('featured' in row.dataset) : row.dataset.track === want;
-      row.hidden = !on;
-      if (on) shown++;
-    }
-    for (const c of ctas) {
-      if (c.dataset.filter === 'all') continue;
-      c.setAttribute('aria-pressed', String(c.dataset.filter === want));
-    }
-    for (const p of panels) p.classList.toggle('is-on', p.dataset.trackCard === want);
-    if (label) label.textContent = LABELS[want] ?? 'Everything';
-    if (reset) reset.hidden = want === 'all';
-    if (themeLink) {
-      themeLink.hidden = want === 'all';
-      if (want !== 'all') themeLink.href = `/${want}/`;
-    }
-    if (none) none.hidden = shown > 0;
+  const CAP = 8;
+  const DWELL_END = 'cue-fill';
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    history.replaceState(null, '', want === 'all' ? location.pathname : `#${want}`);
+  /* ---------- the cracked claim ---------- */
+  const stage = document.querySelector<HTMLElement>('[data-stage]');
+  const claimEls = [...document.querySelectorAll<HTMLElement>('[data-claim]')];
+  const cues = [...document.querySelectorAll<HTMLButtonElement>('[data-cue]')];
+  const pause = document.querySelector<HTMLButtonElement>('[data-pause]');
+  const claimsBox = document.querySelector<HTMLElement>('[data-claims]');
+  const plateEl = document.querySelector<HTMLElement>('.plate');
+  const hint = document.querySelector<HTMLElement>('[data-hint]');
+  let current = 0;
+  let auto = !reduced;
 
-    if (scroll) {
-      document.getElementById('writing')?.scrollIntoView({
-        behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
-        block: 'start',
-      });
+  // Null without WebGL2, in which case the CSS crack below it stays in charge.
+  const plate = plateEl ? createPlate({ plate: plateEl, claims: claimEls, reduced }) : null;
+  if (plate && hint) hint.hidden = false;
+
+  const syncAuto = () => {
+    stage?.classList.toggle('auto', auto);
+    if (pause) {
+      pause.textContent = auto ? 'Pause' : 'Play';
+      pause.setAttribute('aria-pressed', String(!auto));
     }
   };
 
-  const sortBy = (key: string) => {
-    const sorted = [...rows].sort((a, b) =>
-      key === 'title'
-        ? (a.dataset.title ?? '').localeCompare(b.dataset.title ?? '')
-        : (b.dataset.date ?? '').localeCompare(a.dataset.date ?? '')
-    );
-    for (const r of sorted) tbody?.appendChild(r);
-    for (const s of sorts) {
-      const on = s.dataset.sort === key;
-      s.classList.toggle('is-on', on);
-      s.setAttribute('aria-pressed', String(on));
+  const show = (n: number, at?: { x: number; y: number }) => {
+    current = n;
+    plate?.strike(n, at);
+    claimEls.forEach((el, i) => {
+      el.classList.toggle('on', i === n);
+      el.classList.remove('play');
+    });
+    if (!reduced) {
+      void claimEls[n].offsetWidth; // restart the keyframes on a repeat visit
+      claimEls[n].classList.add('play');
     }
+    cues.forEach((c, i) => {
+      c.classList.toggle('cue--on', i === n);
+      c.setAttribute('aria-pressed', String(i === n));
+    });
   };
 
-  for (const c of ctas) {
+  cues.forEach((c, i) => {
     c.addEventListener('click', () => {
-      const want = c.dataset.filter!;
-      // Clicking the open theme again returns you to everything.
-      const already = c.getAttribute('aria-pressed') === 'true';
-      apply(already ? 'all' : want, !already && want !== 'all');
+      auto = false;
+      syncAuto();
+      claimsBox?.setAttribute('aria-live', 'polite');
+      show(i);
+    });
+    // One pass through the five, then rest on the first. It is not a carousel.
+    c.querySelector('.cue__bar')?.addEventListener('animationend', (e) => {
+      if ((e as AnimationEvent).animationName !== DWELL_END || !auto || i !== current) return;
+      if (i === cues.length - 1) {
+        auto = false;
+        syncAuto();
+        show(0);
+      } else {
+        show(i + 1);
+      }
+    });
+  });
+
+  // Anywhere on the plate that is not already a control breaks the next claim,
+  // from exactly where it was struck.
+  plateEl?.addEventListener('click', (e) => {
+    if (!plate || (e.target as HTMLElement).closest('a, button, input')) return;
+    if (getSelection()?.toString()) return;
+    auto = false;
+    syncAuto();
+    claimsBox?.setAttribute('aria-live', 'polite');
+    show((current + 1) % claimEls.length, { x: e.clientX, y: e.clientY });
+  });
+
+  pause?.addEventListener('click', () => {
+    auto = !auto;
+    syncAuto();
+  });
+
+  const hold = (on: boolean) => stage?.classList.toggle('held', on);
+  stage?.addEventListener('pointerenter', () => hold(true));
+  stage?.addEventListener('pointerleave', () => hold(false));
+  stage?.addEventListener('focusin', () => hold(true));
+  stage?.addEventListener('focusout', () => hold(false));
+  if (reduced && pause) pause.hidden = true;
+  syncAuto();
+
+  const startPlate = () => plate?.strike(0);
+  if (plate) {
+    claimEls[0].classList.remove('play');
+    void claimEls[0].offsetWidth;
+    if (!reduced) claimEls[0].classList.add('play');
+    // The headline is set into a texture, so it has to wait for the real face.
+    document.fonts.load('800 80px Inter').then(startPlate, startPlate);
+  }
+
+  /* ---------- the question list ---------- */
+  const rows = [...document.querySelectorAll<HTMLElement>('[data-q]')];
+  const doors = [...document.querySelectorAll<HTMLButtonElement>('[data-door]')];
+  const find = document.querySelector<HTMLInputElement>('[data-find]');
+  const status = document.querySelector<HTMLElement>('[data-status]');
+  const reset = document.querySelector<HTMLElement>('[data-reset]');
+  const clear = document.querySelector<HTMLElement>('[data-clear]');
+  const none = document.querySelector<HTMLElement>('[data-none]');
+  const more = document.querySelector<HTMLButtonElement>('[data-more]');
+  const themeLink = document.querySelector<HTMLAnchorElement>('[data-theme-link]');
+  const bowl = document.querySelector<HTMLElement>('[data-bowl]');
+  const shards = [...document.querySelectorAll<SVGElement>('[data-shard]')];
+  const bowlNow = document.querySelector<HTMLElement>('[data-bowl-now]');
+  const rowOf = new Map(rows.map((r) => [r.dataset.q, r]));
+
+  const state = { track: 'all', text: '', open: false };
+
+  const preview = (slug?: string, exploring = false) => {
+    if (!slug) return;
+    const row = rowOf.get(slug);
+    for (const s of shards) {
+      const on = s.dataset.shard === slug;
+      // Last in the group paints on top, so a lifted shard clears its neighbours.
+      if (on && exploring && !s.classList.contains('on')) s.parentNode?.appendChild(s);
+      s.classList.toggle('on', on);
+    }
+    bowl?.classList.toggle('hot', exploring);
+    if (bowlNow && row) bowlNow.textContent = row.dataset.d ?? '';
+  };
+
+  const render = () => {
+    const terms = state.text.toLowerCase().split(/\s+/).filter(Boolean);
+    const matches = rows.filter(
+      (r) =>
+        (state.track === 'all' || r.dataset.track === state.track) &&
+        terms.every((t) => r.dataset.hay?.includes(t))
+    );
+    const limit = terms.length || state.open ? matches.length : CAP;
+    const shown = new Set(matches.slice(0, limit));
+    for (const r of rows) r.hidden = !shown.has(r);
+    const matching = new Set(matches.map((r) => r.dataset.q));
+    for (const s of shards) s.classList.toggle('off', !matching.has(s.dataset.shard));
+
+    const door = doors.find((d) => d.dataset.door === state.track);
+    for (const d of doors) d.setAttribute('aria-pressed', String(d === door));
+    if (status) {
+      const n = matches.length;
+      const count = `${n} ${n === 1 ? 'question' : 'questions'}`;
+      status.textContent = terms.length
+        ? `${count} matching “${state.text.trim()}”.`
+        : (door?.dataset.blurb ?? 'Everything, newest first.');
+    }
+    if (reset) reset.hidden = state.track === 'all' && !terms.length;
+    if (themeLink) {
+      themeLink.hidden = state.track === 'all';
+      if (state.track !== 'all') themeLink.href = `/${state.track}/`;
+    }
+    if (none) none.hidden = matches.length > 0;
+    if (more) {
+      more.hidden = limit >= matches.length;
+      more.textContent = `Show all ${matches.length} questions`;
+    }
+    preview(matches[0]?.dataset.q);
+    history.replaceState(null, '', state.track === 'all' ? location.pathname : `#${state.track}`);
+  };
+
+  for (const d of doors) {
+    d.addEventListener('click', () => {
+      state.track = state.track === d.dataset.door ? 'all' : d.dataset.door!;
+      state.open = false;
+      render();
     });
   }
-  for (const s of sorts) s.addEventListener('click', () => sortBy(s.dataset.sort!));
+  for (const r of rows) {
+    r.addEventListener('pointerenter', () => preview(r.dataset.q, true));
+    r.addEventListener('focusin', () => preview(r.dataset.q, true));
+  }
+  for (const s of shards) {
+    s.addEventListener('pointerenter', () => {
+      preview(s.dataset.shard, true);
+      for (const r of rows) r.classList.toggle('q--on', r.dataset.q === s.dataset.shard);
+    });
+    s.addEventListener('pointerleave', () => rows.forEach((r) => r.classList.remove('q--on')));
+  }
 
-  const initial = location.hash.replace('#', '');
-  // Always run once: even with no hash, the "all" pass is what removes the three
-  // Latest rows from the table.
-  apply(initial && initial in LABELS ? initial : 'all');
+  document.querySelector('.shelf')?.addEventListener('pointerleave', () => bowl?.classList.remove('hot'));
+
+  // Thumbnails wait until the bowl is close, and follow the theme.
+  const isDark = () => {
+    const t = document.documentElement.dataset.theme;
+    return t ? t === 'dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+  };
+  const artOf = [...document.querySelectorAll<SVGImageElement>('.shard__art')];
+  let artLoaded = false;
+  const loadArt = () => {
+    if (!artLoaded) return;
+    const dark = isDark();
+    for (const a of artOf) {
+      const src = dark ? a.dataset.dark : a.dataset.light;
+      if (src) a.setAttribute('href', src); // a post with no art keeps its plain glaze
+    }
+  };
+  if (bowl) {
+    new IntersectionObserver(
+      (entries, io) => {
+        if (!entries[0].isIntersecting) return;
+        io.disconnect();
+        artLoaded = true;
+        loadArt();
+        // A one-off. Left on, re-stacking a hovered shard would replay it.
+        bowl.classList.add('grow');
+        setTimeout(() => bowl.classList.remove('grow'), shards.length * 26 + 800);
+      },
+      { rootMargin: '200px' }
+    ).observe(bowl);
+    new MutationObserver(loadArt).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+    matchMedia('(prefers-color-scheme: dark)').addEventListener('change', loadArt);
+
+    // The seams catch the light as the pointer crosses the bowl.
+    const gold = document.querySelector('[data-bowl-gold]');
+    const svg = document.querySelector<SVGSVGElement>('[data-bowl-svg]');
+    if (gold && svg && !reduced) {
+      addEventListener('pointermove', (e) => {
+        const b = svg.getBoundingClientRect();
+        if (b.bottom < 0 || b.top > innerHeight) return;
+        const x = ((e.clientX - b.left) / b.width) * 1000;
+        const y = ((e.clientY - b.top) / b.height) * 1000;
+        gold.setAttribute('x1', String(x - 620));
+        gold.setAttribute('y1', String(y - 620));
+        gold.setAttribute('x2', String(x + 620));
+        gold.setAttribute('y2', String(y + 620));
+      }, { passive: true });
+    }
+  }
+
+  more?.addEventListener('click', () => {
+    state.open = true;
+    render();
+  });
+  find?.addEventListener('input', () => {
+    state.text = find.value;
+    render();
+  });
+  const clearAll = () => {
+    state.track = 'all';
+    state.text = '';
+    state.open = false;
+    if (find) find.value = '';
+    render();
+  };
+  reset?.addEventListener('click', clearAll);
+  clear?.addEventListener('click', clearAll);
+
+  addEventListener('keydown', (e) => {
+    const typing = /^(INPUT|TEXTAREA)$/.test((e.target as HTMLElement).tagName);
+    if (e.key === '/' && !typing && !e.metaKey && !e.ctrlKey) {
+      e.preventDefault();
+      find?.focus();
+    } else if (e.key === 'Escape' && e.target === find && find) {
+      find.value = '';
+      state.text = '';
+      render();
+    }
+  });
+
+  const fromHash = () => {
+    const want = location.hash.slice(1);
+    state.track = doors.some((d) => d.dataset.door === want) ? want : 'all';
+    state.open = false;
+    render();
+  };
+  addEventListener('hashchange', fromHash);
+  fromHash();
 </script>
 
-<style>
-  /* `[hidden]` is 0,1,0 and loses to author `display` rules, so anything hidden
-     by the attribute has to opt out — see docs/HANDOFF.md §6. */
-  .ptable tbody tr[hidden],
-  .postlist__none[hidden],
-  .themelink[hidden],
-  .reset[hidden] { display: none !important; }
+<style is:global>
+  .shell--immersive { max-width: none; display: block; }
+  .main--immersive { padding: 0 0 4rem; max-width: none; }
 
-  /* The three Latest posts are shown as cards above; keep them out of the full
-     table. With JS the filter script does this (and re-adds them under a single
-     theme); without JS the filter is unreachable anyway, so just hide them. */
-  html:not(.js) .ptable tbody tr[data-featured] { display: none; }
+  /* The one measure every full-bleed band centres its content to. */
+  .wrap {
+    --wrap-pad: max(var(--gutter), env(safe-area-inset-left, 0px));
+    max-width: 88rem; margin-inline: auto; padding-inline: var(--wrap-pad);
+  }
+  .sr {
+    position: absolute; width: 1px; height: 1px; overflow: hidden;
+    clip-path: inset(50%); white-space: nowrap;
+  }
+  [data-hint][hidden], [data-q][hidden], [data-none][hidden], [data-more][hidden],
+  [data-reset][hidden], [data-theme-link][hidden], [data-pause][hidden] { display: none !important; }
 
-  .themelink {
-    font-size: .75rem; font-weight: 600; color: var(--ink-soft);
-    text-decoration: none; border-bottom: 1px solid var(--border);
-    padding-bottom: 1px;
-    transition: color var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease);
+  .main--immersive .topnav {
+    padding-inline: max(var(--gutter), calc((100% - 88rem) / 2 + var(--gutter)));
+    border-bottom: 0;
   }
-  .themelink:hover { color: var(--ink); border-color: var(--ink-faint); }
+  .topnav__mark {
+    font-size: 1.3rem; font-weight: 800; letter-spacing: -.02em;
+    color: var(--ink) !important; margin-right: 1.25rem; padding: 0 !important;
+  }
+  /* Same calming as the old masthead lockup: a real "i", so the caret does not
+     read as a stray cursor beside the nav links. */
+  .topnav__mark .wordmark__caret, .topnav__mark .wordmark__idot { display: none; }
+  .topnav__mark .wordmark__iglyph { display: inline; }
 
-  /* ---------- masthead ---------- */
-  .mast { text-align: center; padding: 2.5rem 0 2rem; }
-  .mast h1 {
-    font-size: clamp(2.4rem, 7vw, 4.5rem); font-weight: 800; line-height: 1.02;
-    letter-spacing: -.04em; margin: 1rem 0 0; text-wrap: balance;
+  /* ---------- the plate: dark glaze, so gold can read as gold ---------- */
+  .plate {
+    position: relative; color: var(--tldr-ink);
+    background:
+      radial-gradient(70rem 34rem at 82% -8%, color-mix(in srgb, var(--mizu) 11%, transparent), transparent 70%),
+      radial-gradient(56rem 32rem at 4% 108%, color-mix(in srgb, var(--plum) 16%, transparent), transparent 70%),
+      var(--tldr-bg);
+    /* The plate itself breaks out of true where it meets the paper. */
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 57.6% 100%, 56.9% calc(100% - 7px), 57.3% calc(100% - 11px), 56.4% calc(100% - 16px), 0 calc(100% - 16px));
   }
-  .mast__lede {
-    margin: 1.25rem auto 0; max-width: 38rem;
-    font-size: 1.0625rem; line-height: 1.7; color: var(--ink-soft);
+  .plate::before {
+    content: ''; position: absolute; inset: 0; pointer-events: none; opacity: .5; mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 240 240' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
   }
-  @media (min-width: 768px) { .mast__lede { font-size: 1.125rem; } }
+  /* Once the shader is running it paints the whole band, headline included. The
+     DOM headline keeps its layout and stays in the accessibility tree. */
+  .plate__gl { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+  .plate.gl { cursor: crosshair; background: var(--tldr-bg); }
+  .plate.gl::before { display: none; }
+  .plate.gl .claim__pc, .plate.gl .claim__seam { visibility: hidden; }
+  .plate.gl a, .plate.gl button { cursor: pointer; }
+  .plate.gl .claim.play .claim__mend { animation-delay: 1.75s; }
+  .plate__in { position: relative; padding-block: clamp(1.75rem, 3.5vw, 3rem) clamp(2.75rem, 4vw, 3.75rem); }
 
-  .rulebar { display: flex; gap: 3px; margin: 1rem 0 0; }
-  .rulebar span {
-    height: 3px; flex: 1; border-radius: 2px;
-    transform-origin: left; animation: stretch .8s var(--ease) both;
+  .plate__id {
+    display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 34rem);
+    gap: 1rem 4rem; align-items: end;
+    padding-bottom: 1.5rem; border-bottom: 1px solid var(--tldr-hair);
   }
-  .rulebar span:nth-child(1) { background: var(--mizu); animation-delay: .15s; }
-  .rulebar span:nth-child(2) { background: var(--ochre); animation-delay: .22s; }
-  .rulebar span:nth-child(3) { background: var(--moss); animation-delay: .29s; }
-  .rulebar span:nth-child(4) { background: var(--plum); animation-delay: .36s; }
-  .rulebar span:nth-child(5) { background: var(--hanko); animation-delay: .43s; }
-  .rulebar span:nth-child(6) { background: var(--indigo); animation-delay: .5s; }
-  @keyframes stretch { from { transform: scaleX(0); } to { transform: scaleX(1); } }
-
-  /* ---------- section headers ---------- */
-  .sec { display: flex; align-items: center; gap: 1rem; margin: 2.5rem 0 1.25rem; flex-wrap: wrap; }
-  .sec__t {
-    margin: 0; font-size: .6875rem; font-weight: 800; letter-spacing: .18em;
-    text-transform: uppercase; color: var(--ink-faint); white-space: nowrap;
+  .plate__id h1 {
+    margin: 0; font-size: clamp(1.625rem, 2.8vw, 2.5rem); font-weight: 800;
+    letter-spacing: -.03em; line-height: 1.1; text-wrap: balance;
   }
-  .sec__r { flex: 1; height: 1px; background: var(--border); }
-
-  .sortby { display: flex; align-items: center; gap: .4rem; }
-  .sortby__k {
-    font-size: .5625rem; font-weight: 800; letter-spacing: .14em;
-    text-transform: uppercase; color: var(--ink-faint); margin-right: .2rem;
+  .plate__caret {
+    display: inline-block; width: .09em; height: .78em; margin-left: .12em;
+    background: var(--ochre); vertical-align: -.06em;
+    animation: wordmark-blink 1.15s steps(1) infinite;
   }
-  .pill, .reset {
-    font: inherit; cursor: pointer; background: transparent;
-    border: 1px solid var(--border); color: var(--ink-soft); border-radius: 999px;
-    padding: .38rem .8rem;
-    font-size: .625rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase;
-    transition: color var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease),
-                background var(--dur-fast) var(--ease);
-  }
-  .pill:hover, .reset:hover { color: var(--ink); border-color: var(--ink-faint); }
-  .pill.is-on { color: var(--ink); border-color: var(--ink); background: var(--card); }
-
-  /* ---------- theme panels ---------- */
-  /* auto-fit, not a fixed 3, so adding a theme reflows instead of leaving a
-     ragged last row. */
-  /* A fixed 3 so the five cards break 3 + 2 rather than orphaning the fifth on
-     a line of its own (auto-fit did 4 + 1 at desktop widths). */
-  .tracks__grid {
-    display: grid; gap: 1rem;
-    grid-template-columns: repeat(3, 1fr);
-  }
-  .track {
-    display: flex; flex-direction: column; gap: .5rem;
-    padding: 1.75rem; border-radius: 20px;
-    border: 1px solid var(--border); background: var(--card);
-    position: relative; overflow: hidden;
-    transition: border-color .35s var(--ease), transform .35s var(--ease);
-  }
-  .track::before {
-    content: ''; position: absolute; inset: 0; background: var(--tint);
-    opacity: 0; transition: opacity .35s var(--ease);
-  }
-  .track > * { position: relative; }
-  .track:hover, .track:focus-within { border-color: var(--accent); transform: translateY(-4px); }
-  .track:hover::before, .track:focus-within::before, .track.is-on::before { opacity: 1; }
-  .track.is-on { border-color: var(--accent); }
-
-  .track__art { color: var(--accent); width: 80px; height: 80px; margin-bottom: .25rem; }
-  .track__art svg { width: 100%; height: 100%; overflow: visible; }
-
-  /* The one deliberate break in each mark, closing on hover — and the marks
-     draw themselves in when the card first scrolls into view: before the
-     IntersectionObserver adds .revealed, every stroke sits at full offset
-     (invisible), then transitions down to its resting broken state. */
-  .track .ring {
-    stroke-dasharray: 100; stroke-dashoffset: 22;
-    transition: stroke-dashoffset .7s var(--ease);
-  }
-  .track:hover .ring, .track.is-on .ring { stroke-dashoffset: 0; }
-  .track .stray { transform: translate(-9px, 11px); transition: transform .6s var(--ease); }
-  .track:hover .stray, .track.is-on .stray { transform: none; }
-  .track .grid circle:last-child { opacity: 0; }
-  .track .arc { stroke-dasharray: 100; stroke-dashoffset: 26; transition: stroke-dashoffset .7s var(--ease); }
-  .track .a2 { transition-delay: .07s; }
-  .track .a3 { transition-delay: .14s; }
-  .track:hover .arc, .track.is-on .arc { stroke-dashoffset: 0; }
-  .track.scroll-reveal:not(.revealed) .ring,
-  .track.scroll-reveal:not(.revealed) .arc { stroke-dashoffset: 100; }
-  /* No JS: no observer fires, so settle the marks at their resting broken state
-     instead of leaving them drawn to nothing. */
-  html:not(.js) .track .ring { stroke-dashoffset: 22; }
-  html:not(.js) .track .arc { stroke-dashoffset: 26; }
-
-  .track__ask { margin: 0; font-size: .8125rem; font-weight: 800; letter-spacing: .02em; color: var(--accent); }
-  .track__label { margin: 0; font-size: 1.75rem; font-weight: 800; letter-spacing: -.03em; line-height: 1; }
-  .track__blurb { margin: .25rem 0 0; font-size: .875rem; line-height: 1.65; color: var(--ink-soft); }
-
-  /* Pinned to the card foot so the CTA sits at one height across cards whose
-     blurbs run different lengths. */
-  .track__cta {
-    font: inherit; cursor: pointer; margin-top: auto; padding-top: 1.25rem;
-    display: flex; align-items: center; gap: .5rem;
-    background: transparent; border: 0; padding: 0; text-align: left;
-    font-size: .6875rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase;
-    color: var(--accent);
-  }
-  .track__cta svg { width: 13px; height: 13px; transition: transform .3s var(--ease); }
-  .track:hover .track__cta svg, .track__cta:focus-visible svg { transform: translateX(5px); }
-  .track__count { margin-left: auto; color: var(--ink-faint); letter-spacing: .1em; font-size: .5625rem; }
-  .track__cta::after { content: ''; position: absolute; inset: 0; border-radius: 20px; }
-  .track__aside {
-    position: relative; z-index: 1; margin-top: .75rem;
-    font-size: .8125rem; line-height: 1.5; color: var(--ink-soft);
-    text-decoration: none; border-bottom: 1px solid var(--border);
-    align-self: flex-start; padding-bottom: 1px;
-    transition: color var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease);
-  }
-  .track__aside:hover { color: var(--accent); border-color: var(--accent); }
-
-  /* ---------- featured ---------- */
-  .featured__grid {
-    list-style: none; margin: 0; padding: 0;
-    display: grid; gap: 1rem; grid-template-columns: repeat(3, 1fr);
-  }
-  .featured__grid a {
-    display: flex; flex-direction: column; height: 100%; gap: .5rem;
-    text-decoration: none; padding: 1.5rem; border-radius: 18px;
-    border: 1px solid var(--border); background: var(--card);
-    position: relative; overflow: hidden;
-    transition: transform .3s var(--ease), border-color .3s var(--ease);
-  }
-  .featured__grid a::before {
-    content: ''; position: absolute; inset: 0; background: var(--tint);
-    opacity: 0; transition: opacity .3s var(--ease);
-  }
-  .featured__grid a > * { position: relative; }
-  .featured__grid a:hover, .featured__grid a:focus-visible {
-    transform: translateY(-4px); border-color: var(--accent);
-  }
-  .featured__grid a:hover::before, .featured__grid a:focus-visible::before { opacity: 1; }
-  .featured__n {
-    font-size: 2.5rem; font-weight: 800; line-height: 1; letter-spacing: -.04em;
-    color: var(--accent); opacity: .28;
-  }
-  .featured__track {
-    font-size: .5625rem; font-weight: 800; letter-spacing: .18em; text-transform: uppercase;
-    color: var(--accent);
-  }
-  .featured__grid h3 {
-    margin: 0; font-size: 1.0625rem; font-weight: 800; line-height: 1.3; letter-spacing: -.015em;
-  }
-  .featured__grid p { margin: 0; font-size: .875rem; line-height: 1.6; color: var(--ink-soft); }
-  .featured__meta {
-    margin-top: auto; padding-top: .75rem; display: flex; gap: .75rem;
-    font-size: .625rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
-    color: var(--ink-faint);
+  .plate__id p {
+    margin: 0; font-size: 1rem; line-height: 1.6; color: var(--tldr-dim); text-wrap: pretty;
   }
 
-  /* ---------- archive table ---------- */
-  .ptable { width: 100%; border-collapse: collapse; font-size: .9375rem; }
-  .ptable thead th {
-    text-align: left; padding: .6rem .75rem;
-    font-size: .5625rem; font-weight: 800; letter-spacing: .14em; text-transform: uppercase;
-    color: var(--ink-faint); border-bottom: 1px solid var(--border);
+  /* ---------- the claim ---------- */
+  .stage { padding-top: clamp(1.75rem, 3.5vw, 2.75rem); }
+  /* All five share one grid cell, so swapping never moves the page. */
+  .claims { display: grid; }
+  .claim {
+    grid-area: 1 / 1; display: flex; flex-direction: column; min-width: 0;
+    text-decoration: none; color: inherit; visibility: hidden; opacity: 0;
   }
-  .ptable tbody td, .ptable tbody th {
-    text-align: left; padding: 1rem .75rem; border-bottom: 1px solid var(--border);
-    vertical-align: top; font-weight: 400;
+  .claim.on { visibility: visible; opacity: 1; }
+  .claim__go:focus-visible { outline-color: var(--ochre); outline-offset: 4px; }
+  .claim__k { display: block; font-size: .9375rem; font-weight: 600; color: var(--tldr-dim); }
+  .claim__k--gold { color: var(--ochre); }
+
+  .claim__said {
+    display: grid; position: relative; margin-top: .5rem;
+    font-size: clamp(2.5rem, 6.6vw, 5.75rem); font-weight: 800;
+    line-height: 1.05; letter-spacing: -.04em;
   }
-  .ptable tbody tr { transition: background var(--dur-fast) var(--ease); }
-  .ptable tbody tr:hover { background: var(--card); }
-  .ptable tbody th a {
-    text-decoration: none; font-weight: 700; font-size: 1rem; line-height: 1.35;
-    background-image: none; display: inline-block;
+  .claim__pc { grid-area: 1 / 1; text-wrap: balance; display: block; }
+  .claim__pc--l { transform: translateY(-.032em); }
+  .claim__pc--r { transform: translateY(.032em); }
+  .claim__seam { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
+  .claim__seam polyline {
+    fill: none; stroke: var(--ochre); stroke-width: 2.5; stroke-linejoin: miter;
+    filter: drop-shadow(0 0 7px color-mix(in srgb, var(--ochre) 55%, transparent));
+  }
+
+  .claim__mend {
+    display: grid; grid-template-columns: minmax(0, 11rem) minmax(0, 46rem) auto;
+    gap: .35rem 2rem; align-items: baseline; margin-top: clamp(1.5rem, 2.8vw, 2.25rem);
+  }
+  .claim__fix {
+    font-size: clamp(1.1875rem, 1.9vw, 1.5rem); font-weight: 600; line-height: 1.35;
+    letter-spacing: -.012em; color: var(--ochre); text-wrap: pretty;
+  }
+  .claim__go {
+    justify-self: end; white-space: nowrap; font-size: .9375rem; font-weight: 700;
+    color: var(--tldr-ink); text-decoration: none;
+    border-bottom: 1px solid var(--tldr-hair); padding-bottom: 2px;
+    transition: border-color var(--dur-fast) var(--ease);
+  }
+  .claim__go:hover { border-color: var(--ochre); }
+
+  /* The sequence plays over a complete resting state. Without it (no JS,
+     reduced motion, a screenshot) the claim simply sits there already mended. */
+  .claim.play .claim__seam { animation: seam-draw .85s var(--ease) .25s backwards; }
+  .claim.play .claim__pc--l { animation: slip-l .75s var(--ease) .95s backwards; }
+  .claim.play .claim__pc--r { animation: slip-r .75s var(--ease) .95s backwards; }
+  .claim.play .claim__mend { animation: mend-in .9s var(--ease) 1.25s backwards; }
+  @keyframes seam-draw { from { clip-path: inset(-5% -5% 105% -5%); } to { clip-path: inset(-5%); } }
+  @keyframes slip-l { from { transform: none; } }
+  @keyframes slip-r { from { transform: none; } }
+  @keyframes mend-in { from { opacity: 0; transform: translateY(8px); } }
+
+  .cues { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem 1.75rem; margin-top: clamp(1.75rem, 3vw, 2.5rem); }
+  html:not(.js) .cues { display: none; }
+  .cue {
+    font: inherit; background: none; border: 0; cursor: pointer; position: relative;
+    display: inline-flex; align-items: center; gap: .5rem; min-height: 2.75rem; padding: 0;
+    font-size: .9375rem; font-weight: 600; color: var(--tldr-dim);
     transition: color var(--dur-fast) var(--ease);
   }
-  .ptable tbody tr:hover th a { color: var(--accent); }
-  .ptable__q {
-    display: block; margin-top: .25rem; font-size: .8125rem; line-height: 1.5;
-    color: var(--ink-faint); max-width: 44rem;
+  .cue:hover, .cue--on { color: var(--tldr-ink); }
+  .cue:focus-visible, .cue-pause:focus-visible { outline-color: var(--ochre); }
+  .cue__dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
+  .cue__bar {
+    position: absolute; left: 0; right: 0; bottom: 4px; height: 2px;
+    background: var(--ochre); transform: scaleX(0); transform-origin: left;
   }
-  .ptable__track {
-    white-space: nowrap; font-size: .6875rem; font-weight: 800;
-    letter-spacing: .1em; text-transform: uppercase; color: var(--accent);
+  .cue--on .cue__bar { transform: scaleX(1); }
+  .auto .cue--on .cue__bar { animation: cue-fill 9s linear; }
+  .held .cue--on .cue__bar { animation-play-state: paused; }
+  @keyframes cue-fill { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+  .cue-hint { margin-left: auto; font-size: .875rem; color: var(--tldr-dim); }
+  .cue-hint__touch { display: none; }
+  @media (hover: none) { .cue-hint__fine { display: none; } .cue-hint__touch { display: inline; } }
+  .cue-hint:not([hidden]) + .cue-pause { margin-left: 0; }
+  .cue-pause {
+    font: inherit; font-size: .875rem; font-weight: 600; color: var(--tldr-dim); cursor: pointer;
+    margin-left: auto; min-height: 2.75rem; padding: 0 .9rem; background: none;
+    border: 1px solid var(--tldr-hair); border-radius: 999px;
   }
-  .dot {
-    display: inline-block; width: 7px; height: 7px; border-radius: 999px;
-    background: var(--accent); margin-right: .5rem; vertical-align: middle;
-  }
-  .ptable .num {
-    white-space: nowrap; font-variant-numeric: tabular-nums;
-    font-size: .8125rem; color: var(--ink-faint);
-  }
-  .postlist__none { margin: 1.5rem 0 0; font-size: .9375rem; color: var(--ink-soft); }
+  .cue-pause:hover { color: var(--tldr-ink); }
 
-  /* ---------- news plug ---------- */
-  .plug {
-    margin-top: 2.5rem; padding: 1.75rem; border-radius: 18px;
-    background: var(--wash-ochre); border: 1px solid var(--border);
-    display: flex; align-items: center; justify-content: space-between;
-    gap: 1.5rem; flex-wrap: wrap;
+  /* ---------- the reader's side ---------- */
+  .reader { padding-top: clamp(2.75rem, 5vw, 4.5rem); }
+  .reader__top { display: flex; align-items: end; justify-content: space-between; flex-wrap: wrap; gap: 1.25rem 3rem; }
+  .reader h2 {
+    margin: 0; font-size: clamp(1.875rem, 3.8vw, 3rem); font-weight: 800;
+    letter-spacing: -.035em; line-height: 1.08; text-wrap: balance;
   }
-  .plug h2 { font-size: 1.25rem; font-weight: 800; margin: .5rem 0 .5rem; letter-spacing: -.015em; }
-  .plug p { margin: 0; font-size: .9375rem; line-height: 1.6; color: var(--ink-soft); max-width: 32rem; }
-  .plug__cta {
-    display: inline-flex; align-items: center; gap: .45rem; flex-shrink: 0;
-    font-size: .6875rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase;
-    text-decoration: none; color: var(--paper); background: var(--ink);
-    padding: .7rem 1.1rem; border-radius: 999px; transition: transform .25s var(--ease);
+  .find { flex: 0 1 20rem; min-width: min(100%, 16rem); }
+  .find label { display: block; font-size: .875rem; font-weight: 600; color: var(--ink-soft); margin-bottom: .35rem; }
+  .find__box { position: relative; }
+  .find input {
+    font: inherit; font-size: 1rem; width: 100%; min-height: 2.75rem; padding: 0 2.75rem 0 .9rem;
+    color: var(--ink); background: var(--card); border: 1px solid var(--border); border-radius: 10px;
   }
-  .plug__cta svg { width: 12px; height: 12px; transition: transform .25s var(--ease); }
-  .plug__cta:hover { transform: translateY(-2px); }
-  .plug__cta:hover svg { transform: translateX(3px); }
+  .find input::placeholder { color: var(--ink-soft); }
+  .find input:focus { outline: 2px solid var(--mizu); outline-offset: 1px; }
+  .find kbd {
+    position: absolute; right: .6rem; top: 50%; transform: translateY(-50%);
+    font: inherit; font-size: .8125rem; font-weight: 600; color: var(--ink-soft);
+    border: 1px solid var(--border); border-radius: 5px; padding: 0 .4rem; background: var(--paper);
+  }
+  .find input:focus + kbd { display: none; }
 
+  .doors {
+    display: grid; grid-template-columns: repeat(5, minmax(0, 1fr));
+    margin-top: 2rem; border-block: 1px solid var(--border);
+  }
+  .door {
+    font: inherit; color: inherit; text-align: left; cursor: pointer; background: none; border: 0;
+    display: grid; grid-template-columns: 2.5rem minmax(0, 1fr); gap: .1rem .75rem; align-items: center;
+    padding: 1.1rem 1rem; position: relative;
+    transition: background-color var(--dur-fast) var(--ease);
+  }
+  .door + .door { box-shadow: inset 1px 0 0 var(--border); }
+  .door:hover, .door[aria-pressed='true'] { background: var(--tint); }
+  .door[aria-pressed='true']::after {
+    content: ''; position: absolute; left: 0; right: 0; bottom: -1px; height: 3px; background: var(--accent);
+  }
+  .door__mark { grid-row: span 2; color: var(--accent); width: 2.5rem; height: 2.5rem; display: block; }
+  .door__mark svg { width: 100%; height: 100%; overflow: visible; display: block; }
+  .door__label { font-size: 1.1875rem; font-weight: 800; letter-spacing: -.02em; line-height: 1.2; }
+  .door__n { margin-left: .4rem; font-size: .8125rem; font-weight: 600; letter-spacing: 0; color: var(--ink-soft); }
+  .door__ask { font-size: .8125rem; line-height: 1.35; color: var(--ink-soft); }
+
+  /* Each mark has one deliberate break, and reaching for it closes the break. */
+  .door .ring { stroke-dasharray: 100; stroke-dashoffset: 22; transition: stroke-dashoffset .7s var(--ease); }
+  .door .arc { stroke-dasharray: 100; stroke-dashoffset: 26; transition: stroke-dashoffset .7s var(--ease); }
+  .door .a2 { transition-delay: .07s; } .door .a3 { transition-delay: .14s; }
+  .door .stray { transform: translate(-9px, 11px); transition: transform .6s var(--ease); }
+  .door .grid circle:last-child { opacity: 0; }
+  .door:hover .ring, .door[aria-pressed='true'] .ring,
+  .door:hover .arc, .door[aria-pressed='true'] .arc { stroke-dashoffset: 0; }
+  .door:hover .stray, .door[aria-pressed='true'] .stray { transform: none; }
+
+  .status { display: flex; flex-wrap: wrap; align-items: baseline; gap: .4rem 1.25rem; margin-top: 1.25rem; min-height: 1.6rem; }
+  .status__text { margin: 0; flex: 0 1 46rem; font-size: .9375rem; line-height: 1.55; color: var(--ink-soft); }
+  .linkish {
+    font: inherit; font-size: .9375rem; font-weight: 700; color: var(--ink); background: none; border: 0;
+    border-bottom: 1px solid var(--border); padding: 0 0 1px; cursor: pointer; text-decoration: none;
+    transition: border-color var(--dur-fast) var(--ease);
+  }
+  .linkish:hover { border-color: var(--ink); }
+
+  .shelf {
+    display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    gap: clamp(2rem, 4vw, 4rem); margin-top: .75rem; align-items: start;
+  }
+  .qs { list-style: none; margin: 0; padding: 0; }
+  .q { border-bottom: 1px solid var(--border); }
+  .q a { display: block; padding: 1.15rem 0; text-decoration: none; }
+  .q__ask {
+    font-family: var(--serif); font-size: clamp(1.25rem, 1.75vw, 1.5rem);
+    font-weight: 500; line-height: 1.28; letter-spacing: -.008em; text-wrap: pretty;
+    background-image: linear-gradient(var(--accent), var(--accent));
+    background-repeat: no-repeat; background-size: 0 1.5px; background-position: 0 100%;
+    display: inline; transition: background-size .45s var(--ease);
+  }
+  .q a:hover .q__ask, .q a:focus-visible .q__ask { background-size: 100% 1.5px; }
+  .q__title { display: block; margin-top: .45rem; font-size: .9375rem; font-weight: 600; line-height: 1.4; color: var(--ink-soft); }
+  .q__meta { display: block; margin-top: .3rem; font-size: .8125rem; color: var(--ink-soft); font-variant-numeric: tabular-nums; }
+  .q__dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--accent); margin-right: .4rem; vertical-align: 1px; }
+
+  .pv { position: sticky; top: calc(var(--nav-h, 4.5rem) + 1rem); margin-top: .5rem; }
+  .q--on .q__ask { background-size: 100% 1.5px; }
+
+  .empty-q { margin: 1.5rem 0 0; font-size: 1rem; color: var(--ink-soft); }
+  .more {
+    font: inherit; font-size: .9375rem; font-weight: 700; color: var(--paper); background: var(--ink);
+    border: 0; border-radius: 999px; min-height: 2.75rem; padding: 0 1.4rem; margin-top: 1.5rem; cursor: pointer;
+  }
+
+  /* ---------- how it gets made ---------- */
+  .working { margin-top: clamp(3.5rem, 6vw, 5.5rem); background: var(--paper-2); border-block: 1px solid var(--border); }
+  .working__in {
+    display: grid; grid-template-columns: minmax(0, 4fr) minmax(0, 5fr) minmax(0, 3fr);
+    gap: 2.5rem clamp(2rem, 4vw, 4rem); padding-block: clamp(2.5rem, 5vw, 4rem); align-items: start;
+  }
+  .working h2 { margin: 0; font-size: clamp(1.625rem, 2.6vw, 2.25rem); font-weight: 800; letter-spacing: -.03em; line-height: 1.12; text-wrap: balance; }
+  .working p { margin: .85rem 0 1rem; font-size: 1rem; line-height: 1.6; color: var(--ink-soft); text-wrap: pretty; }
+  .author h3 { margin: 0; font-size: 1.0625rem; font-weight: 800; letter-spacing: -.012em; }
+  .author p { font-size: .9375rem; margin-top: .5rem; }
+
+  .flow { font-size: .9375rem; font-weight: 600; }
+  .flow__steps { list-style: none; margin: 0; padding: 0; display: flex; }
+  .flow__steps li { flex: 1; position: relative; padding-top: 1.1rem; }
+  .flow__steps li::before {
+    content: ''; position: absolute; top: 3px; left: 0; width: 9px; height: 9px;
+    transform: rotate(45deg); background: var(--ink);
+  }
+  .flow__steps li::after { content: ''; position: absolute; top: 7px; left: 9px; right: 0; height: 1px; background: var(--ink-soft); }
+  .flow__lanes { margin-top: 1.1rem; display: grid; gap: .6rem; }
+  .lane {
+    display: flex; align-items: center; gap: .9rem; min-height: 3.75rem; padding: .5rem .9rem;
+    border: 1px solid var(--border); border-radius: 12px; background: var(--paper);
+  }
+  .lane__who { flex: 1; min-width: 0; line-height: 1.3; }
+  .lane__end { color: var(--ink-soft); white-space: nowrap; }
+  .lane__end::before { content: '→ '; }
+  .lane__seal {
+    flex: none; display: grid; place-items: center; width: 3.9rem; height: 3.9rem; margin-block: -.25rem;
+    font-size: .75rem; line-height: 1.1; font-weight: 800; text-align: center;
+    color: color-mix(in srgb, var(--hanko) 78%, var(--ink));
+    border: 2px solid var(--hanko); border-radius: 8px 8px 8px 2px; transform: rotate(-4deg);
+  }
+
+  /* ---------- bschool ---------- */
+  .bschool {
+    display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap;
+    gap: 1.25rem 3rem; padding-block: clamp(2.5rem, 4vw, 3.5rem) 0;
+  }
+  .bschool h2 { margin: 0; font-size: 1.375rem; font-weight: 800; letter-spacing: -.02em; }
+  .bschool p { margin: .4rem 0 0; max-width: 36rem; font-size: 1rem; line-height: 1.55; color: var(--ink-soft); }
+  .bschool__go { font-size: .9375rem; font-weight: 700; text-decoration: none; color: var(--paper); background: var(--ink); padding: .75rem 1.3rem; border-radius: 999px; white-space: nowrap; }
+
+  .main--immersive > footer {
+    margin-inline: auto; max-width: 88rem; margin-top: 3.5rem;
+    padding-inline: var(--gutter); border-top: 0;
+  }
+  .main--immersive > footer, .main--immersive .colophon { color: var(--ink-soft); }
+
+  @media (max-width: 68rem) {
+    .plate__id { grid-template-columns: 1fr; }
+    .claim__mend { grid-template-columns: minmax(0, 1fr); }
+    .claim__go { justify-self: start; margin-top: .4rem; }
+    .doors { grid-template-columns: minmax(0, 1fr); border-bottom: 0; }
+    .door { border-bottom: 1px solid var(--border); padding-inline: .25rem; }
+    .door + .door { box-shadow: none; }
+    .working__in { grid-template-columns: minmax(0, 1fr); }
+  }
   @media (max-width: 60rem) {
-    .featured__grid { grid-template-columns: 1fr; }
-    .tracks__grid { grid-template-columns: repeat(2, 1fr); }
+    /* Under the list here, so the bowl never delays the first question. */
+    .shelf { grid-template-columns: minmax(0, 1fr); }
+    .pv { position: static; margin-top: 1.75rem; order: 1; max-width: 32rem; }
   }
   @media (max-width: 40rem) {
-    .tracks__grid { grid-template-columns: 1fr; }
-    /* A four-column table does not fit a phone. Drop to title + date and let
-       the theme show as the accent dot beside the title. */
-    .ptable thead { display: none; }
-    .ptable tbody tr { display: grid; grid-template-columns: 1fr auto; gap: .15rem .75rem; padding: .35rem 0; }
-    .ptable tbody td, .ptable tbody th { border: 0; padding: .15rem 0; }
-    .ptable tbody th { grid-column: 1 / -1; order: 2; }
-    .ptable__track { order: 1; }
-    .ptable .num { order: 3; text-align: right; }
-    .ptable tbody tr { border-bottom: 1px solid var(--border); padding-bottom: .9rem; margin-bottom: .5rem; }
-    .plug { padding: 1.35rem; }
-    .plug__cta { width: 100%; justify-content: center; }
-    .track { padding: 1.35rem; }
+    .main--immersive .topnav { position: static; flex-wrap: wrap; row-gap: .5rem; padding-bottom: .75rem; }
+    .topnav__mark { flex: 1 1 calc(100% - 4rem); margin: 0; }
+    .main--immersive .themetoggle { order: 1; }
+    .main--immersive .topnav a:not(.topnav__mark) { order: 2; }
+    .main--immersive .topnav__spacer { margin-left: 0; }
+    .cue-pause { margin-left: 0; }
+    .cue-hint { flex-basis: 100%; margin-left: 0; order: 9; }
+    .lane { flex-wrap: wrap; }
+    .lane__end { flex-basis: 100%; }
+    .plate { clip-path: polygon(0 0, 100% 0, 100% 100%, 62% 100%, 61% calc(100% - 7px), 61.4% calc(100% - 11px), 60.4% calc(100% - 16px), 0 calc(100% - 16px)); }
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .rulebar span { animation: none; transform: none; }
-    .featured__grid a, .track { transition: border-color .2s; }
-    .featured__grid a:hover, .track:hover { transform: none; }
-    .track .ring, .track .arc, .track .stray { transition: none; }
+    .claim.play .claim__seam, .claim.play .claim__pc--l,
+    .claim.play .claim__pc--r, .claim.play .claim__mend, .auto .cue--on .cue__bar { animation: none; }
+    .door .ring, .door .arc, .door .stray { transition: none; }
   }
 </style>
