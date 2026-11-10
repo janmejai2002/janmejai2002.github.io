@@ -109,7 +109,7 @@ function liftArtworkBrief(markdown) {
  * Returns { markdown, svg, alt }. svg/alt are null when the section is absent
  * or unusable; the caller falls back to deterministic art and says so.
  */
-function liftArtworkSvg(markdown, warn) {
+function liftArtworkSvg(markdown, warn, slug = null) {
   const lines = markdown.split('\n');
   const start = lines.findIndex((l) => /^##\s+Artwork SVG\s*$/i.test(l));
   if (start === -1) return { markdown, svg: null, alt: null };
@@ -135,6 +135,24 @@ function liftArtworkSvg(markdown, warn) {
   else {
     if (!svg.includes('{{paper}}')) reasons.push('no {{paper}} ground token');
     if (/(?:fill|stroke)="#/i.test(svg)) reasons.push('hardcodes a hex colour');
+
+    // Anti-duplication guard: ensure an agent does not copy another article's SVG geometry
+    if (slug) {
+      const artDir = join(here, '..', 'assets-src', 'art');
+      if (existsSync(artDir)) {
+        const existingFiles = readdirSync(artDir).filter((f) => f.endsWith('.svg') && f !== `${slug}.svg`);
+        const cleanSvg = svg.replace(/\s+/g, ' ').trim();
+        for (const f of existingFiles) {
+          try {
+            const existingContent = readFileSync(join(artDir, f), 'utf8').replace(/\s+/g, ' ').trim();
+            if (cleanSvg.length > 300 && existingContent.includes(cleanSvg.slice(100, 300))) {
+              reasons.push(`artwork geometry duplicates ${f}`);
+              break;
+            }
+          } catch {}
+        }
+      }
+    }
   }
   if (!alt) reasons.push('no "Alt:" line');
 
@@ -143,6 +161,44 @@ function liftArtworkSvg(markdown, warn) {
     return { markdown: rest, svg: null, alt: null };
   }
   return { markdown: rest, svg, alt };
+}
+
+/**
+ * Normalizes article markdown to prevent common LLM formatting defects:
+ * 1. Strips blank lines inside raw inline <svg> blocks so CommonMark doesn't break.
+ * 2. Auto-converts ASCII-boxed tables in code blocks into semantic GFM Markdown tables.
+ */
+function normalizeProse(markdown) {
+  // 1. Remove blank lines inside raw inline SVG blocks
+  let result = markdown.replace(/<svg[\s\S]*?<\/svg>/gi, (svgBlock) => {
+    return svgBlock.split('\n').filter((l) => l.trim() !== '').join('\n');
+  });
+
+  // 2. Convert ASCII box tables inside code blocks to standard GFM tables
+  result = result.replace(/```(?:text)?\s*\n(\+[-=+]+\+[\s\S]*?\+[-=+]+\+)\s*```/g, (match, tableAscii) => {
+    const lines = tableAscii.split('\n').map((l) => l.trim()).filter(Boolean);
+    const rows = [];
+    for (const line of lines) {
+      if (line.startsWith('+') && line.endsWith('+')) continue; // separator line
+      if (line.startsWith('|') && line.endsWith('|')) {
+        const cells = line.slice(1, -1).split('|').map((c) => c.trim());
+        if (cells.length === 1 && rows.length === 0) continue; // title banner
+        rows.push(cells);
+      }
+    }
+    if (rows.length < 2) return match;
+    const header = rows[0];
+    const dataRows = rows.slice(1);
+    const colCount = header.length;
+    let gfm = `| ${header.join(' | ')} |\n| ${Array(colCount).fill('---').join(' | ')} |\n`;
+    for (const row of dataRows) {
+      const padded = Array.from({ length: colCount }, (_, i) => row[i] ?? '');
+      gfm += `| ${padded.join(' | ')} |\n`;
+    }
+    return `\n${gfm.trim()}\n`;
+  });
+
+  return result;
 }
 
 /**
@@ -375,8 +431,8 @@ for (const page of rows) {
   }
 
   const lifted = liftArtworkBrief(renderedBody);
-  const liftedArt = liftArtworkSvg(lifted.markdown, (reason) => note(id, title, reason));
-  const markdown = wrapTldr(stripLeadingH1(liftedArt.markdown));
+  const liftedArt = liftArtworkSvg(lifted.markdown, (reason) => note(id, title, reason), slug);
+  const markdown = normalizeProse(wrapTldr(stripLeadingH1(liftedArt.markdown)));
   const words = markdown.split(/\s+/).filter((w) => /\w/.test(w)).length;
   const hasTldr = markdown.startsWith('<div class="tldr">');
   const keywords = plain(p['SEO Keywords']?.rich_text)

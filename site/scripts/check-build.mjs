@@ -77,6 +77,17 @@ function check(path, html) {
   if (/^blog[\\/].+[\\/]index\.html$/.test(rel) && !html.includes('class="tldr"')) {
     fail('article has no Executive TL;DR plate (<div class="tldr">)');
   }
+
+  // 8. No multi-column ASCII tables inside code blocks in article prose.
+  // Tables must be authored as standard GFM markdown tables so Astro renders them
+  // into styled <table> elements.
+  if (/^blog[\\/].+[\\/]index\.html$/.test(rel)) {
+    for (const code of body.match(/<pre[^>]*>[\s\S]*?<\/pre>/g) ?? []) {
+      if (/\+[-=]{3,}(\+[-=]{3,})+\+/.test(code) && /\|[^|\n]+\|[^|\n]+\|/.test(code)) {
+        fail('contains a multi-column ASCII table inside a code block — convert to a standard GFM Markdown table');
+      }
+    }
+  }
 }
 
 walk(dist);
