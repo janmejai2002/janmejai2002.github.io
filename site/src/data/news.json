@@ -1,5 +1,45 @@
 [
   {
+    "headline": "BCG Finds AI Spend Hit 3.3% of Revenue With Zero Non-Tech Payoff",
+    "date": "2026-11-10",
+    "category": "Consulting",
+    "summary": "Boston Consulting Group (BCG) estimates corporate AI spending nearly doubled from 1.7% of revenue in late 2025 to 3.3% in 2026, yet St. Louis Fed and Census Bureau data show 40% worker usage and 25% firm adoption have produced zero measurable financial payoff outside the tech sector because human approval bottlenecks remain unchanged. At the same time, U.S. midterm candidates spent nearly $90 million on anti-data-center ads and voters passed data center restrictions in at least 38 communities as Gallup public trust in tech firms fell from 32% in 2020 to 20% in 2026.",
+    "angle": "Consulting interviewers will press you on the organizational design flaw behind BCG's numbers: why do enterprises double AI spend to 3.3% of revenue without seeing P&L gains? If an advisory partner is hired to turn individual AI productivity into bottom-line EBITDA, why must you redesign sign-off authority and role headcount before deploying software—and how do local data center bans alter sovereign cloud advisory roadmaps?",
+    "source": "https://www.shrm.org/topics-tools/news/ai-unlocked-4-essential-things-to-know-this-week-november-9"
+  },
+  {
+    "headline": "Blinkit Hits 2,751 Dark Stores as 71% of Buyers Pick Price on Apps",
+    "date": "2026-11-10",
+    "category": "Operations",
+    "summary": "Eternal added 308 Blinkit dark stores in Q2 FY27 to reach 2,751 stores (targeting 3,500 by March 2027) as net order value rose 79% year-on-year to Rs 20,940 crore, while Swiggy Instamart reached 1,240 stores (Rs 9,230 crore GOV) and Flipkart Minutes scaled to 1,200 micro-fulfillment centers across 150+ cities. A LocalCircles survey shows 71% of festive quick-commerce shoppers now choose platforms based on price and value, 65% on product quality, and 43% on low fees, while only 22% rank 10-minute delivery speed as their primary driver.",
+    "angle": "Operations interviewers will challenge the unit economics of adding hundreds of fixed-lease dark stores—where non-grocery volumes grow 1.6x faster than groceries—when 71% of shoppers prioritize price and 43% resist delivery fees. Once 10-minute delivery becomes a commoditized baseline across 2,751+ dark stores, how do you prevent SKU proliferation in fashion and electronics from inflating dark store inventory holding costs and stockouts?",
+    "source": "https://www.socialsamosa.com/samosa-snippets/quick-commerce-shaping-india-10-minute-diwali-shopping-12779835"
+  },
+  {
+    "headline": "D2C Pre-Diwali GMV Jumps 81% to Rs 1,328 Cr on Home Appliance Push",
+    "date": "2026-11-10",
+    "category": "Marketing",
+    "summary": "GoKwik's commerce network of over 20,000 D2C brands recorded Rs 1,328 crore in gross merchandise value (GMV) during the 16-day pre-Diwali 2026 window, up 81% from Rs 732 crore last year as average daily GMV rose 70% to Rs 83 crore. Home and kitchen products expanded from 7% of total network sales in September to 9.3% during the festive run-up—with household appliance sales jumping 2.13x and kitchenware rising 73%—while Swiggy Instamart saw non-metro festive orders surge across Raipur, Madurai, Guwahati, Thrissur, and Kollam.",
+    "angle": "Marketing interviewers will ask how a D2C home-appliance brand should balance customer acquisition costs when 60% more brands crowd the festive auction and push up ad rates. Since high-ticket appliances have multi-year replacement cycles, how do you design post-Diwali cross-sell funnels (such as filters, cookware attachments, or consumables) so festive buyers do not become one-time unprofitable cohorts?",
+    "source": "https://www.business-standard.com/industry/news/diwali-shopping-expands-beyond-essentials-as-fashion-gifting-gain-ground-126110900758_1.html"
+  },
+  {
+    "headline": "OpenSea Mobile Launches With 76% Beta Retention and 25% Fee Split",
+    "date": "2026-11-10",
+    "category": "Product Management",
+    "summary": "OpenSea launched its mobile trading app on iOS and Android across more than 25 blockchains after recording 76% active retention among 56,000+ beta sign-ups, replacing seed-phrase setup with under-one-minute Apple Pay and Google Pay onboarding. To win back active traders after losing NFT market share to zero-fee rival Blur, the app introduces an on-chain verified social feed (\"Signals\") and pays referrers a permanent 25% share of invitees' trading fees alongside a lifetime 10% fee discount for referred users.",
+    "angle": "Product panelists will test the unit-economic sustainability of giving away 35% of gross take-rate (a permanent 25% referrer revenue share plus a 10% user fee discount) versus paying upfront performance marketing CAC. When does a perpetual referral annuity create a defensible social-trading network effect, and when does it permanently cap contribution margin while inviting SEC and EU inducement scrutiny?",
+    "source": "https://thefintechtimes.com/opensea-mobile-launches-with-social-trading-feed-and-25-referral-fees/"
+  },
+  {
+    "headline": "Public Cash Rises Rs 5.26L Cr as Currency-to-GDP Holds at 12.1%",
+    "date": "2026-11-10",
+    "category": "Finance",
+    "summary": "Ten years after India's November 2016 demonetisation, RBI data shows currency with the public grew by Rs 5.26 lakh crore (up 14.1%) in calendar year 2026 through October 16, keeping the FY26 currency-to-GDP ratio at 12.1%—identical to its March 2016 level and above the US (7.3%) and China (10.2%). Over the same FY26 period, credit cards, debit cards, and prepaid wallets processed 151,611 lakh transactions worth Rs 30.31 lakh crore, with wallets leading transaction count and credit cards capturing the largest share of value.",
+    "angle": "Finance panelists will press you on why physical cash in circulation continues growing at 14.1% annually despite ubiquitous zero-MDR UPI and Rs 30.31 lakh crore in card and wallet flows. What does a sticky 12.1% currency-to-GDP ratio imply for commercial banks' low-cost CASA deposit mobilization, informal-sector credit underwriting, and the RBI's net seigniorage income?",
+    "source": "https://www.angelone.in/news/economy/ten-years-after-demonetisation-cash-remains-firmly-in-use-despite-digital-payments"
+  },
+  {
     "headline": "Brands Shift Ad Spend to GEO as 26% of Buyers Research via AI",
     "date": "2026-11-09",
     "category": "Marketing",
