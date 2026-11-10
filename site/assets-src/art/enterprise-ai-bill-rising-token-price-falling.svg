@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" role="img">
+  <title>Token Price Deflation vs Agentic TCO Monolith</title>
+  <desc>A falling token cost curve feeds an expanding concentric agent spiral and a stacked TCO column capped by a crimson hanko seal.</desc>
+  <defs><filter id="grain" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch"/></filter></defs>
+  <rect width="1600" height="900" fill="{{paper}}"/>
+  <path d="M120,740H1480M120,140V740" stroke="{{ink}}" stroke-width="2" fill="none"/>
+  <line x1="120" y1="240" x2="1480" y2="240" stroke="{{hanko}}" stroke-width="2" stroke-dasharray="12,8"/>
+  <path d="M160,190Q260,640,500,710" fill="none" stroke="{{ink}}" stroke-width="3"/>
+  <circle cx="160" cy="190" r="8" fill="{{ink}}"/>
+  <circle cx="500" cy="710" r="8" fill="{{ink}}"/>
+  <circle cx="820" cy="490" r="36" fill="none" stroke="{{border}}" stroke-width="1.5"/>
+  <circle cx="820" cy="490" r="72" fill="none" stroke="{{border}}" stroke-width="1.8"/>
+  <circle cx="820" cy="490" r="112" fill="none" stroke="{{ink}}" stroke-width="2"/>
+  <path d="M820,330A160,160,0,1,1,664,524" fill="none" stroke="{{ink}}" stroke-width="3" stroke-dasharray="36,6,18,4"/>
+  <path d="M1160,620h220v120h-220zM1160,500h220v120h-220zM1160,380h220v120h-220zM1160,240h220v140h-220z" fill="{{paper}}" stroke="{{ink}}" stroke-width="2.5"/>
+  <rect x="1344" y="204" width="68" height="68" transform="rotate(-4 1378 238)" fill="{{hanko}}" stroke="{{ink}}" stroke-width="1.5"/>
+  <circle cx="1378" cy="238" r="18" fill="{{paper}}"/>
+  <rect width="1600" height="900" filter="url(#grain)" opacity="0.055"/>
+</svg>
