@@ -81,7 +81,7 @@ files['gemini/skills/waibi-repair/failure-codes.md'] =
   HEADER +
   `# Failure codes and how to fix each one\n\nA row in the Repair Queue lists one or more codes. Fix every code listed, and nothing else.\nAfter ${R.REPAIR.maxAttempts} failed repairs a person takes over.\n\n` +
   Object.entries(R.FAILURES)
-    .map(([c, f]) => `## ${c} — ${f.summary}\n\nSeverity: ${f.class === 'block' ? 'blocks publishing' : f.class === 'warn' ? 'warning only (fix it anyway while you are there)' : 'fixed automatically'}${f.noRepair ? ' · NOT repairable by you: skip this row' : ''}\n\n${f.playbook}\n`)
+    .map(([c, f]) => `## ${c} — ${f.summary}\n\nSeverity: ${f.class === 'block' ? 'blocks publishing' : f.class === 'warn' ? 'warning only (fix it if cheap while you are there; never cut or rewrite content for it)' : 'fixed automatically'}${f.noRepair ? ' · NOT repairable by you: skip this row' : ''}\n\n${f.playbook}\n`)
     .join('\n');
 
 files['gemini/skills/waibi-artwork/tokens.md'] =

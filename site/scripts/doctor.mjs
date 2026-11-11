@@ -119,6 +119,7 @@ if (notionUp) {
     const queued = prod.filter((p) => route(p) === 'repair');
     const gaveUp = prod.filter((p) => route(p) === 'human');
     const legacy = prod.filter((p) => route(p) === 'legacy');
+    const warnOnly = prod.filter((p) => route(p) === 'publish');
     add({
       id: 'repair-loop',
       title: 'Self-healing — Repair Queue',
@@ -126,8 +127,14 @@ if (notionUp) {
       detail:
         `${queued.length} queued for the Repairer` +
         (queued.length ? ` (${queued.map((p) => `${key(p)} [${codes(p).join(',')}] try ${tries(p) + 1}`).join('; ')})` : '') +
-        ` · ${gaveUp.length} need a person (limit ${REPAIR.maxAttempts} or not auto-repairable) · ${legacy.length} pre-harness row(s) not in the loop`,
-      fix: gaveUp.length ? 'Each has a GitHub issue labelled needs-human. Fix the Notion page, run --check, set Draft Ready.' : '',
+        ` · ${gaveUp.length} need a person (limit ${REPAIR.maxAttempts} or not auto-repairable) · ${legacy.length} pre-harness row(s) not in the loop` +
+        (warnOnly.length ? ` · ${warnOnly.length} warning-only row(s) not queued (${warnOnly.map(key).join(', ')})` : ''),
+      fix: [
+        gaveUp.length && 'Each has a GitHub issue labelled needs-human. Fix the Notion page, run --check, set Draft Ready.',
+        warnOnly.length && 'Warning-only rows publish as they are: set Draft Ready.',
+      ]
+        .filter(Boolean)
+        .join(' '),
     });
   } catch (err) {
     add({ id: 'repair-loop', title: 'Self-healing — Repair Queue', status: 'warn', detail: `query failed: ${err.message.split('\n')[0]}` });

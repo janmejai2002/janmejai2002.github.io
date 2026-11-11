@@ -38,6 +38,24 @@ function stripCode(md) {
 }
 
 /**
+ * Every finding as "CODE: message", block codes first, then warnings, joined
+ * with " | " and kept within CAPS.blockedReason. When it is too long the
+ * messages are shortened evenly; codes are never dropped, because a code
+ * without its message is what sent the Repairer hunting (HARNESS-REPAIR-PLAN §1).
+ */
+export function formatFindings(findings, max = CAPS.blockedReason) {
+  const rank = { block: 0, warn: 1 };
+  const ordered = [...findings].sort((a, b) => (rank[a.class] ?? 0) - (rank[b.class] ?? 0));
+  const full = ordered.map((f) => `${f.code}: ${f.message}`).join(' | ');
+  if (full.length <= max) return full;
+  const sep = ' | '.length * Math.max(0, ordered.length - 1);
+  const fixed = ordered.reduce((n, f) => n + f.code.length + 2, 0);
+  const per = Math.max(0, Math.floor((max - sep - fixed) / ordered.length));
+  const cut = (m) => (m.length <= per ? m : `${m.slice(0, Math.max(0, per - 1))}…`);
+  return ordered.map((f) => `${f.code}: ${cut(f.message)}`).join(' | ').slice(0, max);
+}
+
+/**
  * @param {string} md        the article body as it will be written (after normalisation)
  * @param {object} meta      { title, description, question, track }
  * @returns {{code:string, message:string}[]}

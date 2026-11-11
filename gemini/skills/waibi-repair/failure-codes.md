@@ -73,25 +73,25 @@ Remove every markdown image (![...](...)) and <img> from the article body. The o
 
 ## G-ART — Artwork SVG unusable, fallback art used
 
-Severity: warning only (fix it anyway while you are there)
+Severity: warning only (fix it if cheap while you are there; never cut or rewrite content for it)
 
 In "## Artwork SVG": an "Alt:" line, then one ```xml code block with a 1600x900 <svg> using only {{tokens}}, starting with <rect width="1600" height="900" fill="{{paper}}"/>. No hex colours, no blank lines.
 
 ## G-SOURCES — Fewer than 3 source links
 
-Severity: warning only (fix it anyway while you are there)
+Severity: warning only (fix it if cheap while you are there; never cut or rewrite content for it)
 
 Add a "## Sources" section before "## Artwork brief" with at least 3 bullets "[Page title](https://url) — what it supports", each a page that actually contains the claim. For Talks the first is the video URL. Remove any claim you cannot source.
 
 ## G-LENGTH — Article over the word budget
 
-Severity: warning only (fix it anyway while you are there)
+Severity: warning only (fix it if cheap while you are there; never cut or rewrite content for it)
 
-Cut to 1,400–1,800 words by removing the weakest section, not by compressing every paragraph.
+Only if the gate's count is over 2,200 words. The gate counts prose only: code blocks, inline code, HTML tags and the Artwork sections are not counted (Sources link text is). Cut the least-supported paragraphs until the count is under 2,200. Never delete a limitations or trade-offs section. This is a warning: it never justifies rewriting the article.
 
 ## G-STYLE — Banned words or em dashes
 
-Severity: warning only (fix it anyway while you are there)
+Severity: warning only (fix it if cheap while you are there; never cut or rewrite content for it)
 
 Replace each banned word with a concrete verb and each em dash (—) with a period, comma, colon or parentheses.
 

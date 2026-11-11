@@ -87,9 +87,11 @@ function mirrorNotion_() {
     var url = (pr['Post URL'] && pr['Post URL'].url) || '';
     status.push([key, title, track, draftStatus, codes.join(', '), reason, attempts, url, p.last_edited_time]);
 
-    // Same rule as routeFailure() in site/harness/registry.mjs.
+    // Same rule as routeFailure() in site/harness/registry.mjs. Warning codes
+    // alone never queue a repair; they ride along on a row queued for a block code.
     var unrepairable = !codes.length || codes.some(function (c) { return !REGISTRY.FAILURES[c] || REGISTRY.FAILURES[c].noRepair; });
-    if (draftStatus === 'Needs Revision' && attempts < max && !unrepairable) {
+    var blocking = codes.some(function (c) { return (REGISTRY.FAILURES[c] || {}).class === 'block'; });
+    if (draftStatus === 'Needs Revision' && attempts < max && !unrepairable && blocking) {
       var mine = outbox.filter(function (r) { return r.Key === key; })
         .sort(function (a, b) { return Number(b.Attempt) - Number(a.Attempt); });
       var latest = mine[0];

@@ -265,7 +265,7 @@ var REGISTRY = {
       "class": "warn",
       "where": "preflight",
       "summary": "Article over the word budget",
-      "playbook": "Cut to 1,400–1,800 words by removing the weakest section, not by compressing every paragraph."
+      "playbook": "Only if the gate's count is over 2,200 words. The gate counts prose only: code blocks, inline code, HTML tags and the Artwork sections are not counted (Sources link text is). Cut the least-supported paragraphs until the count is under 2,200. Never delete a limitations or trade-offs section. This is a warning: it never justifies rewriting the article."
     },
     "G-STYLE": {
       "class": "warn",

@@ -34,6 +34,9 @@ export const CAPS = {
   wordsMin: 1200,
   wordsMax: 2200, // G-LENGTH warns above this; prompts ask for 1,400–1,800
   minSources: 3,
+  // Blocked Reason budget. Notion allows 2,000 per rich_text; flagBlocked adds a
+  // "(checked … UTC)" stamp and escalation adds a "NEEDS YOU (…)" prefix.
+  blockedReason: 1900,
 };
 
 /**
@@ -214,7 +217,7 @@ export const FAILURES = {
   'G-LENGTH': {
     class: 'warn', where: 'preflight',
     summary: 'Article over the word budget',
-    playbook: 'Cut to 1,400–1,800 words by removing the weakest section, not by compressing every paragraph.',
+    playbook: `Only if the gate's count is over ${CAPS.wordsMax.toLocaleString('en-US')} words. The gate counts prose only: code blocks, inline code, HTML tags and the Artwork sections are not counted (Sources link text is). Cut the least-supported paragraphs until the count is under ${CAPS.wordsMax.toLocaleString('en-US')}. Never delete a limitations or trade-offs section. This is a warning: it never justifies rewriting the article.`,
   },
   'G-STYLE': {
     class: 'warn', where: 'preflight',
@@ -235,12 +238,17 @@ export const failureClass = (code) => FAILURES[code]?.class ?? 'block';
  * Where a Needs Revision row goes next. One rule, used by the Conductor (via
  * Registry.js), doctor and the gates, so nothing can fall between them:
  *   'repair' — the Repairer takes it (keyed, under the attempt limit, every code repairable)
- *   'human'  — a GitHub issue (limit reached, or any code the Repairer cannot fix)
- *   'legacy' — pre-harness row with no Sheet Key; left to the owner as before
+ *   'human'   — a GitHub issue (limit reached, or any code the Repairer cannot fix)
+ *   'publish' — only warning codes: never queued (owner's decision, 2026-11-11).
+ *               The gate publishes such a draft with the warnings logged; a row
+ *               stuck in Needs Revision this way just needs Draft Ready again.
+ *   'legacy'  — pre-harness row with no Sheet Key; left to the owner as before
+ * Warn codes still ride along on a queued row, as "fix if cheap".
  */
 export function routeFailure({ key, attempts = 0, codes = [] }) {
   if (!key) return 'legacy';
   if (attempts >= REPAIR.maxAttempts) return 'human';
   if (!codes.length || codes.some((c) => !FAILURES[c] || FAILURES[c].noRepair)) return 'human';
+  if (!codes.some((c) => failureClass(c) === 'block')) return 'publish';
   return 'repair';
 }
