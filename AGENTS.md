@@ -90,4 +90,4 @@ The following skills are configured in `.agents/skills/` and global config:
 
 ## 6. Current handoff
 
-Before doing any work, read `docs/AGY-HANDOFF.md` and `docs/DESIGN-SYSTEM.md`. They override older docs on design. Do not commit or push unless the owner asks in the conversation.
+Before doing any work, read `docs/AGY-HANDOFF.md` (current state and first tasks, 2026-11-11), then `docs/HOW-IT-WORKS.md`. For site design, `docs/DESIGN-SYSTEM.md` overrides older docs. Do not commit or push unless the owner asks in the conversation.
