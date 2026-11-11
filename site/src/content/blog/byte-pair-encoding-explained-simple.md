@@ -2,6 +2,7 @@
 title: 'Byte Pair Encoding Explains Why AI Models Cannot Count Letters or Math'
 description: 'AI models never see letters or digits. Learn how Byte Pair Encoding (BPE) glues text into integer tokens, hiding the r in strawberry and breaking basic math.'
 pubDate: 2026-11-11
+publishedAt: '2026-11-11T01:19:58.000Z'
 track: basics
 question: 'Why do smart AI models fail at simple tasks like counting letters or basic math?'
 keywords:

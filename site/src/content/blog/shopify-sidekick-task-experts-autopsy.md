@@ -2,6 +2,7 @@
 title: 'Shopify Sidekick Autopsy: The 40:1 Token Tax and the 96% Cost Cut'
 description: 'Shopify replaced a $27M frontier API tax on Sidekick with post-trained Nemotron MoE models, cutting GraphQL latency from 6.5s to 0.87s and costs by 96%.'
 pubDate: 2026-11-11
+publishedAt: '2026-11-10T22:57:51.000Z'
 track: case-studies
 question: 'Can self-hosted task-expert models replace frontier APIs to eliminate high token read costs and reduce query latency?'
 heroImage: '../../assets/art/shopify-sidekick-task-experts-autopsy-light.webp'

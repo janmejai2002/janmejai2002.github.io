@@ -2,6 +2,7 @@
 title: 'Model Context Protocol Flaws Enable Local Remote Code Execution'
 description: 'How MCP tool poisoning triggers local RCE in coding agents and how to enforce mcp server prompt injection security.'
 pubDate: 2026-11-11
+publishedAt: '2026-11-10T22:57:51.000Z'
 track: technical
 question: 'How do attackers weaponize Model Context Protocol tool descriptions to trigger RCE?'
 keywords:

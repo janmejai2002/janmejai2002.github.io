@@ -2,6 +2,7 @@
 title: 'Flaky Agent Evals Force CI Shift from LLM Judges to Trajectory Gates'
 description: 'LLM judges fail 31% of the time on code diffs. Replace flaky prompts with deterministic pytest AST gates and tau-bench pass^k rules to cut CI runs 64%.'
 pubDate: 2026-11-11
+publishedAt: '2026-11-11T03:36:35.000Z'
 track: technical
 question: 'Why do our AI agent CI test suites pass on one run and fail completely on the next?'
 keywords:

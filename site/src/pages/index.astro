@@ -9,9 +9,10 @@ import { TRACKS } from '../data/tracks';
 import { CLAIMS } from '../data/claims';
 import { plateEdge, EDGE_DEPTH } from '../lib/bowl';
 import { pickCrew, WHO, type Mood, type Who } from '../lib/crew';
+import { newestFirst } from '../lib/posts';
 
 const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
-  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf() || b.id.localeCompare(a.id)
+  newestFirst
 );
 
 const slugOf = (p: (typeof posts)[number]) => p.id.replace(/\.md$/, '');

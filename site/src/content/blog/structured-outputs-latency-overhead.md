@@ -2,6 +2,7 @@
 title: 'Grammar Constrained Decoding Imposes a 40% Logit Masking Penalty'
 description: 'Enforcing strict JSON schemas on 8B models adds a 25% to 45% token latency penalty via CPU-GPU logit masking. Compare XGrammar, Outlines, and llguidance.'
 pubDate: 2026-11-11
+publishedAt: '2026-11-10T22:57:51.000Z'
 track: technical
 question: 'Why does enforcing strict JSON schemas slow down small model token generation by 40%?'
 keywords:

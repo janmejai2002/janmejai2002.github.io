@@ -30,6 +30,9 @@ const blog = defineCollection({
         // above the title and on the index card.
         question: z.string().max(120).optional(),
         updatedDate: z.coerce.date().optional(),
+        // When the pipeline wrote the file (full timestamp). Only breaks ties
+        // between posts with the same pubDate, so the newest one leads.
+        publishedAt: z.coerce.date().optional(),
         keywords: z.array(z.string()).default([]),
         draft: z.boolean().default(false),
         readingTime: z.string().optional(),

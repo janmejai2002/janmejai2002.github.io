@@ -2,6 +2,7 @@
 title: 'LLMjacking Attacks Drain One Million Dollars from Enterprise Cloud AI'
 description: 'Threat group UNC6993 drains $100K/day and up to $1M per victim in stolen AI API key fraud. Learn how llmjacking enterprise cloud security controls stop it.'
 pubDate: 2026-11-11
+publishedAt: '2026-11-10T22:57:51.000Z'
 track: business
 question: 'How are cybercriminals draining enterprise cloud budgets via stolen AI API keys?'
 keywords:

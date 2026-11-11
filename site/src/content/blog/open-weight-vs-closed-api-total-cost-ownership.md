@@ -2,6 +2,7 @@
 title: 'Self Hosted Open Weight Models Cost More Than Closed APIs at 1B Tokens'
 description: 'Self-hosting a 70B model on AWS H100s costs $46,885/month with MLOps labor. Below 1B daily tokens, managed APIs with caching cut total spend by 68% to 89%.'
 pubDate: 2026-11-11
+publishedAt: '2026-11-11T01:19:58.000Z'
 track: business
 question: 'Does self-hosting an open-weight 70B model actually save money compared to API calls?'
 keywords:
