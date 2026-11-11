@@ -13,7 +13,7 @@ keywords:
 heroImage: '../../assets/art/ai-agent-eval-harness-ci-cd-light.webp'
 heroImageDark: '../../assets/art/ai-agent-eval-harness-ci-cd-dark.webp'
 heroAlt: 'Minimalist architectural diagram showing eight diverging trajectory paths passing through three vertical verification gates on a fine grid, where five flaky paths terminate at gate boundaries and three aligned mizu vectors emerge cleanly on the right.'
-readingTime: '8 min read'
+readingTime: '10 min read'
 notionId: '415ced67-050a-8121-931a-dab8ecbb8ede'
 ---
 <div class="tldr">
@@ -119,6 +119,16 @@ To measure the operational impact across a 200-task repository benchmark, compar
 | **4. Tiered `pass^4` Release Gate** | VCR stubs + AST + 4x clean-room `pass^4` verification | 0.8% | 0.0% | 29.0 min (nightly) | $18.90 (4x agent rollouts, zero judge) |
 
 Adopt a two-tier CI policy: on every pull request commit, run a single-trial (`pass^1`) VCR, AST, and Clean-Room `FAIL_TO_PASS` gate that completes in under 15 minutes and blocks merges on any regression. On nightly release branches or model-version upgrades, run a 4-trial (`pass^4`) trajectory gate across your top 50 workflows, requiring `pass^4 >= 0.85` before promoting a new system prompt or model checkpoint to production.
+
+## Where Deterministic Trajectory Gates Break Down
+
+Deterministic AST and `FAIL_TO_PASS` gates are not a silver bullet. They introduce three concrete engineering trade-offs that every infrastructure lead must budget for:
+
+1. **High Upfront Fixture Maintenance:** Writing a 5-line LLM judge prompt takes ten minutes; curating isolated `FAIL_TO_PASS` unit tests, Docker image snapshots, and VCR tool cassettes costs 25 to 40 minutes of senior engineer time per benchmark task. When your internal API schemas change, VCR cassettes go stale and must be re-recorded in a controlled staging run.
+2. **Brittleness on Valid Alternative Implementations:** As OpenAI discovered when auditing [SWE-bench Verified](https://openai.com/index/why-we-no-longer-evaluate-swe-bench-verified/), 35.5% of human-written unit tests overspecify internal implementation details ([arXiv:2608.09802](https://arxiv.org/html/2608.09802v2)). If your `FAIL_TO_PASS` test asserts that a specific private helper was called with exact positional arguments, a deterministic gate will reject a valid refactor that solves the bug at the public interface boundary. Rule: write `FAIL_TO_PASS` tests strictly against public module contracts and HTTP/CLI outputs.
+3. **Blindness to Unstructured UX Quality:** A deterministic gate verifies whether a patch compiles, passes unit tests, and obeys tool schemas, but it cannot grade whether the agent's PR description or user-facing explanation is clear and polite. For conversational clarity, retain a lightweight rubric check only *after* the deterministic code gate passes.
+
+Adopt a two-tier CI policy: on every pull request commit, run a single-trial (`pass^1`) VCR + AST + Clean-Room `FAIL_TO_PASS` gate that completes in under 15 minutes and blocks merges on any regression. On nightly release branches or model-version upgrades, run a 4-trial (`pass^4`) trajectory gate across your top 50 critical workflows, requiring `pass^4 ≥ 0.85` before promoting a new system prompt or model checkpoint to production.
 
 ## Sources
 
