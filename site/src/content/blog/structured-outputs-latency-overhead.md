@@ -80,7 +80,7 @@ Engineers asking why does guided decoding slow down vllm trace the bottleneck to
 
 ## Logit masking mechanics: why syntax parsers stall GPU tensor cores
 
-At each decode step, the model projects its hidden state across the vocabulary to produce a logit vector $z ∈ R^|V|$. For [Llama-3.1-8B](https://arxiv.org/pdf/2411.15100), `|V|` is 128,256 tokens; for [Qwen3-8B](https://blog.squeezebits.com/guided-decoding-performance-vllm-sglang), it exceeds 151,000 tokens. Grammar-constrained decoding intercepts this vector before softmax and applies a mask $m ∈ \{0, -∞\}^{|V|}$, setting invalid tokens to $-∞$.
+At each decode step, the model projects its hidden state across the vocabulary to produce a logit vector `z ∈ R^|V|`. For [Llama-3.1-8B](https://arxiv.org/pdf/2411.15100), `|V|` is 128,256 tokens; for [Qwen3-8B](https://blog.squeezebits.com/guided-decoding-performance-vllm-sglang), it exceeds 151,000 tokens. Grammar-constrained decoding intercepts this vector before softmax and applies a mask `m ∈ {0, -∞}^|V|`, setting invalid tokens to `-∞`.
 
 Checking 128,256 tokens against a grammar at every step creates three bottlenecks that drive the cpu gpu logit sync bottleneck:
 

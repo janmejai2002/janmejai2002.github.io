@@ -87,7 +87,7 @@ Enforce this ceiling across four controls:
 
 - **Automated tiered model routing:** Use [Amazon Bedrock Intelligent Prompt Routing](https://aws.amazon.com/bedrock/cost-optimization/) to send extraction and triage to [GPT-4o-mini ($0.15/MTok)](https://developers.openai.com/api/docs/models/gpt-4o-mini) or [Claude Haiku 4.5](https://www.anthropic.com/claude/haiku), cutting [Bedrock bills by 40%-70%](https://wring.co/blog/aws-bedrock-cost-optimization-guide).
 - **Mandatory prefix caching:** Freeze static system and tool prefixes to capture [Anthropic and Bedrock prompt caching](https://aws.amazon.com/blogs/machine-learning/optimizing-cost-and-latency-with-amazon-bedrock-prompt-caching/) at a [90% read discount (0.1x base rate)](https://benchlm.ai/anthropic/api-pricing).
-- **Step-count circuit breakers:** Cap autonomous retries at $N_{max}≤ 6$ turns and pass explicit token budgets in prompts per [Epoch AI's Pareto findings](https://epoch.ai/publications/the-plunging-price-of-thought).
+- **Step-count circuit breakers:** Cap autonomous retries at `N_max ≤ 6` turns and pass explicit token budgets in prompts per [Epoch AI's Pareto findings](https://epoch.ai/publications/the-plunging-price-of-thought).
 - **Unit cost-to-serve tagging:** Tag every API key, [Databricks cluster, and Snowflake query](https://www.mavvrik.ai/blog/ai-cost-drivers-databricks-snowflake/) with `workflow_id` and `customer_id` to audit cost per autonomous decision ([Novamind TCO Framework](https://novamindlabs.ai/resources/enterprise-ai-total-cost-of-ownership)).
 
 ## Sources
