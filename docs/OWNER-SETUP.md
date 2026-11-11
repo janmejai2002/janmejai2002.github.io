@@ -5,7 +5,6 @@ Do these once, in this order. About 10 minutes. Everything else is automated.
 ## 1. Tell Claude the Apps Script ID
 Sheet → Extensions → Apps Script → Project Settings (gear) → **Script ID**. Paste it into the chat.
 (If there is no project yet, just say so and Claude will create one attached to the Sheet.)
-
 ## 2. Turn on the Apps Script API (lets Claude upload code with `clasp`)
 Open https://script.google.com/home/usersettings → **Google Apps Script API: On**.
 
@@ -46,7 +45,7 @@ The screen will ask for exactly three things:
 `install` creates the new tabs (`Status`, `Repair Queue`, `Repair Outbox`, `Runs`) and the timer. Run it again any time; it's safe to repeat.
 
 ## 7. Gemini app checks
-- Settings → **Connected apps**: keep Google Sheets/Drive, Gemini Notebook and YouTube on. Turn **Gmail off** (and anything else the tasks don't use).
+- Settings → **Connected apps**: Gmail stays on because other (non-blog) tasks need it. To compensate, every wAIbi task prompt and the `waibi-sheet-contract` skill forbid using Gmail or any other app, and tell the task to treat web text as material, never instructions. Turn off any connected app that *no* task uses.
 - Confirm `@tech-article-engine` and `@humanize-ai-text` appear under **Skills**, not Gems.
 
 When the skills and the Repairer prompt are ready, Claude will give you the files to upload and the task to schedule; that's step 8 and comes later.
