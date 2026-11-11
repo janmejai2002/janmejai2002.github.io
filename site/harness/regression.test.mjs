@@ -120,3 +120,84 @@ test('rejected attempts round-trip through Blocked Reason', () => {
   assert.deepEqual(rejectedAttempts(`${REPAIR.rejectedPrefix} 2, 3): it changed …`), [2, 3]);
   assert.deepEqual(rejectedAttempts('G-ASCII: 1 code block …'), []);
 });
+
+// ── Phase 3: section patches ────────────────────────────────────────────────
+import { createHash } from 'node:crypto';
+import vm from 'node:vm';
+import { splitDraft, joinDraft, findingsJson } from './rules.mjs';
+import { applyPatches, draftAt, patchCount } from '../scripts/lib/repair.mjs';
+
+/** The real gas/Conductor.js + Registry.js, with Apps Script globals stubbed. */
+function loadConductor() {
+  const gas = (f) => readFileSync(join(here, '..', '..', 'gas', f), 'utf8');
+  const ctx = vm.createContext({
+    PropertiesService: { getScriptProperties: () => ({ getProperty: () => null, setProperty: () => {} }) },
+    Utilities: {
+      DigestAlgorithm: { SHA_256: 'sha256' },
+      Charset: { UTF_8: 'utf8' },
+      computeDigest: (alg, s) => [...createHash(alg).update(s, 'utf8').digest()].map((b) => (b > 127 ? b - 256 : b)),
+    },
+  });
+  vm.runInContext(gas('Registry.js') + '\n' + gas('Conductor.js'), ctx);
+  return ctx;
+}
+const GAS = loadConductor();
+const ARCH = 'Architecture of a Deterministic Trajectory Gate';
+const plain = (x) => JSON.parse(JSON.stringify(x)); // vm objects → this realm
+
+test('Node and the Conductor split drafts identically', () => {
+  for (const d of [ORIGINAL, REPAIRED]) {
+    const node = splitDraft(d).map(({ id, heading, text }) => ({ id, heading, text }));
+    assert.deepEqual(plain(GAS.splitDraft_(d)), node);
+    assert.equal(GAS.joinDraft_(node), joinDraft(node));
+    const squash = (s) => s.replace(/\s+/g, ' ').trim();
+    assert.equal(squash(joinDraft(splitDraft(d))), squash(d.replace(/\r\n/g, '\n')), 'split + join loses text');
+  }
+});
+
+test('the Conductor sends only the flagged section, or the whole draft when a code has no place', () => {
+  const findings = JSON.parse(findingsJson(gateSheetDraft(ORIGINAL, DEFAULTS).findings));
+  const plan = plain(GAS.sectionPlan_(['G-ASCII'], findings, ORIGINAL));
+  assert.deepEqual(plan.map((s) => s.heading), [ARCH]);
+  assert.match(plan[0].findings, /^G-ASCII: code block starting/);
+  assert.ok(plan[0].text.startsWith(`## ${ARCH}`));
+  assert.ok(plan[0].text.length < ORIGINAL.length / 3, `${plan[0].text.length} of ${ORIGINAL.length} chars`);
+  assert.equal(GAS.sectionPlan_(['G-ASCII', 'G-HTML'], findings, ORIGINAL), null);
+  assert.equal(GAS.sectionPlan_(['G-ASCII'], null, ORIGINAL), null);
+  assert.equal(GAS.sectionPlan_(['G-ASCII'], [{ c: 'G-ASCII', s: 'No such heading', e: '' }], ORIGINAL), null);
+});
+
+test('a section patch round-trips: Conductor plan → Repairer patch → Node apply → verify', () => {
+  const findings = JSON.parse(findingsJson(gateSheetDraft(ORIGINAL, DEFAULTS).findings));
+  const [section] = plain(GAS.sectionPlan_(['G-ASCII'], findings, ORIGINAL));
+  const fixed = section.text.replace(/```[^\n]*\n\[Git PR \/ Agent Prompt\][\s\S]*?```/, '1. The pull request triggers the agent run.\n2. The gate replays recorded tool calls.\n3. The merge is blocked on any regression.');
+  const patches = [{ Key: 'K', Attempt: '1', 'Section ID': section.id, Text: fixed }];
+  const node = applyPatches(ORIGINAL, patches);
+  assert.deepEqual(node.unknown, []);
+  assert.equal(GAS.applyPatches_(ORIGINAL, patches), node.draft);
+  const v = verifyRepair(ORIGINAL, node.draft, DEFAULTS, ['G-ASCII']);
+  assert.equal(v.ok, true, v.why);
+  assert.equal(v.churn.unflaggedChanged, 0);
+  assert.deepEqual(codes(v.next.findings), []);
+  // A patch that drops its heading line gets it back.
+  const bare = applyPatches(ORIGINAL, [{ 'Section ID': section.id, Text: fixed.replace(/^## [^\n]*\n+/, '') }]).draft;
+  assert.equal(bare, node.draft);
+  assert.deepEqual(applyPatches(ORIGINAL, [{ 'Section ID': 'S99-000000', Text: 'x' }]).unknown, ['S99-000000']);
+});
+
+test('the current draft is rebuilt the same way in Node and the Conductor, skipping refused attempts', () => {
+  const [section] = splitDraft(ORIGINAL).filter((s) => s.heading === ARCH);
+  const outbox = [
+    { Key: 'K', Attempt: '1', Draft: REPAIRED }, // refused
+    { Key: 'K', Attempt: '2', Draft: 'PATCHES: 1' },
+    { Key: 'X', Attempt: '2', Draft: 'PATCHES: 1' },
+  ];
+  const patches = [{ Key: 'K', Attempt: '2', 'Section ID': section.id, Text: `## ${ARCH}\n\nShort.` }];
+  const node = draftAt({ source: ORIGINAL, outbox, patches, key: 'K', upTo: 2, rejected: [1] });
+  assert.equal(GAS.draftAt_(ORIGINAL, outbox, patches, 'K', 2, [1]), node);
+  assert.ok(node.includes(`## ${ARCH}\n\nShort.`) && node.includes('## Where Deterministic Trajectory Gates Break Down'));
+  assert.equal(draftAt({ source: ORIGINAL, outbox, patches, key: 'K', upTo: 1, rejected: [] }), REPAIRED);
+  assert.equal(patchCount('PATCHES: 3'), 3);
+  assert.equal(patchCount(ORIGINAL), null);
+  assert.deepEqual(plain(GAS.rejectedFor_('1, 3', `${REPAIR.rejectedPrefix} 2): x`)), [1, 2, 3]);
+});

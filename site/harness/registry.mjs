@@ -78,6 +78,9 @@ export const SHEET = {
       writer: 'repairer',
       columns: ['Date', 'Key', 'Attempt', 'Title', 'Draft', 'Changed', 'Not Fixed'],
     },
+    // Section patches (Phase 3): one row per section the Repairer changed, in a
+    // "sections" mode repair. The Outbox row's Draft cell then reads "PATCHES: <n>".
+    'Repair Patches': { owner: 'agent', writer: 'repairer', columns: ['Date', 'Key', 'Attempt', 'Section ID', 'Text'] },
     Runs: { owner: 'agent', writer: 'all', columns: ['Date', 'Time', 'Task', 'Result', 'Note'] },
     Status: {
       owner: 'code',
@@ -85,8 +88,10 @@ export const SHEET = {
     },
     'Repair Queue': {
       owner: 'code',
-      columns: ['Key', 'Title', 'Track', 'Next Attempt', 'Failure Codes', 'Blocked Reason', 'Playbook', 'Previous Notes', 'Current Draft'],
+      columns: ['Key', 'Title', 'Track', 'Next Attempt', 'Mode', 'Failure Codes', 'Blocked Reason', 'Playbook', 'Previous Notes', 'Current Draft'],
     },
+    // Only the sections a "sections" mode repair may change, one per row.
+    'Repair Sections': { owner: 'code', columns: ['Key', 'Attempt', 'Section ID', 'Heading', 'Findings', 'Text'] },
   },
 };
 
@@ -107,6 +112,27 @@ export const NOTION_HARNESS_PROPS = {
   'Sheet Key': { rich_text: {} },
   'Repair Attempts': { number: { format: 'number' } },
   'Failure Codes': { multi_select: {} },
+  // JSON [{c: code, s: section heading, e: excerpt}] — where each finding is. The
+  // Conductor reads it to send only the flagged sections (SECTIONS below).
+  Findings: { rich_text: {} },
+  // "1, 3": attempts sync-drafts refused. Kept apart from Blocked Reason (which is
+  // rewritten) so the current draft can always be rebuilt from the Sheet.
+  'Rejected Attempts': { rich_text: {} },
+};
+
+/**
+ * SECTION PATCHES. A draft is split at its "## " headings (outside code fences)
+ * into sections; the text before the first one is "(opening)". Each section's
+ * text includes its heading line and is trimmed; a draft is rebuilt by joining
+ * the sections with one blank line. Node (site/harness/rules.mjs splitDraft) and
+ * Apps Script (gas/Conductor.js splitDraft_) implement exactly this, and the
+ * regression test runs both on the same draft.
+ *   id: "S<index>-<first hashLength hex of sha256(heading)>", e.g. S5-3fa9c2
+ */
+export const SECTIONS = {
+  opening: '(opening)',
+  hashLength: 6,
+  patchMarker: 'PATCHES:',
 };
 
 export const REPAIR = {

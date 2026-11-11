@@ -39,7 +39,7 @@ import { fileURLToPath } from 'node:url';
 import { api, queryAll, blocks, blocksDeep, toMarkdown, plain, inline, flagBlocked, clearBlockedReason, PRODUCTION_DS } from './lib/notion.mjs';
 import { fallbackArt } from './lib/fallback-art.mjs';
 import { CAPS, TRACKS as TRACK_REGISTRY, AUTO_TRACKS, REPAIR, routeFailure } from '../harness/registry.mjs';
-import { formatFindings } from '../harness/rules.mjs';
+import { formatFindings, findingsJson } from '../harness/rules.mjs';
 import { gateBody } from './lib/gate.mjs';
 import { recordNeedsHuman } from '../harness/needs-human.mjs';
 import { notify } from './notify.mjs';
@@ -266,7 +266,7 @@ for (const page of rows) {
       formatFindings(findings),
       [...new Set([...blocking, ...warnings].map((f) => f.code))],
       attempts,
-      { key: sheetKey, track: trackLabel }
+      { key: sheetKey, track: trackLabel, findings: findingsJson(findings) }
     );
     continue;
   }
@@ -425,7 +425,7 @@ if (!dryRun && fatal.length) {
       recordNeedsHuman({ id: p.id, title: p.title, key: p.key, track: p.track, codes: p.codes, attempts: p.attempts, reason: p.reason });
     }
     const reason = atLimit ? `NEEDS YOU (${p.attempts} repair attempts; not auto-repairable). ${p.reason}` : p.reason;
-    if (await flagBlocked(p.id, reason, { needsRevision: true, codes: p.codes })) {
+    if (await flagBlocked(p.id, reason, { needsRevision: true, codes: p.codes, findings: p.findings })) {
       unreported--;
       console.error(`  ↳ marked "${p.title}" Needs Revision in Notion [${p.codes.join(', ')}]`);
     }

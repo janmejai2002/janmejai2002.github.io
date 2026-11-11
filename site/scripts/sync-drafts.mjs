@@ -31,9 +31,10 @@
 import { api, PRODUCTION_DS, queryAll, plain } from './lib/notion.mjs';
 import { importDraft } from './import-draft.mjs';
 import { SHEET, TRACKS, REPAIR, FAILURES } from '../harness/registry.mjs';
-import { sheetKey, formatFindings, RULES_VERSION, RULES_STAMP_RE } from '../harness/rules.mjs';
+import { sheetKey, formatFindings, findingsJson, RULES_VERSION, RULES_STAMP_RE } from '../harness/rules.mjs';
 import { gateSheetDraft } from './lib/gate.mjs';
-import { verifyRepair, rejectedAttempts, churnLine } from './lib/repair.mjs';
+import { verifyRepair, rejectedFor, churnLine, patchCount, applyPatches, draftAt } from './lib/repair.mjs';
+import { rich } from '../harness/md-to-notion.mjs';
 
 const sheetId = process.env.GOOGLE_SHEET_ID || SHEET.id;
 const commit = process.argv.includes('--commit');
@@ -134,15 +135,10 @@ for (const tab of ['Drafts', 'Case Studies', 'Talks']) {
 }
 
 const outbox = await readTab('Repair Outbox');
-/**
- * The draft a row is at before `attempt`: the newest Outbox draft with a lower
- * attempt number that was not rejected, else the original Sheet draft. Same
- * rule as the Conductor's draft choice in gas/Conductor.js.
- */
-const draftBefore = (key, attempt, rejected = []) =>
-  outbox
-    .filter((o) => o.Key === key && o.Draft && Number(o.Attempt) < attempt && !rejected.includes(Number(o.Attempt)))
-    .sort((a, b) => Number(b.Attempt) - Number(a.Attempt))[0]?.Draft ?? sources.get(key) ?? null;
+const patches = await readTab('Repair Patches');
+const rejectedOf = (p) => rejectedFor(plain(p['Rejected Attempts']?.rich_text), plain(p['Blocked Reason']?.rich_text));
+/** The draft a row holds after every accepted attempt before `attempt` (lib/repair.mjs draftAt). */
+const draftBefore = (key, attempt, rejected = []) => draftAt({ source: sources.get(key), outbox, patches, key, upTo: attempt - 1, rejected });
 
 // 2. Repairs — verified before they are applied
 let repaired = 0;
@@ -161,14 +157,45 @@ for (const r of outbox) {
   handled.add(r.Key);
 
   const p = page.properties;
-  const reason = plain(p['Blocked Reason']?.rich_text);
-  const rejected = rejectedAttempts(reason);
+  const rejected = rejectedOf(p);
   const rowCodes = (p['Failure Codes']?.multi_select ?? []).map((o) => o.name);
   const prevDraft = draftBefore(r.Key, attempt, rejected);
+  const refuse = async (why, prevFindings) => {
+    refused++;
+    const list = [...rejected, attempt].join(', ');
+    console.log(`  ✗ refused: ${why}`);
+    await patch(
+      page,
+      {
+        'Blocked Reason': text(`${REPAIR.rejectedPrefix} ${list}): ${why}. Start again from the previous draft; fix only these: ${formatFindings(prevFindings)}`),
+        'Rejected Attempts': text(list),
+        Findings: { rich_text: rich(findingsJson(prevFindings)) },
+        'Repair Attempts': { number: attempt },
+      },
+      `mark ${r.Key} attempt ${attempt} refused`
+    );
+  };
+
+  // Section patches: rebuild the full draft from the previous one by Section ID.
+  let nextDraft = r.Draft;
+  const expected = patchCount(r.Draft);
+  if (expected !== null) {
+    const mine = patches.filter((x) => x.Key === r.Key && Number(x.Attempt) === attempt);
+    if (mine.length < expected) { console.log(`· repair ${r.Key} attempt ${attempt} — ${mine.length}/${expected} patch rows so far; waiting`); handled.delete(r.Key); continue; }
+    if (!prevDraft) { console.log(`· repair ${r.Key} attempt ${attempt} — patches, but no earlier draft to apply them to; leaving it`); continue; }
+    const merged = applyPatches(prevDraft, mine);
+    if (merged.unknown.length) {
+      await refuse(`patch(es) for section id(s) not in the draft: ${merged.unknown.join(', ')}`, gateSheetDraft(prevDraft, gateDefaults(p)).findings);
+      continue;
+    }
+    nextDraft = merged.draft;
+    console.log(`  repair ${r.Key} attempt ${attempt}: ${mine.length} section patch(es) applied to the previous draft`);
+  }
+
   if (testKeys.has(r.Key) && !prevDraft) { console.log(`  ◇ test row ${r.Key} has no draft to compare against; leaving it`); continue; }
   let churn = '';
   if (prevDraft) {
-    const v = verifyRepair(prevDraft, r.Draft, gateDefaults(p), rowCodes, r.Title);
+    const v = verifyRepair(prevDraft, nextDraft, gateDefaults(p), rowCodes, r.Title);
     churn = churnLine(v.churn);
     console.log(`  repair ${r.Key} attempt ${attempt}: ${churn}`);
     if (testKeys.has(r.Key)) {
@@ -186,17 +213,7 @@ for (const r of outbox) {
       continue;
     }
     if (!v.ok) {
-      refused++;
-      const list = [...rejected, attempt].join(', ');
-      console.log(`  ✗ refused: ${v.why}`);
-      await patch(
-        page,
-        {
-          'Blocked Reason': text(`${REPAIR.rejectedPrefix} ${list}): ${v.why}. Start again from the previous draft; fix only these: ${formatFindings(v.prev.findings)}`),
-          'Repair Attempts': { number: attempt },
-        },
-        `mark ${r.Key} attempt ${attempt} refused`
-      );
+      await refuse(v.why, v.prev.findings);
       continue;
     }
   } else {
@@ -207,8 +224,9 @@ for (const r of outbox) {
   if (p['Source Idea']?.relation?.length) carry['Source Idea'] = { relation: p['Source Idea'].relation.map(({ id }) => ({ id })) };
   if (p['Promoted On']?.date) carry['Promoted On'] = { date: { start: p['Promoted On'].date.start } };
   if (p['SEO Keywords']?.rich_text?.length) carry['SEO Keywords'] = { rich_text: p['SEO Keywords'].rich_text.map((t) => ({ type: 'text', text: { content: t.plain_text } })) };
+  if (rejected.length) carry['Rejected Attempts'] = text(rejected.join(', '));
   carry['Blocked Reason'] = text(`Repair attempt ${attempt} applied. Changed: ${r.Changed || '-'}. Not fixed: ${r['Not Fixed'] || '-'}${churn ? `. Churn: ${churn}` : ''}`);
-  await importDraft(r.Draft, {
+  await importDraft(nextDraft, {
     key: r.Key,
     attempt,
     replace: page.id,
@@ -233,7 +251,7 @@ for (const page of prod) {
   // Notion block the Sheet draft does not have.
   if (!codes.length || codes.some((c) => FAILURES[c]?.where !== 'preflight' || c === 'G-BLOCK')) continue;
   const done = p['Repair Attempts']?.number ?? 0;
-  const draft = draftBefore(key, done + 1, rejectedAttempts(reason));
+  const draft = draftBefore(key, done + 1, rejectedOf(p));
   if (!draft) { console.log(`· re-check ${key} — no draft in the Sheet; leaving it`); continue; }
 
   const { findings } = gateSheetDraft(draft, gateDefaults(p));
@@ -246,6 +264,7 @@ for (const page of prod) {
     {
       'Failure Codes': { multi_select: now.map((name) => ({ name })) },
       'Blocked Reason': text(blocking ? formatFindings(findings) : `Re-checked with current rules: nothing blocking (${now.join(', ') || 'clean'}). [rules ${RULES_VERSION}]`),
+      Findings: { rich_text: rich(findingsJson(findings)) },
       ...(blocking ? {} : { 'Draft Status': { select: { name: 'Draft Ready' } } }),
     },
     `re-check ${key}`

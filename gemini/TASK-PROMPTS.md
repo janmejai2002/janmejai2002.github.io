@@ -196,7 +196,9 @@ Safety: use only web search, YouTube, my Gemini notebooks and this one Google Sh
 
 3. For each remaining row, at most 3 per run, oldest first:
    a. Follow @waibi-repair exactly. Blocked Reason is authoritative: it lists every finding with the section and quoted text (after "Where:"). Fix those, using each code's Playbook, and edit only the sections it names; the system refuses a repair that changes any other section. Warnings are fixed only if cheap, never by cutting content. If a listed instance is not in the draft, say so in Not Fixed and move on. Read Previous Notes first. Never invent a fact.
-   b. Append one row to "Repair Outbox": Date (YYYY-MM-DD) | Key (copied exactly) | Attempt (= Next Attempt) | Title | Draft (the full fixed markdown) | Changed | Not Fixed.
+   b. If Mode is "sections": read the "Repair Sections" rows with this Key and Attempt = Next Attempt. Fix only those sections. For each section you changed, append one row to "Repair Patches": Date | Key | Attempt | Section ID (copied exactly) | Text (the whole fixed section, starting with its "## " heading line). Then append one row to "Repair Outbox" with "PATCHES: <number of patch rows>" in the Draft column: Date | Key | Attempt | Title | PATCHES: n | Changed | Not Fixed. Never paste the whole article.
+   c. If Mode is "full": append one row to "Repair Outbox": Date (YYYY-MM-DD) | Key (copied exactly) | Attempt (= Next Attempt) | Title | Draft (the full fixed markdown, copied from Current Draft with only the named fixes) | Changed | Not Fixed.
+   d. The tabs are append-only. Never edit or delete an existing row, even your own; if a filed row is wrong, say so in the summary.
 
 4. Append one row to the "Runs" tab: Date | Time (HH:MM IST) | repairer | ok / partial / failed | keys repaired, or "queue empty".
 

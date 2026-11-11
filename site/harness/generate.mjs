@@ -26,7 +26,7 @@ files['gas/Registry.js'] =
   '// GENERATED from site/harness/registry.mjs by site/harness/generate.mjs — do not edit.\n' +
   'var REGISTRY = ' +
   JSON.stringify(
-    { REPO: R.REPO, NOTION: R.NOTION, SHEET: R.SHEET, KEY_RULE: R.KEY_RULE, REPAIR: R.REPAIR, TASKS: R.TASKS, FAILURES: R.FAILURES, TRACKS: R.TRACKS },
+    { REPO: R.REPO, NOTION: R.NOTION, SHEET: R.SHEET, KEY_RULE: R.KEY_RULE, REPAIR: R.REPAIR, SECTIONS: R.SECTIONS, TASKS: R.TASKS, FAILURES: R.FAILURES, TRACKS: R.TRACKS },
     null,
     2
   ) +

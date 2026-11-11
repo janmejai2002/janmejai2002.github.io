@@ -58,7 +58,10 @@ export async function api(path, { method = 'GET', body } = {}) {
  * Never throws — a failed write-back must not mask the failure it reports.
  * Returns true on success, false otherwise.
  */
-export async function flagBlocked(pageId, reason, { needsRevision = false, codes = null } = {}) {
+/** Long text as Notion rich_text pieces (2,000 characters each). */
+const chunks = (s) => (String(s).match(/[\s\S]{1,2000}/g) ?? ['']).map((content) => ({ type: 'text', text: { content } }));
+
+export async function flagBlocked(pageId, reason, { needsRevision = false, codes = null, findings = null } = {}) {
   const stamp = new Date().toISOString().slice(0, 16).replace('T', ' ');
   const properties = {
     'Blocked Reason': {
@@ -69,6 +72,10 @@ export async function flagBlocked(pageId, reason, { needsRevision = false, codes
   // Failure Codes is a harness property (site/harness/registry.mjs). Written
   // only when the caller has codes, so older callers keep working unchanged.
   if (codes) properties['Failure Codes'] = { multi_select: codes.map((name) => ({ name })) };
+  // Findings (JSON, where each code is) travels with the codes so the Conductor
+  // never reads locations from an older check. No located findings → "[]",
+  // which makes the Conductor send the whole draft.
+  if (codes) properties.Findings = { rich_text: chunks(findings ?? '[]') };
   try {
     await api(`/pages/${pageId}`, { method: 'PATCH', body: { properties } });
     return true;
@@ -86,6 +93,7 @@ export async function flagBlocked(pageId, reason, { needsRevision = false, codes
 export async function clearBlockedReason(pageId, warnCodes = null, { keepReason = false } = {}) {
   const properties = keepReason ? {} : { 'Blocked Reason': { rich_text: [] } };
   if (warnCodes) properties['Failure Codes'] = { multi_select: warnCodes.map((name) => ({ name })) };
+  if (warnCodes) properties.Findings = { rich_text: [] };
   try {
     await api(`/pages/${pageId}`, { method: 'PATCH', body: { properties } });
     return true;

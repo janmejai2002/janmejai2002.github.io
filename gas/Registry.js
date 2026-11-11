@@ -88,6 +88,17 @@ var REGISTRY = {
           "Not Fixed"
         ]
       },
+      "Repair Patches": {
+        "owner": "agent",
+        "writer": "repairer",
+        "columns": [
+          "Date",
+          "Key",
+          "Attempt",
+          "Section ID",
+          "Text"
+        ]
+      },
       "Runs": {
         "owner": "agent",
         "writer": "all",
@@ -120,11 +131,23 @@ var REGISTRY = {
           "Title",
           "Track",
           "Next Attempt",
+          "Mode",
           "Failure Codes",
           "Blocked Reason",
           "Playbook",
           "Previous Notes",
           "Current Draft"
+        ]
+      },
+      "Repair Sections": {
+        "owner": "code",
+        "columns": [
+          "Key",
+          "Attempt",
+          "Section ID",
+          "Heading",
+          "Findings",
+          "Text"
         ]
       }
     }
@@ -140,6 +163,11 @@ var REGISTRY = {
     "rejectedPrefix": "Repair rejected (attempts",
     "testStatus": "Test",
     "testParkStatus": "Queued"
+  },
+  "SECTIONS": {
+    "opening": "(opening)",
+    "hashLength": 6,
+    "patchMarker": "PATCHES:"
   },
   "TASKS": [
     {

@@ -1,6 +1,6 @@
 # Harness repair plan — after the first live repair (2026-11-11)
 
-Status: **Phases 1 and 2 implemented (2026-11-11); Phase 3 not started.** Written by Claude after agy's Task A/B run and the
+Status: **Phases 1, 2 and 3 implemented (2026-11-11).** Written by Claude after agy's Task A/B run and the
 first end-to-end repair of `DR-20261111-9f8879` ("Flaky Agent Evals…"). Start a new chat with:
 
 > Read AGENTS.md, then docs/HARNESS-REPAIR-PLAN.md. Do Phase 1. Show me the diff and the test

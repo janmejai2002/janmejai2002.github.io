@@ -13,11 +13,14 @@ The publishing system rejected a draft and wrote down why. Each row of the **Rep
 | Title | Current title |
 | Track | Its track |
 | Next Attempt | The attempt number you are making (write this in Attempt) |
+| Mode | `sections` (fix only the sections in the **Repair Sections** tab) or `full` (fix the whole Current Draft) |
 | Failure Codes | What failed, e.g. `G-ASCII, G-LATEX` |
 | Blocked Reason | Every finding, blocking first: `CODE: message Where: "Section" (quoted text); …` |
 | Playbook | The standard fix for each code (same as failure-codes.md) |
 | Previous Notes | What the last repair attempt changed and could not fix |
-| Current Draft | The full draft to fix |
+| Current Draft | The full draft to fix (`full` mode only; empty in `sections` mode) |
+
+In `sections` mode the **Repair Sections** tab holds one row per section you may change: `Key | Attempt | Section ID | Heading | Findings | Text`. Findings lists that section's problems; Text is the section exactly as it is now, starting with its `## ` heading line. Every other section is copied by the system unchanged, so you cannot damage it.
 
 ## The method
 
@@ -32,10 +35,22 @@ The publishing system rejected a draft and wrote down why. Each row of the **Rep
 8. **Re-check before filing.** For each code, confirm it is gone. Count the title, meta description and Reader Question characters.
 9. **Skip what you cannot help.** Any code marked "NOT repairable" in failure-codes.md: skip the row.
 
-## Output
+## Output — `sections` mode
 
-For each repaired article append one row to **Repair Outbox**:
+1. For each section you changed, append one row to **Repair Patches**:
+   `Date | Key (copied exactly) | Attempt (= Next Attempt) | Section ID (copied exactly from Repair Sections) | Text (the whole fixed section, starting with its unchanged "## " heading line)`
+   Copy the section's Text and edit only what the findings name; everything else in it stays word for word. One row per section; skip sections you did not change.
+2. **Then** append one row to **Repair Outbox**, with `PATCHES: <number of Repair Patches rows you wrote>` in the Draft column:
+   `Date | Key | Attempt | Title (new if you changed it, else unchanged) | PATCHES: 1 | Changed | Not Fixed`
+   Write the patches first and the Outbox row last: the system waits until it sees as many patch rows as the Outbox row promises.
+3. Never paste the whole article anywhere in this mode.
+
+## Output — `full` mode
+
+Append one row to **Repair Outbox**:
 
 `Date | Key (copied exactly) | Attempt (= Next Attempt) | Title (new if you changed it, else unchanged) | Draft (the full fixed markdown) | Changed (one line per code: what you did) | Not Fixed (anything you could not fix and why, or "none")`
 
-Never write a second Outbox row for the same Key and Attempt. If one already exists, skip that article.
+Copy the whole Current Draft and change only what the findings name. Do not retype it from memory: the system compares every section with the previous draft and refuses the repair if any unnamed section differs.
+
+Never write a second Outbox row (or a second set of patches) for the same Key and Attempt. If one already exists, skip that article. Sheet tabs are append-only: never edit or delete a row you or anyone else wrote, even to correct it; if a filed row is wrong, say so in the chat summary and stop.

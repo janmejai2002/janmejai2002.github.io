@@ -8,6 +8,8 @@
  *        Repair Queue  — articles at Needs Revision the Repairer should fix,
  *                        each with its failure codes, the fix playbook, the
  *                        previous attempt's notes and the current draft text
+ *        Repair Sections — in "sections" mode, only the sections that failed
+ *                        (the Repairer returns patches; code keeps the rest)
  *   2. Wake GitHub when an agent tab gained rows (workflow_dispatch of
  *      sync-news.yml, which ingests and then publishes). GitHub's own cron is
  *      unreliable; this is the real trigger.
@@ -73,7 +75,8 @@ function mirrorNotion_() {
   var outbox = readTab_(ss, 'Repair Outbox');
   var max = REGISTRY.REPAIR.maxAttempts;
 
-  var status = [], queue = [];
+  var status = [], queue = [], sections = [];
+  var patches = null; // Repair Patches tab, read only when something is queued
   rows.forEach(function (p) {
     var pr = p.properties;
     var key = plain_(pr['Sheet Key']);
@@ -100,20 +103,135 @@ function mirrorNotion_() {
         return f ? c + ' (' + f.summary + '): ' + f.playbook : c;
       }).join('\n\n');
       var notes = latest ? 'Attempt ' + latest.Attempt + ' changed: ' + latest.Changed + ' | not fixed: ' + latest['Not Fixed'] : '';
-      // Start from the newest draft sync-drafts did NOT refuse (same rule as
-      // draftBefore() in site/scripts/sync-drafts.mjs).
-      var rejected = rejectedAttempts_(reason);
-      var good = mine.filter(function (r) { return rejected.indexOf(Number(r.Attempt)) === -1; })[0];
+      // The draft the row holds now: the original plus every accepted attempt
+      // (same rule as draftAt() in site/scripts/lib/repair.mjs).
+      var rejected = rejectedFor_(plain_(pr['Rejected Attempts']), reason);
       if (latest && rejected.indexOf(Number(latest.Attempt)) !== -1) notes = 'REFUSED by the publishing system, see Blocked Reason. ' + notes;
-      var draft = good ? good.Draft : sourceDraft_(ss, key);
-      queue.push([key, title, track, attempts + 1, codes.join(', '), reason, playbook, notes, (draft || '').slice(0, 49000)]);
+      if (patches === null) patches = readTab_(ss, 'Repair Patches');
+      var draft = draftAt_(sourceDraft_(ss, key), outbox, patches, key, attempts, rejected) || '';
+
+      // Send only the flagged sections when every code is tied to sections
+      // and they are all in the draft; otherwise the whole draft, as before.
+      var plan = sectionPlan_(codes, parseFindings_(pr.Findings), draft);
+      if (plan) {
+        plan.forEach(function (s) { sections.push([key, attempts + 1, s.id, s.heading, s.findings, s.text.slice(0, 49000)]); });
+        queue.push([key, title, track, attempts + 1, 'sections', codes.join(', '), reason, playbook, notes,
+          '(sections mode: the ' + plan.length + ' section(s) to fix are in the Repair Sections tab)']);
+      } else {
+        queue.push([key, title, track, attempts + 1, 'full', codes.join(', '), reason, playbook, notes, draft.slice(0, 49000)]);
+      }
     }
   });
 
   status.sort(function (a, b) { return String(b[8]).localeCompare(String(a[8])); });
   writeTab_(ss, 'Status', status);
   writeTab_(ss, 'Repair Queue', queue);
-  return status.length + ' status, ' + queue.length + ' queued';
+  writeTab_(ss, 'Repair Sections', sections);
+  return status.length + ' status, ' + queue.length + ' queued, ' + sections.length + ' section(s)';
+}
+
+/* ───────────── section patches (SECTIONS in site/harness/registry.mjs) ───────────── */
+
+/** Must match sectionId() in site/harness/rules.mjs. */
+function sectionId_(index, heading) {
+  var bytes = Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256, heading, Utilities.Charset.UTF_8);
+  var hex = bytes.map(function (b) { var v = (b < 0 ? b + 256 : b).toString(16); return v.length === 1 ? '0' + v : v; }).join('');
+  return 'S' + index + '-' + hex.slice(0, REGISTRY.SECTIONS.hashLength);
+}
+
+/** Must match splitDraft() in site/harness/rules.mjs (the regression test runs both). */
+function splitDraft_(md) {
+  var out = [{ heading: REGISTRY.SECTIONS.opening, lines: [] }];
+  var fence = false;
+  String(md || '').replace(/\r\n/g, '\n').split('\n').forEach(function (line) {
+    if (/^\s*```/.test(line)) fence = !fence;
+    var h = !fence && line.match(/^##\s+(.+?)\s*$/);
+    if (h) out.push({ heading: h[1], lines: [line] });
+    else out[out.length - 1].lines.push(line);
+  });
+  return out.map(function (s, i) {
+    return { id: sectionId_(i, s.heading), heading: s.heading, text: s.lines.join('\n').trim() };
+  });
+}
+
+function joinDraft_(sections) {
+  return sections.map(function (s) { return s.text.trim(); }).filter(function (t) { return t; }).join('\n\n') + '\n';
+}
+
+/** Must match applyPatches() in site/scripts/lib/repair.mjs. */
+function applyPatches_(draft, patches) {
+  var sections = splitDraft_(draft);
+  patches.forEach(function (p) {
+    var id = String(p['Section ID']).trim();
+    var s = sections.filter(function (x) { return x.id === id; })[0];
+    if (!s) return;
+    var text = String(p.Text || '').replace(/\r\n/g, '\n').trim();
+    if (s.heading !== REGISTRY.SECTIONS.opening && !/^##\s+/.test(text)) text = '## ' + s.heading + '\n\n' + text;
+    s.text = text;
+  });
+  return joinDraft_(sections);
+}
+
+/** "PATCHES: 2" → 2; a full draft → null. */
+function patchCount_(cell) {
+  var t = String(cell || '').trim();
+  if (t.indexOf(REGISTRY.SECTIONS.patchMarker) !== 0) return null;
+  return Number(t.slice(REGISTRY.SECTIONS.patchMarker.length).trim()) || 0;
+}
+
+/** Must match draftAt() in site/scripts/lib/repair.mjs. */
+function draftAt_(source, outbox, patches, key, upTo, rejected) {
+  var draft = source || null;
+  outbox
+    .filter(function (o) { return o.Key === key && Number(o.Attempt) <= upTo && rejected.indexOf(Number(o.Attempt)) === -1 && o.Draft; })
+    .sort(function (a, b) { return Number(a.Attempt) - Number(b.Attempt); })
+    .forEach(function (o) {
+      if (patchCount_(o.Draft) === null) draft = o.Draft;
+      else if (draft !== null) draft = applyPatches_(draft, patches.filter(function (p) { return p.Key === key && Number(p.Attempt) === Number(o.Attempt); }));
+    });
+  return draft;
+}
+
+/** The Findings property (JSON [{c, s, e}]), or null when absent or unreadable. */
+function parseFindings_(prop) {
+  var raw = plain_(prop);
+  if (!raw) return null;
+  try { var v = JSON.parse(raw); return Array.isArray(v) ? v : null; } catch (e) { return null; }
+}
+
+/**
+ * The sections a repair may change, or null for a whole-draft repair. Null when
+ * any code is not tied to a section (scope 'article' or unknown), when there
+ * are no located findings, or when a named section is not in the draft.
+ */
+function sectionPlan_(codes, findings, draft) {
+  if (!findings || !draft) return null;
+  var ok = codes.every(function (c) { var f = REGISTRY.FAILURES[c]; return f && (f.scope === 'section' || f.scope === 'none'); });
+  if (!ok) return null;
+  var located = findings.filter(function (f) { var d = REGISTRY.FAILURES[f.c]; return d && d.scope === 'section' && f.s && f.s !== '(title)'; });
+  var titleOnly = findings.some(function (f) { return f.s === '(title)'; });
+  if (!located.length && !titleOnly) return null;
+  var sections = splitDraft_(draft);
+  var names = {};
+  located.forEach(function (f) { names[f.s] = true; });
+  var missing = Object.keys(names).filter(function (n) { return !sections.some(function (s) { return s.heading === n; }); });
+  if (missing.length) return null;
+  return sections
+    .filter(function (s) { return names[s.heading]; })
+    .map(function (s) {
+      var mine = located.filter(function (f) { return f.s === s.heading; })
+        .map(function (f) { return f.c + (f.e ? ': ' + f.e : ''); });
+      return { id: s.id, heading: s.heading, text: s.text, findings: mine.join('\n') };
+    });
+}
+
+/** Every refused attempt: the Rejected Attempts property plus any in Blocked Reason. Mirrors rejectedFor() in site/scripts/lib/repair.mjs. */
+function rejectedFor_(prop, reason) {
+  var seen = {};
+  String(prop || '').split(',').map(function (n) { return Number(n.trim()); })
+    .concat(rejectedAttempts_(reason))
+    .forEach(function (n) { if (n > 0) seen[n] = true; });
+  return Object.keys(seen).map(Number).sort(function (a, b) { return a - b; });
 }
 
 /** Attempt numbers in a "Repair rejected (attempts 2, 3): …" Blocked Reason. Mirrors rejectedAttempts() in site/scripts/lib/repair.mjs. */

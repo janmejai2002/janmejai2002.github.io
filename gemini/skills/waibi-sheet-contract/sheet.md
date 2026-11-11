@@ -16,9 +16,11 @@ https://docs.google.com/spreadsheets/d/1-UcD-C4My_Zp4aH3n-5dB3JQNtDN_MSAK6vTCPt8
 | Talks | agent | talks | Date · Track · Title · DocUrl · Draft · Status |
 | News | agent | news | Date · Category · Headline · Summary · Interview Angle · Source |
 | Repair Outbox | agent | repairer | Date · Key · Attempt · Title · Draft · Changed · Not Fixed |
+| Repair Patches | agent | repairer | Date · Key · Attempt · Section ID · Text |
 | Runs | agent | all | Date · Time · Task · Result · Note |
 | Status | code | Conductor | Key · Title · Track · Draft Status · Failure Codes · Blocked Reason · Repair Attempts · Live URL · Updated |
-| Repair Queue | code | Conductor | Key · Title · Track · Next Attempt · Failure Codes · Blocked Reason · Playbook · Previous Notes · Current Draft |
+| Repair Queue | code | Conductor | Key · Title · Track · Next Attempt · Mode · Failure Codes · Blocked Reason · Playbook · Previous Notes · Current Draft |
+| Repair Sections | code | Conductor | Key · Attempt · Section ID · Heading · Findings · Text |
 
 ## Row keys
 

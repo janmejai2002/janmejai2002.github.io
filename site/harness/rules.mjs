@@ -7,7 +7,7 @@
  * check-build.mjs still runs the rendered-HTML backstops after the build.
  */
 import { createHash } from 'node:crypto';
-import { CAPS, STYLE, FAILURES, SHEET, KEY_RULE } from './registry.mjs';
+import { CAPS, STYLE, FAILURES, SHEET, KEY_RULE, SECTIONS } from './registry.mjs';
 
 /** Stable row key — see KEY_RULE in registry.mjs. Must match gas/Conductor.js. */
 export function sheetKey(tab, date, title) {
@@ -47,15 +47,47 @@ function stripCode(md) {
  * @returns {{ heading: string, text: string }[]}
  */
 export function splitSections(md) {
-  const out = [{ heading: '(opening)', lines: [] }];
+  return splitDraft(md).map((s) => ({ heading: s.heading, text: s.body }));
+}
+
+/** Section id per SECTIONS in registry.mjs. Must match sectionId_ in gas/Conductor.js. */
+export function sectionId(index, heading) {
+  return `S${index}-${createHash('sha256').update(heading, 'utf8').digest('hex').slice(0, SECTIONS.hashLength)}`;
+}
+
+/**
+ * A draft as sections, per SECTIONS in registry.mjs. Must match splitDraft_ in
+ * gas/Conductor.js (the regression test runs both).
+ * @returns {{ id, heading, text, body }[]}  text = heading line + body, trimmed
+ */
+export function splitDraft(md) {
+  const out = [{ heading: SECTIONS.opening, lines: [] }];
   let fence = false;
-  for (const line of md.replace(/\r\n/g, '\n').split('\n')) {
+  for (const line of String(md).replace(/\r\n/g, '\n').split('\n')) {
     if (/^\s*```/.test(line)) fence = !fence;
     const h = !fence && line.match(/^##\s+(.+?)\s*$/);
-    if (h) out.push({ heading: h[1], lines: [] });
+    if (h) out.push({ heading: h[1], lines: [line] });
     else out[out.length - 1].lines.push(line);
   }
-  return out.map((s) => ({ heading: s.heading, text: s.lines.join('\n').trim() }));
+  return out.map((s, i) => {
+    const text = s.lines.join('\n').trim();
+    const body = (i === 0 ? text : s.lines.slice(1).join('\n')).trim();
+    return { id: sectionId(i, s.heading), heading: s.heading, text, body };
+  });
+}
+
+/** Sections back into a draft: non-empty texts, one blank line apart. */
+export function joinDraft(sections) {
+  return sections.map((s) => s.text.trim()).filter(Boolean).join('\n\n') + '\n';
+}
+
+/**
+ * Findings as the compact JSON stored in Notion's Findings property, which the
+ * Conductor reads to pick the sections to send: [{c, s, e}] (code, section, excerpt).
+ */
+export function findingsJson(findings, maxInstances = 40) {
+  const rows = findings.flatMap((f) => (f.instances?.length ? f.instances : [{ section: '', excerpt: '' }]).map((i) => ({ c: f.code, s: i.section, e: i.excerpt.slice(0, 160) })));
+  return JSON.stringify(rows.slice(0, maxInstances));
 }
 
 /** The section heading in force at character `index` of `text`. */
