@@ -41,14 +41,40 @@ const live = CLAIMS.flatMap((c) => {
   if (!post) console.warn(`claims.ts: skipping missing post ${c.slug}`);
   return post ? [{ c, post }] : [];
 });
-if (!live.length) throw new Error('claims.ts: no claim points at a published post');
-const claims = live.map(({ c, post }) => {
+
+/* One article per track, picked at random on each visit (the inline script
+   after the cues). The page ships a small pool per track: its hand-written
+   claims from claims.ts, plus its newest posts, which use their Reader Question
+   as the line and their meta description as the finding. */
+const POOL_PER_TRACK = 4;
+const handSlugs = new Set(live.map(({ c }) => c.slug));
+const seamFor = (slug: string) => 36 + ([...slug].reduce((h, ch) => (h * 31 + ch.charCodeAt(0)) >>> 0, 7) % 12);
+const pool = TRACKS.flatMap((t) => [
+  ...live.filter(({ post }) => post.data.track === t.id).map(({ c, post }) => ({ ...c, kind: 'claim' as const, post })),
+  ...posts
+    .filter((p) => p.data.track === t.id && !handSlugs.has(slugOf(p)))
+    .slice(0, POOL_PER_TRACK)
+    .map((p) => ({
+      slug: slugOf(p),
+      subject: t.label,
+      claim: p.data.question ?? p.data.title,
+      mend: p.data.description,
+      seam: seamFor(slugOf(p)),
+      kind: 'question' as const,
+      post: p,
+    })),
+]);
+if (!pool.length) throw new Error('index.astro: no published post for the hero');
+const claims = pool.map(({ post, ...c }) => {
   const pts = seamOf(c.seam);
   const edge = pts.map(([x, y]) => `${x}% ${y}%`);
   const first = pts[0][0];
   const last = pts[pts.length - 1][0];
   return {
     ...c,
+    label: c.kind === 'claim' ? 'Claimed' : 'The question',
+    long: c.claim.length > 60,
+    trackId: post.data.track,
     href: `/blog/${c.slug}/`,
     accent: trackOf[post.data.track].accent,
     track: trackOf[post.data.track].label,
@@ -99,8 +125,8 @@ const edgeLine = edge.map(([x, d]) => `${(x * 10).toFixed(0)},${(EDGE_DEPTH - d)
       <div class="stage" data-stage>
         <div class="claims" data-claims>
           {claims.map((c, n) => (
-            <div class:list={['claim', n === 0 && 'on', n === 0 && 'play']} data-claim={n} data-seam={c.seam}>
-              <span class="claim__k">Claimed</span>
+            <div class:list={['claim', c.long && 'claim--long', n === 0 && 'on', n === 0 && 'play']} data-claim={n} data-seam={c.seam} data-track={c.trackId}>
+              <span class="claim__k">{c.label}</span>
               <span class="claim__said">
                 <span class="sr">{c.claim}</span>
                 <span class="claim__pc claim__pc--l" style={`clip-path:${c.left}`} aria-hidden="true">{c.claim}</span>
@@ -124,6 +150,7 @@ const edgeLine = edge.map(([x, d]) => `${(x * 10).toFixed(0)},${(EDGE_DEPTH - d)
               type="button"
               class:list={['cue', n === 0 && 'cue--on']}
               data-cue={n}
+              data-track={c.trackId}
               aria-pressed={n === 0 ? 'true' : 'false'}
               style={`--accent:var(--${c.accent})`}
             >
@@ -141,6 +168,33 @@ const edgeLine = edge.map(([x, d]) => `${(x * 10).toFixed(0)},${(EDGE_DEPTH - d)
           </div>
           <button type="button" class="cue-pause" data-pause>Pause</button>
         </div>
+        {/* One claim per track, chosen at random on every visit. Inline and
+            synchronous, so it runs before first paint and before the page
+            script below reads the claims (it maps cues to claims by position). */}
+        <script is:inline>
+          (function () {
+            var claims = [].slice.call(document.querySelectorAll('[data-claim]'));
+            var cues = [].slice.call(document.querySelectorAll('[data-cue]'));
+            var groups = {};
+            claims.forEach(function (el, i) { (groups[el.dataset.track] = groups[el.dataset.track] || []).push(i); });
+            var keep = {};
+            Object.keys(groups).forEach(function (t) { var g = groups[t]; keep[g[Math.floor(Math.random() * g.length)]] = true; });
+            var n = 0;
+            claims.forEach(function (el, i) {
+              if (!keep[i]) { el.remove(); if (cues[i]) cues[i].remove(); return; }
+              var first = n === 0;
+              el.dataset.claim = String(n);
+              el.classList.toggle('on', first);
+              el.classList.toggle('play', first);
+              if (cues[i]) {
+                cues[i].dataset.cue = String(n);
+                cues[i].classList.toggle('cue--on', first);
+                cues[i].setAttribute('aria-pressed', first ? 'true' : 'false');
+              }
+              n++;
+            });
+          })();
+        </script>
       </div>
     </div>
 
@@ -1061,6 +1115,8 @@ const edgeLine = edge.map(([x, d]) => `${(x * 10).toFixed(0)},${(EDGE_DEPTH - d)
     text-decoration: none; color: inherit; visibility: hidden; opacity: 0;
   }
   .claim.on { visibility: visible; opacity: 1; }
+  /* A Reader Question runs to ~120 characters, three times a hand-written claim. */
+  .claim--long .claim__said { font-size: clamp(1.875rem, 4.2vw, 3.5rem); line-height: 1.08; letter-spacing: -.03em; }
   .claim__go:focus-visible { outline-color: var(--ochre); outline-offset: 4px; }
   .claim__k { display: block; font-size: .9375rem; font-weight: 600; color: var(--tldr-dim); }
   .claim__k--gold { color: var(--ochre); }
