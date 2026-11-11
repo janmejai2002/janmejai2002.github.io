@@ -104,5 +104,4 @@ Machine notes:
 - Rewrite of the public post `site/src/content/blog/how-this-blog-builds-itself.md` for non-technical readers, based on `docs/HOW-IT-WORKS.md`: still wanted, only when the owner says go. Its description must drop to 160 characters (it is 161), and it has no `notionId:`.
 - `G-SOURCES` (fewer than 3 sources) is a warning only. The plan is to make it blocking after a week on the new prompts.
 - Older (pre-Gemini) Notion rows without a Sheet Key are outside the repair loop on purpose.
-- Gmail stays connected in Gemini for the owner's other tasks. Every wAIbi prompt forbids using it. Keep that line in any prompt you edit.
-- `docs/HOW-IT-WORKS.md` predates section patches; it still describes whole-draft repairs.
+- Gmail stays connected in Gemini for the owner's other tasks. Every wAIbi prompt forbids using it. Keep that line in any prompt you edit.
