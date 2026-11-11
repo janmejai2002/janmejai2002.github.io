@@ -92,6 +92,9 @@ export const SHEET = {
     },
     // Only the sections a "sections" mode repair may change, one per row.
     'Repair Sections': { owner: 'code', columns: ['Key', 'Attempt', 'Section ID', 'Heading', 'Findings', 'Text'] },
+    // Repair-loop test rows, added by the Sheet menu "wAIbi → Start a repair test"
+    // (gas/RepairTest.js) from REPAIR.testFixture. Never published: see REPAIR.testStatus.
+    'Repair Tests': { owner: 'code', keyPrefix: 'RT', columns: ['Date', 'Track', 'Title', 'DocUrl', 'Draft', 'Status'] },
   },
 };
 
@@ -152,6 +155,10 @@ export const REPAIR = {
   // acts on). It is never applied, so it can never publish.
   testStatus: 'Test',
   testParkStatus: 'Queued',
+  // The article the test menu files: one ASCII diagram + one em dash, both in
+  // one section (the regression test pins exactly that).
+  testFixture: 'site/harness/fixtures/repair-test.md',
+  testTab: 'Repair Tests',
 };
 
 /** Gemini scheduled tasks (IST). `expectRun` = the Conductor alerts if no Runs row by this time. */

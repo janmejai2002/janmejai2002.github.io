@@ -21,6 +21,7 @@ https://docs.google.com/spreadsheets/d/1-UcD-C4My_Zp4aH3n-5dB3JQNtDN_MSAK6vTCPt8
 | Status | code | Conductor | Key · Title · Track · Draft Status · Failure Codes · Blocked Reason · Repair Attempts · Live URL · Updated |
 | Repair Queue | code | Conductor | Key · Title · Track · Next Attempt · Mode · Failure Codes · Blocked Reason · Playbook · Previous Notes · Current Draft |
 | Repair Sections | code | Conductor | Key · Attempt · Section ID · Heading · Findings · Text |
+| Repair Tests | code | Conductor | Date · Track · Title · DocUrl · Draft · Status |
 
 ## Row keys
 

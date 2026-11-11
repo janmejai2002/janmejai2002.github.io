@@ -149,6 +149,18 @@ var REGISTRY = {
           "Findings",
           "Text"
         ]
+      },
+      "Repair Tests": {
+        "owner": "code",
+        "keyPrefix": "RT",
+        "columns": [
+          "Date",
+          "Track",
+          "Title",
+          "DocUrl",
+          "Draft",
+          "Status"
+        ]
       }
     }
   },
@@ -162,7 +174,9 @@ var REGISTRY = {
     "issueLabel": "needs-human",
     "rejectedPrefix": "Repair rejected (attempts",
     "testStatus": "Test",
-    "testParkStatus": "Queued"
+    "testParkStatus": "Queued",
+    "testFixture": "site/harness/fixtures/repair-test.md",
+    "testTab": "Repair Tests"
   },
   "SECTIONS": {
     "opening": "(opening)",

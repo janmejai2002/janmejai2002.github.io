@@ -138,7 +138,7 @@ function loadConductor() {
       computeDigest: (alg, s) => [...createHash(alg).update(s, 'utf8').digest()].map((b) => (b > 127 ? b - 256 : b)),
     },
   });
-  vm.runInContext(gas('Registry.js') + '\n' + gas('Conductor.js'), ctx);
+  vm.runInContext(gas('Registry.js') + '\n' + gas('Conductor.js') + '\n' + gas('RepairTest.js'), ctx);
   return ctx;
 }
 const GAS = loadConductor();
@@ -200,4 +200,13 @@ test('the current draft is rebuilt the same way in Node and the Conductor, skipp
   assert.equal(patchCount('PATCHES: 3'), 3);
   assert.equal(patchCount(ORIGINAL), null);
   assert.deepEqual(plain(GAS.rejectedFor_('1, 3', `${REPAIR.rejectedPrefix} 2): x`)), [1, 2, 3]);
+});
+
+test('the one-click repair test article has exactly one fix to make, in one section', () => {
+  const draft = readFileSync(join(here, '..', '..', REPAIR.testFixture), 'utf8');
+  const { findings } = gateSheetDraft(draft, { title: 'TEST 2026-11-11 14:05 Repair loop check', track: 'Technical' });
+  assert.deepEqual(codes(findings), ['G-ASCII', 'G-STYLE'], explain(findings));
+  const plan = plain(GAS.sectionPlan_(['G-ASCII', 'G-STYLE'], JSON.parse(findingsJson(findings)), draft));
+  assert.deepEqual(plan.map((s) => s.heading), [ARCH]);
+  assert.equal(typeof GAS.startRepairTest, 'function');
 });

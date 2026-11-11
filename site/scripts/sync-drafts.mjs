@@ -108,13 +108,38 @@ const gateDefaults = (p, title) => ({ title: title || plain(p.Name?.title), trac
 const sources = new Map();
 const testKeys = new Set(); // Status = REPAIR.testStatus: repair loop dry runs, never applied
 let imported = 0;
-for (const tab of ['Drafts', 'Case Studies', 'Talks']) {
+let seeded = 0;
+const testTabKeys = new Set();
+for (const tab of ['Drafts', 'Case Studies', 'Talks', REPAIR.testTab]) {
   for (const r of await readTab(tab)) {
     if (!r.Title || !r.Date) continue;
     const key = sheetKey(tab, r.Date, r.Title);
     if (r.Draft) sources.set(key, r.Draft);
-    if ((r.Status || '').toLowerCase() === REPAIR.testStatus.toLowerCase()) testKeys.add(key);
+    const isTest = tab === REPAIR.testTab || (r.Status || '').toLowerCase() === REPAIR.testStatus.toLowerCase();
+    if (isTest) testKeys.add(key);
+    if (tab === REPAIR.testTab) testTabKeys.add(key);
     if (byKey.has(key) || titles.has(r.Title.toLowerCase()) || titles.has(r.Title.slice(0, 70).toLowerCase())) continue;
+    // A new repair test: create its Notion row as if the publish run had just
+    // blocked it, so the Conductor queues it. It can never be applied (see 2).
+    if (isTest && r.Draft) {
+      const defaults = { title: r.Title, track: r.Track || 'Technical' };
+      const { findings } = gateSheetDraft(r.Draft, defaults);
+      console.log(`· test ${key} "${r.Title}" → Needs Revision [${findings.map((f) => f.code).join(', ')}]`);
+      seeded++;
+      const { page } = await importDraft(r.Draft, { key, commit, status: 'Needs Revision', defaults });
+      if (page)
+        await patch(
+          page,
+          {
+            'Failure Codes': { multi_select: [...new Set(findings.map((f) => f.code))].map((name) => ({ name })) },
+            'Blocked Reason': text(formatFindings(findings)),
+            Findings: { rich_text: rich(findingsJson(findings)) },
+            'Repair Attempts': { number: 0 },
+          },
+          `set findings on test ${key}`
+        );
+      continue;
+    }
     if (r.Status && !/^ready$/i.test(r.Status)) {
       console.log(`· skip ${key} "${r.Title}" — Status is "${r.Status}"`);
       continue;
@@ -271,7 +296,28 @@ for (const page of prod) {
   );
 }
 
+// 4. Old repair tests — the menu keeps one test row in the Repair Tests tab; a
+// test's Notion row whose Sheet row is gone is deleted (moved to Notion's trash).
+// Only while a test row exists, so a failed Sheet read never deletes the live one.
+const testPrefix = `${SHEET.tabs[REPAIR.testTab].keyPrefix}-`;
+let cleared = 0;
+if (testTabKeys.size) {
+  for (const page of prod) {
+    const key = keyOf(page);
+    if (!key.startsWith(testPrefix) || testTabKeys.has(key)) continue;
+    cleared++;
+    if (!commit) { console.log(`  (dry run) would delete old test row ${key}`); continue; }
+    try {
+      await api(`/pages/${page.id}`, { method: 'PATCH', body: { in_trash: true } });
+      console.log(`  ✓ deleted old test row ${key}`);
+    } catch (err) {
+      console.error(`::warning::could not delete old test row ${key}: ${err.message.split('\n')[0]}`);
+    }
+  }
+}
+
 console.log(
-  `\n${imported} new draft(s), ${repaired} repair(s) ${commit ? 'applied' : 'would be applied'}, ${refused} refused, ${regated} stale row(s) re-checked.`
+  `\n${imported} new draft(s), ${seeded} repair test(s) started, ${repaired} repair(s) ${commit ? 'applied' : 'would be applied'}, ` +
+    `${refused} refused, ${regated} stale row(s) re-checked, ${cleared} old test row(s) deleted.`
 );
 
