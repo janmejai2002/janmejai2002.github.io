@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" role="img">
+  <title>Grammar Constrained Decoding Bitmask Gate</title>
+  <desc>Horizontal logit vectors meet a vertical PDA bitmask gate; three mizu paths pass through and one jump-forward arc vaults above.</desc>
+  <defs>
+    <filter id="grain" x="0" y="0" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch"/>
+    </filter>
+  </defs>
+  <rect width="1600" height="900" fill="{{paper}}"/>
+  <rect x="80" y="80" width="1440" height="740" fill="none" stroke="{{border}}" stroke-width="1"/>
+  <path d="M920,100V800M1040,100V800M1160,100V800" stroke="{{border}}" stroke-width="1" stroke-dasharray="6,10" fill="none"/>
+  <rect x="964" y="140" width="32" height="620" fill="{{paper}}" stroke="{{ink}}" stroke-width="2"/>
+  <path d="M160,190H964M160,240H964M160,340H964M160,390H964M160,490H964M160,540H964M160,640H964M160,690H964" stroke="{{ink}}" stroke-width="1.5" fill="none"/>
+  <path d="M160,290H1440M160,440H956M160,590H1440M1004,446L1036,434L1440,440" stroke="{{mizu}}" stroke-width="3" fill="none"/>
+  <path d="M440,290C680,90,1120,90,1336,290" stroke="{{mizu}}" stroke-width="2.5" stroke-dasharray="12,6" fill="none"/>
+  <circle cx="440" cy="290" r="7" fill="{{mizu}}"/>
+  <circle cx="1336" cy="290" r="7" fill="{{mizu}}"/>
+  <circle cx="956" cy="440" r="6" fill="{{mizu}}"/>
+  <rect width="1600" height="900" filter="url(#grain)" opacity="0.055"/>
+</svg>
