@@ -4,12 +4,13 @@
   "version": "1.0.0",
   "scripts": {
     "dev": "astro dev",
-    "build": "node --experimental-strip-types --no-warnings scripts/test-crew.mjs && astro build && node scripts/check-build.mjs && node scripts/check-design.mjs && node harness/generate.mjs --check",
+    "build": "node --experimental-strip-types --no-warnings scripts/test-crew.mjs && node --test harness/regression.test.mjs && astro build && node scripts/check-build.mjs && node scripts/check-design.mjs && node harness/generate.mjs --check",
     "test:crew": "node --experimental-strip-types --no-warnings scripts/test-crew.mjs",
     "images": "node scripts/make-images.mjs",
     "preview": "astro preview",
     "doctor": "node scripts/doctor.mjs",
-    "dashboard": "node scripts/dashboard.mjs"
+    "dashboard": "node scripts/dashboard.mjs",
+    "test": "node --test harness/regression.test.mjs"
   },
   "dependencies": {
     "@astrojs/rss": "^4.0.11",
