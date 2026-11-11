@@ -1,5 +1,45 @@
 [
   {
+    "headline": "India's 1,060 Logistics Startups Target $159.5B Freight Market",
+    "date": "2026-11-11",
+    "category": "Operations",
+    "summary": "Datalabs and Redseer figures show India's 1,060 logistics startups have raised $8.26 billion across 47 acquisitions as total logistics spend grows from $107.2 billion in FY23 to a projected $159.5 billion by FY28 (8–9% CAGR) and $357.3 billion by 2030, led by express parcel networks compounding at 14%. Despite that capital influx, India's 12.5 million trucks remain fragmented across 3.5 million operators—nearly 75% owning fewer than five vehicles—leaving plant-gate dispatch on spreadsheets, inflating dead-freight costs, and blocking shipment-level Scope 3 emissions tracking.",
+    "angle": "Operations panelists will ask why $8.26 billion in startup venture funding has failed to consolidate a trucking market where 75% of fleet owners still run fewer than five trucks. When designing a B2B freight or D2C courier aggregation platform for Tier-2 and Tier-3 India, how do you enforce service-level reliability, cash-on-delivery reconciliation, and Scope 3 carbon auditing across unorganized small fleet owners without taking balance-sheet asset risk?",
+    "source": "https://www.logisticsinsider.in/logistics-startups-innovation-reimagining-supply-chains-by-2030/"
+  },
+  {
+    "headline": "Marico Lifts Ad Spend 44% While HUL Cuts 9% Amid Input Inflation",
+    "date": "2026-11-11",
+    "category": "Marketing",
+    "summary": "Indian FMCG majors diverged sharply on September-quarter marketing budgets as Marico and Colgate-Palmolive raised advertising spend by 44% and 40% year-on-year, while Godrej Consumer Products and Dabur increased spend by 2.1% and 2%. Hindustan Unilever (HUL) cut Q2 advertising expenditure by 9% year-on-year, with CEO Priya Nair stating the firm calibrated media budgets to offset rising commodity costs in categories where price hikes were not passed to shoppers.",
+    "angle": "Marketing panelists will press you on the share-of-voice versus gross-margin dilemma during commodity inflation: when a market leader like HUL cuts ad spend 9% to hold retail price points while challengers hike media budgets 40%+, who wins long-term brand equity? In an IIM placement interview, how would you decide which FMCG categories have high price elasticity (requiring price protection funded by ad cuts) versus high advertising elasticity (requiring sustained media weight even if prices rise)?",
+    "source": "https://www.startuplanes.com/post/fmcg-majors-report-mixed-advertising-spends-in-september-quarter-amid-shifting-market-pressures"
+  },
+  {
+    "headline": "RBI Orders Level 3 Accounting on Rs 1.1L Cr Bond-Forward Trades",
+    "date": "2026-11-11",
+    "category": "Finance",
+    "summary": "During recent supervisory audits, the Reserve Bank of India (RBI) instructed banks to reclassify bond-forward contracts—which reached Rs 1.1 lakh crore ($11 billion) in notional clearinghouse volume this year—under Level 3 valuation inputs because prices rely on internal bank models without observable market quotes. Because Level 3 classification under RBI norms can restrict bank dividend payouts and reduce regulatory capital, lenders are working with FIMMDA and the Clearing Corp. of India (CCIL) to trial an electronic bond-forward trading platform and expand price reporting.",
+    "angle": "Finance interviewers will test your grasp of fair-value hierarchy (Ind AS 113 / IFRS 13) and bank capital adequacy: why does shifting an $11 billion life-insurer hedging market from Level 2 to Level 3 directly penalize CET1 capital and dividend capacity? If banks pull back from writing long-dated bond forwards to avoid Level 3 capital charges, how will Indian life insurers hedge asset-liability duration mismatches on guaranteed-return policies?",
+    "source": "https://www.startuplanes.com/post/rbi-questions-bank-valuations-on-bond-forward-trades-seeking-accounting-shifts"
+  },
+  {
+    "headline": "US Medicaid Cuts Trim Healthcare Share at 4 of 5 Indian IT Majors",
+    "date": "2026-11-11",
+    "category": "Consulting",
+    "summary": "Four of India's five largest IT and consulting firms reported year-on-year drops in healthcare and life sciences revenue contribution—led by Cognizant (-160 bps to 28%), Wipro (-100 bps to 13.5%), HCLTech (-90 bps to 13.8%), and TCS (-20 bps to 10.3%)—while Infosys expanded its healthcare mix by 200 bps to 8.4%. Cognizant CEO Ravi Kumar and industry analysts linked the slowdown to US insurers and state agencies freezing discretionary legacy tech projects ahead of an estimated $911 billion in ten-year Medicaid cuts under the One Big Beautiful Bill Act, even as pharma clients shift budgets toward AI drug discovery.",
+    "angle": "Consulting interviewers will test how you translate US public policy shocks into offshore practice strategy: when a $911 billion federal Medicaid cut freezes payer ERP and claims-administration projects, how should an IT-advisory practice partner reallocate bench talent? Specifically, how do you pivot delivery teams from low-margin payer \"run-the-business\" maintenance into R&D-funded pharma AI drug discovery where budgets sit with Chief Scientific Officers outside traditional CIO purviews?",
+    "source": "https://www.startuplanes.com/post/indian-it-major-see-revenue-contribution-dip-from-healthcare-sector-amid-regulatory-uncertainty"
+  },
+  {
+    "headline": "Wix Cuts FCF Margin Target to 16% as Base44 AI Nears $250M ARR",
+    "date": "2026-11-11",
+    "category": "Product Management",
+    "summary": "Wix grew Q3 2026 revenue 13% year-on-year to $570 million and reached $2.02 billion in total ARR across 323 million users, driven by its acquired natural-language app and Superagent builder Base44 approaching $250 million in ARR less than 18 months after launch. Although Q1 2026 user cohort bookings rose 46% to $52 million and recovered $90 million in acquisition spend within three quarters (1.0x TROI), Wix cut its FY26 free cash flow margin guidance from high teens to ~16% as sales and marketing climbed to 47% of non-GAAP gross profit (up from 30–33% in 2023–2025).",
+    "angle": "Product interviewers will press you on the growth-versus-profitability tradeoff when an incumbent SaaS platform acquires a breakout \"vibe-coding\" AI product scaling toward $250 million ARR. When three-quarter cohort payback hits 1.0x, is management right to let sales and marketing jump to 47% of gross profit and compress free cash flow margins to 16%, or does aggressive top-of-funnel spend risk masking high churn among low-intent DIY app builders?",
+    "source": "https://www.investing.com/news/company-news/wix-q3-2026-slides-ai-push-drives-13-revenue-growth-base44-nears-250m-93CH-5016089"
+  },
+  {
     "headline": "BCG Finds AI Spend Hit 3.3% of Revenue With Zero Non-Tech Payoff",
     "date": "2026-11-10",
     "category": "Consulting",
