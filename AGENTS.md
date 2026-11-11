@@ -5,14 +5,17 @@
 - **Project**: wAIbi-sabi (`https://janmejai2002.github.io`) — Applied-AI journal by Janmejai Singh Minhas and B-school interview news archive.
 - **Engine**: Astro 5 (Static Site Generation), zero client runtime JS framework, Sharp for WebP optimization.
 - **Local Workspace**: `C:\Users\Janmejai\janmejai2002.github.io` (`site/` contains web source).
-- **Control Plane**: Notion (3 databases: Pipeline Radar, Article Production, Interview News Archive).
+- **Content engine (since 2026-11)**: five Gemini scheduled tasks + a Repairer, all writing to one Google Sheet. The Claude scheduled routines are retired.
+- **Control Plane**: Notion (3 databases: Pipeline Radar, Article Production, Interview News Archive). Notion is the one authority for article status.
 - **Deployment**: Push to `main` -> GitHub Actions (`deploy.yml`) -> GitHub Pages.
+
+**Read `docs/HOW-IT-WORKS.md` first** (plain English), then `docs/HARNESS-PLAN.md` (design). Every rule (caps, tracks, sheet tabs, failure codes, repair limit) lives in **`site/harness/registry.mjs`**; after editing it run `node site/harness/generate.mjs`. Never hardcode a rule elsewhere.
 
 ---
 
 ## 2. Invariant Guardrails — Never Violate
 
-1. **Approved Gate is Human-Only**: `Draft Status = Approved` and `Interest Rating` in Notion are reserved strictly for the owner. No session or agent may set `Approved`.
+1. **Approved is Human-Only**: no session or agent may set `Draft Status = Approved`. (`Interest Rating` is retired — the radar scores topics itself.)
 2. **Never commit to `notion/approved-articles`**: The automated poll overwrites this branch from `main`. Commit post-merge edits to `main`.
 3. **Hard Character Caps**:
    - Title: `max 70 chars`
@@ -22,11 +25,11 @@
 4. **Artwork Rules**:
    - Sources in `site/assets-src/art/<slug>.svg` MUST use placeholder tokens (`{{paper}}`, `{{ink}}`, `{{mizu}}`...) and **never hardcoded hex codes**.
    - `heroAlt` is mandatory when `heroImage` is set.
-5. **No Blind Publishing**:
-   - Unattended tracks (`Talks`, `Case Studies`, `Basics`) publish directly.
-   - Reviewed tracks (`Technical`, `Business`) require owner approval -> automated PR.
+5. **Gates, not reviewers**: all five tracks publish automatically (owner's decision, 2026-11-11; `TRACKS[].auto` in the registry). The gates are the only safety net, so never weaken one; fix the content or the rule's false positive.
 6. **Closed-Loop Reconciliation**:
    - `close-loop.mjs` verifies the live URL serves HTTP 200 with content before marking the Notion row `Published`.
+7. **Self-healing loop**: a failed draft goes to `Needs Revision` with `Failure Codes`; the Conductor puts it in the Sheet's `Repair Queue`; the Gemini Repairer appends a fix to `Repair Outbox`; `sync-drafts.mjs` applies it. After `REPAIR.maxAttempts` (4) a GitHub issue labelled `needs-human` is opened. When asked to fix such an issue: edit the Notion page, run `node site/scripts/publish-article.mjs --check <id>`, set `Draft Ready`.
+8. **Sheet tabs**: agents only append; `Status` and `Repair Queue` are code-owned. See `gemini/skills/waibi-sheet-contract/sheet.md`.
 
 ---
 
@@ -50,6 +53,13 @@ node site/scripts/doctor.mjs
 # Code knowledge graph navigation (codemap on PATH)
 codemap analyze C:\Users\Janmejai\janmejai2002.github.io
 codemap query <file> C:\Users\Janmejai\janmejai2002.github.io
+
+# Harness
+node site/scripts/publish-article.mjs --check <notion-page-id>   # every gate on one draft
+node site/scripts/sync-drafts.mjs                                # Sheet → Notion dry run (--commit to apply)
+node site/harness/generate.mjs                                   # regenerate gas/Registry.js + Gemini skill files
+node site/harness/notion-schema.mjs                              # add any new harness properties to Notion
+cd gas; clasp push                                               # deploy the Conductor (Apps Script)
 
 # Token-cheap Notion CLI (replaces schema-heavy Notion MCP)
 node site/scripts/notion.mjs radar
