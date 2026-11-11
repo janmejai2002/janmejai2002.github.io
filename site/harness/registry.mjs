@@ -120,6 +120,12 @@ export const REPAIR = {
   // Conductor reads the attempt numbers after it, so the next attempt starts
   // from the last good draft instead of the rejected one.
   rejectedPrefix: 'Repair rejected (attempts',
+  // A source row whose Status cell is this is a dry run of the repair loop: it
+  // is queued and repaired like any other, but sync-drafts only records the
+  // verify result and parks the Notion row at `testParkStatus` (which nothing
+  // acts on). It is never applied, so it can never publish.
+  testStatus: 'Test',
+  testParkStatus: 'Queued',
 };
 
 /** Gemini scheduled tasks (IST). `expectRun` = the Conductor alerts if no Runs row by this time. */

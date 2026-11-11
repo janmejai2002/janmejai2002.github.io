@@ -105,12 +105,14 @@ const gateDefaults = (p, title) => ({ title: title || plain(p.Name?.title), trac
 
 // 1. New drafts (and the original draft of every keyed row, for 2 and 3)
 const sources = new Map();
+const testKeys = new Set(); // Status = REPAIR.testStatus: repair loop dry runs, never applied
 let imported = 0;
 for (const tab of ['Drafts', 'Case Studies', 'Talks']) {
   for (const r of await readTab(tab)) {
     if (!r.Title || !r.Date) continue;
     const key = sheetKey(tab, r.Date, r.Title);
     if (r.Draft) sources.set(key, r.Draft);
+    if ((r.Status || '').toLowerCase() === REPAIR.testStatus.toLowerCase()) testKeys.add(key);
     if (byKey.has(key) || titles.has(r.Title.toLowerCase()) || titles.has(r.Title.slice(0, 70).toLowerCase())) continue;
     if (r.Status && !/^ready$/i.test(r.Status)) {
       console.log(`· skip ${key} "${r.Title}" — Status is "${r.Status}"`);
@@ -163,11 +165,26 @@ for (const r of outbox) {
   const rejected = rejectedAttempts(reason);
   const rowCodes = (p['Failure Codes']?.multi_select ?? []).map((o) => o.name);
   const prevDraft = draftBefore(r.Key, attempt, rejected);
+  if (testKeys.has(r.Key) && !prevDraft) { console.log(`  ◇ test row ${r.Key} has no draft to compare against; leaving it`); continue; }
   let churn = '';
   if (prevDraft) {
     const v = verifyRepair(prevDraft, r.Draft, gateDefaults(p), rowCodes, r.Title);
     churn = churnLine(v.churn);
     console.log(`  repair ${r.Key} attempt ${attempt}: ${churn}`);
+    if (testKeys.has(r.Key)) {
+      const verdict = v.ok ? 'WOULD BE APPLIED' : `WOULD BE REFUSED: ${v.why}`;
+      console.log(`  ◇ test row — ${verdict}; parking at ${REPAIR.testParkStatus}, not applying`);
+      await patch(
+        page,
+        {
+          'Blocked Reason': text(`TEST RUN (not applied). Attempt ${attempt} ${verdict}. Churn: ${churn}. Gate after repair: ${formatFindings(v.next.findings) || 'clean'}`),
+          'Repair Attempts': { number: attempt },
+          'Draft Status': { select: { name: REPAIR.testParkStatus } },
+        },
+        `record test result for ${r.Key}`
+      );
+      continue;
+    }
     if (!v.ok) {
       refused++;
       const list = [...rejected, attempt].join(', ');

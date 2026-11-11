@@ -137,7 +137,9 @@ var REGISTRY = {
   "REPAIR": {
     "maxAttempts": 4,
     "issueLabel": "needs-human",
-    "rejectedPrefix": "Repair rejected (attempts"
+    "rejectedPrefix": "Repair rejected (attempts",
+    "testStatus": "Test",
+    "testParkStatus": "Queued"
   },
   "TASKS": [
     {
