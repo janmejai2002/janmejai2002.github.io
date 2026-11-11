@@ -59,7 +59,7 @@ node site/scripts/publish-article.mjs --check <notion-page-id>   # every gate on
 node site/scripts/sync-drafts.mjs                                # Sheet → Notion dry run (--commit to apply)
 node site/harness/generate.mjs                                   # regenerate gas/Registry.js + Gemini skill files
 node site/harness/notion-schema.mjs                              # add any new harness properties to Notion
-cd gas; clasp push                                               # deploy the Conductor (Apps Script)
+cd gas; clasp -u waibi push -f                                   # deploy the Conductor (Apps Script, personal Google login)
 
 # Token-cheap Notion CLI (replaces schema-heavy Notion MCP)
 node site/scripts/notion.mjs radar

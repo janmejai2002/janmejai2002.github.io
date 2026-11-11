@@ -8,11 +8,14 @@ Sheet → Extensions → Apps Script → Project Settings (gear) → **Script ID
 ## 2. Turn on the Apps Script API (lets Claude upload code with `clasp`)
 Open https://script.google.com/home/usersettings → **Google Apps Script API: On**.
 
+clasp's default login on this machine is the XLRI account. The blog uses a separate named login: run `! clasp -u waibi login` once and sign in as janmejai2002@gmail.com. Claude then pushes with `clasp -u waibi push` from `gas/`.
+
 ## 3. Create a read-only Notion connection for the Conductor
-1. https://www.notion.so/profile/integrations → **New integration** → name `waibi-conductor`, type Internal.
-2. Capabilities: tick **Read content** only. Untick Update content, Insert content, and everything under User information.
-3. Save, copy the **Internal Integration Secret**.
-4. In Notion, open the **✍️ Article Production** database → `•••` → **Connections** → add `waibi-conductor`. Share nothing else.
+Notion moves this page around; the goal is an **internal** connection that can **only read**, shared with **one database**.
+1. Notion → Settings → **Connections** → *Develop or manage integrations* (or go to https://www.notion.so/profile/integrations) → create a new **internal** integration named `waibi-conductor`.
+2. In its capabilities, allow **Read content** only. Turn off update/insert content and user information.
+3. Copy its secret (starts `ntn_`).
+4. Open the **✍️ Article Production** database → `•••` → **Connections** → add `waibi-conductor`. Share nothing else.
 
 ## 4. Create a GitHub token that can only start workflows
 1. https://github.com/settings/personal-access-tokens/new
