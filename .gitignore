@@ -43,3 +43,6 @@ check-build-report.json
 
 # harness hand-off file (CI artefact)
 needs-human.json
+
+# skill zips for uploading to Gemini (rebuilt from gemini/skills)
+/gemini/upload/
