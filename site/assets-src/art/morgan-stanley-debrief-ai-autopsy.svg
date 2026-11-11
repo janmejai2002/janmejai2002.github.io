@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" role="img">
+  <title>Morgan Stanley AI Architecture</title>
+  <desc>Minimalist geometric diagram illustrating research RAG retrieval passing through a supervisory human-in-the-loop gate.</desc>
+  <defs>
+    <filter id="grain" x="0" y="0" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch"/>
+    </filter>
+  </defs>
+  <rect width="1600" height="900" fill="{{paper}}"/>
+  <path d="M80,80h1440v740h-1440zM80,450h1440M460,80v740M1140,80v740" fill="none" stroke="{{border}}" stroke-width="1"/>
+  <circle cx="460" cy="450" r="150" fill="none" stroke="{{ink}}" stroke-width="2"/>
+  <circle cx="460" cy="450" r="50" fill="none" stroke="{{ink}}" stroke-width="1.5"/>
+  <path d="M460,300v-80M460,600v80M310,450h-90M610,450h90" stroke="{{border}}" stroke-width="1.5"/>
+  <rect x="730" y="240" width="120" height="420" fill="none" stroke="{{border}}" stroke-width="1"/>
+  <rect x="730" y="240" width="120" height="150" fill="{{ink}}" fill-opacity="0.08" stroke="{{ink}}" stroke-width="1.5"/>
+  <rect x="750" y="420" width="120" height="180" fill="{{moss}}" fill-opacity="0.22" stroke="{{moss}}" stroke-width="2.5"/>
+  <line x1="870" y1="510" x2="1140" y2="510" stroke="{{moss}}" stroke-width="2" stroke-dasharray="6,8"/>
+  <circle cx="1140" cy="450" r="140" fill="none" stroke="{{ink}}" stroke-width="2"/>
+  <path d="M1140,310 A140,140 0 0,1 1280,450" fill="none" stroke="{{moss}}" stroke-width="3"/>
+  <line x1="1280" y1="450" x2="1360" y2="450" stroke="{{ink}}" stroke-width="2"/>
+  <circle cx="1360" cy="450" r="6" fill="{{ink}}"/>
+  <rect width="1600" height="900" filter="url(#grain)" opacity="0.05"/>
+</svg>
