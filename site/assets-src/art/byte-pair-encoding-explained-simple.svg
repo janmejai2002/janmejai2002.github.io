@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" role="img">
+  <title>Byte Pair Encoding Merging Uniform Characters into Unequal Token Blocks</title>
+  <desc>Ten uniform vertical character slots at the top converge via geometric merge lines into three unequal subword blocks below, with a moss-green block straddling the vertical alignment grid.</desc>
+  <defs>
+    <filter id="grain" x="0" y="0" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch"/>
+    </filter>
+  </defs>
+  <rect width="1600" height="900" fill="{{paper}}"/>
+  <g stroke="{{border}}" stroke-width="1" opacity="0.6">
+    <line x1="200" y1="220" x2="1400" y2="220"/>
+    <line x1="200" y1="450" x2="1400" y2="450"/>
+    <line x1="200" y1="660" x2="1400" y2="660"/>
+    <line x1="560" y1="120" x2="560" y2="780" stroke-dasharray="6 6"/>
+    <line x1="920" y1="120" x2="920" y2="780" stroke-dasharray="6 6"/>
+  </g>
+  <g stroke="{{ink}}" stroke-width="2" fill="none">
+    <rect x="200" y="170" width="100" height="50"/>
+    <rect x="320" y="170" width="100" height="50"/>
+    <rect x="440" y="170" width="100" height="50"/>
+    <rect x="560" y="170" width="100" height="50"/>
+    <rect x="680" y="170" width="100" height="50"/>
+    <rect x="800" y="170" width="100" height="50"/>
+    <rect x="920" y="170" width="100" height="50"/>
+    <rect x="1040" y="170" width="100" height="50"/>
+    <rect x="1160" y="170" width="100" height="50"/>
+    <rect x="1280" y="170" width="100" height="50"/>
+  </g>
+  <g stroke="{{ink}}" stroke-width="1.4" opacity="0.55" fill="none">
+    <line x1="250" y1="220" x2="310" y2="580"/>
+    <line x1="370" y1="220" x2="310" y2="580"/>
+    <line x1="490" y1="220" x2="625" y2="565"/>
+    <line x1="610" y1="220" x2="625" y2="565"/>
+    <line x1="730" y1="220" x2="625" y2="565"/>
+    <line x1="850" y1="220" x2="1100" y2="580"/>
+    <line x1="970" y1="220" x2="1100" y2="580"/>
+    <line x1="1090" y1="220" x2="1100" y2="580"/>
+    <line x1="1210" y1="220" x2="1100" y2="580"/>
+    <line x1="1330" y1="220" x2="1100" y2="580"/>
+  </g>
+  <rect x="200" y="580" width="220" height="80" fill="{{paper}}" stroke="{{ink}}" stroke-width="2.5"/>
+  <rect x="445" y="565" width="360" height="80" fill="{{paper}}" stroke="{{moss}}" stroke-width="3.5"/>
+  <rect x="820" y="580" width="560" height="80" fill="{{paper}}" stroke="{{ink}}" stroke-width="2.5"/>
+  <g fill="{{moss}}">
+    <circle cx="490" cy="195" r="6"/>
+    <circle cx="970" cy="195" r="6"/>
+    <circle cx="1090" cy="195" r="6"/>
+    <circle cx="625" cy="605" r="7"/>
+  </g>
+  <line x1="560" y1="540" x2="560" y2="670" stroke="{{moss}}" stroke-width="2.5" stroke-dasharray="4 4"/>
+  <rect width="1600" height="900" filter="url(#grain)" opacity="0.055"/>
+</svg>
