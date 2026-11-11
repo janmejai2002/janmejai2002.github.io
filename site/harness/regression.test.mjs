@@ -1,66 +1,48 @@
 /**
- * Regression tests for the publish gate, run with:  node --test site/harness/
+ * Regression tests for the publish gate and the repair loop:
+ *   npm --prefix site test        (also the first step of npm run build)
  *
  * The fixtures are exact copies of the Sheet cells from the first live repair
  * (DR-20261111-9f8879, 2026-11-11). Each draft goes through the same path a real
- * one does: Sheet markdown → Notion blocks (md-to-notion) → markdown again
- * (toMarkdown) → the transforms and gate in publish-article.mjs. See
- * docs/HARNESS-REPAIR-PLAN.md §1 for why each expectation matters.
+ * one does: Sheet markdown → Notion blocks → markdown → the publish gate
+ * (scripts/lib/gate.mjs, shared with publish-article and sync-drafts).
+ * See docs/HARNESS-REPAIR-PLAN.md for why each expectation matters.
  */
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { markdownToBlocks } from './md-to-notion.mjs';
-import { checkArticle } from './rules.mjs';
-import { routeFailure } from './registry.mjs';
-import { toMarkdown, plain } from '../scripts/lib/notion.mjs';
-import { liftArtworkBrief, liftArtworkSvg, normalizeProse, stripLeadingH1, wrapTldr } from '../scripts/lib/prose.mjs';
+import { checkArticle, formatFindings, RULES_VERSION, RULES_STAMP_RE } from './rules.mjs';
+import { routeFailure, REPAIR } from './registry.mjs';
+import { normalizeProse } from '../scripts/lib/prose.mjs';
+import { gateSheetDraft } from '../scripts/lib/gate.mjs';
+import { verifyRepair, rejectedAttempts } from '../scripts/lib/repair.mjs';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const fixture = (name) => readFileSync(join(here, 'fixtures', name), 'utf8');
+const ORIGINAL = fixture('DR-20261111-9f8879.original.md');
+const REPAIRED = fixture('DR-20261111-9f8879.repaired.md');
+const DEFAULTS = { title: 'Flaky Agent Evals Force CI Shift from LLM Judges to Trajectory Gates', track: 'Technical' };
+// The codes the row actually carried into the live repair (two were stale).
+const LIVE_CODES = ['G-ASCII', 'G-LATEX', 'G-LENGTH', 'G-STYLE'];
 
-const TITLE = 'Flaky Agent Evals Force CI Shift from LLM Judges to Trajectory Gates';
-const SLUG = 'ai-agent-eval-harness-ci-cd';
+const codes = (findings) => findings.map((f) => f.code).sort();
+const explain = (findings) => findings.map((f) => `${f.code}: ${f.message}`).join('\n');
 
-/** What the Notion API returns for text we wrote: content also appears as plain_text. */
-function asFetched(node) {
-  if (Array.isArray(node)) return node.map(asFetched);
-  if (!node || typeof node !== 'object') return node;
-  const out = {};
-  for (const [k, v] of Object.entries(node)) out[k] = asFetched(v);
-  if (out.type === 'text' && out.text && out.plain_text === undefined) out.plain_text = out.text.content;
-  return out;
-}
+/** The repair the harness should have asked for: swap the one diagram for a list. */
+const SURGICAL = ORIGINAL.replace(/```[^\n]*\n\[Git PR \/ Agent Prompt\][\s\S]*?```/, '1. The pull request triggers the agent run.\n2. The gate replays recorded tool calls and runs the tests.\n3. The merge is blocked on any regression.');
 
-/** Sheet draft → every finding publish-article.mjs would report. */
-function gate(draft, { title = TITLE, slug = SLUG } = {}) {
-  const list = asFetched(markdownToBlocks(draft));
-  // parseHeader(): the leading run of quote/callout blocks is the metadata header.
-  let end = 0;
-  while (end < list.length && ['callout', 'quote'].includes(list[end]?.type)) end++;
-  const header = list.slice(0, end).map((b) => plain(b[b.type]?.rich_text)).join('\n');
-  const grab = (label) =>
-    header.match(new RegExp(`\\**\\s*${label}\\s*\\**\\s*:?\\s*\\**\\s*([^\\n]+)`, 'i'))?.[1]?.replace(/\*+$/, '').trim() || '';
-
-  const artWarnings = [];
-  const lifted = liftArtworkBrief(toMarkdown(list.slice(end)));
-  const art = liftArtworkSvg(lifted.markdown, (r) => artWarnings.push(r), slug);
-  const md = normalizeProse(wrapTldr(stripLeadingH1(art.markdown)));
-  const findings = checkArticle(md, { title, description: grab('Meta description'), question: grab('Reader Question') });
-  if (artWarnings.length) findings.push({ code: 'G-ART', class: 'warn', message: artWarnings.join(' ') });
-  return { md, findings, codes: findings.map((f) => f.code).sort() };
-}
+// ── Phase 1 ──────────────────────────────────────────────────────────────────
 
 test('original draft: the only real defect is the ASCII diagram', () => {
-  const { codes, findings } = gate(fixture('DR-20261111-9f8879.original.md'));
-  assert.deepEqual(codes, ['G-ASCII'], findings.map((f) => `${f.code}: ${f.message}`).join('\n'));
+  const { findings } = gateSheetDraft(ORIGINAL, DEFAULTS);
+  assert.deepEqual(codes(findings), ['G-ASCII'], explain(findings));
 });
 
 test('repaired draft: clears every gate', () => {
-  const { codes, findings } = gate(fixture('DR-20261111-9f8879.repaired.md'));
-  assert.deepEqual(codes, [], findings.map((f) => `${f.code}: ${f.message}`).join('\n'));
+  const { findings } = gateSheetDraft(REPAIRED, DEFAULTS);
+  assert.deepEqual(codes(findings), [], explain(findings));
 });
 
 test('normaliser converts inline LaTeX with decimals, percent and maths symbols', () => {
@@ -82,4 +64,59 @@ test('routing: warnings alone never queue a repair', () => {
   assert.equal(routeFailure({ key: 'DR-1', codes: ['G-BUILD'] }), 'human');
   assert.equal(routeFailure({ key: 'DR-1', attempts: 4, codes: ['G-ASCII'] }), 'human');
   assert.equal(routeFailure({ key: '', codes: ['G-ASCII'] }), 'legacy');
+});
+
+// ── Phase 2 ──────────────────────────────────────────────────────────────────
+
+test('findings name the section and quote the text', () => {
+  const [ascii] = gateSheetDraft(ORIGINAL, DEFAULTS).findings;
+  assert.deepEqual(ascii.instances, [{ section: 'Architecture of a Deterministic Trajectory Gate', excerpt: 'code block starting "[Git PR / Agent Prompt]"' }]);
+  const style = checkArticle('<div class="tldr">\n\n## Executive TL;DR\n- x\n\n</div>\n\n## Costs\n\nWe delve into it — fast.\n', { title: 't', description: 'd' }).find((f) => f.code === 'G-STYLE');
+  assert.deepEqual(style.instances.map((i) => i.section), ['Costs', 'Costs']);
+  assert.match(style.instances[0].excerpt, /delve/);
+});
+
+test('Blocked Reason carries every finding with its place, stamped with the rules version', () => {
+  const reason = formatFindings(gateSheetDraft(ORIGINAL, DEFAULTS).findings);
+  assert.match(reason, /^G-ASCII: .* Where: "Architecture of a Deterministic Trajectory Gate"/);
+  assert.equal(RULES_STAMP_RE.exec(reason)?.[1], RULES_VERSION);
+  const many = Array.from({ length: 30 }, (_, i) => ({ code: `G-X${i}`, class: i % 2 ? 'warn' : 'block', message: 'x'.repeat(200), instances: [] }));
+  const long = formatFindings(many);
+  assert.ok(long.length <= 1900, `${long.length} chars`);
+  for (const f of many) assert.ok(long.includes(`${f.code}:`), `${f.code} dropped`);
+});
+
+test('verify: the live repair (rewrote ~75% of the article) is refused', () => {
+  const v = verifyRepair(ORIGINAL, REPAIRED, DEFAULTS, LIVE_CODES);
+  assert.equal(v.ok, false);
+  assert.match(v.why, /changed section\(s\) no finding named/);
+  assert.match(v.why, /Where Deterministic Trajectory Gates Break Down/);
+  assert.ok(v.churn.unflaggedChanged >= 5, JSON.stringify(v.churn));
+});
+
+test('verify: a surgical repair of the flagged section is applied, with zero unflagged churn', () => {
+  assert.notEqual(SURGICAL, ORIGINAL, 'fixture changed: the diagram block was not found');
+  const v = verifyRepair(ORIGINAL, SURGICAL, DEFAULTS, LIVE_CODES);
+  assert.equal(v.ok, true, v.why);
+  assert.equal(v.churn.unflaggedChanged, 0);
+  assert.equal(v.churn.sectionsChanged, 1);
+  assert.deepEqual(codes(v.next.findings), []);
+});
+
+test('verify: a repair that adds a blocking problem is refused', () => {
+  const worse = SURGICAL.replace('1. The pull request', '```\n[A] --> [B]\n```\n\n1. The pull request');
+  const v = verifyRepair(SURGICAL, worse, DEFAULTS, ['G-LATEX']);
+  assert.equal(v.ok, false);
+  assert.match(v.why, /adds blocking code\(s\) G-ASCII/);
+});
+
+test('verify: codes with no single place lift the section restriction', () => {
+  const v = verifyRepair(ORIGINAL, REPAIRED, DEFAULTS, ['G-ASCII', 'G-HTML']);
+  assert.equal(v.churn.unflaggedChanged, null);
+  assert.equal(v.ok, true, v.why);
+});
+
+test('rejected attempts round-trip through Blocked Reason', () => {
+  assert.deepEqual(rejectedAttempts(`${REPAIR.rejectedPrefix} 2, 3): it changed …`), [2, 3]);
+  assert.deepEqual(rejectedAttempts('G-ASCII: 1 code block …'), []);
 });

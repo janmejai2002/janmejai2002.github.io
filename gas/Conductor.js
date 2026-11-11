@@ -100,7 +100,12 @@ function mirrorNotion_() {
         return f ? c + ' (' + f.summary + '): ' + f.playbook : c;
       }).join('\n\n');
       var notes = latest ? 'Attempt ' + latest.Attempt + ' changed: ' + latest.Changed + ' | not fixed: ' + latest['Not Fixed'] : '';
-      var draft = latest ? latest.Draft : sourceDraft_(ss, key);
+      // Start from the newest draft sync-drafts did NOT refuse (same rule as
+      // draftBefore() in site/scripts/sync-drafts.mjs).
+      var rejected = rejectedAttempts_(reason);
+      var good = mine.filter(function (r) { return rejected.indexOf(Number(r.Attempt)) === -1; })[0];
+      if (latest && rejected.indexOf(Number(latest.Attempt)) !== -1) notes = 'REFUSED by the publishing system, see Blocked Reason. ' + notes;
+      var draft = good ? good.Draft : sourceDraft_(ss, key);
       queue.push([key, title, track, attempts + 1, codes.join(', '), reason, playbook, notes, (draft || '').slice(0, 49000)]);
     }
   });
@@ -109,6 +114,15 @@ function mirrorNotion_() {
   writeTab_(ss, 'Status', status);
   writeTab_(ss, 'Repair Queue', queue);
   return status.length + ' status, ' + queue.length + ' queued';
+}
+
+/** Attempt numbers in a "Repair rejected (attempts 2, 3): …" Blocked Reason. Mirrors rejectedAttempts() in site/scripts/lib/repair.mjs. */
+function rejectedAttempts_(reason) {
+  var prefix = REGISTRY.REPAIR.rejectedPrefix;
+  if (!reason || reason.indexOf(prefix) !== 0) return [];
+  return reason.slice(prefix.length).split(')')[0].split(',')
+    .map(function (n) { return Number(n.trim()); })
+    .filter(function (n) { return n > 0; });
 }
 
 /** The original draft for a key, found by recomputing keys over the source tabs. */

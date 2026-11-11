@@ -136,7 +136,8 @@ var REGISTRY = {
   },
   "REPAIR": {
     "maxAttempts": 4,
-    "issueLabel": "needs-human"
+    "issueLabel": "needs-human",
+    "rejectedPrefix": "Repair rejected (attempts"
   },
   "TASKS": [
     {
@@ -186,96 +187,112 @@ var REGISTRY = {
     "G-TITLE": {
       "class": "block",
       "where": "preflight",
+      "scope": "section",
       "summary": "Title over 70 characters",
       "playbook": "Rewrite the title to 70 characters or fewer, keeping the main keyword and the specific claim. Count the characters. Put the new title in the Title column of your Repair Outbox row. Change nothing else."
     },
     "G-META": {
       "class": "block",
       "where": "preflight",
+      "scope": "section",
       "summary": "Meta description missing or over 160 characters",
       "playbook": "The first lines of the draft must be the callout \"> **Meta description:** ...\" then \"> **Slug:** ...\". Write a meta description of 160 characters or fewer stating the thesis and one number. Count the characters."
     },
     "G-QUESTION": {
       "class": "block",
       "where": "preflight",
+      "scope": "section",
       "summary": "Reader Question over 120 characters",
       "playbook": "Shorten the \"> **Reader Question:**\" line in the opening callout to 120 characters or fewer. It must still be a question a practitioner would actually ask."
     },
     "G-TLDR": {
       "class": "block",
       "where": "preflight",
+      "scope": "section",
       "summary": "No Executive TL;DR at the top",
       "playbook": "Directly after the opening callout, add an H2 reading exactly \"## Executive TL;DR\" followed by 4 to 6 bullets carrying the article's actual findings and numbers (taken from the body, nothing new)."
     },
     "G-BLOCK": {
       "class": "block",
       "where": "preflight",
+      "scope": "article",
       "summary": "Contains formatting the site cannot convert",
       "playbook": "Rewrite the section named in Blocked Reason using only paragraphs, H2/H3 headings, bullet or numbered lists, quotes, normal markdown tables, and code blocks for real code."
     },
     "G-ASCII": {
       "class": "block",
       "where": "preflight",
+      "scope": "section",
       "summary": "Diagram drawn with text characters",
       "playbook": "Find every code block that draws boxes, arrows or flows with characters (+---+, |, v, ->, -->, ┌─┐). Replace each one with a numbered list of steps (\"1. The request reaches the router. 2. ...\") or a markdown table. Keep every fact the diagram carried."
     },
     "G-LATEX": {
       "class": "block",
       "where": "preflight",
+      "scope": "section",
       "summary": "Maths written in LaTeX",
       "playbook": "Remove all LaTeX: $...$, $$...$$, \\frac, \\sqrt, \\times, \\approx, \\cdot, \\sum. Write each formula as plain text inside backticks, e.g. `cost = tokens × price`. Single variables in prose become plain words or backticked names (`k`)."
     },
     "G-TABLE": {
       "class": "block",
       "where": "build",
+      "scope": "article",
       "summary": "Markdown table broken into paragraphs",
       "playbook": "Tables must be continuous: header row, |---| row, data rows, no blank lines between rows, never inside a code block."
     },
     "G-HTML": {
       "class": "block",
       "where": "build",
+      "scope": "article",
       "summary": "Raw HTML broke and leaked into the page as text",
       "playbook": "Remove any raw HTML (<div>, <figure>, <svg>) from the article body. Only the Artwork SVG section may contain SVG, and it must have no blank lines."
     },
     "G-HEADING": {
       "class": "block",
       "where": "build",
+      "scope": "article",
       "summary": "Body starts with a \"# Title\" heading",
       "playbook": "Delete any \"# \" (H1) heading in the body. Body headings start at \"## \"."
     },
     "G-IMAGE": {
       "class": "block",
       "where": "build",
+      "scope": "article",
       "summary": "Image without alt text in the body",
       "playbook": "Remove every markdown image (![...](...)) and <img> from the article body. The only picture an article has is its Artwork SVG."
     },
     "G-ART": {
       "class": "warn",
       "where": "preflight",
+      "scope": "section",
       "summary": "Artwork SVG unusable, fallback art used",
       "playbook": "In \"## Artwork SVG\": an \"Alt:\" line, then one ```xml code block with a 1600x900 <svg> using only {{tokens}}, starting with <rect width=\"1600\" height=\"900\" fill=\"{{paper}}\"/>. No hex colours, no blank lines."
     },
     "G-SOURCES": {
       "class": "warn",
       "where": "preflight",
+      "scope": "article",
       "summary": "Fewer than 3 source links",
       "playbook": "Add a \"## Sources\" section before \"## Artwork brief\" with at least 3 bullets \"[Page title](https://url) — what it supports\", each a page that actually contains the claim. For Talks the first is the video URL. Remove any claim you cannot source."
     },
     "G-LENGTH": {
       "class": "warn",
       "where": "preflight",
+      "scope": "none",
       "summary": "Article over the word budget",
       "playbook": "Only if the gate's count is over 2,200 words. The gate counts prose only: code blocks, inline code, HTML tags and the Artwork sections are not counted (Sources link text is). Cut the least-supported paragraphs until the count is under 2,200. Never delete a limitations or trade-offs section. This is a warning: it never justifies rewriting the article."
     },
     "G-STYLE": {
       "class": "warn",
       "where": "preflight",
+      "scope": "section",
       "summary": "Banned words or em dashes",
       "playbook": "Replace each banned word with a concrete verb and each em dash (—) with a period, comma, colon or parentheses."
     },
     "G-BUILD": {
       "class": "block",
       "where": "build",
+      "scope": "article",
       "summary": "Site build failed for a reason not tied to one article",
       "playbook": "Not repairable by the Repairer. The owner (or Claude) must read the GitHub Actions log.",
       "noRepair": true

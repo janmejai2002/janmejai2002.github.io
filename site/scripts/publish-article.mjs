@@ -39,8 +39,8 @@ import { fileURLToPath } from 'node:url';
 import { api, queryAll, blocks, blocksDeep, toMarkdown, plain, inline, flagBlocked, clearBlockedReason, PRODUCTION_DS } from './lib/notion.mjs';
 import { fallbackArt } from './lib/fallback-art.mjs';
 import { CAPS, TRACKS as TRACK_REGISTRY, AUTO_TRACKS, REPAIR, routeFailure } from '../harness/registry.mjs';
-import { checkArticle, formatFindings } from '../harness/rules.mjs';
-import { liftArtworkBrief, liftArtworkSvg, normalizeProse, stripLeadingH1, wrapTldr } from './lib/prose.mjs';
+import { formatFindings } from '../harness/rules.mjs';
+import { gateBody } from './lib/gate.mjs';
 import { recordNeedsHuman } from '../harness/needs-human.mjs';
 import { notify } from './notify.mjs';
 
@@ -222,11 +222,6 @@ for (const page of rows) {
     continue;
   }
 
-  const lifted = liftArtworkBrief(renderedBody);
-  const artWarnings = [];
-  const liftedArt = liftArtworkSvg(lifted.markdown, (reason) => { artWarnings.push(reason); note(id, title, reason); }, slug);
-  const markdown = normalizeProse(wrapTldr(stripLeadingH1(liftedArt.markdown)));
-  const words = markdown.split(/\s+/).filter((w) => /\w/.test(w)).length;
   const keywords = plain(p['SEO Keywords']?.rich_text)
     .split(',')
     .map((k) => k.trim())
@@ -251,9 +246,14 @@ for (const page of rows) {
 
   // Every content rule, every violation, each with a failure code — so a repair
   // pass sees the whole list at once instead of discovering one problem per
-  // attempt. Rules and codes: site/harness/rules.mjs + registry.mjs.
-  const findings = checkArticle(markdown, { title, description, question, track: rawTrack });
-  if (artWarnings.length) findings.push({ code: 'G-ART', class: 'warn', message: artWarnings.join(' ') });
+  // attempt. Rules and codes: site/harness/rules.mjs + registry.mjs. The same
+  // gateBody() runs in sync-drafts and the tests, so they all agree.
+  const gate = gateBody(renderedBody, { title, description, question, track: rawTrack }, { slug });
+  for (const reason of gate.artWarnings) note(id, title, reason);
+  const { markdown, findings } = gate;
+  const lifted = { brief: gate.brief };
+  const liftedArt = { svg: gate.svg, alt: gate.alt };
+  const words = markdown.split(/\s+/).filter((w) => /\w/.test(w)).length;
   const blocking = findings.filter((f) => f.class === 'block');
   const warnings = findings.filter((f) => f.class === 'warn');
   for (const w of warnings) if (w.code !== 'G-ART') note(id, title, `${w.code}: ${w.message}`);
