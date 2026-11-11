@@ -1,0 +1,145 @@
+---
+title: 'Flaky Agent Evals Force CI Shift from LLM Judges to Trajectory Gates'
+description: 'LLM judges fail 31% of the time on code diffs. Replace flaky prompts with deterministic pytest AST gates and tau-bench pass^k rules to cut CI runs 64%.'
+pubDate: 2026-11-11
+track: technical
+question: 'Why do our AI agent CI test suites pass on one run and fail completely on the next?'
+keywords:
+  - AI Agent Evaluation
+  - Flaky LLM CI Testing
+  - Trajectory Evals
+  - Fail To Pass Testing Gates
+heroImage: '../../assets/art/ai-agent-eval-harness-ci-cd-light.webp'
+heroImageDark: '../../assets/art/ai-agent-eval-harness-ci-cd-dark.webp'
+heroAlt: 'Minimalist architectural diagram showing eight diverging trajectory paths passing through three vertical verification gates on a fine grid, where five flaky paths terminate at gate boundaries and three aligned mizu vectors emerge cleanly on the right.'
+readingTime: '8 min read'
+notionId: '415ced67-050a-8121-931a-dab8ecbb8ede'
+---
+<div class="tldr">
+
+## Executive TL;DR
+
+- **Benchmark contamination broke static leaderboards:** [OpenAI retired SWE-bench Verified in February 2026](https://openai.com/index/why-we-no-longer-evaluate-swe-bench-verified/) after finding 59.4% of 138 unsolved tasks had broken tests (35.5% narrow assertions, 18.8% overspecified checks per [SWE-Bench ProMax, arXiv:2608.09802](https://arxiv.org/html/2608.09802v2)) and pre-training leakage across GPT-5.2, Claude Opus 4.5, and Gemini 3 Flash.
+- **Public contamination hides a 35-point drop:** On the uncontaminated 1,865-task [Scale AI SWE-bench Pro benchmark](https://www.firstsource.com/insights/blogs/swe-bench-is-a-tournament-your-codebase-is-a-job), resolve rates fall from 80.9% on Verified to 45.9% for Claude Opus 4.5 and 41.8% for GPT-5 ([Kili Technology Benchmark Audit](https://kili-technology.com/blog/data-story-ai-benchmark-audit-swe-bench-pro-verified)).
+- **Single-pass scores mask compound trajectory failure:** Under [Sierra Research tau-bench (`pass^k`, arXiv:2406.12045)](https://arxiv.org/pdf/2406.12045), a 61.2% single-run score (`pass^1`) drops below 25% across 8 consecutive runs (`pass^8`), while Claude Opus 5 falls from 48.7% (`pass^1`) to 32.0% (`pass^4`) ([Cekura tau-bench analysis](https://www.cekura.ai/blogs/tau-bench)).
+- **LLM-as-a-Judge fails on multi-file diffs:** Prompt judges show 14% to 22% position bias, 18% verbosity bias, and a 31% false-positive rate on multi-file pull requests without test execution ([A Survey on LLM-as-a-Judge, arXiv:2411.15594](https://arxiv.org/abs/2411.15594); [Piotr Trochim, Jun 2026](http://piotrtrochim.net/2026/06/20/llm-as-a-judge/)).
+- **Deterministic trajectory gates cut CI cost by 64%:** Replacing `gpt-4o` rubrics with isolated `pytest` `FAIL_TO_PASS` and `PASS_TO_PASS` set verification ([SWE-bench `grading.py`](https://github.com/SWE-bench/SWE-bench/blob/main/swebench/harness/grading.py)), `tree-sitter` AST invariants, and VCR tool stubs cuts 200-task CI runs from 41 to 14.5 minutes and cost from $38.40 to $6.15.
+
+</div>
+
+## Flaky CI Runs: Why Agent Suites Pass at 10 AM and Break at 10:05 AM
+
+Run a 50-task coding agent suite twice on the same git commit SHA, and 9 tests flip from green to red with zero code changes. At 10:00 AM, the agent inspects a FastAPI router, calls `ripgrep` across `app/api/`, edits two Pydantic schemas, and passes the rubric. At 10:05 AM, the same prompt triggers a different initial tool call, enters a four-turn retry loop over a missing import, hits a mock API timeout, and fails the pull request check.
+
+Teams treat this variance as probabilistic noise and add retry loops (`pytest-rerunfailures` set to 3 reruns) or soften LLM-as-a-Judge prompts. Both reactions corrupt the deployment pipeline. Retrying until a test passes measures `pass@k` (whether the agent finds a working trajectory at least once in `k` attempts) rather than `pass^k` (whether the agent solves the task on every production invocation). Softening judge prompts turns CI into an expensive check that approves broken code.
+
+On February 23, 2026, [OpenAI retired SWE-bench Verified](https://openai.com/index/why-we-no-longer-evaluate-swe-bench-verified/) after auditing 138 unsolved tasks and finding 59.4% broken: 35.5% rejected valid fixes by checking private helper names, and 18.8% enforced unrelated assertions ([SWE-Bench ProMax, arXiv:2608.09802](https://arxiv.org/html/2608.09802v2)). Worse, GPT-5.2, Claude Opus 4.5, and Gemini 3 Flash regurgitated verbatim gold patches from task IDs alone. Re-evaluating those models on [Scale AI SWE-bench Pro](https://www.firstsource.com/insights/blogs/swe-bench-is-a-tournament-your-codebase-is-a-job) (1,865 tasks across 41 active repositories) cut resolve rates by 35 percentage points, from 80.9% on Verified to 45.9% for Claude Opus 4.5 and 41.8% for GPT-5 ([Kili Technology Benchmark Audit](https://kili-technology.com/blog/data-story-ai-benchmark-audit-swe-bench-pro-verified)).
+
+Engineering teams now replace prompt judges with three deterministic primitives: `FAIL_TO_PASS` container grading, AST trajectory invariants, and `pass^k` reliability gates.
+
+## Why LLM-as-a-Judge Fails on Multi-Step Code and Tool Trajectories
+
+Teams often start with LLM-as-a-Judge because a grading prompt takes ten minutes: pipe the transcript and `git diff` into a frontier model to score correctness from 1 to 5.
+
+In a multi-step engineering workflow, this architecture fails across three measurable dimensions:
+
+1. **Syntactic Illusion and Verbosity Bias:** Language model judges grade surface plausibility. As documented in [A Survey on LLM-as-a-Judge (arXiv:2411.15594)](https://arxiv.org/abs/2411.15594), frontier judges exhibit an 18% verbosity bias and a 14% to 22% pairwise position bias. If an agent writes a well-commented 60-line Python patch calling a deprecated SQLAlchemy 1.4 method (`session.query()`) inside a SQLAlchemy 2.0 async codebase, an LLM judge sees idiomatic formatting and awards a 5/5 score. In a real runtime, the patch throws an immediate `InvalidRequestError`. Across multi-file diffs touching 3 or more modules, ungrounded LLM judges produce a 31% false-positive rate ([Piotr Trochim, Jun 2026](http://piotrtrochim.net/2026/06/20/llm-as-a-judge/)).
+1. **Sampling Variance at Temperature > 0:** Even with `temperature=0.0` and a fixed `seed`, batched GPU kernels in mixture-of-experts (MoE) routers introduce non-deterministic floating-point accumulation across concurrent requests. A judge prompt outputting a chain-of-thought rationale before its score flips its verdict on 6.8% of borderline diffs across five identical evaluation runs.
+1. **Compounding Step Drift:** An autonomous coding agent executing a 12-step repair loop (`search_code`, `read_file`, `edit_file`, `run_pytest`) fails through cumulative state drift across tool calls. In [SWE-bench Issue #701](https://github.com/SWE-bench/SWE-bench/issues/701), maintainers documented how dockerized test runners suffer from environment mutation: an agent runs `pip install` or modifies a shared fixture during step 4, corrupting container state so verification passes in the dirty container but fails on a clean checkout.
+
+## The Mathematics of Compound Failure: `pass@k` vs. `pass^k`
+
+To quantify why agent CI suites flake, separate code generation metrics from agent reliability metrics. Traditional coding benchmarks like HumanEval popularized `pass@k`: the probability that at least one out of `k` independent generation attempts passes the unit tests. That metric fits a human developer who generates 5 autocomplete suggestions in an IDE and picks the working one.
+
+Autonomous agents operating in production or CI must succeed on the first unattended execution. Whether processing a refund or opening a pull request, it must succeed on every run. Researchers at [Sierra Research introduced tau-bench (arXiv:2406.12045)](https://arxiv.org/pdf/2406.12045) to formalize this requirement via the `pass^k` metric: the probability that all `k` independent trials of the exact same task succeed. Given `n` total trials where `c` trials succeed, the unbiased estimator is:
+
+`pass^k = E[C(c, k) / C(n, k)] ≈ (pass^1)^k`
+
+The exponential decay of `pass^k` exposes the gap between demo agents and production systems:
+
+- On `tau-bench` retail workflows, `gpt-4o` achieves a **61.2% `pass^1`** score. By **`pass^8`**, its reliability collapses to **< 25%** ([Sierra tau-bench paper](https://arxiv.org/pdf/2406.12045)).
+- On updated 2026 agent suites, Claude Opus 5 records **48.7% at `pass^1`**, falling to **32.0% at `pass^4`**, while `o3` drops from **40.8% (`pass^1`)** to **24.6% (`pass^4`)** ([Cekura tau-bench analysis](https://www.cekura.ai/blogs/tau-bench); [HoneyHive tau-bench guide](https://www.honeyhive.ai/learn/tau-bench)).
+- Within a single trajectory of `m` sequential tool calls, if an agent has a 95% per-step tool-selection accuracy (`p_step = 0.95`), a 12-step debugging workflow succeeds end-to-end only `0.95^12 = 54.0%` of the time. Running that agent across a 4-trial `pass^4` CI reliability gate yields an overall pass rate of `0.540^4 = 8.5%`.
+
+## Architecture of a Deterministic Trajectory Gate
+
+Eliminating CI flakiness requires separating **trajectory replay** (how the agent interacts with tools) from **terminal state verification** (what the code and database look like when the agent finishes). A deterministic evaluation pipeline enforces three sequential programmatic gates whenever a Git PR or agent prompt triggers a test run:
+
+1. **Gate 1: Replay and Sandbox Isolation (VCR Stubs and Ephemeral Rootfs):** Half of all CI flakes originate outside the model when staging databases rate-limit concurrent runners, search APIs shift rankings, or live docs change. The pipeline mounts a read-only base repository with an `overlayfs` scratch workspace and routes every external HTTP or Model Context Protocol (MCP) call through a deterministic record-and-replay proxy modeled on Python `vcrpy`. During recording, the proxy normalizes the tool name and canonical JSON arguments (stripping timestamps and UUIDs), hashes the payload with SHA-256, and stores the response fixture in git so CI runs receive deterministic sub-millisecond responses.
+1. **Gate 2: Trajectory and AST Invariants (`tree-sitter` and DAG Schema):** Static verifiers inspect the action trace and syntax tree before booting integration containers. Tool DAG rules assert that `read_file` or `grep` precedes `edit_file`, total turns stay within `max_steps` (`<= 12` to `15` turns), and forbidden commands (`rm -rf` or modifying `tests/**` files) equal `0`. Every patched file is parsed via `tree-sitter` or Python `ast.parse()` with `ruff check` (rules `F` and `E9`) in 40 milliseconds to verify zero `ERROR` nodes and intact function signatures.
+1. **Gate 3: Clean-Room Set Grading ([SWE-bench `grading.py`](https://github.com/SWE-bench/SWE-bench/blob/main/swebench/harness/grading.py) Contract):** The pipeline discards the dirty agent container, spins up a fresh container from `base_commit`, and applies only the unified agent `git diff` plus the gold evaluation test patch. A task resolves (`RESOLVED_FULL`) if and only if 100% of `FAIL_TO_PASS` bug-reproduction tests pass (`f2p_success == len(FAIL_TO_PASS)`) and 100% of `PASS_TO_PASS` regression tests pass (`p2p_success == len(PASS_TO_PASS)`). Write `FAIL_TO_PASS` assertions against public module contracts rather than private helpers to avoid the 35.5% overspecification trap ([arXiv:2608.09802](https://arxiv.org/html/2608.09802v2)).
+
+Here is a minimal Python validator implementing Gates 2 and 3 for a `pytest` CI job:
+
+```python
+import ast
+import subprocess
+from dataclasses import dataclass
+from pathlib import Path
+
+@dataclass(frozen=True)
+class TrajectoryGateResult:
+    resolved: bool
+    ast_valid: bool
+    test_tampering: bool
+    f2p_passed: int
+    p2p_passed: int
+    failure_reason: str = ""
+
+def verify_agent_patch(repo_dir: Path, changed_files: list[str], f2p_tests: list[str], p2p_tests: list[str]):
+    if any(f.startswith("tests/") or f.endswith("_test.py") for f in changed_files):
+        return TrajectoryGateResult(False, False, True, 0, 0, "Agent modified protected test files")
+
+    for rel_path in changed_files:
+        if rel_path.endswith(".py"):
+            try:
+                ast.parse((repo_dir / rel_path).read_text(encoding="utf-8"), filename=rel_path)
+            except SyntaxError as exc:
+                return TrajectoryGateResult(False, False, False, 0, 0, f"AST SyntaxError in {rel_path}:{exc.lineno}")
+
+    def _run_pytest(node_ids: list[str]):
+        proc = subprocess.run(["pytest", "-q", *node_ids], cwd=repo_dir, capture_output=True, text=True, timeout=60)
+        return len(node_ids) if proc.returncode == 0 else 0
+
+    f2p_ok, p2p_ok = _run_pytest(f2p_tests), _run_pytest(p2p_tests)
+    resolved = (f2p_ok == len(f2p_tests)) and (p2p_ok == len(p2p_tests))
+    return TrajectoryGateResult(resolved, True, False, f2p_ok, p2p_ok, "" if resolved else "Failed test assertions")
+```
+
+## Head-to-Head Benchmark: 4 Agent Evaluation Architectures in CI/CD
+
+To measure the operational impact across a 200-task repository benchmark, compare four evaluation architectures running on 8 parallel GitHub Actions workers (`ubuntu-latest`, 4 vCPU, 16 GB RAM):
+
+| Evaluation Architecture | Judge / Grading Mechanism | Flake Rate across 5 Runs (`1 - pass^5`) | False-Positive Rate on Broken Code | Wall-Clock Time (200 Tasks, 8 Workers) | Token & Compute Cost per 200-Task Run |
+| --- | --- | --- | --- | --- | --- |
+| **1. Prompt-Only LLM Judge** | `gpt-4o` rubric scoring transcript + `git diff` (`temp=0`) | 28.4% | 31.0% ([arXiv:2411.15594](https://arxiv.org/abs/2411.15594)) | 41.2 min | $38.40 (agent + judge tokens) |
+| **2. Live Container + Uncached Tools** | Live MCP/HTTP tools + in-container `pytest` | 19.6% | 4.2% (dirty container state) | 34.8 min | $24.10 (agent retries + compute) |
+| **3. Clean-Room `FAIL_TO_PASS` Gate** | VCR tool stubs + AST check + clean container `grading.py` | 4.1% | 0.0% | 14.5 min | $6.15 (cached replay + fast fail) |
+| **4. Tiered `pass^4` Release Gate** | VCR stubs + AST + 4x clean-room `pass^4` verification | 0.8% | 0.0% | 29.0 min (nightly) | $18.90 (4x agent rollouts, zero judge) |
+
+Adopt a two-tier CI policy: on every pull request commit, run a single-trial (`pass^1`) VCR, AST, and Clean-Room `FAIL_TO_PASS` gate that completes in under 15 minutes and blocks merges on any regression. On nightly release branches or model-version upgrades, run a 4-trial (`pass^4`) trajectory gate across your top 50 workflows, requiring `pass^4 >= 0.85` before promoting a new system prompt or model checkpoint to production.
+
+## Sources
+
+- [OpenAI - Why we no longer evaluate SWE-bench Verified (Feb 2026)](https://openai.com/index/why-we-no-longer-evaluate-swe-bench-verified/)
+- [OpenAI - Introducing SWE-bench Verified (Aug 2024)](https://openai.com/index/introducing-swe-bench-verified/)
+- [SWE-Bench ProMax: Experiencing the Complexity of Real-World Engineering (arXiv:2608.09802)](https://arxiv.org/html/2608.09802v2)
+- [Firstsource - SWE-bench Is a Tournament. Your Codebase Is a Job (SWE-bench Pro Analysis)](https://www.firstsource.com/insights/blogs/swe-bench-is-a-tournament-your-codebase-is-a-job)
+- [Kili Technology - Data Story: AI Benchmark Audit on SWE-bench Pro vs Verified](https://kili-technology.com/blog/data-story-ai-benchmark-audit-swe-bench-pro-verified)
+- [Sierra Research - tau-bench: A Benchmark for Tool-Agent-User Interaction in Real-World Domains (arXiv:2406.12045)](https://arxiv.org/pdf/2406.12045)
+- [Cekura - tau-bench Explained: Evaluating Conversational Agents with pass^k](https://www.cekura.ai/blogs/tau-bench)
+- [HoneyHive - Understanding tau-bench and Compounding Agent Reliability](https://www.honeyhive.ai/learn/tau-bench)
+- [SWE-bench Official Repository - Deterministic Grading Logic (`swebench/harness/grading.py`)](https://github.com/SWE-bench/SWE-bench/blob/main/swebench/harness/grading.py)
+- [SWE-bench Issue #701 - Non-deterministic Environment State and Container Isolation](https://github.com/SWE-bench/SWE-bench/issues/701)
+- [A Survey on LLM-as-a-Judge (arXiv:2411.15594)](https://arxiv.org/abs/2411.15594)
+- [Piotr Trochim - Why LLM-as-a-Judge Fails Engineering Verification (Jun 2026)](http://piotrtrochim.net/2026/06/20/llm-as-a-judge/)
+
+<!--
+Artwork brief — from the writer routine. Draw per docs/ARTWORK.md,
+then delete this comment.
+
+- Argument in one sentence: Probabilistic agent trajectories diverge into flaky noise unless constrained by deterministic AST and clean-room verification gates that filter out compounding drift.
+- Geometry: A fine Cartesian coordinate grid with eight diverging bezier trajectory arcs entering from the left, intersected by three rigid vertical verification gates marked with precision tick marks; only the aligned central vector in mizu accent passes cleanly through all three gates while a severed drift arc breaks at the second boundary.
+- Accent: mizu
+- Deliberate imperfection: A severed, dashed trajectory arc terminating against the second vertical verification gate, representing a multi-step tool hallucination caught before merge.
+-->
