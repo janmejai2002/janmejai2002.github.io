@@ -9,6 +9,35 @@ If you only read one document about this blog, read this one.
 
 Five AI assistants, all run by Gemini on Google's computers, wake up at set times each day. They research, write, and drop their work into **one Google Sheet**. A set of robots on GitHub copies anything new from that sheet into **Notion**, turns it into a web page, runs a long list of quality checks, and if everything passes, puts it live on **janmejai2002.github.io**. When an article fails a check, a sixth assistant repairs exactly the part that failed, and code checks the repair before it is used. Notion is where you see what's happening. Nothing needs your laptop to be on.
 
+## The picture
+
+How an article gets from an idea to the live site. Purple is Gemini, blue is where things are stored, green is live, orange is a problem being handled.
+
+```mermaid
+flowchart TD
+  subgraph AI["🤖 Gemini, every morning"]
+    direction LR
+    R["Radar<br/>picks 3 topics"] --> W["Writer<br/>writes the articles"]
+  end
+  W -->|adds a row| S[("📄 Google Sheet<br/>the shared inbox")]
+  S -->|within 15 min| N["📋 Notion<br/>status board"]
+  N --> C{{"✅ Quality checks"}}
+  C -->|all good| L["🌐 Live on the site"]
+  C -->|only a warning| L
+  C -->|something blocks it| F["🔧 Repair loop<br/>see the next picture"]
+  F -->|fixed| C
+
+  style AI fill:#f6f3fb,stroke:#7e57c2,color:#2d1b4e
+  classDef ai fill:#ede7f6,stroke:#7e57c2,color:#2d1b4e
+  classDef store fill:#e3f2fd,stroke:#1e88e5,color:#0d2a45
+  classDef ok fill:#e8f5e9,stroke:#43a047,color:#123d17
+  classDef bad fill:#fff3e0,stroke:#fb8c00,color:#4a2a00
+  class R,W ai
+  class S,N store
+  class L ok
+  class F bad
+```
+
 ## The cast
 
 | Who | Where it lives | What it does | When (IST) |
@@ -41,6 +70,30 @@ Gemini's daily allowance resets at **3:30 AM**, which is why the writing happens
 All five tracks publish with no human approval. That's your decision, and you read the live articles afterwards.
 
 ## When an article fails: the self-healing loop
+
+The repair loop in one picture (purple is Gemini, blue is code; the steps are explained below):
+
+```mermaid
+flowchart TD
+  A["❌ A check fails<br/>e.g. a diagram drawn with keyboard characters<br/>in section 5 of the article"] --> B["✂️ The Conductor cuts the article<br/>into its sections"]
+  B --> C["📤 Gemini gets ONLY section 5<br/>plus what is wrong with it"]
+  C --> D["🤖 Gemini fixes section 5<br/>and sends just that back"]
+  D --> E["🧩 Code rebuilds the article<br/>the other sections are copied exactly"]
+  E --> V{{"🔍 Did anything else change?<br/>Is there a new problem?"}}
+  V -->|"no: accept it"| P["✅ Checked again, then live"]
+  V -->|"yes: refuse it"| X["🗑️ Thrown away<br/>next try starts from the last good version"]
+  X -->|try again| C
+  X -.->|after 4 tries| H["👤 You get a notification<br/>and a GitHub issue for Claude or agy"]
+
+  classDef ai fill:#ede7f6,stroke:#7e57c2,color:#2d1b4e
+  classDef code fill:#e3f2fd,stroke:#1e88e5,color:#0d2a45
+  classDef ok fill:#e8f5e9,stroke:#43a047,color:#123d17
+  classDef bad fill:#fff3e0,stroke:#fb8c00,color:#4a2a00
+  class C,D ai
+  class B,E,V code
+  class P ok
+  class A,X,H bad
+```
 
 1. **The checks say exactly what and where.** Every problem gets a code, such as `G-ASCII` (a diagram drawn with keyboard characters), the section it's in, and the exact text, for example: `G-ASCII … Where: "Architecture of a Deterministic Trajectory Gate" (code block starting "[Git PR / Agent Prompt]")`. All of it goes on the Notion row, so the Repairer never has to hunt.
 2. **Only the broken article is held back.** The rest of the batch still goes live.
