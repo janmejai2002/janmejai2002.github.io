@@ -31,7 +31,7 @@ Apps Script editor → Project Settings → Script Properties → Add:
 |---|---|
 | `NOTION_TOKEN` | the secret from step 3 |
 | `GITHUB_TOKEN` | the token from step 4 |
-| `NOTIFY_TOPIC` | the same value as the GitHub secret of that name (your phone notification topic) |
+| `NOTIFY_TOPIC` | your phone notification topic: open the **ntfy** app on your phone; it's the topic name you subscribed to (the same value as the GitHub secret `NOTIFY_TOPIC`, which GitHub won't show again) |
 
 Script Properties are visible only to you, the script's owner.
 
