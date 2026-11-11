@@ -129,7 +129,8 @@ for (const post of posts) {
   if (!productionDone) {
     await api(`/pages/${post.notionId}`, {
       method: 'PATCH',
-      body: { properties: { 'Draft Status': { select: { name: 'Published' } } } },
+      // Live and verified: wipe any leftover failure note from earlier attempts.
+      body: { properties: { 'Draft Status': { select: { name: 'Published' } }, 'Blocked Reason': { rich_text: [] } } },
     });
   }
 

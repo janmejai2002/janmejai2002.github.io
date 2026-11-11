@@ -1,307 +1,128 @@
 /**
- * Ingests a markdown article draft into Notion Article Production.
+ * Ingests one markdown article draft into Notion Article Production at
+ * `Draft Status = Draft Ready`.
  *
- * Usage:
- *   node site/scripts/import-draft.mjs <path-to-draft.md> [--commit]
+ *   node site/scripts/import-draft.mjs <draft.md> [--key DR-20261111-3fa9c2] [--commit]
  *
- * Parses:
- *   - Frontmatter or Callout (Title, Slug, Meta description, Track, Reader Question)
- *   - Executive TL;DR
- *   - Article body headings, paragraphs, lists
- *   - Artwork brief
- *   - Artwork SVG
+ * Also used as a module by sync-drafts.mjs (importDraft), including repair mode:
+ * `replace: <pageId>` archives the old Notion page and creates the repaired one
+ * in its place, carrying Sheet Key, Repair Attempts and the radar link over.
+ * (Notion has no "replace page body" call; archive-and-recreate is one request
+ * instead of one per block.)
  *
- * Pushes directly to Notion Article Production database with `Draft Status = Draft Ready`.
+ * Accepts YAML frontmatter or the opening callout lines the Gemini tasks write:
+ *   > **Meta description:** ...
+ *   > **Slug:** ...
+ *   > **Reader Question:** ...
  */
 import { readFileSync, existsSync } from 'node:fs';
 import { resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { api, PRODUCTION_DS } from './lib/notion.mjs';
-
-const fileArg = process.argv[2];
-const commit = process.argv.includes('--commit');
-
-if (!fileArg || fileArg.startsWith('--')) {
-  console.log('Usage: node site/scripts/import-draft.mjs <file.md> [--commit]');
-  process.exit(1);
-}
-
-const fullPath = resolve(fileArg);
-if (!existsSync(fullPath)) {
-  console.error(`File not found: ${fullPath}`);
-  process.exit(1);
-}
-
-const raw = readFileSync(fullPath, 'utf8');
-
-// 1. Parse Metadata / Frontmatter / Opening Callout
-let title = '';
-let track = 'Technical';
-let question = '';
-let description = '';
-let slug = '';
-let keywords = '';
-let sourceIdea = '';
+import { markdownToBlocks, rich } from '../harness/md-to-notion.mjs';
+import { TRACKS, CAPS } from '../harness/registry.mjs';
 
 const unquote = (s) => (s ? s.trim().replace(/^["']|["']$/g, '').trim() : '');
+const clean = (s) => (s ?? '').replace(/^[*_:\s]+|[*_\s]+$/g, '').trim();
 
-// Check YAML frontmatter if present
-if (raw.startsWith('---')) {
-  const parts = raw.split(/^---$/m);
-  if (parts.length >= 3) {
-    const yaml = parts[1];
-    title = unquote(yaml.match(/^title:\s*(.*)$/m)?.[1]);
-    track = unquote(yaml.match(/^track:\s*(.*)$/m)?.[1]) || 'Technical';
-    question = unquote(yaml.match(/^question:\s*(.*)$/m)?.[1]);
-    description = unquote(yaml.match(/^description:\s*(.*)$/m)?.[1]);
-    slug = unquote(yaml.match(/^slug:\s*(.*)$/m)?.[1]);
-    keywords = unquote(yaml.match(/^keywords:\s*(.*)$/m)?.[1]);
-    sourceIdea = unquote(yaml.match(/^(?:source_idea|sourceIdea|idea):\s*(.*)$/m)?.[1]);
+export function parseDraft(raw, defaults = {}) {
+  raw = raw.replace(/\r\n/g, '\n');
+  const fm = {};
+  let body = raw;
+  const m = raw.match(/^---\n([\s\S]*?)\n---\n/);
+  if (m) {
+    for (const k of ['title', 'track', 'question', 'description', 'slug', 'keywords', 'source_idea', 'sourceIdea'])
+      fm[k] = unquote(m[1].match(new RegExp(`^${k}:\\s*(.*)$`, 'm'))?.[1]);
+    body = raw.slice(m[0].length);
   }
+  // Gemini sometimes wraps the whole draft in a ```markdown fence.
+  body = body.trim().replace(/^```(?:markdown|md)\s*\n([\s\S]*?)\n```\s*$/i, '$1');
+  const label = (name) => clean(body.match(new RegExp(`(?:\\*\\*|__)?${name}:(?:\\*\\*|__)?\\s*([^\\n]+)`, 'i'))?.[1]);
+
+  const title = clean(fm.title || defaults.title || body.match(/^#\s+(.+)$/m)?.[1] || 'Untitled Draft');
+  const trackRaw = fm.track || defaults.track || 'Technical';
+  const track = TRACKS.find((t) => t.notion.toLowerCase() === trackRaw.toLowerCase())?.notion ?? 'Technical';
+  return {
+    title,
+    track,
+    description: fm.description || label('Meta description'),
+    slug: (fm.slug || label('Slug') || title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')).toLowerCase().replace(/^\/+|\/+$/g, ''),
+    question: fm.question || label('Reader Question') || defaults.question || '',
+    keywords: fm.keywords || label('SEO Keywords') || defaults.keywords || '',
+    sourceIdea: fm.source_idea || fm.sourceIdea || defaults.sourceIdea || '',
+    body: body.replace(/^#\s+[^\n]+\n+/, ''), // a body H1 is never allowed
+  };
 }
 
-// Fallback regex parsing across body
-if (!title) {
-  title = raw.match(/^#\s+(.+)$/m)?.[1]?.trim() ||
-          raw.match(/^Title:\s*(.+)$/im)?.[1]?.trim() ||
-          'Untitled Draft';
-}
-if (!description) {
-  description = raw.match(/(?:\*\*|__)?Meta description:(?:\*\*|__)?\s*([^\n]+)/i)?.[1]?.trim() || '';
-}
-if (!slug) {
-  slug = raw.match(/(?:\*\*|__)?Slug:(?:\*\*|__)?\s*([^\n]+)/i)?.[1]?.trim() ||
-         title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-}
-if (!question) {
-  question = raw.match(/(?:\*\*|__)?Reader Question:(?:\*\*|__)?\s*([^\n]+)/i)?.[1]?.trim() || '';
-}
-if (!keywords) {
-  keywords = raw.match(/(?:\*\*|__)?SEO Keywords:(?:\*\*|__)?\s*([^\n]+)/i)?.[1]?.trim() || '';
-}
-
-// Strip any trailing markdown formatting characters from parsed strings
-description = description.replace(/^[*_:\s]+|[*_\s]+$/g, '').trim();
-slug = slug.replace(/^[*_:\s]+|[*_\s]+$/g, '').trim().toLowerCase();
-question = question.replace(/^[*_:\s]+|[*_\s]+$/g, '').trim();
-title = title.replace(/^[*_:\s]+|[*_\s]+$/g, '').trim();
-
-// Ensure track matches valid Notion select options
-const validTracks = ['Technical', 'Business', 'Basics', 'Case Studies', 'Talks'];
-const matchedTrack = validTracks.find((t) => t.toLowerCase() === track.toLowerCase()) || 'Technical';
-
-// Remove frontmatter from body
-let bodyText = raw.replace(/^---[\s\S]*?---\s*/, '').trim();
-// Strip leading H1 title if present
-bodyText = bodyText.replace(/^#\s+[^\n]+\n+/, '');
-
-function chunkText(text) {
-  if (!text) return [{ type: 'text', text: { content: '' } }];
-  const chunks = [];
-  for (let idx = 0; idx < text.length; idx += 2000) {
-    chunks.push({ type: 'text', text: { content: text.slice(idx, idx + 2000) } });
+/**
+ * @param {string} raw  markdown draft
+ * @param {object} opts { key, attempt, replace (pageId), carry (properties to copy), commit, defaults }
+ * @returns {Promise<{page?:object, draft:object}>}
+ */
+export async function importDraft(raw, opts = {}) {
+  const draft = parseDraft(raw, opts.defaults);
+  let body = draft.body;
+  // The opening callout must survive as a quote/callout so publish-article's
+  // parseHeader finds it. If the draft has none, synthesise one.
+  if (!/^\s*>\s*\*{0,2}Meta description/i.test(body)) {
+    const lines = [];
+    if (draft.description) lines.push(`> **Meta description:** ${draft.description}`);
+    lines.push(`> **Slug:** ${draft.slug}`);
+    body = lines.join('\n') + '\n\n' + body;
   }
-  return chunks;
-}
+  const blocks = markdownToBlocks(body);
+  const today = new Date().toISOString().slice(0, 10);
 
-// Convert markdown text to Notion blocks
-function textToBlocks(text) {
-  const blocks = [];
-  const lines = text.split('\n');
-  let i = 0;
+  const properties = {
+    ...(opts.carry ?? {}),
+    Name: { title: rich(draft.title.slice(0, CAPS.title)) },
+    'Draft Status': { select: { name: opts.status ?? 'Draft Ready' } },
+    Track: { select: { name: draft.track } },
+    'Reader Question': { rich_text: rich(draft.question.slice(0, CAPS.question)) },
+    'Draft Completed': { date: { start: today } },
+  };
+  if (!opts.carry?.['Promoted On']) properties['Promoted On'] = { date: { start: today } };
+  if (draft.keywords) properties['SEO Keywords'] = { rich_text: rich(draft.keywords.slice(0, 2000)) };
+  if (draft.sourceIdea) properties['Source Idea'] = { relation: [{ id: draft.sourceIdea }] };
+  if (opts.key) properties['Sheet Key'] = { rich_text: rich(opts.key) };
+  if (opts.attempt != null) properties['Repair Attempts'] = { number: opts.attempt };
 
-  // Add opening callout with description and slug if present
-  if (description || slug) {
-    const calloutLines = [];
-    if (description) calloutLines.push(`**Meta description:** ${description}`);
-    if (slug) calloutLines.push(`**Slug:** ${slug}`);
-    blocks.push({
-      object: 'block',
-      type: 'callout',
-      callout: {
-        rich_text: chunkText(calloutLines.join('\n')),
-        icon: { emoji: '💡' },
-      },
-    });
-  }
+  console.log(
+    `  ${opts.replace ? 'REPAIR' : 'IMPORT'} "${draft.title}" (${draft.title.length}/${CAPS.title}) [${draft.track}] ` +
+      `key=${opts.key ?? '-'} meta=${draft.description.length}/${CAPS.description} q=${draft.question.length}/${CAPS.question} blocks=${blocks.length}`
+  );
+  if (!opts.commit) return { draft };
 
-  while (i < lines.length) {
-    const line = lines[i];
-    const trimmed = line.trim();
-
-    if (!trimmed) {
-      i++;
-      continue;
-    }
-
-    // Code block
-    if (trimmed.startsWith('```')) {
-      const lang = trimmed.slice(3).trim() || 'plain text';
-      const codeLines = [];
-      i++;
-      while (i < lines.length && !lines[i].trim().startsWith('```')) {
-        codeLines.push(lines[i]);
-        i++;
-      }
-      i++; // skip closing ```
-      blocks.push({
-        object: 'block',
-        type: 'code',
-        code: {
-          language: lang === 'xml' || lang === 'svg' ? 'xml' : (lang === 'html' ? 'html' : 'plain text'),
-          rich_text: chunkText(codeLines.join('\n')),
-        },
-      });
-      continue;
-    }
-
-    // Headings
-    if (trimmed.startsWith('### ')) {
-      blocks.push({
-        object: 'block',
-        type: 'heading_3',
-        heading_3: { rich_text: chunkText(trimmed.slice(4)) },
-      });
-      i++;
-      continue;
-    }
-    if (trimmed.startsWith('## ')) {
-      blocks.push({
-        object: 'block',
-        type: 'heading_2',
-        heading_2: { rich_text: chunkText(trimmed.slice(3)) },
-      });
-      i++;
-      continue;
-    }
-
-    // Bulleted list item
-    if (trimmed.startsWith('- ') || trimmed.startsWith('* ')) {
-      blocks.push({
-        object: 'block',
-        type: 'bulleted_list_item',
-        bulleted_list_item: { rich_text: chunkText(trimmed.slice(2)) },
-      });
-      i++;
-      continue;
-    }
-
-    // Numbered list item
-    if (/^\d+\.\s+/.test(trimmed)) {
-      const match = trimmed.match(/^\d+\.\s+(.+)$/);
-      blocks.push({
-        object: 'block',
-        type: 'numbered_list_item',
-        numbered_list_item: { rich_text: chunkText(match[1]) },
-      });
-      i++;
-      continue;
-    }
-
-    // Quotes
-    if (trimmed.startsWith('> ')) {
-      blocks.push({
-        object: 'block',
-        type: 'quote',
-        quote: { rich_text: chunkText(trimmed.slice(2)) },
-      });
-      i++;
-      continue;
-    }
-
-    // Dividers
-    if (trimmed === '---' || trimmed === '***') {
-      blocks.push({ object: 'block', type: 'divider', divider: {} });
-      i++;
-      continue;
-    }
-
-    // Standard paragraph
-    blocks.push({
-      object: 'block',
-      type: 'paragraph',
-      paragraph: { rich_text: chunkText(trimmed) },
-    });
-    i++;
-  }
-
-  return blocks;
-}
-
-const blocks = textToBlocks(bodyText);
-const today = new Date().toISOString().slice(0, 10);
-
-const properties = {
-  Name: { title: [{ type: 'text', text: { content: title.slice(0, 70) } }] },
-  'Draft Status': { select: { name: 'Draft Ready' } },
-  Track: { select: { name: matchedTrack } },
-  'Reader Question': { rich_text: [{ type: 'text', text: { content: question.slice(0, 120) } }] },
-  'Draft Completed': { date: { start: today } },
-  'Promoted On': { date: { start: today } },
-};
-if (keywords) {
-  properties['SEO Keywords'] = { rich_text: [{ type: 'text', text: { content: keywords.slice(0, 2000) } }] };
-}
-if (sourceIdea) {
-  properties['Source Idea'] = { relation: [{ id: sourceIdea }] };
-}
-
-console.log('──────────────────────────────────────────────────────');
-console.log('ARTICLE IMPORT PREVIEW');
-console.log('──────────────────────────────────────────────────────');
-console.log(`Title:           "${title}" (${title.length}/70 chars)`);
-console.log(`Track:           ${matchedTrack}`);
-console.log(`Reader Question: "${question}" (${question.length}/120 chars)`);
-console.log(`Meta Description:"${description}" (${description.length}/160 chars)`);
-console.log(`Slug:            ${slug}`);
-console.log(`Total Blocks:    ${blocks.length} blocks parsed`);
-console.log('──────────────────────────────────────────────────────');
-
-if (!commit) {
-  console.log('\n[DRY RUN] Would create page in Notion Article Production.');
-  console.log('Run with --commit to push directly to Notion:\n');
-  console.log(`node site/scripts/import-draft.mjs "${fileArg}" --commit\n`);
-  process.exit(0);
-}
-
-console.log('Pushing to Notion Article Production...');
-// Notion limits initial children to 100 blocks
-const firstBatch = blocks.slice(0, 100);
-const remainingBlocks = blocks.slice(100);
-
-const page = await api('/pages', {
-  method: 'POST',
-  body: {
-    parent: { type: 'data_source_id', data_source_id: PRODUCTION_DS },
-    properties,
-    children: firstBatch,
-  },
-});
-
-console.log(`✓ Created page: ${page.id} (${page.url})`);
-
-// Append any remaining blocks in chunks of 100
-let chunkIndex = 1;
-while (remainingBlocks.length > 0) {
-  const chunk = remainingBlocks.splice(0, 100);
-  console.log(`  Appending block chunk ${chunkIndex++} (${chunk.length} blocks)...`);
-  await api(`/blocks/${page.id}/children`, {
-    method: 'PATCH',
-    body: { children: chunk },
+  const page = await api('/pages', {
+    method: 'POST',
+    body: { parent: { type: 'data_source_id', data_source_id: PRODUCTION_DS }, properties, children: blocks.slice(0, 100) },
   });
-}
-
-if (sourceIdea) {
-  try {
-    await api(`/pages/${sourceIdea}`, {
-      method: 'PATCH',
-      body: { properties: { Status: { select: { name: 'Drafting' } } } },
-    });
-    console.log(`  Linked and marked radar idea ${sourceIdea} as Drafting.`);
-  } catch (err) {
-    console.warn(`  Could not update radar idea ${sourceIdea}: ${err.message}`);
+  for (let i = 100; i < blocks.length; i += 100) {
+    await api(`/blocks/${page.id}/children`, { method: 'PATCH', body: { children: blocks.slice(i, i + 100) } });
   }
+  if (opts.replace) await api(`/pages/${opts.replace}`, { method: 'PATCH', body: { in_trash: true } });
+  if (draft.sourceIdea && !opts.replace) {
+    try {
+      await api(`/pages/${draft.sourceIdea}`, { method: 'PATCH', body: { properties: { Status: { select: { name: 'Drafting' } } } } });
+    } catch (err) {
+      console.warn(`  could not mark radar idea ${draft.sourceIdea} Drafting: ${err.message.split('\n')[0]}`);
+    }
+  }
+  console.log(`  ✓ ${page.url}`);
+  return { page, draft };
 }
 
-console.log('\n✓ Article draft successfully ingested into Notion at Draft Ready!');
-console.log('To run preflight assertions:');
-console.log(`node site/scripts/publish-article.mjs --check ${page.id}`);
+// CLI
+if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
+  const file = process.argv[2];
+  if (!file || file.startsWith('--') || !existsSync(resolve(file))) {
+    console.log('Usage: node site/scripts/import-draft.mjs <draft.md> [--key <sheet key>] [--commit]');
+    process.exit(1);
+  }
+  const argv = process.argv;
+  const key = argv.includes('--key') ? argv[argv.indexOf('--key') + 1] : undefined;
+  const commit = argv.includes('--commit');
+  const { page } = await importDraft(readFileSync(resolve(file), 'utf8'), { key, commit });
+  if (!commit) console.log('\n[DRY RUN] Pass --commit to create the Notion page.');
+  else console.log(`\nPreflight: node site/scripts/publish-article.mjs --check ${page.id}`);
+}

@@ -37,3 +37,9 @@ publish-manifest.json
 /drafts/
 /scratch/
 .playwright-mcp/
+
+# check-build per-article failure report (CI artefact)
+check-build-report.json
+
+# harness hand-off file (CI artefact)
+needs-human.json

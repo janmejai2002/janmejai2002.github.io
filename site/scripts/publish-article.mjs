@@ -38,6 +38,10 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { api, queryAll, blocks, blocksDeep, toMarkdown, plain, inline, flagBlocked, clearBlockedReason, PRODUCTION_DS } from './lib/notion.mjs';
 import { fallbackArt } from './lib/fallback-art.mjs';
+import { CAPS, TRACKS as TRACK_REGISTRY, AUTO_TRACKS, REPAIR, routeFailure } from '../harness/registry.mjs';
+import { checkArticle } from '../harness/rules.mjs';
+import { recordNeedsHuman } from '../harness/needs-human.mjs';
+import { notify } from './notify.mjs';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const BLOG = join(here, '..', 'src', 'content', 'blog');
@@ -48,13 +52,8 @@ const checkId = process.argv.includes('--check')
   : null;
 const dryRun = process.argv.includes('--dry-run') || Boolean(checkId);
 
-// These mirror src/content.config.ts. Failing here gives a readable message
-// instead of a Zod error thrown halfway through an Astro build.
-const MAX_TITLE = 70;
-const MAX_DESC = 160;
-// Matches the `question` cap in src/content.config.ts. Enforced here so the
-// message is readable instead of a Zod error mid-build, same as the other two.
-const MAX_QUESTION = 120;
+// Caps, tracks and failure codes live in site/harness/registry.mjs.
+const MAX_TITLE = CAPS.title;
 
 const slugify = (s) =>
   s.toLowerCase().replace(/['']/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
@@ -220,9 +219,6 @@ function normalizeProse(markdown) {
 
   // 4. Sanitize uncompiled LaTeX math formulas into clean Unicode or formatted code blocks
   result = result
-    .replace(/\$\$(?:\s*B_\{max\}[\s\S]*?|\s*B_\{?\\max\}?[\s\S]*?)\$\$/gi, () => {
-      return '\n> **Budget Guardrail Formula:** `B_max = min(L_saved × (1 - M_target), Sum(Token_Costs) + Infra_Cost)`\n';
-    })
     .replace(/\$\$([\s\S]*?)\$\$/g, (_, math) => `\n\`${math.replace(/[\r\n]+/g, ' ').trim()}\`\n`)
     .replace(/\\mathbb\{R\}\^\{[^}]+\}/g, 'R^|V|')
     .replace(/\\in\s*\{0,\s*-\\infty\}\^\{[^}]+\}/g, 'in {0, -inf}^|V|')
@@ -369,13 +365,9 @@ const existingIds = new Set(
     : []
 );
 
-// Tracks that publish themselves. These are the unattended routines: they pick
-// their own subject from a curated allowlist, check their own claims, and file
-// a finished draft. Adding a track here removes the human gate for it and
-// nothing else — every automated check still runs.
-//
-// Names must match the Notion `Track` select exactly, before slugification.
-const AUTO_TRACKS = ['Talks', 'Case Studies', 'Basics', 'Technical', 'Business'];
+// Tracks that publish themselves (AUTO_TRACKS) come from site/harness/registry.mjs.
+// Adding a track there removes the human gate for it and nothing else — every
+// automated check still runs.
 
 async function fetchCheckPage(id) {
   try {
@@ -411,7 +403,8 @@ const manifest = { auto: [], reviewed: [] };
 // approved article did not appear. Each entry now carries the page it belongs
 // to so the reason can be written back to the row itself.
 const problems = [];
-const blocked = (id, title, reason) => problems.push({ id, title, reason, fatal: true });
+const blocked = (id, title, reason, codes = ['G-BLOCK'], attempts = 0, extra = {}) =>
+  problems.push({ id, title, reason, codes, attempts, fatal: true, ...extra });
 const note = (id, title, reason) => problems.push({ id, title, reason, fatal: false });
 // Rows that published cleanly this run, so any Blocked Reason left over from a
 // previous failure can be wiped.
@@ -421,6 +414,9 @@ for (const page of rows) {
   const p = page.properties;
   const title = plain(p.Name?.title).trim();
   const id = page.id;
+  const attempts = p['Repair Attempts']?.number ?? 0;
+  const sheetKey = plain(p['Sheet Key']?.rich_text).trim();
+  const trackLabel = p['Track']?.select?.name ?? '';
 
   if (existingIds.has(id) || existingIds.has(id.replace(/-/g, ''))) {
     skipped.push(`${title} — already in the repo`);
@@ -445,7 +441,10 @@ for (const page of rows) {
     blocked(
       id,
       title,
-      `The page has a block the generator cannot convert — ${err.message} Rewrite it as a paragraph, list, quote, or code block.`
+      `G-BLOCK: The page has a block the generator cannot convert — ${err.message} Rewrite it as a paragraph, list, quote, or code block.`,
+      ['G-BLOCK'],
+      attempts,
+      { key: sheetKey, track: trackLabel }
     );
     continue;
   }
@@ -462,34 +461,11 @@ for (const page of rows) {
     continue;
   }
 
-  // Fail loudly and specifically. These caps are deliberate: they already
-  // caught a 193-character description that search would have truncated.
-  if (title.length > MAX_TITLE) {
-    blocked(id, title, `Title is ${title.length} characters; the maximum is ${MAX_TITLE}. Shorten the page name.`);
-    continue;
-  }
-  if (!description) {
-    blocked(
-      id,
-      title,
-      'No "Meta description:" line found in the opening callout. Add a callout at the top of this page containing a line like "Meta description: <under 160 characters>".'
-    );
-    continue;
-  }
-  if (description.length > MAX_DESC) {
-    blocked(
-      id,
-      title,
-      `Meta description is ${description.length} characters; the maximum is ${MAX_DESC}. Shorten it in the opening callout.`
-    );
-    continue;
-  }
-
   const lifted = liftArtworkBrief(renderedBody);
-  const liftedArt = liftArtworkSvg(lifted.markdown, (reason) => note(id, title, reason), slug);
+  const artWarnings = [];
+  const liftedArt = liftArtworkSvg(lifted.markdown, (reason) => { artWarnings.push(reason); note(id, title, reason); }, slug);
   const markdown = normalizeProse(wrapTldr(stripLeadingH1(liftedArt.markdown)));
   const words = markdown.split(/\s+/).filter((w) => /\w/.test(w)).length;
-  const hasTldr = markdown.startsWith('<div class="tldr">');
   const keywords = plain(p['SEO Keywords']?.rich_text)
     .split(',')
     .map((k) => k.trim())
@@ -501,7 +477,7 @@ for (const page of rows) {
   // technical, which is also the schema default — a missing Track must never be
   // able to fail a build. These three strings must match the enum in
   // src/content.config.ts and the Notion select exactly.
-  const TRACKS = ['technical', 'business', 'basics', 'case-studies', 'talks'];
+  const TRACKS = TRACK_REGISTRY.map((t) => t.id);
   // "Case Studies" in Notion becomes "case-studies" as a track id.
   const rawTrack = (p['Track']?.select?.name ?? '').trim().toLowerCase().replace(/\s+/g, '-');
   const track = TRACKS.includes(rawTrack) ? rawTrack : 'technical';
@@ -511,26 +487,23 @@ for (const page of rows) {
 
   // The reader question the piece answers. Optional, capped to match the schema.
   const question = plain(p['Reader Question']?.rich_text).trim();
-  if (question.length > MAX_QUESTION) {
-    blocked(
-      id,
-      title,
-      `Reader Question is ${question.length} characters; the maximum is ${MAX_QUESTION}. Shorten it.`
-    );
-    continue;
-  }
 
-  // Blocking, deliberately. This started life as a note, and the note was how
-  // the first two pipeline articles shipped without the block their own writer
-  // prompt requires — a requirement that is only a remark is a requirement
-  // being quietly missed. The TL;DR is also the most citable block on the page,
-  // so its absence is a distribution defect, not a style one. The reason lands
-  // on the Notion row, where the fix takes a minute.
-  if (!hasTldr) {
+  // Every content rule, every violation, each with a failure code — so a repair
+  // pass sees the whole list at once instead of discovering one problem per
+  // attempt. Rules and codes: site/harness/rules.mjs + registry.mjs.
+  const findings = checkArticle(markdown, { title, description, question, track: rawTrack });
+  if (artWarnings.length) findings.push({ code: 'G-ART', class: 'warn', message: artWarnings.join(' ') });
+  const blocking = findings.filter((f) => f.class === 'block');
+  const warnings = findings.filter((f) => f.class === 'warn');
+  for (const w of warnings) if (w.code !== 'G-ART') note(id, title, `${w.code}: ${w.message}`);
+  if (blocking.length) {
     blocked(
       id,
       title,
-      'The draft does not open with an "Executive TL;DR" H2 and bullets. Add the section at the top of the page body (heading text exactly "Executive TL;DR"), then set Draft Status back to Approved.'
+      blocking.map((f) => `${f.code}: ${f.message}`).join(' | '),
+      [...new Set([...blocking, ...warnings].map((f) => f.code))],
+      attempts,
+      { key: sheetKey, track: trackLabel }
     );
     continue;
   }
@@ -596,7 +569,7 @@ for (const page of rows) {
   const auto = AUTO_TRACKS.includes(trackName);
   // `id` rides along so a later pipeline failure (build, artwork, PR) can write
   // its reason back onto this exact row — see flag-pipeline-failure.mjs.
-  manifest[auto ? 'auto' : 'reviewed'].push({ id, slug, title, track: trackName });
+  manifest[auto ? 'auto' : 'reviewed'].push({ id, slug, title, track: trackName, key: sheetKey, attempts });
 
   if (dryRun) {
     written.push(`${slug}.md (${words} words) [dry run]`);
@@ -617,7 +590,15 @@ for (const page of rows) {
     console.log(`  · ${slug}.svg — ${art.label}; render with npm run images`);
   }
   written.push(`${slug}.md (${words} words)`);
-  clearBlocked.push({ id, title });
+  clearBlocked.push({
+    id,
+    title,
+    warnCodes: [...new Set(warnings.map((w) => w.code))],
+    // A "publishing then failed" note from a previous run must survive until the
+    // article is actually live (close-loop clears it), or flag-pipeline-failure
+    // could never tell a second failure from a first one.
+    keepReason: plain(p['Blocked Reason']?.rich_text).includes('publishing then failed at'),
+  });
 }
 
 // A manifest rather than parsed stdout. `git status` cannot tell an unattended
@@ -668,21 +649,39 @@ const fatal = problems.filter((p) => p.fatal);
 // condition at the bottom).
 let unreported = fatal.length;
 if (!dryRun && fatal.length) {
+  const exhausted = [];
   for (const p of fatal) {
-    if (await flagBlocked(p.id, p.reason, { needsRevision: true })) {
+    // Only Sheet-harness rows (keyed) escalate; pre-harness rows keep the old
+    // behaviour of waiting in Needs Revision for the owner.
+    const route = routeFailure({ key: p.key, attempts: p.attempts, codes: p.codes });
+    const atLimit = route === 'human';
+    if (atLimit) {
+      exhausted.push(p.title);
+      recordNeedsHuman({ id: p.id, title: p.title, key: p.key, track: p.track, codes: p.codes, attempts: p.attempts, reason: p.reason });
+    }
+    const reason = atLimit ? `NEEDS YOU (${p.attempts} repair attempts; not auto-repairable). ${p.reason}` : p.reason;
+    if (await flagBlocked(p.id, reason, { needsRevision: true, codes: p.codes })) {
       unreported--;
-      console.error(`  ↳ marked "${p.title}" Needs Revision in Notion`);
+      console.error(`  ↳ marked "${p.title}" Needs Revision in Notion [${p.codes.join(', ')}]`);
     }
     // flagBlocked already logged a ::warning:: if it could not write; that row
     // stays counted in `unreported`, which keeps the run red — Actions is then
     // the last signal left.
   }
+  if (exhausted.length) {
+    await notify(
+      'Article needs you',
+      `${exhausted.length} draft(s) need you (repair limit ${REPAIR.maxAttempts} reached, or not auto-repairable): ${exhausted.slice(0, 3).join(', ')}. A GitHub issue has the details.`,
+      { url: 'https://www.notion.so/d39ea073cc874c258a3cd9f276a59b68' }
+    );
+  }
 }
 
-// Clear a stale block off anything that has now published successfully.
+// Clear a stale block off anything that has now published successfully, and
+// record any warn-level codes it shipped with (that is the failure log).
 if (!dryRun) {
-  for (const { id, title } of clearBlocked) {
-    if (!(await clearBlockedReason(id))) {
+  for (const { id, title, warnCodes, keepReason } of clearBlocked) {
+    if (!(await clearBlockedReason(id, warnCodes, { keepReason }))) {
       console.error(`  ↳ could not clear Blocked Reason for "${title}"`);
     }
   }

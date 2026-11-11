@@ -14,8 +14,9 @@
  */
 
 import { api, PIPELINE_DS, queryAll } from './lib/notion.mjs';
+import { SHEET } from '../harness/registry.mjs';
 
-const DEFAULT_SHEET_ID = '1-UcD-C4My_Zp4aH3n-5dB3JQNtDN_MSAK6vTCPt8LY0';
+const DEFAULT_SHEET_ID = SHEET.id;
 const sheetId = process.env.GOOGLE_SHEET_ID || DEFAULT_SHEET_ID;
 const commit = process.argv.includes('--commit');
 

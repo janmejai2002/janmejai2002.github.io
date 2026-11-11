@@ -9,11 +9,12 @@
  */
 import { readFileSync } from 'node:fs';
 
-const NOTION_VERSION = '2025-09-03';
+import { NOTION } from '../../harness/registry.mjs';
+const NOTION_VERSION = NOTION.version;
 const LOCAL_ENVS = ['C:/Users/Janmejai/.env.global', 'C:/Users/Janmejai/Notion/.env'];
 
-export const PIPELINE_DS = '511e41a3-c1cd-47e0-8fa2-d319feef0ced';
-export const PRODUCTION_DS = 'd39ea073-cc87-4c25-8a3c-d9f276a59b68';
+export const PIPELINE_DS = NOTION.radar;
+export const PRODUCTION_DS = NOTION.production;
 
 export function token() {
   if (process.env.NOTION_TOKEN) return process.env.NOTION_TOKEN.trim();
@@ -57,7 +58,7 @@ export async function api(path, { method = 'GET', body } = {}) {
  * Never throws — a failed write-back must not mask the failure it reports.
  * Returns true on success, false otherwise.
  */
-export async function flagBlocked(pageId, reason, { needsRevision = false } = {}) {
+export async function flagBlocked(pageId, reason, { needsRevision = false, codes = null } = {}) {
   const stamp = new Date().toISOString().slice(0, 16).replace('T', ' ');
   const properties = {
     'Blocked Reason': {
@@ -65,6 +66,9 @@ export async function flagBlocked(pageId, reason, { needsRevision = false } = {}
     },
   };
   if (needsRevision) properties['Draft Status'] = { select: { name: 'Needs Revision' } };
+  // Failure Codes is a harness property (site/harness/registry.mjs). Written
+  // only when the caller has codes, so older callers keep working unchanged.
+  if (codes) properties['Failure Codes'] = { multi_select: codes.map((name) => ({ name })) };
   try {
     await api(`/pages/${pageId}`, { method: 'PATCH', body: { properties } });
     return true;
@@ -74,10 +78,16 @@ export async function flagBlocked(pageId, reason, { needsRevision = false } = {}
   }
 }
 
-/** Wipes `Blocked Reason` off a row that has since gone through cleanly. Never throws. */
-export async function clearBlockedReason(pageId) {
+/**
+ * Wipes `Blocked Reason` off a row that has since gone through cleanly, and sets
+ * `Failure Codes` to the warn-level codes it shipped with (empty = clean).
+ * Never throws.
+ */
+export async function clearBlockedReason(pageId, warnCodes = null, { keepReason = false } = {}) {
+  const properties = keepReason ? {} : { 'Blocked Reason': { rich_text: [] } };
+  if (warnCodes) properties['Failure Codes'] = { multi_select: warnCodes.map((name) => ({ name })) };
   try {
-    await api(`/pages/${pageId}`, { method: 'PATCH', body: { properties: { 'Blocked Reason': { rich_text: [] } } } });
+    await api(`/pages/${pageId}`, { method: 'PATCH', body: { properties } });
     return true;
   } catch {
     return false;

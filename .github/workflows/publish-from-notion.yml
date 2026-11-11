@@ -62,6 +62,8 @@ permissions:
   # workflow-from-workflow recursion), so the unattended commit below has to
   # dispatch the deploy itself — which needs this scope.
   actions: write
+  # Opening a "needs-human" issue when an article fails after the repair limit.
+  issues: write
 
 jobs:
   publish:
@@ -122,7 +124,26 @@ jobs:
       # passing — which matters far more now that three tracks publish with no
       # human in the loop.
       - name: Build
+        id: build
         if: steps.manifest.outputs.auto_count != '0' || steps.manifest.outputs.reviewed_count != '0'
+        continue-on-error: true
+        working-directory: site
+        run: rm -f check-build-report.json && npm run build
+
+      # One bad article must not hold the batch hostage. If the build failed on
+      # problems that all belong to articles in this run, those articles are
+      # flagged Needs Revision (with failure codes, so the Repairer picks them
+      # up) and removed from the tree; the rest are rebuilt and ship. Anything
+      # not attributable to this run's articles exits 1 and the run goes red.
+      - name: Quarantine failing articles
+        if: steps.build.outcome == 'failure'
+        working-directory: site
+        env:
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+        run: node scripts/quarantine-build.mjs
+
+      - name: Rebuild without the quarantined articles
+        if: steps.build.outcome == 'failure'
         working-directory: site
         run: npm run build
 
@@ -146,7 +167,9 @@ jobs:
             echo "Nothing staged — already committed."
             exit 0
           fi
-          git commit -m "Publish from Notion: ${{ steps.manifest.outputs.auto_slugs }}"
+          # Read slugs from the manifest file, not the earlier step output: the
+          # quarantine step may have removed some since.
+          git commit -m "Publish from Notion: $(jq -r '[.auto[].slug] | join(", ")' site/publish-manifest.json)"
           # Rebase rather than force: a reviewed-article PR branch or a human
           # commit may have landed on main while this run was building.
           git pull --rebase origin main
@@ -211,6 +234,17 @@ jobs:
           NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
           NOTIFY_TOPIC: ${{ secrets.NOTIFY_TOPIC }}
         run: node scripts/flag-pipeline-failure.mjs "artwork rendering, the site build, the commit to main, or the pull request"
+
+      # The end of the self-healing loop: any article that has now failed after
+      # REPAIR.maxAttempts automatic repairs (site/harness/registry.mjs) gets a
+      # GitHub issue with the full context, ready to hand to Claude or agy.
+      # Runs on success and failure alike; it is a no-op when nothing gave up.
+      - name: Open issues for articles the Repairer gave up on
+        if: ${{ always() }}
+        working-directory: site
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: node scripts/open-issues.mjs
 
       # Catch-all: a failure so early there is no manifest (bad NOTION_TOKEN,
       # the query step itself, a checkout problem) leaves nothing on any Notion

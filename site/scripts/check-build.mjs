@@ -11,12 +11,16 @@
  *
  *   node scripts/check-build.mjs
  */
-import { readFileSync, readdirSync, statSync } from 'node:fs';
+import { readFileSync, readdirSync, statSync, writeFileSync } from 'node:fs';
 import { join, dirname, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const dist = join(dirname(fileURLToPath(import.meta.url)), '..', 'dist');
 const failures = [];
+// Structured copy of every failure, keyed to the article it belongs to, so the
+// publish workflow can quarantine just that article (scripts/quarantine-build.mjs).
+// Codes are the failure codes in site/harness/registry.mjs.
+const report = [];
 
 function walk(dir) {
   for (const name of readdirSync(dir)) {
@@ -28,7 +32,11 @@ function walk(dir) {
 
 function check(path, html) {
   const rel = relative(dist, path);
-  const fail = (msg) => failures.push(`${rel}: ${msg}`);
+  const slug = rel.match(/^blog[\\/]([^\\/]+)[\\/]index\.html$/)?.[1] ?? null;
+  const fail = (msg, code = 'G-BUILD') => {
+    failures.push(`${rel}: [${code}] ${msg}`);
+    report.push({ rel, slug, code, message: msg });
+  };
 
   // Redirect stubs are not pages; none of the content assertions apply.
   if (/http-equiv="refresh"/i.test(html.slice(0, 500))) return;
@@ -38,7 +46,7 @@ function check(path, html) {
   // 1. Escaped markup leaking into prose means a raw HTML block was broken.
   for (const tag of ['svg', 'g>', 'rect', 'figure', 'div']) {
     if (body.includes(`&#x3C;${tag}`) || body.includes(`&lt;${tag}`)) {
-      fail(`escaped <${tag} in rendered prose — a raw HTML block was split (check for blank lines inside it)`);
+      fail(`escaped <${tag} in rendered prose — a raw HTML block was split (check for blank lines inside it)`, 'G-HTML');
     }
   }
 
@@ -46,14 +54,14 @@ function check(path, html) {
   const figures = html.match(/<figure class="diagram">[\s\S]*?<\/figure>/g) ?? [];
   figures.forEach((fig, i) => {
     const texts = (fig.match(/<text/g) ?? []).length;
-    if (texts < 6) fail(`diagram ${i + 1} has only ${texts} <text> elements — looks truncated`);
-    if (!/<\/svg>/.test(fig)) fail(`diagram ${i + 1} has no closing </svg>`);
+    if (texts < 6) fail(`diagram ${i + 1} has only ${texts} <text> elements — looks truncated`, 'G-HTML');
+    if (!/<\/svg>/.test(fig)) fail(`diagram ${i + 1} has no closing </svg>`, 'G-HTML');
   });
 
   // 3. Diagrams must not hardcode colour; the site has a real dark mode.
   for (const fig of figures) {
     const hard = fig.match(/(?:fill|stroke)="(#[0-9a-f]{3,8}|white|black|rgb\()/gi);
-    if (hard) fail(`diagram hardcodes colour: ${[...new Set(hard)].join(', ')}`);
+    if (hard) fail(`diagram hardcodes colour: ${[...new Set(hard)].join(', ')}`, 'G-HTML');
   }
 
   // 4. Social cards were declared but missing once already.
@@ -63,7 +71,7 @@ function check(path, html) {
 
   // 5. Every content image needs alt text.
   for (const img of html.match(/<img[^>]*>/g) ?? []) {
-    if (!/\balt="[^"]+"/.test(img)) fail(`img without alt text: ${img.slice(0, 90)}`);
+    if (!/\balt="[^"]+"/.test(img)) fail(`img without alt text: ${img.slice(0, 90)}`, 'G-IMAGE');
   }
 
   // 6. Exactly one <h1> per page. The pipeline's first run shipped two articles
@@ -72,7 +80,7 @@ function check(path, html) {
   // search-engine verification tokens at the dist root are HTML but not pages.
   const isPage = /(?:^|[\\/])(?:index|404)\.html$/.test(rel);
   const h1s = (html.match(/<h1[\s>]/g) ?? []).length;
-  if (isPage && h1s !== 1) fail(`${h1s} <h1> elements — every page renders exactly one`);
+  if (isPage && h1s !== 1) fail(`${h1s} <h1> elements — every page renders exactly one`, 'G-HEADING');
 
   // 7. Every article opens with the Executive TL;DR plate. The writer prompt
   // requires it, the generator now blocks without it, and this is the backstop
@@ -82,11 +90,11 @@ function check(path, html) {
   // that keeps both honest. (rel is dist-relative, e.g. blog/<slug>/index.html.)
   if (/^blog[\\/].+[\\/]index\.html$/.test(rel)) {
     if (!html.includes('class="tldr"')) {
-      fail('article has no Executive TL;DR plate (<div class="tldr">)');
+      fail('article has no Executive TL;DR plate (<div class="tldr">)', 'G-TLDR');
     }
     // 7b. Every article must have hero artwork
     if (!html.includes('class="plateart"')) {
-      fail('article has no hero artwork (<figure class="plateart">)');
+      fail('article has no hero artwork (<figure class="plateart">)', 'G-ART');
     }
   }
 
@@ -96,7 +104,7 @@ function check(path, html) {
   if (/^blog[\\/].+[\\/]index\.html$/.test(rel)) {
     for (const code of body.match(/<pre[^>]*>[\s\S]*?<\/pre>/g) ?? []) {
       if (/\+[-=]{3,}(\+[-=]{3,})+\+/.test(code) && /\|[^|\n]+\|[^|\n]+\|/.test(code)) {
-        fail('contains a multi-column ASCII table inside a code block — convert to a standard GFM Markdown table');
+        fail('contains a multi-column ASCII table inside a code block — convert to a standard GFM Markdown table', 'G-ASCII');
       }
     }
   }
@@ -105,7 +113,7 @@ function check(path, html) {
   if (/^blog[\\/].+[\\/]index\.html$/.test(rel)) {
     for (const tbl of body.match(/<table[^>]*>[\s\S]*?<\/table>/g) ?? []) {
       if (/\+[-=]{5,}|\b[vV]\b.*?\+[-=]+|<td>\s*\+\s*<\/td>/.test(tbl)) {
-        fail('contains corrupted ASCII diagram/box artifacts inside a <table> — convert flowcharts to <figure class="diagram"><svg>');
+        fail('contains corrupted ASCII diagram/box artifacts inside a <table> — convert flowcharts to <figure class="diagram"><svg>', 'G-ASCII');
       }
     }
   }
@@ -114,7 +122,7 @@ function check(path, html) {
   // so Astro renders them into <table> rather than raw paragraph text.
   if (/^blog[\\/].+[\\/]index\.html$/.test(rel)) {
     if (/<p>\s*\|(?:[^|\n]+\|){2,}\s*<\/p>/.test(body)) {
-      fail('contains unrendered markdown table syntax inside <p> — ensure table rows have no blank lines in between');
+      fail('contains unrendered markdown table syntax inside <p> — ensure table rows have no blank lines in between', 'G-TABLE');
     }
   }
 
@@ -128,7 +136,7 @@ function check(path, html) {
         /\+[-=]{8,}\+[\s\S]*?\|\s*\n\s+[vV]/.test(code) ||
         /\d+\.\s+[A-Z\s]+:[\s\S]*?\|\s*\n\s+[vV]/.test(code)
       ) {
-        fail('contains an ASCII diagram inside a code block — convert to a semantic <figure class="diagram"><svg> element');
+        fail('contains an ASCII diagram inside a code block — convert to a semantic <figure class="diagram"><svg> element', 'G-ASCII');
       }
     }
   }
@@ -136,13 +144,16 @@ function check(path, html) {
   // 11. No uncompiled LaTeX math commands leaking into article body prose.
   // Formulas should be written in clean Unicode/HTML or dedicated formula cards.
   if (/^blog[\\/].+[\\/]index\.html$/.test(rel)) {
-    if (/(?:\\sqrt|\\frac|\\approx|\\sum|\\cdot|\$\$(?!\s*\$)|(?<![\$\w])\$[a-zA-Z_]\w*\$(?![\$\w]))/.test(body)) {
-      fail('contains uncompiled LaTeX math syntax in prose — write in clean Unicode/code blocks instead');
+    // The last alternative also catches inline math with subscripts/symbols
+    // ($N_{max}≤ 6$, $z ∈ R^|V|$), which the old \w-only pattern let through.
+    if (/(?:\\sqrt|\\frac|\\approx|\\sum|\\cdot|\$\$(?!\s*\$)|(?<![\$\w])\$[a-zA-Z_\\][^$\n<]{0,40}\$(?![\$\w]))/.test(body)) {
+      fail('contains uncompiled LaTeX math syntax in prose — write in clean Unicode/code blocks instead', 'G-LATEX');
     }
   }
 }
 
 walk(dist);
+writeFileSync(join(dist, '..', 'check-build-report.json'), JSON.stringify(report, null, 2) + '\n');
 
 if (failures.length) {
   console.error(`\ncheck-build: ${failures.length} problem(s)\n`);

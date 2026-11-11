@@ -25,8 +25,8 @@ import { notify } from './notify.mjs';
 
 const dryRun = process.argv.includes('--dry-run');
 
-// Must match AUTO_TRACKS in publish-article.mjs.
-const AUTO_TRACKS = ['Talks', 'Case Studies', 'Basics', 'Technical', 'Business'];
+// AUTO_TRACKS lives in site/harness/registry.mjs.
+import { AUTO_TRACKS } from '../harness/registry.mjs';
 // How long an unattended row may sit ready before it counts as stuck. Generous
 // on purpose: GitHub throttles scheduled workflows on quiet repos and gaps of
 // several hours are normal, so this is set well beyond that.

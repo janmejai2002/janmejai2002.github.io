@@ -31,6 +31,7 @@ import {
   plain,
   token,
 } from './lib/notion.mjs';
+import { AUTO_TRACKS, REPAIR, routeFailure } from '../harness/registry.mjs';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(here, '..', '..');
@@ -38,11 +39,8 @@ const SITE = join(here, '..');
 const BLOG = join(SITE, 'src', 'content', 'blog');
 const LIVE = process.env.SITE_URL ?? 'https://janmejai2002.github.io';
 
-// Notion select values that mean "the owner has approved this idea".
-const APPROVE_RATINGS = ['4', '5'];
-// Must track AUTO_TRACKS in publish-article.mjs — the tracks that publish with
-// no human in the path, so "ready and not live for half a day" is unambiguous.
-const AUTO_TRACKS = ['Talks', 'Case Studies', 'Basics', 'Technical', 'Business'];
+// AUTO_TRACKS (tracks that publish with no human in the path) comes from
+// site/harness/registry.mjs, so "ready and not live for half a day" is unambiguous.
 const STALE_HOURS = 12;
 // Block types lib/notion.mjs' toMarkdown() knows how to render. Anything a draft
 // page uses that is not on this list crashes the publish poll.
@@ -107,36 +105,32 @@ try {
 }
 
 // ---------------------------------------------------------------------------
-// 2. Radar — the throughput gate is unrated ideas
+// 2. Self-healing loop — what the Repairer has to do, and what it gave up on.
+// (Interest Rating was retired 2026-11-11: the Gemini radar scores and picks
+// topics itself, so ratings no longer gate anything.)
 // ---------------------------------------------------------------------------
-let radarRows = [];
 if (notionUp) {
   try {
-    radarRows = await queryAll(PIPELINE_DS);
-    const rating = (p) => p.properties['Interest Rating']?.select?.name ?? null;
-    const status = (p) => p.properties['Status']?.select?.name ?? null;
-    const isIdea = (p) => status(p) === 'Radar Idea';
-
-    const unrated = radarRows.filter((p) => isIdea(p) && !rating(p));
-    const approvedNotMoved = radarRows.filter(
-      (p) => isIdea(p) && APPROVE_RATINGS.includes((rating(p) ?? '').trim()[0])
-    );
-    const lowRated = radarRows.filter((p) => {
-      const r = (rating(p) ?? '').trim()[0];
-      return r === '1' || r === '2';
-    });
-
+    const prod = await queryAll(PRODUCTION_DS, { property: 'Draft Status', select: { equals: 'Needs Revision' } });
+    const key = (p) => plain(p.properties['Sheet Key']?.rich_text).trim();
+    const tries = (p) => p.properties['Repair Attempts']?.number ?? 0;
+    const codes = (p) => (p.properties['Failure Codes']?.multi_select ?? []).map((o) => o.name);
+    const route = (p) => routeFailure({ key: key(p), attempts: tries(p), codes: codes(p) });
+    const queued = prod.filter((p) => route(p) === 'repair');
+    const gaveUp = prod.filter((p) => route(p) === 'human');
+    const legacy = prod.filter((p) => route(p) === 'legacy');
     add({
-      id: 'radar-unrated',
-      title: 'Radar — unrated ideas',
-      status: unrated.length > 25 ? 'warn' : 'ok',
-      detail: `${unrated.length} unrated · ${approvedNotMoved.length} rated 4/5 still on the radar · ${lowRated.length} rated 1–2`,
-      fix: unrated.length
-        ? 'Rate ideas in 📝 AI Blog OS Pipeline. 4–5 approves and lets ai-article-writer promote it; 1–2 steers future radar runs away. Cadence is not the gate — ratings are.'
-        : '',
+      id: 'repair-loop',
+      title: 'Self-healing — Repair Queue',
+      status: gaveUp.length ? 'warn' : 'ok',
+      detail:
+        `${queued.length} queued for the Repairer` +
+        (queued.length ? ` (${queued.map((p) => `${key(p)} [${codes(p).join(',')}] try ${tries(p) + 1}`).join('; ')})` : '') +
+        ` · ${gaveUp.length} need a person (limit ${REPAIR.maxAttempts} or not auto-repairable) · ${legacy.length} pre-harness row(s) not in the loop`,
+      fix: gaveUp.length ? 'Each has a GitHub issue labelled needs-human. Fix the Notion page, run --check, set Draft Ready.' : '',
     });
   } catch (err) {
-    add({ id: 'radar-unrated', title: 'Radar — unrated ideas', status: 'warn', detail: `query failed: ${err.message.split('\n')[0]}` });
+    add({ id: 'repair-loop', title: 'Self-healing — Repair Queue', status: 'warn', detail: `query failed: ${err.message.split('\n')[0]}` });
   }
 }
 

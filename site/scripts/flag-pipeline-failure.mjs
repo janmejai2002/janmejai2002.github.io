@@ -18,8 +18,15 @@
 import { readFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { flagBlocked } from './lib/notion.mjs';
+import { flagBlocked, api, plain } from './lib/notion.mjs';
 import { notify } from './notify.mjs';
+import { recordNeedsHuman } from '../harness/needs-human.mjs';
+
+// The first failure may be a transient GitHub/network flake, so the row stays
+// Draft Ready and the next poll retries it. A second consecutive failure is not
+// a flake: the row moves to Needs Revision with G-BUILD and a needs-human issue
+// is opened, instead of failing on every poll forever.
+const MARKER = 'publishing then failed at';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const phase = process.argv[2]?.trim() || 'a step after generation';
@@ -44,12 +51,18 @@ for (const r of rows) {
     console.error(`::warning::manifest row for "${r.slug}" has no id — cannot flag it`);
     continue;
   }
-  const ok = await flagBlocked(
-    r.id,
-    `This draft passed every content gate, but publishing then failed at ${phase}, so the article is not live yet. ` +
-      `Nothing needs to change on this row unless the GitHub Actions log points at its content — check the log for the failed ` +
-      `"Publish from Notion" run, fix the cause, and re-trigger (or wait for the next poll).`
-  );
+  let previous = '';
+  try {
+    previous = plain((await api(`/pages/${r.id}`)).properties['Blocked Reason']?.rich_text);
+  } catch {}
+  const repeat = previous.includes(MARKER);
+  const reason =
+    (repeat ? 'FAILED TWICE — needs you. ' : '') +
+    `This draft passed every content gate, but ${MARKER} ${phase}, so the article is not live yet. ` +
+    `Check the log for the failed "Publish from Notion" run, fix the cause, and set Draft Ready again.`;
+  const ok = await flagBlocked(r.id, reason, repeat ? { needsRevision: true, codes: ['G-BUILD'] } : {});
+  if (repeat)
+    recordNeedsHuman({ id: r.id, title: r.title, key: r.key, track: r.track, codes: ['G-BUILD'], attempts: r.attempts ?? 0, reason });
   if (ok) {
     flagged++;
     console.log(`  ↳ flagged "${r.title}" (${r.slug})`);
