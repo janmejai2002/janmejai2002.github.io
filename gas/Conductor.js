@@ -48,6 +48,7 @@ function tick() {
   if (!lock.tryLock(5000)) return; // previous tick still running
   try {
     var log = [];
+    safe_(log, 'tabs', function () { ensureTabs_(); return 'ok'; });
     safe_(log, 'mirror', mirrorNotion_);
     safe_(log, 'dispatch', dispatchIfNew_);
     safe_(log, 'runs', checkRunsDaily_);
@@ -182,8 +183,30 @@ function checkRunsDaily_() {
 
 /* ───────────────────────── helpers ───────────────────────── */
 
+/**
+ * One-time fix (2026-11-11): the news always lived in the first tab, named
+ * "Sheet1", and the first install created an empty "News" tab beside it. Rename
+ * the real one to "News" and drop the empty copy. Safe: only runs when the
+ * first tab really holds news, and only deletes a "News" tab with no data rows.
+ * Renaming keeps gid=0, which is what sync-news.mjs reads.
+ */
+function migrateNewsTab_(ss) {
+  var first = ss.getSheets()[0];
+  if (first.getName() === 'News') return 'ok';
+  var head = first.getRange(1, 1, 1, 3).getDisplayValues()[0].join('|');
+  if (head !== 'Date|Category|Headline') return 'first tab is not news; left alone';
+  var empty = ss.getSheetByName('News');
+  if (empty) {
+    if (empty.getLastRow() > 1) return 'both tabs have news; left alone';
+    ss.deleteSheet(empty);
+  }
+  first.setName('News');
+  return 'renamed ' + 'first tab to News';
+}
+
 function ensureTabs_() {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
+  migrateNewsTab_(ss);
   Object.keys(REGISTRY.SHEET.tabs).forEach(function (name) {
     var cols = REGISTRY.SHEET.tabs[name].columns;
     var sh = ss.getSheetByName(name);

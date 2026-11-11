@@ -80,6 +80,7 @@ function parseCSV(text) {
 const sheetId = process.env.GOOGLE_SHEET_ID || DEFAULT_SHEET_ID;
 const sheetCsvUrl =
   process.env.GOOGLE_SHEET_CSV_URL ||
+  // gid=0 is the "News" tab (renamed from Sheet1 on 2026-11-11; renaming keeps the gid).
   (sheetId ? `https://docs.google.com/spreadsheets/d/${sheetId}/export?format=csv&gid=0` : null);
 
 const sheetRows = [];
