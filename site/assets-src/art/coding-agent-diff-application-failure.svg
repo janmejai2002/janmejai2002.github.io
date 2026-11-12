@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" role="img">
+  <title>Line-Number Diff Drift vs Content-Hash and AST Anchoring</title>
+  <desc>Two vertical columns of horizontal code lines on a subtle grid: the left column shows a drifting mizu bracket misaligned by three rows, while the right column shows a rigid mizu AST frame locked to a content-hash anchor.</desc>
+  <defs>
+    <filter id="grain" x="0" y="0" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch"/>
+    </filter>
+  </defs>
+  <rect width="1600" height="900" fill="{{paper}}"/>
+  <g stroke="{{border}}" stroke-width="1" opacity="0.55">
+    <line x1="160" y1="120" x2="1440" y2="120"/>
+    <line x1="160" y1="780" x2="1440" y2="780"/>
+    <line x1="800" y1="90" x2="800" y2="810" stroke-dasharray="6 6"/>
+  </g>
+  <g stroke="{{ink}}" stroke-width="1.5" opacity="0.45">
+    <line x1="260" y1="180" x2="620" y2="180"/>
+    <line x1="260" y1="220" x2="540" y2="220"/>
+    <line x1="260" y1="260" x2="640" y2="260"/>
+    <line x1="260" y1="300" x2="500" y2="300"/>
+    <line x1="260" y1="340" x2="610" y2="340"/>
+    <line x1="260" y1="380" x2="580" y2="380"/>
+    <line x1="260" y1="420" x2="650" y2="420"/>
+    <line x1="260" y1="460" x2="520" y2="460"/>
+    <line x1="260" y1="500" x2="630" y2="500"/>
+    <line x1="260" y1="540" x2="560" y2="540"/>
+    <line x1="260" y1="580" x2="620" y2="580"/>
+    <line x1="260" y1="620" x2="490" y2="620"/>
+    <line x1="260" y1="660" x2="640" y2="660"/>
+    <line x1="260" y1="700" x2="570" y2="700"/>
+  </g>
+  <rect x="245" y="325" width="420" height="110" fill="none" stroke="{{ink}}" stroke-width="2" stroke-dasharray="4 4"/>
+  <g stroke="{{mizu}}" stroke-width="3" fill="none">
+    <path d="M 225 450 L 205 450 L 205 560 L 225 560"/>
+    <path d="M 685 450 L 705 450 L 705 510"/>
+    <line x1="205" y1="505" x2="245" y2="505" stroke-dasharray="3 3"/>
+  </g>
+  <circle cx="705" cy="525" r="5" fill="{{mizu}}"/>
+  <g stroke="{{ink}}" stroke-width="1.5" opacity="0.55">
+    <line x1="940" y1="180" x2="1300" y2="180"/>
+    <line x1="940" y1="220" x2="1220" y2="220"/>
+    <line x1="940" y1="260" x2="1320" y2="260"/>
+    <line x1="940" y1="300" x2="1180" y2="300"/>
+    <line x1="940" y1="340" x2="1290" y2="340"/>
+    <line x1="940" y1="380" x2="1260" y2="380"/>
+    <line x1="940" y1="420" x2="1330" y2="420"/>
+    <line x1="940" y1="460" x2="1200" y2="460"/>
+    <line x1="940" y1="500" x2="1310" y2="500"/>
+    <line x1="940" y1="540" x2="1240" y2="540"/>
+    <line x1="940" y1="580" x2="1300" y2="580"/>
+    <line x1="940" y1="620" x2="1170" y2="620"/>
+    <line x1="940" y1="660" x2="1320" y2="660"/>
+    <line x1="940" y1="700" x2="1250" y2="700"/>
+  </g>
+  <rect x="925" y="325" width="420" height="110" fill="none" stroke="{{mizu}}" stroke-width="3"/>
+  <g fill="{{mizu}}">
+    <circle cx="910" cy="340" r="6"/>
+    <circle cx="910" cy="380" r="6"/>
+    <circle cx="910" cy="420" r="6"/>
+    <rect x="1360" y="368" width="24" height="24" fill="none" stroke="{{mizu}}" stroke-width="2"/>
+  </g>
+  <rect width="1600" height="900" filter="url(#grain)" opacity="0.05"/>
+</svg>
