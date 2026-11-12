@@ -1,5 +1,45 @@
 [
   {
+    "headline": "AI Agent Vendors Shift to FTE Pricing at 20-40% of Human Wage Cost",
+    "date": "2026-11-12",
+    "category": "Product Management",
+    "summary": "AI product companies including Cognition (Devin at $500/month), Sierra, and Intercom are replacing per-token billing with Full-Time Equivalent (FTE) seat and outcome models for autonomous agents that replace bounded human job roles. Anchoring an agent seat at 30% of a US junior support rep's $78,000 fully loaded annual cost yields a $1,950 monthly price ($23,400/year) for a 200-conversation daily throughput cap, generating a ~90% gross margin when monthly model inference runs $200 but compressing margin to ~23% if complex reasoning pushes inference to $1,500.",
+    "angle": "Product interviewers will press you on the margin and procurement risks of selling an AI agent like a full-time employee out of an HR or operations headcount budget. If you guarantee a flat $1,950 monthly FTE seat price for up to 200 daily support tickets without metered overages, how do you prevent multi-step reasoning loops on edge-case tickets from driving monthly token inference from $200 to $1,500 and wiping out gross margin?",
+    "source": "https://www.institutepm.com/knowledge-hub/fte-pricing-ai-agents"
+  },
+  {
+    "headline": "D2C Festive Sales Jump 45% While CAC Rises 20% to Rs 650 per Buyer",
+    "date": "2026-11-12",
+    "category": "Marketing",
+    "summary": "ClickPost data across 400 brands shows Indian D2C festive sales value rose 45% (with Unicommerce recording 30% order growth on brand websites versus 8% on marketplaces), yet over 20% of brands saw shipments drop more than 25% while the top 10–15% captured 65% of creator marketing spend. Kearney estimates D2C customer acquisition cost (CAC) climbed 15–20% to Rs 600–650 as retail and commerce media budgets grew 27%, driving acquisition cost per rupee of sales up 19–24% for mass-market brands where 85% of festive orders sit below Rs 1,000.",
+    "angle": "Marketing panelists will press you on the unit-economics squeeze facing mass-market D2C brands in Tier-3 towns (which generated 45% of ClickPost shipments): when CAC hits Rs 650 and 85% of orders are under Rs 1,000, first-order contribution margin turns negative. How would you reallocate spend across vernacular ad creatives—which delivered 38% higher festive engagement than English ads—and post-purchase retention loops before the November 21 wedding season drives ad rates up again?",
+    "source": "https://www.medianews4u.com/d2c-festive-sales-grow-45-but-one-in-five-brands-sees-shipments-fall-over-25-report/"
+  },
+  {
+    "headline": "EU Enforces Item-Level IDs and €2 Fee on Indian D2C Parcel Exports",
+    "date": "2026-11-12",
+    "category": "Operations",
+    "summary": "The European Commission is enforcing mandatory item-level product identifiers—merchant SKU codes (C127), manufacturer part numbers (C128), and EAN/UPC/ISBN barcodes (C129)—on all B2C customs filings for imported parcels valued at €150 or less, alongside a permanent €2 Union handling fee per item and a temporary €3 flat duty per item type running until July 2028. Separately, EU member states agreed on November 9, 2026 to remove the €150 consignment-value cap from the VAT Import One-Stop Shop (IOSS) starting July 1, 2028 once the EU Customs Data Hub is live.",
+    "angle": "Operations panelists will test how a cross-border Indian D2C apparel or handicrafts exporter redesigns fulfillment when every sub-€150 parcel to Europe incurs a €3 item-type duty, a permanent €2 per-item handling fee, and customs rejection risk if C127–C129 SKU codes are missing. At what order volume does it become cheaper to ship bulk container inventory into an EU bonded customs warehouse under the expanded 2028 IOSS rules instead of dispatching individual air-express parcels from India?",
+    "source": "https://www.logisticsinsider.in/eu-product-identifiers-ioss-indian-exporters/"
+  },
+  {
+    "headline": "India Infra Consulting Hits $103.4B as NHAI Caps Fees at 2.5%",
+    "date": "2026-11-12",
+    "category": "Consulting",
+    "summary": "India's construction and infrastructure consulting market grew from $96.20 billion in 2025 to $103.42 billion in 2026 (projected to reach $150.55 billion by 2031 at a 7.80% CAGR), backed by $2.68 trillion across 14,569 National Infrastructure Pipeline projects and 2026 Union Budget allocations of $36.5 billion for roads and $34.5 billion for railways. However, the National Highways Authority of India (NHAI) capped consultant fees at 2.5% of project cost (down from 3–3.5%), public payment delays stretch up to 120 days, and developer contract renegotiations cut margins by 250 basis points, pushing firms toward Tier III/IV data-center advisory that commands 30–40% higher margins.",
+    "angle": "Consulting interviewers will challenge you on practice portfolio allocation: public highway and metro Project Management Consultancy (PMC) makes up 38.5% of market volume, yet NHAI's 2.5% fee cap, 120-day debtor days, and $60–120 million indemnity requirements squeeze working capital and returns. How should an infrastructure advisory partner use ISO 19650 BIM platforms (which cut rework 20%) and AI quantity take-offs to protect public-sector margins while shifting senior engineers into private REIT ESG audits and hyperscale data-center mandates?",
+    "source": "https://www.globenewswire.com/news-release/2026/11/11/3400880/28124/en/india-construction-consulting-market-size-share-industry-trends-and-growth-forecasts-2026-2031-infrastructure-data-centers-and-bim-fuel-7-8-cagr.html"
+  },
+  {
+    "headline": "Jefferies Forecasts 25-50 Bps RBI Rate Hike at December 4 Meeting",
+    "date": "2026-11-12",
+    "category": "Finance",
+    "summary": "Global brokerage Jefferies expects the Reserve Bank of India (RBI) to hike its policy repo rate by 25 to 50 basis points at the December 4, 2026 MPC meeting after VRRR, OMO, and daily CRR absorption pared October's banking liquidity surplus to just over Rs 2 trillion. Indian bank credit grew 18% year-on-year in October—led by 24% corporate and 20% agricultural loan growth—while FCNR-B inflows lifted year-on-year deposit growth from 13% in June to 17% by October 15, though Jefferies projects credit growth will cool to 14–16% by March 2027.",
+    "angle": "Finance interviewers will ask how a 25–50 bps RBI repo rate hike ahead of the February 2027 Union Budget affects bank net interest margins (NIMs) when corporate borrowers are already shifting from bank loans to bonds and external commercial borrowings (ECBs). As FCNR-B foreign-currency inflows lift deposit growth to 17%, how should a bank treasury head balance wholesale term-deposit pricing against slowing working-capital loan demand from oil and commodity corporates?",
+    "source": "https://www.startuplanes.com/post/jefferies-projects-rbi-rate-hike-in-december-as-banking-sector-sees-strong-credit-growth-and-moderating-liquidity"
+  },
+  {
     "headline": "India's 1,060 Logistics Startups Target $159.5B Freight Market",
     "date": "2026-11-11",
     "category": "Operations",
