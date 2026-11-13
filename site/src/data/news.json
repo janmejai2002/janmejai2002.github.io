@@ -1,5 +1,45 @@
 [
   {
+    "headline": "Bobba Plans Rs 250 Cr Devanahalli Hub for Pay-As-You-Store Model",
+    "date": "2026-11-13",
+    "category": "Operations",
+    "summary": "Bengaluru-based Bobba Logistics is replacing fixed multi-year warehouse leases with daily, weekly, and pallet-level \"Pay-As-You-Store\" contracts across 900 to 1,000 adjustable pallet positions and multi-temperature cold-chain bays, paired with an aviation-style \"Code Share\" partner warehouse network for MSMEs. To scale the model, the group is advancing a Rs 100 crore to Rs 150 crore warehouse project near Bengaluru's Devanahalli airport cargo hub and evaluating an additional Rs 70 crore to Rs 100 crore outlay for dock-to-rack robotics and inventory-scanning drones.",
+    "angle": "Operations panelists will challenge the asset-utilization math of funding Rs 170 crore to Rs 250 crore in automated warehouse and cold-chain capex while selling short-term daily or weekly storage with zero long-term tenant lock-in. How must an operations head structure dynamic seasonal pricing across agricultural, pharma, and e-commerce peaks—and enforce service-level liability across partner \"Code Share\" warehouses—so off-peak vacancy does not sink return on invested capital?",
+    "source": "https://www.logisticsinsider.in/disrupting-the-ordinary-how-chandrakala-bobba-is-taking-warehousing-into-its-next-era-with-pay-as-you-store/"
+  },
+  {
+    "headline": "Cognizant Forms 25,000-Person Anthropic Group for Managed AI Ops",
+    "date": "2026-11-13",
+    "category": "Consulting",
+    "summary": "Cognizant created a dedicated 25,000-associate Claude Frontier Capability Group—after training or certifying more than 44,000 employees across business units on Anthropic's Claude—just weeks after forming a separate 25,000-person OpenAI Frontier Capability Group in October. Alongside the unit, Cognizant launched a managed services offering where the Chennai-anchored IT major takes end-to-end operational responsibility for running production Claude agents and AI-native software engineering inside client enterprises.",
+    "angle": "Consulting interviewers will ask how an IT-advisory firm justifies training 44,000+ staff and standing up twin 25,000-person delivery units for rival frontier labs (Anthropic and OpenAI) when enterprise clients want model-agnostic architectures. When pitching a managed-services contract to run production AI agents, how does a partner price SLA liability for agent hallucinations and token cost spikes while transitioning billable headcount from one-off pilot consulting into multi-year managed operations?",
+    "source": "https://www.startuplanes.com/post/cognizant-forms-25-000-person-claude-frontier-group-to-deliver-anthropic-ai"
+  },
+  {
+    "headline": "NIQ Links 265M Products to Google Shopping Graph as AI Sales Rise",
+    "date": "2026-11-13",
+    "category": "Product Management",
+    "summary": "NIQ Global Intelligence grew Q3 2026 revenue 6.3% year-on-year to $1,119.1 million ($3,061.8 million in annualized subscription revenue at 105% net dollar retention and 99% gross dollar retention) and posted its first post-IPO GAAP net profit of $35.8 million as adjusted EBITDA margin rose 230 basis points to 23.6%. With 60% of its top 100 clients now buying AI applications (lifting AI-native revenue 28% year-to-date) and MCP connectors live across Claude, ChatGPT, Gemini, and Copilot, NIQ partnered with Google to feed proprietary semantic data on over 265 million products across 90 countries into the Google Shopping Graph.",
+    "angle": "Product interviewers will probe the data-moat versus disintermediation dilemma when a B2B data incumbent licenses its crown-jewel catalog of 265 million products into Google's consumer-facing Shopping Graph and exposes datasets via MCP to external LLMs. If CPG brand managers can query NIQ data directly inside ChatGPT, Claude, or Gemini, how must the PM price Optiq Bridge and ConnectAI API consumption so zero-click LLM workflows expand net dollar retention above 105% instead of cannibalizing core seat subscriptions?",
+    "source": "https://www.fool.com/earnings/call-transcripts/2026/11/12/niq-global-intelligence-niq-q3-2026-earnings-call-transcript/"
+  },
+  {
+    "headline": "Only 34% of Marketers Use AI Bidding Despite 97% Adoption Plans",
+    "date": "2026-11-13",
+    "category": "Marketing",
+    "summary": "DoubleVerify's 2026 Global Insights Report surveying 2,020 marketers found that while 97% plan to use AI across media planning, buying, or optimization in 2026 and 98% of AI bidding users report performance gains, actual workflow deployment stays below 40%. Usage is projected to reach 40% for media brief summarization (up from 28% in 2024 and 37% in 2025), 40% for campaign activation (up from 35%), 36% for mid-flight optimization (up from 21% in 2024), and 34% for bidding optimization (up from 29%), as 35% of respondents flag recommendation accuracy and 29% cite data privacy compliance and ROI proof as top concerns.",
+    "angle": "Marketing panelists will press you on why 98% of advertisers using AI bidding see better results, yet two-thirds of marketers still refuse to hand programmatic bidding and mid-flight budget shifts over to algorithms. When pitching an AI-driven media plan for a consumer brand, how do you combine first-party CRM data with third-party verification so the CMO gets algorithmic ROAS gains without exposing the brand to opaque ad placements or privacy violations?",
+    "source": "https://www.medianews4u.com/97-of-marketers-plan-to-use-ai-in-2026-but-adoption-across-ad-workflows-remains-uneven-doubleverify-report/"
+  },
+  {
+    "headline": "RBI Caps BC Cash Pay-Ins at Rs 5,000 and Monthly Remit at Rs 25K",
+    "date": "2026-11-13",
+    "category": "Finance",
+    "summary": "The Reserve Bank of India (RBI) enforced the Domestic Money Transfer Directions, 2026 across commercial, regional rural, and co-operative banks, repealing two earlier circulars from October 2011 and July 2024. The rules cap cash payouts to unbanked recipients via ATMs or Business Correspondents (BCs) at Rs 10,000 per transaction and Rs 25,000 per beneficiary monthly, limit BC and ATM cash pay-ins to Rs 5,000 per transaction (Rs 25,000 monthly per remitter) with mandatory Officially Valid Document and two-factor authentication, and set a Rs 50,000 ceiling on walk-in branch NEFT cash remittances.",
+    "angle": "Finance interviewers will test the tradeoff between anti-money-laundering (AML) velocity controls and financial inclusion for migrant workers who remit cash through neighbourhood Business Correspondents. When a Rs 5,000 per-transaction cap and mandatory two-factor KYC raise compliance friction at BC outlets, does the rule push unbanked remitters into formal Jan Dhan accounts or drive them back toward informal hawala channels, and how does it hit fee income at payments banks?",
+    "source": "https://www.angelone.in/news/economy/rbi-issues-domestic-money-transfer-directions-2026-with-updated-limits-walk-in-neft-up-to-50-000"
+  },
+  {
     "headline": "AI Agent Vendors Shift to FTE Pricing at 20-40% of Human Wage Cost",
     "date": "2026-11-12",
     "category": "Product Management",
