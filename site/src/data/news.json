@@ -1,5 +1,45 @@
 [
   {
+    "headline": "BCG Ranks India Second Globally on Healthcare Consumerization at 66",
+    "date": "2026-11-14",
+    "category": "Consulting",
+    "summary": "Boston Consulting Group's (BCG) 10-country survey of nearly 10,000 patients places India second on its Health Care Consumerization Index with a score of 66 (behind China at 72 and ahead of the UAE at 63, Brazil at 62, and Japan at 36), led by Indian millennials at 71 versus Gen Z at 59. Sixty percent of Indian respondents trust AI and online medical information as much as doctors (19 percentage points above the global average) and 61% prefer instant AI or online answers over waiting for a clinician, while 78% want more control over treatment choices and 73% over costs and payment options.",
+    "angle": "Consulting interviewers will challenge you on hospital and pharma commercialization strategy: when 60% of Indian patients trust AI answers as much as doctors and 84% of higher-income patients demand control over treatment choices (with 48% globally willing to pay out-of-pocket for drugs like GLP-1s), traditional doctor-led prescription funnels weaken. If you are advising a private Indian hospital chain or pharma major, how do you build AI triage and transparent self-pay packages that capture D2C patient demand without violating National Medical Commission tele-advisory and prescription norms?",
+    "source": "https://www.medianews4u.com/60-of-indian-consumers-trust-online-health-information-as-much-as-professional-advice-bcg-report/"
+  },
+  {
+    "headline": "Beco Gets 45% of Revenue From Q-Comm, Targets 25,000 Kirana Stores",
+    "date": "2026-11-14",
+    "category": "Marketing",
+    "summary": "Mumbai-based sustainable home-care brand Beco now generates 80% of its sales online, with quick-commerce platforms Blinkit, Zepto, Swiggy Instamart, Flipkart Minutes, and BigBasket contributing 45% of total revenue (up from 30% a year earlier) across 90% of relevant dark stores. After growing FY25 revenue to Rs 108 crore (up from Rs 49.37 crore in FY24) with a Rs 21.7 crore net loss, the company plans to expand from 5,000 general-trade outlets across nine cities to over 25,000 kirana stores to reach Rs 2,000 crore in turnover and a 15–20% category share within four years.",
+    "angle": "Marketing panelists will press you on the channel-margin and working-capital shock when a digital-first FMCG challenger (80% online, 45% quick commerce) tries to scale 5x into 25,000 general-trade kirana stores dominated by HUL's Surf Excel and Vim. How do you fund distributor margins, retailer credit cycles, and low-unit-price trial packs in Tier-2 towns when the business is still burning Rs 21.7 crore on a Rs 108 crore revenue base?",
+    "source": "https://pulse.d2cinsider.com/beco-targets-25000-general-trade-stores-as-quick-commerce-contributes-45-of-revenue/"
+  },
+  {
+    "headline": "JD Sports Hits 98% Shelf Availability With 414-Store RFID Rollout",
+    "date": "2026-11-14",
+    "category": "Operations",
+    "summary": "Sportswear retailer JD Sports, which operates 5,000 stores across 46 countries, deployed Zebra handheld RFID sleds across 414 UK and Ireland stores in three months—going live in its first store in 76 days and scaling at 26 stores per week after a five-store pilot. The system lifted on-shelf availability to 98%, sped up replenishment by 20%, and enabled store staff to move over 95% of inventory from backrooms to the shop floor while replacing 90-to-180-day shrinkage audits with daily or twice-weekly cycle counts.",
+    "angle": "Operations panelists will test how item-level RFID changes omnichannel ship-from-store and 30-minute quick-commerce fulfillment economics when backroom-to-floor stock movement exceeds 95%. When a multi-brand apparel retailer scales to thousands of stores, how do you enforce item-level RFID tag encoding across third-party suppliers (like Nike, Adidas, and New Balance) so tag costs and misreads at receiving docks do not erase the 20% store replenishment labor savings?",
+    "source": "https://www.supplychaindive.com/news/jd-sports-leverages-tech-for-faster-replenishment/874427/"
+  },
+  {
+    "headline": "MSTC Jumps 20% as RBI Grants In-Principle Approval for TReDS Unit",
+    "date": "2026-11-14",
+    "category": "Finance",
+    "summary": "State-backed e-commerce company MSTC hit a 20% upper circuit at Rs 783.85 per share on November 13, 2026 after receiving in-principle Reserve Bank of India (RBI) approval under the Payment and Settlement Systems Act, 2007 to launch a Trade Receivables Discounting System (TReDS) invoice-financing platform for MSMEs. Alongside the regulatory nod, MSTC reported a 51.8% year-on-year rise in September-quarter standalone net profit to Rs 74.61 crore (up from Rs 49.15 crore) on total income of Rs 139.21 crore, taking H1 FY27 net profit to Rs 132.73 crore.",
+    "angle": "Finance interviewers will ask whether the market's 20% single-day re-rating of MSTC overstates the standalone fee economics of a new TReDS license when incumbent exchanges (RXIL, M1xchange, Invoicemart) already control liquidity network effects among banks and NBFCs. How can a PSU-backed entrant use its existing government PSU buyer relationships to onboard anchor corporates and price invoice-discounting transaction fees without compressing its 53.6% net profit margin?",
+    "source": "https://www.angelone.in/news/stocks/mstc-share-price-hits-20-upper-circuit-rbi-gives-in-principle-approval-for-treds-business"
+  },
+  {
+    "headline": "Zaggle Q2 Revenue Rises 34% to Rs 580 Cr as Cash Flow Turns Green",
+    "date": "2026-11-14",
+    "category": "Product Management",
+    "summary": "Indian B2B spend-management fintech Zaggle grew Q2 FY27 consolidated revenue 34.2% year-on-year to Rs 5,799 million (crossing Rs 1,000 crore in H1 revenue at Rs 10,031 million) across 4,236 corporate clients and 4.08 million users (under 1.5% churn), while turning consolidated operating cash flow positive for the first time at Rs 50.5 million. However, gross margin fell from 45.4% to 39.8% and adjusted EBITDA margin dropped from 10.8% to 7.7% (Rs 446 million) due to gross-accounted Propel reward redemptions (up 49.5% to Rs 3,686 million), Rs 680 million Dice Technology integration costs, and a Rs 27.8 million EBITDA loss at consumer UPI app Zagg.Money.",
+    "angle": "Product interviewers will press you on the monetization mix and working-capital tradeoff inside an embedded B2B fintech platform: Propel loyalty points grew 49.5% to 63.6% of total revenue, yet Ind AS gross accounting and delayed corporate reimbursements dragged gross margins down 560 basis points. How should a PM use the newly acquired Dice procurement workflow and AI decision tools to upsell high-margin SaaS seat fees (just Rs 159 million in Q2) while firing working-capital-heavy enterprise reward accounts?",
+    "source": "https://www.investing.com/news/company-news/zaggle-q2-fy27-slides-34-revenue-growth-cash-flow-turns-positive-93CH-5025269"
+  },
+  {
     "headline": "Bobba Plans Rs 250 Cr Devanahalli Hub for Pay-As-You-Store Model",
     "date": "2026-11-13",
     "category": "Operations",
