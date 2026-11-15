@@ -1,5 +1,45 @@
 [
   {
+    "headline": "Cabinet Extends Rs 9,111 Cr Credit Guarantee Funds Until March 2031",
+    "date": "2026-11-15",
+    "category": "Finance",
+    "summary": "The Union Cabinet extended the Credit Guarantee Fund for Micro Units (CGFMU) and the Stand-Up India guarantee scheme through March 31, 2031, allocating a Rs 5,000 crore CGFMU corpus to back over Rs 12.5 lakh crore in collateral-free Mudra loans of up to Rs 20 lakh (building on 60.36 crore sanctioned loans worth Rs 43.34 lakh crore since 2016). The Cabinet also approved a Rs 4,111 crore Stand-Up India guarantee corpus for Rs 10 lakh to Rs 1 crore greenfield loans to women, SC, and ST entrepreneurs, standardizing the annual guarantee fee at 0.50% with zero risk premium and raising default cover to 85%.",
+    "angle": "Finance interviewers will test the moral-hazard and credit-pricing math of sovereign guarantee funds: when the government caps the Stand-Up India guarantee fee at a flat 0.50% without risk-based pricing and covers 85% of defaults across two mandated greenfield loans per bank branch, how does a bank's credit committee prevent adverse selection? How does an 85% NCGTC sovereign guarantee alter risk-weighted assets (RWA) and net credit cost for PSU versus private microfinance lenders?",
+    "source": "https://www.startuplanes.com/post/union-cabinet-approves-extension-of-credit-guarantee-funds-for-mudra-and-stand-up-india-schemes"
+  },
+  {
+    "headline": "KPMG Tax and Audit Outgrow Advisory 2x Across $39.8B Revenue Base",
+    "date": "2026-11-15",
+    "category": "Consulting",
+    "summary": "KPMG's 276,030-person global network grew FY25 aggregated revenue 5.1% in local currency to $39.8 billion, with regulated Tax & Legal (up 7.5% to $9.3 billion) and Audit (up 6.0% to $14.1 billion) growing more than twice as fast as Advisory (up 2.9% to $16.4 billion). Supported by a three-year $4.2 billion investment plan, KPMG embedded AI agents into its KPMG Clara audit platform for over 95,000 auditors, launched the Microsoft-based KPMG Workbench with 50 live agents (and nearly 1,000 in development), and partnered with Anthropic to deploy Claude across its Digital Gateway tax suite.",
+    "angle": "Strategy interviewers will ask why regulated Audit (+6.0%) and Tax & Legal (+7.5%) are outgrowing discretionary Advisory (+2.9%) at a Big Four firm during the generative AI wave. Because statutory audits and tax filings require a licensed human partner's legal sign-off that AI cannot unbundle—and auditor independence rules bar cross-selling consulting to audit clients—how should a Big Four partner price AI-accelerated audit and tax managed services when KPMG Clara agents cut junior staff hours?",
+    "source": "https://fourweekmba.com/kpmg-business-model/"
+  },
+  {
+    "headline": "Mahindra Logistics Names Turra CEO as Q2 Revenue Hits Rs 2,095 Cr",
+    "date": "2026-11-15",
+    "category": "Operations",
+    "summary": "Mahindra Logistics Limited appointed IIM Bangalore alumnus and former BCG partner Mohammed Turra as Managing Director and CEO for a five-year term starting December 16, 2026, succeeding 26-year Mahindra veteran Hemant Sikka. The listed third-party logistics (3PL) operator grew September-quarter consolidated revenue 24% year-on-year to Rs 2,095 crore and posted Rs 26.2 crore in profit after tax across 22 million sq-ft of warehousing space and roughly 600 operating locations.",
+    "angle": "Operations panelists will zero in on Mahindra Logistics' thin 1.25% net profit margin (Rs 26.2 crore PAT on Rs 2,095 crore quarterly revenue) despite operating 22 million sq-ft of warehousing across 600 sites. If you step in as CEO of an asset-light Indian 3PL where parent auto volumes and B2B express acquisitions drive top-line growth, what operational levers—warehouse automation, multi-client space pooling, or line-haul fleet utilization—must you pull to expand PAT margins toward 3–4%?",
+    "source": "https://www.logisticsinsider.in/mahindra-logistics-mohammed-turra-md-ceo/"
+  },
+  {
+    "headline": "SaaS Vendors Charging Extra for AI Grow ARR 27% vs 17% Bundlers",
+    "date": "2026-11-15",
+    "category": "Product Management",
+    "summary": "KeyBanc Capital Markets' 17th annual AI x Software Benchmark shows software firms charging separately for AI posted 27% median ARR growth in 2025 versus 17% for companies bundling AI into existing plans, yet separate monetization has not lifted net dollar retention and AI represents just 12% of total ARR. Meanwhile, 44% of vendors overspent their AI budgets (24% by over 20%) due to token usage—dragging median gross margin down to 66% at firms spending over 5% of revenue on AI versus 78% at firms spending under 2%—while 57% report customers building internal alternatives with AI coding tools.",
+    "angle": "Product interviewers will press you on the renewal trap uncovered by KeyBanc: charging separately for AI boosts initial ARR growth by 10 percentage points (27% versus 17%), but brings zero net dollar retention lift while 57% of enterprise buyers use AI coding tools to build DIY replacements. When token overruns slash gross margins by 1,200 basis points (from 78% to 66%), how should a SaaS PM package AI features—bundled for retention or metered as a paid add-on—before the first annual renewal cohort churns?",
+    "source": "https://salestechedition.com/articles/keybanc-software-benchmark-charging-separately-ai-arr-growth-2026/"
+  },
+  {
+    "headline": "Tata Consumer Deploys AI Sales Agents as GCPL Trims Trade Stock",
+    "date": "2026-11-15",
+    "category": "Marketing",
+    "summary": "Tata Consumer Products equipped 1,600 to 1,700 field salespeople with an AI sales companion for SKU-level recommendations and deployed automated voice agents to capture kirana orders when reps miss scheduled store visits, targeting a full salesforce rollout by December. Meanwhile, Britannia spun out e-commerce as a standalone unit generating 7% of revenue (up from 6% in FY26) to sell premium packs above Rs 5 and Rs 10 price points, while Godrej Consumer Products (GCPL) took a 150-basis-point hit to Q2 FY27 standalone growth to cut distributor channel inventory.",
+    "angle": "Marketing panelists will press you on the incentive conflict between primary sales (billing to distributors) and secondary or tertiary consumer offtake: why would GCPL voluntarily sacrifice 150 bps of quarterly top-line growth to destock trade channels? When quick commerce and e-commerce reach 7% of an FMCG major's sales and carry premium packs, how do you redesign field-rep commissions and AI voice-order routing so general-trade distributors do not suffer margin cannibalization?",
+    "source": "https://www.startuplanes.com/post/fmcg-companies-rethink-sales-strategies-as-retail-channels-evolve"
+  },
+  {
     "headline": "BCG Ranks India Second Globally on Healthcare Consumerization at 66",
     "date": "2026-11-14",
     "category": "Consulting",
