@@ -44,6 +44,12 @@ export const BING_SITE_VERIFICATION = '8AE472167560C6B10D02A15F64EA2389';
  */
 export const UMAMI_WEBSITE_ID = 'df2f7d8f-549a-412b-a2d5-be4d82ab4426';
 
+/**
+ * Microsoft Clarity analytics (session recordings, heatmaps, scroll depth).
+ * Configured via Bing Webmaster Tools integration.
+ */
+export const CLARITY_PROJECT_ID = 'zep5vkb77s';
+
 // Google is verified twice over, deliberately: the meta tag above and the file
 // at public/googlea1340fe9bfe1e41a.html, which deploys to the site root. Either
 // alone is sufficient. Google's instruction is not to remove the file even
