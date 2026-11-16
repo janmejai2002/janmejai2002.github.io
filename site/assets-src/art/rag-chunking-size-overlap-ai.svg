@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" role="img">
+  <title>Naive Fixed Chunk Cut Severing Context vs Overlapping Recursive Window Preserving Meaning</title>
+  <desc>Two horizontal rows compare document splitting: in the top row, three butt-joined ink rectangles sever a central policy block at x=640, causing the right half to drop out of alignment; in the bottom row, three rectangles share plum overlap zones that enclose the entire policy block intact.</desc>
+  <defs>
+    <filter id="grain" x="0" y="0" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch"/>
+    </filter>
+  </defs>
+  <rect width="1600" height="900" fill="{{paper}}"/>
+  <g stroke="{{border}}" stroke-width="1" opacity="0.55">
+    <line x1="120" y1="260" x2="1480" y2="260"/>
+    <line x1="120" y1="450" x2="1480" y2="450" stroke-dasharray="6 6"/>
+    <line x1="120" y1="640" x2="1480" y2="640"/>
+    <line x1="640" y1="100" x2="640" y2="800"/>
+    <line x1="1040" y1="100" x2="1040" y2="800"/>
+  </g>
+  <g stroke="{{ink}}" stroke-width="2.2" fill="none">
+    <rect x="200" y="170" width="440" height="180"/>
+    <rect x="640" y="170" width="400" height="180"/>
+    <rect x="1040" y="170" width="360" height="180"/>
+    <rect x="520" y="230" width="116" height="60"/>
+    <rect x="644" y="275" width="116" height="60" stroke-dasharray="5 5"/>
+    <line x1="640" y1="140" x2="640" y2="380" stroke-width="3"/>
+    <rect x="200" y="550" width="490" height="180"/>
+    <rect x="590" y="550" width="500" height="180"/>
+    <rect x="990" y="550" width="410" height="180"/>
+  </g>
+  <g stroke="{{plum}}" stroke-width="3.2" fill="none">
+    <rect x="590" y="550" width="100" height="180"/>
+    <rect x="990" y="550" width="100" height="180"/>
+    <rect x="605" y="610" width="240" height="60"/>
+    <line x1="640" y1="260" x2="640" y2="610" stroke-dasharray="4 8" opacity="0.5"/>
+  </g>
+  <g fill="{{ink}}">
+    <circle cx="520" cy="260" r="5"/>
+    <circle cx="636" cy="260" r="5"/>
+    <circle cx="644" cy="305" r="5"/>
+  </g>
+  <g fill="{{plum}}">
+    <circle cx="605" cy="640" r="6"/>
+    <circle cx="725" cy="640" r="7"/>
+    <circle cx="845" cy="640" r="6"/>
+    <circle cx="640" cy="550" r="6"/>
+    <circle cx="1040" cy="550" r="6"/>
+  </g>
+  <rect width="1600" height="900" filter="url(#grain)" opacity="0.05"/>
+</svg>
