@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" role="img">
+<title>Blackwell Roofline Balance Point Schematic</title>
+<desc>Minimalist geometric roofline plot depicting a linear compute trajectory intersecting a raised memory-fetch line at an offset cinnabar seal.</desc>
+<defs>
+<filter id="grain" x="0" y="0" width="100%" height="100%">
+<feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch"/>
+</filter>
+</defs>
+<rect width="1600" height="900" fill="{{paper}}"/>
+<rect x="120" y="100" width="1360" height="700" fill="none" stroke="{{border}}" stroke-width="1"/>
+<line x1="220" y1="720" x2="1380" y2="720" stroke="{{ink}}" stroke-width="2"/>
+<line x1="220" y1="160" x2="220" y2="720" stroke="{{ink}}" stroke-width="2"/>
+<line x1="220" y1="540" x2="1380" y2="540" stroke="{{border}}" stroke-width="1" stroke-dasharray="4,8"/>
+<line x1="220" y1="360" x2="1380" y2="360" stroke="{{border}}" stroke-width="1" stroke-dasharray="4,8"/>
+<line x1="600" y1="160" x2="600" y2="720" stroke="{{border}}" stroke-width="1" stroke-dasharray="4,8"/>
+<line x1="980" y1="160" x2="980" y2="720" stroke="{{border}}" stroke-width="1" stroke-dasharray="4,8"/>
+<line x1="220" y1="720" x2="820" y2="395" stroke="{{ink}}" stroke-width="2.5"/>
+<line x1="890" y1="357" x2="1340" y2="180" stroke="{{ink}}" stroke-width="2.5"/>
+<line x1="220" y1="500" x2="1340" y2="275" stroke="{{ink}}" stroke-width="2"/>
+<circle cx="855" cy="376" r="14" fill="{{paper}}" stroke="{{hanko}}" stroke-width="3"/>
+<rect x="833" y="398" width="44" height="44" fill="none" stroke="{{hanko}}" stroke-width="3"/>
+<circle cx="855" cy="420" r="6" fill="{{hanko}}"/>
+<rect width="1600" height="900" filter="url(#grain)" opacity="0.05"/>
+</svg>
