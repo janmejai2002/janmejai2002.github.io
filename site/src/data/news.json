@@ -1,5 +1,45 @@
 [
   {
+    "headline": "AI Agents Drive 70% of New Supabase DBs as Seat SaaS NRR Hits 88%",
+    "date": "2026-11-16",
+    "category": "Product Management",
+    "summary": "LeadWave's 2026-backed SaaS benchmark reports that AI products rose from 32% of software company revenue in 2025 to a projected 42% in 2026 (at a 53% gross margin, up from 45%, per ICONIQ), while seat-based incumbent ZoomInfo saw Q3 2026 revenue drop 3% year-on-year with net revenue retention falling to 88% as hybrid pricing reached 37% of B2B vendors. Autonomous coding and chat agents have become the primary acquisition channel for developer platforms, initiating over 60% of Vercel deployments (up from 3% in January 2026), 70% of new Supabase databases (4 million monthly), 70% of Stripe CLI API requests, and 43% of Tally user sign-ups.",
+    "angle": "Product interviewers will press you on how B2B growth loops and monetization change when autonomous coding agents—not human developers—create 70% of new databases and 60% of cloud deployments. If your next customer is an LLM agent selecting tools via MCP servers, CLIs, and llms.txt files while seat-based NRR drops to 88%, how do you redesign onboarding, post-trained vertical models, and per-task credit pricing to defend gross margins above 53%?",
+    "source": "https://getleadwave.io/blog/saas-trends"
+  },
+  {
+    "headline": "Cars24 Festive Sales Jump 44% as 72% of Buyers Are First-Timers",
+    "date": "2026-11-16",
+    "category": "Marketing",
+    "summary": "India's pre-owned car sales reached 5.5 lakh to 6 lakh units during the 2026 Navratri-Diwali season (up from under 5 lakh last year), with Cars24 selling 19,039 vehicles—a 44% jump over 13,221 units a year ago—and disbursing over Rs 300 crore in loans at 55% financing penetration. Seventy-two percent of Cars24 buyers purchased their first car, 40% came from rural pincodes, and women buyers rose from 31% to 36%, while petrol (65% demand versus 58% supply leads) and CNG/EV models (over 15% bookings versus 10% supply leads) faced inventory shortages.",
+    "angle": "Marketing panelists will press you on how an organized used-car platform positions its brand when 72% of buyers are first-time car owners in rural and Tier-2 markets bypassing entry-level new hatchbacks, while young urban entrepreneurs trade up to Rs 30–60 lakh pre-owned German luxury SUVs. When CNG and EV buyer bookings (15%+) outstrip seller supply leads (10%) and luxury buyers shun used EVs over battery-replacement fears, how do you use targeted trade-in incentives and battery-health warranties to close the supply gap?",
+    "source": "https://www.startuplanes.com/post/first-time-buyers-and-easy-financing-drive-india-s-used-car-sales-past-5-5-lakh-units-during-festive-season"
+  },
+  {
+    "headline": "Gartner Forecasts 1.7M Net AI Jobs by 2030 Amid 5M Deferred Hires",
+    "date": "2026-11-16",
+    "category": "Consulting",
+    "summary": "Gartner projects artificial intelligence will create 10.6 million new roles and eliminate 8.9 million jobs globally by 2030—a net gain of 1.7 million positions—while requiring 435.5 million workers (over 20% of the global workforce) to adapt their daily workflows. However, business and IT leaders deferred creating 1.3 million positions in 2026 (alongside 2.2 million jobs lost and 1.6 million gained) on the way to 5 million cumulative deferred hires by 2030, with 2030 job gains versus losses splitting across asset-intensive industries (+6.4 million versus -6.0 million), technology (+1.9 million versus -0.4 million), and the public sector (+0.4 million versus -0.9 million).",
+    "angle": "Consulting interviewers will probe the gap between Gartner's 2030 net job gain (+1.7 million) and the 2026 reality where enterprises lost 2.2 million jobs, created 1.6 million, and froze 1.3 million new openings. When advising a CHRO or public-sector ministry—where AI will eliminate 0.9 million roles against just 0.4 million gains—how do you redesign workforce planning for 435.5 million existing employees when 5 million entry-level and expansion roles are quietly never opened?",
+    "source": "https://www.startuplanes.com/post/gartner-projects-ai-to-create-10-6-million-jobs-and-eliminate-8-9-million-globally-by-2030"
+  },
+  {
+    "headline": "GreenLine Deploys Electric Heavy Trucks for Kirloskar Plant Freight",
+    "date": "2026-11-16",
+    "category": "Operations",
+    "summary": "Essar Group venture GreenLine Mobility Solutions partnered with Kirloskar Ferrous Industries at its Taloja, Navi Mumbai facility to deploy electric heavy commercial trucks for inter-plant goods movement while keeping liquefied natural gas (LNG) for long-haul corridors. GreenLine operates a fleet of over 1,200 LNG and electric heavy trucks across steel, cement, mining, FMCG, and chemical routes—having logged more than 100 million cumulative kilometres and cut over 30,000 tonnes of carbon dioxide emissions—supported by a national LNG refueling network built by subsidiary Ultra Gas and Energy Ltd.",
+    "angle": "Operations panelists will challenge you on powertrain segmentation in heavy industrial freight: why does GreenLine restrict battery-electric heavy trucks to fixed inter-plant loops like Kirloskar's Taloja shuttle while relying on LNG trucks for long-haul steel and cement corridors? When evaluating Scope 3 decarbonization for a heavy manufacturer, how do payload battery weight penalties, charging dwell times, and captive LNG station capex determine the breakeven distance between electric and LNG trucking?",
+    "source": "https://www.startuplanes.com/post/greenline-deploys-electric-trucks-for-kirloskar-ferrous-logistics-operations"
+  },
+  {
+    "headline": "India Reclaims $5.4T Fifth-Largest Stock Market on Rs 65,735 Cr FPI",
+    "date": "2026-11-16",
+    "category": "Finance",
+    "summary": "India overtook Taiwan to regain its rank as the world's fifth-largest equity market at $5.4 trillion after adding $640 billion in market value since late October, with the Nifty 50 rising 9.55% in November to an eight-month high of 25,255.05. Foreign portfolio investors (FPIs) bought a net Rs 65,735 crore of Indian shares through November 11—while domestic institutional investors (DIIs) sold Rs 40,504 crore—after foreign funds pulled $30.68 billion from Taiwan and $14.59 billion from South Korea in October and as 35 Nifty 50 firms posted 22% year-on-year Q2 earnings growth alongside a 19% Brent crude drop to $92 per barrel.",
+    "angle": "Finance interviewers will test your reading of cross-border institutional liquidity: why did FPIs dump $45.27 billion across semiconductor-heavy Taiwan and South Korea in October to buy Rs 65,735 crore of Indian equities, while DIIs simultaneously booked Rs 40,504 crore in profits? If global AI hardware capex fears ease or Brent crude rebounds from $92 back toward $113, how vulnerable is India's $5.4 trillion market valuation to a sudden FPI rotation back into North Asian hardware stocks?",
+    "source": "https://www.startuplanes.com/post/india-overtakes-taiwan-to-become-world-s-fifth-largest-stock-market-following-market-recovery"
+  },
+  {
     "headline": "Cabinet Extends Rs 9,111 Cr Credit Guarantee Funds Until March 2031",
     "date": "2026-11-15",
     "category": "Finance",
