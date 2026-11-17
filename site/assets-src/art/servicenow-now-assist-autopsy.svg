@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" role="img">
+  <title>ServiceNow Assist Tiers and Loop Breaker</title>
+  <desc>Minimalist geometric diagram depicting three escalating workflow blocks and a recursive feedback arc severed by a vertical moss green kill-switch bar.</desc>
+  <defs>
+    <filter id="grain" x="0" y="0" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch"/>
+    </filter>
+  </defs>
+  <rect width="1600" height="900" fill="{{paper}}"/>
+  <path d="M100,100h1400v700h-1400zM100,450h1400M560,100v700M1080,100v700" fill="none" stroke="{{border}}" stroke-width="1"/>
+  <rect x="200" y="560" width="220" height="90" fill="{{ink}}" fill-opacity="0.06" stroke="{{ink}}" stroke-width="2"/>
+  <rect x="200" y="420" width="220" height="120" fill="{{ink}}" fill-opacity="0.10" stroke="{{ink}}" stroke-width="2"/>
+  <rect x="200" y="210" width="220" height="190" fill="{{moss}}" fill-opacity="0.20" stroke="{{moss}}" stroke-width="2.5"/>
+  <line x1="420" y1="305" x2="780" y2="305" stroke="{{ink}}" stroke-width="2"/>
+  <circle cx="880" cy="450" r="145" fill="none" stroke="{{ink}}" stroke-width="2"/>
+  <path d="M880,305 A145,145 0 1,1 755,525" fill="none" stroke="{{moss}}" stroke-width="3" stroke-dasharray="8,6"/>
+  <line x1="1080" y1="160" x2="1080" y2="740" stroke="{{moss}}" stroke-width="3"/>
+  <rect x="1055" y="420" width="50" height="60" fill="{{moss}}" fill-opacity="0.25" stroke="{{moss}}" stroke-width="2"/>
+  <line x1="1105" y1="450" x2="1360" y2="450" stroke="{{ink}}" stroke-width="2"/>
+  <circle cx="1360" cy="450" r="12" fill="{{ink}}"/>
+  <rect width="1600" height="900" filter="url(#grain)" opacity="0.05"/>
+</svg>
