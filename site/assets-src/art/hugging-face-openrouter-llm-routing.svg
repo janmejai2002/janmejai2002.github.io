@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" role="img">
+  <title>OpenRouter Failover Routing and Provider Pinning on Hugging Face</title>
+  <desc>A left-hand client node connects into a central switching circle at x=640: the upper path hits a capacity barrier and reroutes via a bold mizu arc into the middle pinned provider block with a cache loop, while the lower dashed path passes through an unclosed gate into an unvetted provider box.</desc>
+  <defs>
+    <filter id="grain" x="0" y="0" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch"/>
+    </filter>
+  </defs>
+  <rect width="1600" height="900" fill="{{paper}}"/>
+  <g stroke="{{border}}" stroke-width="1" opacity="0.55">
+    <line x1="120" y1="220" x2="1480" y2="220"/>
+    <line x1="120" y1="450" x2="1480" y2="450"/>
+    <line x1="120" y1="680" x2="1480" y2="680"/>
+    <line x1="640" y1="100" x2="640" y2="800"/>
+    <line x1="1020" y1="100" x2="1020" y2="800" stroke-dasharray="6 6"/>
+  </g>
+  <g stroke="{{ink}}" stroke-width="2.2" fill="none">
+    <rect x="160" y="380" width="180" height="140"/>
+    <circle cx="640" cy="450" r="90"/>
+    <rect x="1180" y="150" width="220" height="140"/>
+    <rect x="1180" y="610" width="220" height="140" stroke-dasharray="6 6"/>
+    <path d="M 705 388 C 800 220, 880 220, 960 220"/>
+    <line x1="960" y1="190" x2="960" y2="250" stroke-width="3.5"/>
+    <path d="M 705 512 C 820 680, 960 680, 1180 680" stroke-dasharray="7 6"/>
+    <line x1="1020" y1="620" x2="1020" y2="655" stroke-width="3"/>
+  </g>
+  <g stroke="{{mizu}}" stroke-width="3.4" fill="none">
+    <line x1="340" y1="450" x2="550" y2="450"/>
+    <line x1="730" y1="450" x2="1180" y2="450"/>
+    <path d="M 960 220 C 960 340, 990 450, 1080 450"/>
+    <rect x="1180" y="380" width="220" height="140"/>
+    <circle cx="1290" cy="450" r="36"/>
+    <rect x="1002" y="432" width="36" height="36"/>
+  </g>
+  <g fill="{{ink}}">
+    <circle cx="960" cy="220" r="6"/>
+    <circle cx="1180" cy="680" r="6"/>
+  </g>
+  <g fill="{{mizu}}">
+    <circle cx="340" cy="450" r="6"/>
+    <circle cx="550" cy="450" r="6"/>
+    <circle cx="640" cy="450" r="7"/>
+    <circle cx="730" cy="450" r="6"/>
+    <circle cx="1180" cy="450" r="7"/>
+    <circle cx="1290" cy="450" r="6"/>
+  </g>
+  <rect width="1600" height="900" filter="url(#grain)" opacity="0.05"/>
+</svg>
