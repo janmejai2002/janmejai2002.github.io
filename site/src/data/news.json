@@ -1,5 +1,45 @@
 [
   {
+    "headline": "Bain Survey Finds Only 15% of Hospitals Cut Costs 10%+ Using AI",
+    "date": "2026-11-17",
+    "category": "Consulting",
+    "summary": "Bain & Company's 2026 survey of 100 hospital administrators, 400 physicians, and 100 nurses found that while 62% of hospitals allocate 5% to 25% of their IT budgets to AI, only 42% can measure ROI and just 15% achieved cost savings of 10% to 20%. Returns lag because 52% of providers bolt standalone AI tools onto isolated tasks while only 10% redesign workflows end-to-end, 63% fail to link workflow changes to workforce planning, and 85% of clinicians face data gaps.",
+    "angle": "A consulting case panel will ask why 46% of healthcare systems stay stuck in AI pilot mode and how you would structure an end-to-end workflow and workforce redesign to turn 5% IT budget commitments into measurable margin gains.",
+    "source": "https://www.bain.com/insights/ai-isnt-paying-off-yet-for-healthcare-providers-us-front-line-of-healthcare-2026/"
+  },
+  {
+    "headline": "Diwali Ad CPCs Jump 83% Even as Online Retail Sales Grow Just 2%",
+    "date": "2026-11-17",
+    "category": "Marketing",
+    "summary": "Criteo's Diwali 2026 study shows Indian online retail sales in the two weeks before the festival grew 2% year-on-year and averaged 30% above the September 1-14 baseline, led by unit jumps in baby outerwear (+205%), table runners (+180%), and candle holders (+178%). Over the same two-week window, average cost per click rose 62% and CPM climbed 38%, peaking on Diwali day at 83% and 65% above the baseline.",
+    "angle": "An XLRI marketing panel will ask how a brand manager should allocate festive ad budgets between early-September discovery waves and peak Diwali week when CPC inflation (+83%) outpaces top-line category growth (+2%).",
+    "source": "https://www.medianews4u.com/online-retail-sales-rise-2-during-diwali-2026-as-home-fashion-and-gifting-categories-record-gains-criteo/"
+  },
+  {
+    "headline": "NSE Valuation Tops Rs 5.11 Lakh Crore on 22.8% Q2 Profit Growth",
+    "date": "2026-11-17",
+    "category": "Finance",
+    "summary": "National Stock Exchange of India shares rose 3.84% to Rs 2,066.40 and touched a 52-week intraday high of Rs 2,074.00 on November 16, 2026, taking full market capitalisation to Rs 5,11,409.25 crore on Rs 723.75 crore in turnover. For Q2 FY27, NSE's net profit grew 22.8% year-on-year to Rs 2,577.62 crore on Rs 4,554.46 crore in total income, though profit fell 17.4% sequentially from Q1 FY27's Rs 3,120.08 crore.",
+    "angle": "A finance panel will test how you value an exchange monopoly like NSE when year-on-year profit grows 22.8% but sequential earnings drop 17.4% amid tighter derivatives trading norms.",
+    "source": "https://www.angelone.in/news/stocks/nse-share-price-gains-over-3-hits-new-high-in-intraday-trading-on-november-16-2026"
+  },
+  {
+    "headline": "Quick-Commerce Dark Stores Push Frozen Food Sales Up 88% to $376M",
+    "date": "2026-11-17",
+    "category": "Operations",
+    "summary": "Redseer Strategy Consultants estimates frozen ready-to-cook sales on India's quick-commerce platforms rose 88% year-on-year to $376 million in 2025, with vegetarian items making up 47% of demand and frozen snacks and peas contributing 40%. Quick-commerce networks reached roughly 6,280 centralized dark stores by January 2026, bypassing neighbourhood kirana freezer constraints inside a Rs 426 billion cold-storage market backed by 291 operational government-approved cold-chain projects.",
+    "angle": "An operations panel will ask you to compare the unit economics of running centralized freezer dark stores across 6,280 locations versus subsidizing cold-chain cabinets across fragmented general-trade kiranas.",
+    "source": "https://www.sial-network.com/en/trends/Newsroom/india-frozen-food-qsr-everyday-consumption"
+  },
+  {
+    "headline": "Veritone Stock Drops 24% as Consumption AI Revenue Swings Hit ARR",
+    "date": "2026-11-17",
+    "category": "Product Management",
+    "summary": "Enterprise AI vendor Veritone saw its shares plunge 24.14% to $0.3426 on November 16, 2026 after Q3 2026 revenue fell 30% year-on-year to $18.6 million and total ARR dropped 12.6% to $55.9 million despite gross revenue retention above 90%. While SaaS subscriptions supplied $41.1 million (73%) of ARR across 2,775 customers, lumpy hyperscaler training schedules in its consumption-based Veritone Data Refinery unit cut new bookings 43.1% to $10.8 million and forced 100+ job cuts.",
+    "angle": "A product management panel will press you on how an AI B2B platform should price and package consumption-based data pipelines alongside recurring SaaS contracts so hyperscaler budget swings do not destabilize ARR.",
+    "source": "https://ca.investing.com/news/stock-market-news/veritone-q3-2026-slides-ai-platform-growth-amid-revenue-challenges-93CH-4961444"
+  },
+  {
     "headline": "AI Agents Drive 70% of New Supabase DBs as Seat SaaS NRR Hits 88%",
     "date": "2026-11-16",
     "category": "Product Management",
