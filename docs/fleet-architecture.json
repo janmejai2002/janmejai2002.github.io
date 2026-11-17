@@ -1,0 +1,258 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "wAIbi-sabi Multi-Account Autonomous Fleet Architecture",
+    "subtitle": "4-Account Google Pro Swarm with Antigravity Sovereign Orchestration & Zero Manual Intervention",
+    "output": "fleet-architecture.html",
+    "quality_profile": "showcase",
+    "views": [
+      {
+        "id": "full-fleet",
+        "label": "End-to-End Autonomous Fleet",
+        "focus": ["notion_mirror", "antigravity_orch", "fleet_gateway", "gemini_web_fleet", "conductor_relay", "shared_mesh", "gate_auditor", "close_loop", "github_actions", "astro_engine", "github_pages"],
+        "note": "Antigravity dispatches and balances workloads across 4 pooled Google Pro accounts with cloud failover and deterministic gates."
+      },
+      {
+        "id": "gemini-web-dispatch",
+        "label": "Gemini Web Programmatic Bridge",
+        "focus": ["antigravity_orch", "fleet_gateway", "gemini_web_fleet", "shared_mesh"],
+        "note": "Direct programmatic control over Gemini Web sessions with token-free Pro quotas, 2M context, deep research, and instant account rotation."
+      },
+      {
+        "id": "self-healing-flow",
+        "label": "Zero-Wait Self-Healing Loop",
+        "focus": ["github_actions", "gate_auditor", "fleet_gateway", "gemini_web_fleet"],
+        "note": "Gate failure triggers an immediate out-of-band Gemini Web section patch (<60s) instead of waiting for a daily scheduled cron."
+      }
+    ]
+  },
+  "components": [
+    {
+      "id": "notion_mirror",
+      "type": "database",
+      "label": "Notion Status Mirror",
+      "sublabel": "Coverage & Archive DB",
+      "pos": [40, 70],
+      "size": [160, 52],
+      "tag": "Source of Truth"
+    },
+    {
+      "id": "antigravity_orch",
+      "type": "backend",
+      "label": "Antigravity Core",
+      "sublabel": "Local Sovereign Brain",
+      "pos": [260, 70],
+      "size": [150, 52],
+      "tag": "Master Controller"
+    },
+    {
+      "id": "fleet_gateway",
+      "type": "security",
+      "label": "Gemini Fleet Gateway",
+      "sublabel": "ag-gateway proxy :8045",
+      "pos": [470, 70],
+      "size": [150, 52],
+      "tag": "Session Pool"
+    },
+    {
+      "id": "gemini_web_fleet",
+      "type": "cloud",
+      "label": "4x Google Pro Fleet",
+      "sublabel": "Scout, Writer, Gate, Patcher",
+      "pos": [680, 70],
+      "size": [150, 52],
+      "tag": "Gemini Web Mesh"
+    },
+    {
+      "id": "conductor_relay",
+      "type": "backend",
+      "label": "Conductor v2 Relay",
+      "sublabel": "Apps Script Webhooks",
+      "pos": [260, 195],
+      "size": [150, 52],
+      "tag": "Cloud Heartbeat"
+    },
+    {
+      "id": "shared_mesh",
+      "type": "database",
+      "label": "Shared Cloud Mesh",
+      "sublabel": "Google Sheet & Drive",
+      "pos": [470, 195],
+      "size": [150, 52],
+      "tag": "Shared Inbox"
+    },
+    {
+      "id": "gate_auditor",
+      "type": "security",
+      "label": "Deterministic Gate",
+      "sublabel": "rules.mjs & Section Split",
+      "pos": [680, 195],
+      "size": [150, 52],
+      "tag": "70/160 Caps"
+    },
+    {
+      "id": "close_loop",
+      "type": "backend",
+      "label": "Close-Loop Reconciler",
+      "sublabel": "scripts/close-loop.mjs",
+      "pos": [40, 320],
+      "size": [160, 52],
+      "tag": "Verify 200 OK"
+    },
+    {
+      "id": "github_actions",
+      "type": "cloud",
+      "label": "GitHub Actions CI/CD",
+      "sublabel": "sync & deploy workflows",
+      "pos": [260, 320],
+      "size": [150, 52],
+      "tag": "Autonomous CI"
+    },
+    {
+      "id": "astro_engine",
+      "type": "frontend",
+      "label": "Astro 5 SSG Engine",
+      "sublabel": "Zero Client Runtime JS",
+      "pos": [470, 320],
+      "size": [150, 52],
+      "tag": "Production Build"
+    },
+    {
+      "id": "github_pages",
+      "type": "cloud",
+      "label": "GitHub Pages Edge",
+      "sublabel": "janmejai2002.github.io",
+      "pos": [680, 320],
+      "size": [150, 52],
+      "tag": "Live Global CDN"
+    }
+  ],
+  "boundaries": [
+    {
+      "kind": "region",
+      "label": "Sovereign Command Fleet",
+      "wraps": ["notion_mirror", "antigravity_orch", "fleet_gateway", "gemini_web_fleet"]
+    },
+    {
+      "kind": "security-group",
+      "label": "Ingress & Quality Gates",
+      "wraps": ["conductor_relay", "shared_mesh", "gate_auditor"]
+    },
+    {
+      "kind": "region",
+      "label": "Delivery & Edge Verify",
+      "wraps": ["close_loop", "github_actions", "astro_engine", "github_pages"]
+    }
+  ],
+  "connections": [
+    {
+      "id": "notion-to-orch",
+      "from": "notion_mirror",
+      "to": "antigravity_orch",
+      "label": "status sync",
+      "labelDy": -25
+    },
+    {
+      "id": "orch-to-gateway",
+      "from": "antigravity_orch",
+      "to": "fleet_gateway",
+      "label": "IPC route",
+      "labelDy": -19
+    },
+    {
+      "id": "gateway-to-fleet",
+      "from": "fleet_gateway",
+      "to": "gemini_web_fleet",
+      "label": "pools 4x",
+      "labelDy": -19
+    },
+    {
+      "id": "fleet-to-mesh",
+      "from": "gemini_web_fleet",
+      "to": "shared_mesh",
+      "label": "drafts & radar",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "labelAt": [595, 155]
+    },
+    {
+      "id": "mesh-to-conductor",
+      "from": "shared_mesh",
+      "to": "conductor_relay",
+      "label": "sheet trigger",
+      "labelDy": -25
+    },
+    {
+      "id": "conductor-to-actions",
+      "from": "conductor_relay",
+      "to": "github_actions",
+      "label": "wake repo dispatch",
+      "fromSide": "bottom",
+      "toSide": "top",
+      "labelAt": [335, 261]
+    },
+    {
+      "id": "actions-to-astro",
+      "from": "github_actions",
+      "to": "astro_engine",
+      "label": "gated build",
+      "labelDy": -19
+    },
+    {
+      "id": "astro-to-pages",
+      "from": "astro_engine",
+      "to": "github_pages",
+      "label": "deploy dist/",
+      "variant": "emphasis",
+      "labelDy": -19
+    },
+    {
+      "id": "actions-to-closeloop",
+      "from": "github_actions",
+      "to": "close_loop",
+      "label": "verify live",
+      "labelDy": -25
+    },
+    {
+      "id": "closeloop-to-notion",
+      "from": "close_loop",
+      "to": "notion_mirror",
+      "label": "mark Published (200 OK)",
+      "variant": "security",
+      "fromSide": "top",
+      "toSide": "bottom",
+      "labelAt": [120, 220]
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "Local Sovereign Orchestrator",
+      "items": [
+        "Antigravity runs on Windows 11 with direct IPC to Gemini Fleet Gateway",
+        "Holds programmatic control: dispatches jobs, selects models, rotates sessions",
+        "Eliminates manual prompt pasting and GUI management entirely"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "4x Google Pro Specialization",
+      "items": [
+        "Account 1: 24/7 Radar & deep SERP / arXiv intelligence",
+        "Account 2: Long-form drafting with Gemini 4 Argon 2M context",
+        "Account 3: Independent fact verification & tokenized SVG art",
+        "Account 4: Real-time section repair (<60s) & social syndication"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "Zero-Wait Self-Healing",
+      "items": [
+        "Gate violations trigger instant out-of-band Gemini Web repair calls",
+        "Replaces 12-hour cron delay with 45-second section patching",
+        "4 attempts with deterministic section diff checks before human escalation"
+      ]
+    }
+  ]
+}

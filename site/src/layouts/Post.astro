@@ -83,6 +83,14 @@ const TLDR = /<div class="tldr">[\s\S]*?<\/div>/;
 const tldr = rendered.match(TLDR)?.[0].replace(/(<h2\b[^>]*>)[\s\S]*?(<\/h2>)/, '$1The short version$2');
 const prose = tldr ? rendered.replace(TLDR, '') : rendered;
 
+// Extract first point for FAQPage schema
+const faq = question && tldr
+  ? [{
+      question: question,
+      answer: tldr.replace(/<[^>]*>/g, '').split('-').filter(Boolean)[0].trim()
+    }]
+  : [];
+
 // The article's drawing as separate marks, so they can fly together on the plate.
 const art = liveArt(slug);
 
@@ -155,6 +163,7 @@ const related = [...candidates.slice(offset), ...candidates.slice(0, offset)].sl
     { name: TRACK.label, path: `/${track}/` },
     { name: title },
   ]}
+  faq={faq}
   progress={true}
   immersive
   grain={false}

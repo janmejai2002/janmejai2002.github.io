@@ -21,6 +21,7 @@ export interface Props {
   pageType?: string;
   /** Extra schema.org properties merged into the page's WebPage node. */
   schema?: Record<string, unknown>;
+  faq?: { question: string; answer: string }[];
 }
 const {
   title,
@@ -39,6 +40,7 @@ const {
   noindex = false,
   pageType = 'WebPage',
   schema: pageSchema = {},
+  faq = [],
 } = Astro.props;
 
 const canonical = new URL(Astro.url.pathname, Astro.site).href;
@@ -88,11 +90,28 @@ const breadcrumbNode = breadcrumbs?.length
     ]
   : [];
 
+const faqNode = faq.length
+  ? [
+      {
+        '@type': 'FAQPage',
+        mainEntity: faq.map((f) => ({
+          '@type': 'Question',
+          name: f.question,
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: f.answer,
+          },
+        })),
+      },
+    ]
+  : [];
+
 const graph =
   type === 'article'
     ? [
         person,
         ...breadcrumbNode,
+        ...faqNode,
         {
           '@type': 'BlogPosting',
           headline: socialTitle,
@@ -128,6 +147,7 @@ const graph =
       : [
           person,
           ...breadcrumbNode,
+          ...faqNode,
           {
             '@type': pageType,
             '@id': canonical,
