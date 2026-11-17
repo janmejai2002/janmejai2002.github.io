@@ -88,6 +88,14 @@ The following skills are configured in `.agents/skills/` and global config:
 
 ---
 
-## 6. Current handoff
+## 6. Authority Engine (Added 2026-11-17)
+
+- **Controller MCP**: `mcp/waibi-controller` handles autonomous orchestration (Notion/Sheets ↔ NotebookLM ↔ Firecrawl).
+- **Backlink Intelligence**: `site/scripts/backlink-intelligence.mjs` autonomously discovers citation opportunities in technical repositories.
+- **Tracker Widget**: Embeddable asset (`site/src/components/TrackerWidget.astro`) for external site backlink generation.
+
+---
+
+## 7. Current handoff
 
 Before doing any work, read `docs/AGY-HANDOFF.md` (current state and first tasks, 2026-11-11), then `docs/HOW-IT-WORKS.md`. For site design, `docs/DESIGN-SYSTEM.md` overrides older docs. Do not commit or push unless the owner asks in the conversation.
