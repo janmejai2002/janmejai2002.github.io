@@ -1,0 +1,29 @@
+---
+/**
+ * TrackerWidget — A lightweight, embeddable component that showcases 
+ * wAIbi-sabi autopsy data and provides a backlink to the source.
+ */
+
+interface Props {
+  title: string;
+  dataValue: string;
+  sourceUrl: string;
+  sourceTitle: string;
+}
+
+const { title, dataValue, sourceUrl, sourceTitle } = Astro.props;
+---
+
+<div class="tracker-widget" style="border: 1px solid currentColor; padding: 1rem; border-radius: 4px; font-family: monospace;">
+  <div style="font-size: 0.8rem; margin-bottom: 0.5rem;">{title}</div>
+  <div style="font-size: 1.5rem; font-weight: bold; margin-bottom: 0.5rem;">{dataValue}</div>
+  <div style="font-size: 0.7rem;">
+    <a href={sourceUrl} target="_blank" rel="noopener noreferrer">
+      Source: {sourceTitle}
+    </a>
+    <span style="margin: 0 0.5rem;">|</span>
+    <a href="https://janmejai2002.github.io" target="_blank" rel="noopener noreferrer">
+      wAIbi-sabi
+    </a>
+  </div>
+</div>
