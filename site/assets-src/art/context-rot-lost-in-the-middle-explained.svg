@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" role="img">
+  <title>The U-Shaped Attention Curve and Context Rot in the Middle</title>
+  <desc>Nineteen evenly spaced vertical bars along a baseline are spanned by a sweeping U-shaped plum curve that starts high on the left, drops deeply across the center where two bars are broken, and rises again on the right.</desc>
+  <defs>
+    <filter id="grain" x="0" y="0" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch"/>
+    </filter>
+  </defs>
+  <rect width="1600" height="900" fill="{{paper}}"/>
+  <g stroke="{{border}}" stroke-width="1" opacity="0.6">
+    <line x1="160" y1="220" x2="1440" y2="220"/>
+    <line x1="160" y1="450" x2="1440" y2="450"/>
+    <line x1="160" y1="680" x2="1440" y2="680"/>
+    <line x1="800" y1="140" x2="800" y2="760" stroke-dasharray="6 6"/>
+  </g>
+  <line x1="160" y1="680" x2="1440" y2="680" stroke="{{ink}}" stroke-width="2"/>
+  <g stroke="{{ink}}" stroke-width="2">
+    <line x1="200" y1="260" x2="200" y2="680"/>
+    <line x1="266" y1="320" x2="266" y2="680"/>
+    <line x1="332" y1="390" x2="332" y2="680"/>
+    <line x1="398" y1="460" x2="398" y2="680"/>
+    <line x1="464" y1="510" x2="464" y2="680"/>
+    <line x1="530" y1="550" x2="530" y2="680"/>
+    <line x1="596" y1="580" x2="596" y2="680"/>
+    <line x1="662" y1="600" x2="662" y2="680"/>
+    <line x1="728" y1="615" x2="728" y2="645" opacity="0.35"/>
+    <line x1="794" y1="620" x2="794" y2="650" opacity="0.35"/>
+    <line x1="860" y1="615" x2="860" y2="645" opacity="0.35"/>
+    <line x1="926" y1="595" x2="926" y2="680"/>
+    <line x1="992" y1="570" x2="992" y2="680"/>
+    <line x1="1058" y1="540" x2="1058" y2="680"/>
+    <line x1="1124" y1="505" x2="1124" y2="680"/>
+    <line x1="1190" y1="470" x2="1190" y2="680"/>
+    <line x1="1256" y1="435" x2="1256" y2="680"/>
+    <line x1="1322" y1="400" x2="1322" y2="680"/>
+    <line x1="1388" y1="365" x2="1388" y2="680"/>
+  </g>
+  <path d="M 200 260 C 420 560, 620 635, 800 635 C 980 635, 1180 510, 1388 365" fill="none" stroke="{{plum}}" stroke-width="3.5"/>
+  <g fill="{{plum}}">
+    <circle cx="200" cy="260" r="6"/>
+    <circle cx="800" cy="635" r="6"/>
+    <circle cx="1388" cy="365" r="6"/>
+  </g>
+  <rect x="708" y="595" width="172" height="75" fill="none" stroke="{{plum}}" stroke-width="1.5" stroke-dasharray="4 4"/>
+  <rect width="1600" height="900" filter="url(#grain)" opacity="0.05"/>
+</svg>

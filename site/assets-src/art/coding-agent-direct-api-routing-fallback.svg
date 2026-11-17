@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" role="img">
+  <title>Stateless API and Multi-Cloud Failover Bypassing an OAuth Outage</title>
+  <desc>Three horizontal request lines travel from left to right toward a rectangular model block: the top line terminates at a fractured circular OAuth gate, while two lower mizu lines route cleanly through stateless API and cloud IAM nodes into the model block.</desc>
+  <defs>
+    <filter id="grain" x="0" y="0" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch"/>
+    </filter>
+  </defs>
+  <rect width="1600" height="900" fill="{{paper}}"/>
+  <g stroke="{{border}}" stroke-width="1" opacity="0.55">
+    <line x1="140" y1="240" x2="1460" y2="240"/>
+    <line x1="140" y1="450" x2="1460" y2="450"/>
+    <line x1="140" y1="660" x2="1460" y2="660"/>
+    <line x1="420" y1="120" x2="420" y2="780"/>
+    <line x1="680" y1="120" x2="680" y2="780" stroke-dasharray="6 6"/>
+    <line x1="980" y1="120" x2="980" y2="780"/>
+  </g>
+  <rect x="1160" y="180" width="240" height="540" fill="none" stroke="{{ink}}" stroke-width="2.5"/>
+  <g stroke="{{ink}}" stroke-width="2" fill="none">
+    <line x1="200" y1="240" x2="635" y2="240"/>
+    <line x1="725" y1="240" x2="1160" y2="240" stroke-dasharray="5 6" opacity="0.4"/>
+    <path d="M 650 205 A 42 42 0 1 0 715 265"/>
+    <line x1="665" y1="225" x2="695" y2="255"/>
+    <line x1="695" y1="225" x2="665" y2="255"/>
+  </g>
+  <g stroke="{{mizu}}" stroke-width="3.2" fill="none">
+    <path d="M 200 240 C 310 240, 340 450, 420 450"/>
+    <line x1="420" y1="450" x2="1160" y2="450"/>
+    <path d="M 420 450 C 510 450, 560 660, 680 660"/>
+    <line x1="680" y1="660" x2="1160" y2="660"/>
+  </g>
+  <g fill="{{mizu}}">
+    <circle cx="200" cy="240" r="6"/>
+    <circle cx="420" cy="450" r="7"/>
+    <circle cx="680" cy="450" r="6"/>
+    <circle cx="680" cy="660" r="6"/>
+    <circle cx="980" cy="450" r="6"/>
+    <circle cx="980" cy="660" r="6"/>
+    <circle cx="1160" cy="450" r="7"/>
+    <circle cx="1160" cy="660" r="7"/>
+  </g>
+  <rect x="662" y="432" width="36" height="36" fill="none" stroke="{{mizu}}" stroke-width="2"/>
+  <rect x="662" y="642" width="36" height="36" fill="none" stroke="{{mizu}}" stroke-width="2"/>
+  <rect width="1600" height="900" filter="url(#grain)" opacity="0.05"/>
+</svg>

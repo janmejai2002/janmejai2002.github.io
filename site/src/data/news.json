@@ -1,5 +1,205 @@
 [
   {
+    "headline": "Bain Survey Finds Only 15% of Hospitals Cut Costs 10%+ Using AI",
+    "date": "2026-11-17",
+    "category": "Consulting",
+    "summary": "Bain & Company's 2026 survey of 100 hospital administrators, 400 physicians, and 100 nurses found that while 62% of hospitals allocate 5% to 25% of their IT budgets to AI, only 42% can measure ROI and just 15% achieved cost savings of 10% to 20%. Returns lag because 52% of providers bolt standalone AI tools onto isolated tasks while only 10% redesign workflows end-to-end, 63% fail to link workflow changes to workforce planning, and 85% of clinicians face data gaps.",
+    "angle": "A consulting case panel will ask why 46% of healthcare systems stay stuck in AI pilot mode and how you would structure an end-to-end workflow and workforce redesign to turn 5% IT budget commitments into measurable margin gains.",
+    "source": "https://www.bain.com/insights/ai-isnt-paying-off-yet-for-healthcare-providers-us-front-line-of-healthcare-2026/"
+  },
+  {
+    "headline": "Diwali Ad CPCs Jump 83% Even as Online Retail Sales Grow Just 2%",
+    "date": "2026-11-17",
+    "category": "Marketing",
+    "summary": "Criteo's Diwali 2026 study shows Indian online retail sales in the two weeks before the festival grew 2% year-on-year and averaged 30% above the September 1-14 baseline, led by unit jumps in baby outerwear (+205%), table runners (+180%), and candle holders (+178%). Over the same two-week window, average cost per click rose 62% and CPM climbed 38%, peaking on Diwali day at 83% and 65% above the baseline.",
+    "angle": "An XLRI marketing panel will ask how a brand manager should allocate festive ad budgets between early-September discovery waves and peak Diwali week when CPC inflation (+83%) outpaces top-line category growth (+2%).",
+    "source": "https://www.medianews4u.com/online-retail-sales-rise-2-during-diwali-2026-as-home-fashion-and-gifting-categories-record-gains-criteo/"
+  },
+  {
+    "headline": "NSE Valuation Tops Rs 5.11 Lakh Crore on 22.8% Q2 Profit Growth",
+    "date": "2026-11-17",
+    "category": "Finance",
+    "summary": "National Stock Exchange of India shares rose 3.84% to Rs 2,066.40 and touched a 52-week intraday high of Rs 2,074.00 on November 16, 2026, taking full market capitalisation to Rs 5,11,409.25 crore on Rs 723.75 crore in turnover. For Q2 FY27, NSE's net profit grew 22.8% year-on-year to Rs 2,577.62 crore on Rs 4,554.46 crore in total income, though profit fell 17.4% sequentially from Q1 FY27's Rs 3,120.08 crore.",
+    "angle": "A finance panel will test how you value an exchange monopoly like NSE when year-on-year profit grows 22.8% but sequential earnings drop 17.4% amid tighter derivatives trading norms.",
+    "source": "https://www.angelone.in/news/stocks/nse-share-price-gains-over-3-hits-new-high-in-intraday-trading-on-november-16-2026"
+  },
+  {
+    "headline": "Quick-Commerce Dark Stores Push Frozen Food Sales Up 88% to $376M",
+    "date": "2026-11-17",
+    "category": "Operations",
+    "summary": "Redseer Strategy Consultants estimates frozen ready-to-cook sales on India's quick-commerce platforms rose 88% year-on-year to $376 million in 2025, with vegetarian items making up 47% of demand and frozen snacks and peas contributing 40%. Quick-commerce networks reached roughly 6,280 centralized dark stores by January 2026, bypassing neighbourhood kirana freezer constraints inside a Rs 426 billion cold-storage market backed by 291 operational government-approved cold-chain projects.",
+    "angle": "An operations panel will ask you to compare the unit economics of running centralized freezer dark stores across 6,280 locations versus subsidizing cold-chain cabinets across fragmented general-trade kiranas.",
+    "source": "https://www.sial-network.com/en/trends/Newsroom/india-frozen-food-qsr-everyday-consumption"
+  },
+  {
+    "headline": "Veritone Stock Drops 24% as Consumption AI Revenue Swings Hit ARR",
+    "date": "2026-11-17",
+    "category": "Product Management",
+    "summary": "Enterprise AI vendor Veritone saw its shares plunge 24.14% to $0.3426 on November 16, 2026 after Q3 2026 revenue fell 30% year-on-year to $18.6 million and total ARR dropped 12.6% to $55.9 million despite gross revenue retention above 90%. While SaaS subscriptions supplied $41.1 million (73%) of ARR across 2,775 customers, lumpy hyperscaler training schedules in its consumption-based Veritone Data Refinery unit cut new bookings 43.1% to $10.8 million and forced 100+ job cuts.",
+    "angle": "A product management panel will press you on how an AI B2B platform should price and package consumption-based data pipelines alongside recurring SaaS contracts so hyperscaler budget swings do not destabilize ARR.",
+    "source": "https://ca.investing.com/news/stock-market-news/veritone-q3-2026-slides-ai-platform-growth-amid-revenue-challenges-93CH-4961444"
+  },
+  {
+    "headline": "AI Agents Drive 70% of New Supabase DBs as Seat SaaS NRR Hits 88%",
+    "date": "2026-11-16",
+    "category": "Product Management",
+    "summary": "LeadWave's 2026-backed SaaS benchmark reports that AI products rose from 32% of software company revenue in 2025 to a projected 42% in 2026 (at a 53% gross margin, up from 45%, per ICONIQ), while seat-based incumbent ZoomInfo saw Q3 2026 revenue drop 3% year-on-year with net revenue retention falling to 88% as hybrid pricing reached 37% of B2B vendors. Autonomous coding and chat agents have become the primary acquisition channel for developer platforms, initiating over 60% of Vercel deployments (up from 3% in January 2026), 70% of new Supabase databases (4 million monthly), 70% of Stripe CLI API requests, and 43% of Tally user sign-ups.",
+    "angle": "Product interviewers will press you on how B2B growth loops and monetization change when autonomous coding agents—not human developers—create 70% of new databases and 60% of cloud deployments. If your next customer is an LLM agent selecting tools via MCP servers, CLIs, and llms.txt files while seat-based NRR drops to 88%, how do you redesign onboarding, post-trained vertical models, and per-task credit pricing to defend gross margins above 53%?",
+    "source": "https://getleadwave.io/blog/saas-trends"
+  },
+  {
+    "headline": "Cars24 Festive Sales Jump 44% as 72% of Buyers Are First-Timers",
+    "date": "2026-11-16",
+    "category": "Marketing",
+    "summary": "India's pre-owned car sales reached 5.5 lakh to 6 lakh units during the 2026 Navratri-Diwali season (up from under 5 lakh last year), with Cars24 selling 19,039 vehicles—a 44% jump over 13,221 units a year ago—and disbursing over Rs 300 crore in loans at 55% financing penetration. Seventy-two percent of Cars24 buyers purchased their first car, 40% came from rural pincodes, and women buyers rose from 31% to 36%, while petrol (65% demand versus 58% supply leads) and CNG/EV models (over 15% bookings versus 10% supply leads) faced inventory shortages.",
+    "angle": "Marketing panelists will press you on how an organized used-car platform positions its brand when 72% of buyers are first-time car owners in rural and Tier-2 markets bypassing entry-level new hatchbacks, while young urban entrepreneurs trade up to Rs 30–60 lakh pre-owned German luxury SUVs. When CNG and EV buyer bookings (15%+) outstrip seller supply leads (10%) and luxury buyers shun used EVs over battery-replacement fears, how do you use targeted trade-in incentives and battery-health warranties to close the supply gap?",
+    "source": "https://www.startuplanes.com/post/first-time-buyers-and-easy-financing-drive-india-s-used-car-sales-past-5-5-lakh-units-during-festive-season"
+  },
+  {
+    "headline": "Gartner Forecasts 1.7M Net AI Jobs by 2030 Amid 5M Deferred Hires",
+    "date": "2026-11-16",
+    "category": "Consulting",
+    "summary": "Gartner projects artificial intelligence will create 10.6 million new roles and eliminate 8.9 million jobs globally by 2030—a net gain of 1.7 million positions—while requiring 435.5 million workers (over 20% of the global workforce) to adapt their daily workflows. However, business and IT leaders deferred creating 1.3 million positions in 2026 (alongside 2.2 million jobs lost and 1.6 million gained) on the way to 5 million cumulative deferred hires by 2030, with 2030 job gains versus losses splitting across asset-intensive industries (+6.4 million versus -6.0 million), technology (+1.9 million versus -0.4 million), and the public sector (+0.4 million versus -0.9 million).",
+    "angle": "Consulting interviewers will probe the gap between Gartner's 2030 net job gain (+1.7 million) and the 2026 reality where enterprises lost 2.2 million jobs, created 1.6 million, and froze 1.3 million new openings. When advising a CHRO or public-sector ministry—where AI will eliminate 0.9 million roles against just 0.4 million gains—how do you redesign workforce planning for 435.5 million existing employees when 5 million entry-level and expansion roles are quietly never opened?",
+    "source": "https://www.startuplanes.com/post/gartner-projects-ai-to-create-10-6-million-jobs-and-eliminate-8-9-million-globally-by-2030"
+  },
+  {
+    "headline": "GreenLine Deploys Electric Heavy Trucks for Kirloskar Plant Freight",
+    "date": "2026-11-16",
+    "category": "Operations",
+    "summary": "Essar Group venture GreenLine Mobility Solutions partnered with Kirloskar Ferrous Industries at its Taloja, Navi Mumbai facility to deploy electric heavy commercial trucks for inter-plant goods movement while keeping liquefied natural gas (LNG) for long-haul corridors. GreenLine operates a fleet of over 1,200 LNG and electric heavy trucks across steel, cement, mining, FMCG, and chemical routes—having logged more than 100 million cumulative kilometres and cut over 30,000 tonnes of carbon dioxide emissions—supported by a national LNG refueling network built by subsidiary Ultra Gas and Energy Ltd.",
+    "angle": "Operations panelists will challenge you on powertrain segmentation in heavy industrial freight: why does GreenLine restrict battery-electric heavy trucks to fixed inter-plant loops like Kirloskar's Taloja shuttle while relying on LNG trucks for long-haul steel and cement corridors? When evaluating Scope 3 decarbonization for a heavy manufacturer, how do payload battery weight penalties, charging dwell times, and captive LNG station capex determine the breakeven distance between electric and LNG trucking?",
+    "source": "https://www.startuplanes.com/post/greenline-deploys-electric-trucks-for-kirloskar-ferrous-logistics-operations"
+  },
+  {
+    "headline": "India Reclaims $5.4T Fifth-Largest Stock Market on Rs 65,735 Cr FPI",
+    "date": "2026-11-16",
+    "category": "Finance",
+    "summary": "India overtook Taiwan to regain its rank as the world's fifth-largest equity market at $5.4 trillion after adding $640 billion in market value since late October, with the Nifty 50 rising 9.55% in November to an eight-month high of 25,255.05. Foreign portfolio investors (FPIs) bought a net Rs 65,735 crore of Indian shares through November 11—while domestic institutional investors (DIIs) sold Rs 40,504 crore—after foreign funds pulled $30.68 billion from Taiwan and $14.59 billion from South Korea in October and as 35 Nifty 50 firms posted 22% year-on-year Q2 earnings growth alongside a 19% Brent crude drop to $92 per barrel.",
+    "angle": "Finance interviewers will test your reading of cross-border institutional liquidity: why did FPIs dump $45.27 billion across semiconductor-heavy Taiwan and South Korea in October to buy Rs 65,735 crore of Indian equities, while DIIs simultaneously booked Rs 40,504 crore in profits? If global AI hardware capex fears ease or Brent crude rebounds from $92 back toward $113, how vulnerable is India's $5.4 trillion market valuation to a sudden FPI rotation back into North Asian hardware stocks?",
+    "source": "https://www.startuplanes.com/post/india-overtakes-taiwan-to-become-world-s-fifth-largest-stock-market-following-market-recovery"
+  },
+  {
+    "headline": "Cabinet Extends Rs 9,111 Cr Credit Guarantee Funds Until March 2031",
+    "date": "2026-11-15",
+    "category": "Finance",
+    "summary": "The Union Cabinet extended the Credit Guarantee Fund for Micro Units (CGFMU) and the Stand-Up India guarantee scheme through March 31, 2031, allocating a Rs 5,000 crore CGFMU corpus to back over Rs 12.5 lakh crore in collateral-free Mudra loans of up to Rs 20 lakh (building on 60.36 crore sanctioned loans worth Rs 43.34 lakh crore since 2016). The Cabinet also approved a Rs 4,111 crore Stand-Up India guarantee corpus for Rs 10 lakh to Rs 1 crore greenfield loans to women, SC, and ST entrepreneurs, standardizing the annual guarantee fee at 0.50% with zero risk premium and raising default cover to 85%.",
+    "angle": "Finance interviewers will test the moral-hazard and credit-pricing math of sovereign guarantee funds: when the government caps the Stand-Up India guarantee fee at a flat 0.50% without risk-based pricing and covers 85% of defaults across two mandated greenfield loans per bank branch, how does a bank's credit committee prevent adverse selection? How does an 85% NCGTC sovereign guarantee alter risk-weighted assets (RWA) and net credit cost for PSU versus private microfinance lenders?",
+    "source": "https://www.startuplanes.com/post/union-cabinet-approves-extension-of-credit-guarantee-funds-for-mudra-and-stand-up-india-schemes"
+  },
+  {
+    "headline": "KPMG Tax and Audit Outgrow Advisory 2x Across $39.8B Revenue Base",
+    "date": "2026-11-15",
+    "category": "Consulting",
+    "summary": "KPMG's 276,030-person global network grew FY25 aggregated revenue 5.1% in local currency to $39.8 billion, with regulated Tax & Legal (up 7.5% to $9.3 billion) and Audit (up 6.0% to $14.1 billion) growing more than twice as fast as Advisory (up 2.9% to $16.4 billion). Supported by a three-year $4.2 billion investment plan, KPMG embedded AI agents into its KPMG Clara audit platform for over 95,000 auditors, launched the Microsoft-based KPMG Workbench with 50 live agents (and nearly 1,000 in development), and partnered with Anthropic to deploy Claude across its Digital Gateway tax suite.",
+    "angle": "Strategy interviewers will ask why regulated Audit (+6.0%) and Tax & Legal (+7.5%) are outgrowing discretionary Advisory (+2.9%) at a Big Four firm during the generative AI wave. Because statutory audits and tax filings require a licensed human partner's legal sign-off that AI cannot unbundle—and auditor independence rules bar cross-selling consulting to audit clients—how should a Big Four partner price AI-accelerated audit and tax managed services when KPMG Clara agents cut junior staff hours?",
+    "source": "https://fourweekmba.com/kpmg-business-model/"
+  },
+  {
+    "headline": "Mahindra Logistics Names Turra CEO as Q2 Revenue Hits Rs 2,095 Cr",
+    "date": "2026-11-15",
+    "category": "Operations",
+    "summary": "Mahindra Logistics Limited appointed IIM Bangalore alumnus and former BCG partner Mohammed Turra as Managing Director and CEO for a five-year term starting December 16, 2026, succeeding 26-year Mahindra veteran Hemant Sikka. The listed third-party logistics (3PL) operator grew September-quarter consolidated revenue 24% year-on-year to Rs 2,095 crore and posted Rs 26.2 crore in profit after tax across 22 million sq-ft of warehousing space and roughly 600 operating locations.",
+    "angle": "Operations panelists will zero in on Mahindra Logistics' thin 1.25% net profit margin (Rs 26.2 crore PAT on Rs 2,095 crore quarterly revenue) despite operating 22 million sq-ft of warehousing across 600 sites. If you step in as CEO of an asset-light Indian 3PL where parent auto volumes and B2B express acquisitions drive top-line growth, what operational levers—warehouse automation, multi-client space pooling, or line-haul fleet utilization—must you pull to expand PAT margins toward 3–4%?",
+    "source": "https://www.logisticsinsider.in/mahindra-logistics-mohammed-turra-md-ceo/"
+  },
+  {
+    "headline": "SaaS Vendors Charging Extra for AI Grow ARR 27% vs 17% Bundlers",
+    "date": "2026-11-15",
+    "category": "Product Management",
+    "summary": "KeyBanc Capital Markets' 17th annual AI x Software Benchmark shows software firms charging separately for AI posted 27% median ARR growth in 2025 versus 17% for companies bundling AI into existing plans, yet separate monetization has not lifted net dollar retention and AI represents just 12% of total ARR. Meanwhile, 44% of vendors overspent their AI budgets (24% by over 20%) due to token usage—dragging median gross margin down to 66% at firms spending over 5% of revenue on AI versus 78% at firms spending under 2%—while 57% report customers building internal alternatives with AI coding tools.",
+    "angle": "Product interviewers will press you on the renewal trap uncovered by KeyBanc: charging separately for AI boosts initial ARR growth by 10 percentage points (27% versus 17%), but brings zero net dollar retention lift while 57% of enterprise buyers use AI coding tools to build DIY replacements. When token overruns slash gross margins by 1,200 basis points (from 78% to 66%), how should a SaaS PM package AI features—bundled for retention or metered as a paid add-on—before the first annual renewal cohort churns?",
+    "source": "https://salestechedition.com/articles/keybanc-software-benchmark-charging-separately-ai-arr-growth-2026/"
+  },
+  {
+    "headline": "Tata Consumer Deploys AI Sales Agents as GCPL Trims Trade Stock",
+    "date": "2026-11-15",
+    "category": "Marketing",
+    "summary": "Tata Consumer Products equipped 1,600 to 1,700 field salespeople with an AI sales companion for SKU-level recommendations and deployed automated voice agents to capture kirana orders when reps miss scheduled store visits, targeting a full salesforce rollout by December. Meanwhile, Britannia spun out e-commerce as a standalone unit generating 7% of revenue (up from 6% in FY26) to sell premium packs above Rs 5 and Rs 10 price points, while Godrej Consumer Products (GCPL) took a 150-basis-point hit to Q2 FY27 standalone growth to cut distributor channel inventory.",
+    "angle": "Marketing panelists will press you on the incentive conflict between primary sales (billing to distributors) and secondary or tertiary consumer offtake: why would GCPL voluntarily sacrifice 150 bps of quarterly top-line growth to destock trade channels? When quick commerce and e-commerce reach 7% of an FMCG major's sales and carry premium packs, how do you redesign field-rep commissions and AI voice-order routing so general-trade distributors do not suffer margin cannibalization?",
+    "source": "https://www.startuplanes.com/post/fmcg-companies-rethink-sales-strategies-as-retail-channels-evolve"
+  },
+  {
+    "headline": "BCG Ranks India Second Globally on Healthcare Consumerization at 66",
+    "date": "2026-11-14",
+    "category": "Consulting",
+    "summary": "Boston Consulting Group's (BCG) 10-country survey of nearly 10,000 patients places India second on its Health Care Consumerization Index with a score of 66 (behind China at 72 and ahead of the UAE at 63, Brazil at 62, and Japan at 36), led by Indian millennials at 71 versus Gen Z at 59. Sixty percent of Indian respondents trust AI and online medical information as much as doctors (19 percentage points above the global average) and 61% prefer instant AI or online answers over waiting for a clinician, while 78% want more control over treatment choices and 73% over costs and payment options.",
+    "angle": "Consulting interviewers will challenge you on hospital and pharma commercialization strategy: when 60% of Indian patients trust AI answers as much as doctors and 84% of higher-income patients demand control over treatment choices (with 48% globally willing to pay out-of-pocket for drugs like GLP-1s), traditional doctor-led prescription funnels weaken. If you are advising a private Indian hospital chain or pharma major, how do you build AI triage and transparent self-pay packages that capture D2C patient demand without violating National Medical Commission tele-advisory and prescription norms?",
+    "source": "https://www.medianews4u.com/60-of-indian-consumers-trust-online-health-information-as-much-as-professional-advice-bcg-report/"
+  },
+  {
+    "headline": "Beco Gets 45% of Revenue From Q-Comm, Targets 25,000 Kirana Stores",
+    "date": "2026-11-14",
+    "category": "Marketing",
+    "summary": "Mumbai-based sustainable home-care brand Beco now generates 80% of its sales online, with quick-commerce platforms Blinkit, Zepto, Swiggy Instamart, Flipkart Minutes, and BigBasket contributing 45% of total revenue (up from 30% a year earlier) across 90% of relevant dark stores. After growing FY25 revenue to Rs 108 crore (up from Rs 49.37 crore in FY24) with a Rs 21.7 crore net loss, the company plans to expand from 5,000 general-trade outlets across nine cities to over 25,000 kirana stores to reach Rs 2,000 crore in turnover and a 15–20% category share within four years.",
+    "angle": "Marketing panelists will press you on the channel-margin and working-capital shock when a digital-first FMCG challenger (80% online, 45% quick commerce) tries to scale 5x into 25,000 general-trade kirana stores dominated by HUL's Surf Excel and Vim. How do you fund distributor margins, retailer credit cycles, and low-unit-price trial packs in Tier-2 towns when the business is still burning Rs 21.7 crore on a Rs 108 crore revenue base?",
+    "source": "https://pulse.d2cinsider.com/beco-targets-25000-general-trade-stores-as-quick-commerce-contributes-45-of-revenue/"
+  },
+  {
+    "headline": "JD Sports Hits 98% Shelf Availability With 414-Store RFID Rollout",
+    "date": "2026-11-14",
+    "category": "Operations",
+    "summary": "Sportswear retailer JD Sports, which operates 5,000 stores across 46 countries, deployed Zebra handheld RFID sleds across 414 UK and Ireland stores in three months—going live in its first store in 76 days and scaling at 26 stores per week after a five-store pilot. The system lifted on-shelf availability to 98%, sped up replenishment by 20%, and enabled store staff to move over 95% of inventory from backrooms to the shop floor while replacing 90-to-180-day shrinkage audits with daily or twice-weekly cycle counts.",
+    "angle": "Operations panelists will test how item-level RFID changes omnichannel ship-from-store and 30-minute quick-commerce fulfillment economics when backroom-to-floor stock movement exceeds 95%. When a multi-brand apparel retailer scales to thousands of stores, how do you enforce item-level RFID tag encoding across third-party suppliers (like Nike, Adidas, and New Balance) so tag costs and misreads at receiving docks do not erase the 20% store replenishment labor savings?",
+    "source": "https://www.supplychaindive.com/news/jd-sports-leverages-tech-for-faster-replenishment/874427/"
+  },
+  {
+    "headline": "MSTC Jumps 20% as RBI Grants In-Principle Approval for TReDS Unit",
+    "date": "2026-11-14",
+    "category": "Finance",
+    "summary": "State-backed e-commerce company MSTC hit a 20% upper circuit at Rs 783.85 per share on November 13, 2026 after receiving in-principle Reserve Bank of India (RBI) approval under the Payment and Settlement Systems Act, 2007 to launch a Trade Receivables Discounting System (TReDS) invoice-financing platform for MSMEs. Alongside the regulatory nod, MSTC reported a 51.8% year-on-year rise in September-quarter standalone net profit to Rs 74.61 crore (up from Rs 49.15 crore) on total income of Rs 139.21 crore, taking H1 FY27 net profit to Rs 132.73 crore.",
+    "angle": "Finance interviewers will ask whether the market's 20% single-day re-rating of MSTC overstates the standalone fee economics of a new TReDS license when incumbent exchanges (RXIL, M1xchange, Invoicemart) already control liquidity network effects among banks and NBFCs. How can a PSU-backed entrant use its existing government PSU buyer relationships to onboard anchor corporates and price invoice-discounting transaction fees without compressing its 53.6% net profit margin?",
+    "source": "https://www.angelone.in/news/stocks/mstc-share-price-hits-20-upper-circuit-rbi-gives-in-principle-approval-for-treds-business"
+  },
+  {
+    "headline": "Zaggle Q2 Revenue Rises 34% to Rs 580 Cr as Cash Flow Turns Green",
+    "date": "2026-11-14",
+    "category": "Product Management",
+    "summary": "Indian B2B spend-management fintech Zaggle grew Q2 FY27 consolidated revenue 34.2% year-on-year to Rs 5,799 million (crossing Rs 1,000 crore in H1 revenue at Rs 10,031 million) across 4,236 corporate clients and 4.08 million users (under 1.5% churn), while turning consolidated operating cash flow positive for the first time at Rs 50.5 million. However, gross margin fell from 45.4% to 39.8% and adjusted EBITDA margin dropped from 10.8% to 7.7% (Rs 446 million) due to gross-accounted Propel reward redemptions (up 49.5% to Rs 3,686 million), Rs 680 million Dice Technology integration costs, and a Rs 27.8 million EBITDA loss at consumer UPI app Zagg.Money.",
+    "angle": "Product interviewers will press you on the monetization mix and working-capital tradeoff inside an embedded B2B fintech platform: Propel loyalty points grew 49.5% to 63.6% of total revenue, yet Ind AS gross accounting and delayed corporate reimbursements dragged gross margins down 560 basis points. How should a PM use the newly acquired Dice procurement workflow and AI decision tools to upsell high-margin SaaS seat fees (just Rs 159 million in Q2) while firing working-capital-heavy enterprise reward accounts?",
+    "source": "https://www.investing.com/news/company-news/zaggle-q2-fy27-slides-34-revenue-growth-cash-flow-turns-positive-93CH-5025269"
+  },
+  {
+    "headline": "Bobba Plans Rs 250 Cr Devanahalli Hub for Pay-As-You-Store Model",
+    "date": "2026-11-13",
+    "category": "Operations",
+    "summary": "Bengaluru-based Bobba Logistics is replacing fixed multi-year warehouse leases with daily, weekly, and pallet-level \"Pay-As-You-Store\" contracts across 900 to 1,000 adjustable pallet positions and multi-temperature cold-chain bays, paired with an aviation-style \"Code Share\" partner warehouse network for MSMEs. To scale the model, the group is advancing a Rs 100 crore to Rs 150 crore warehouse project near Bengaluru's Devanahalli airport cargo hub and evaluating an additional Rs 70 crore to Rs 100 crore outlay for dock-to-rack robotics and inventory-scanning drones.",
+    "angle": "Operations panelists will challenge the asset-utilization math of funding Rs 170 crore to Rs 250 crore in automated warehouse and cold-chain capex while selling short-term daily or weekly storage with zero long-term tenant lock-in. How must an operations head structure dynamic seasonal pricing across agricultural, pharma, and e-commerce peaks—and enforce service-level liability across partner \"Code Share\" warehouses—so off-peak vacancy does not sink return on invested capital?",
+    "source": "https://www.logisticsinsider.in/disrupting-the-ordinary-how-chandrakala-bobba-is-taking-warehousing-into-its-next-era-with-pay-as-you-store/"
+  },
+  {
+    "headline": "Cognizant Forms 25,000-Person Anthropic Group for Managed AI Ops",
+    "date": "2026-11-13",
+    "category": "Consulting",
+    "summary": "Cognizant created a dedicated 25,000-associate Claude Frontier Capability Group—after training or certifying more than 44,000 employees across business units on Anthropic's Claude—just weeks after forming a separate 25,000-person OpenAI Frontier Capability Group in October. Alongside the unit, Cognizant launched a managed services offering where the Chennai-anchored IT major takes end-to-end operational responsibility for running production Claude agents and AI-native software engineering inside client enterprises.",
+    "angle": "Consulting interviewers will ask how an IT-advisory firm justifies training 44,000+ staff and standing up twin 25,000-person delivery units for rival frontier labs (Anthropic and OpenAI) when enterprise clients want model-agnostic architectures. When pitching a managed-services contract to run production AI agents, how does a partner price SLA liability for agent hallucinations and token cost spikes while transitioning billable headcount from one-off pilot consulting into multi-year managed operations?",
+    "source": "https://www.startuplanes.com/post/cognizant-forms-25-000-person-claude-frontier-group-to-deliver-anthropic-ai"
+  },
+  {
+    "headline": "NIQ Links 265M Products to Google Shopping Graph as AI Sales Rise",
+    "date": "2026-11-13",
+    "category": "Product Management",
+    "summary": "NIQ Global Intelligence grew Q3 2026 revenue 6.3% year-on-year to $1,119.1 million ($3,061.8 million in annualized subscription revenue at 105% net dollar retention and 99% gross dollar retention) and posted its first post-IPO GAAP net profit of $35.8 million as adjusted EBITDA margin rose 230 basis points to 23.6%. With 60% of its top 100 clients now buying AI applications (lifting AI-native revenue 28% year-to-date) and MCP connectors live across Claude, ChatGPT, Gemini, and Copilot, NIQ partnered with Google to feed proprietary semantic data on over 265 million products across 90 countries into the Google Shopping Graph.",
+    "angle": "Product interviewers will probe the data-moat versus disintermediation dilemma when a B2B data incumbent licenses its crown-jewel catalog of 265 million products into Google's consumer-facing Shopping Graph and exposes datasets via MCP to external LLMs. If CPG brand managers can query NIQ data directly inside ChatGPT, Claude, or Gemini, how must the PM price Optiq Bridge and ConnectAI API consumption so zero-click LLM workflows expand net dollar retention above 105% instead of cannibalizing core seat subscriptions?",
+    "source": "https://www.fool.com/earnings/call-transcripts/2026/11/12/niq-global-intelligence-niq-q3-2026-earnings-call-transcript/"
+  },
+  {
+    "headline": "Only 34% of Marketers Use AI Bidding Despite 97% Adoption Plans",
+    "date": "2026-11-13",
+    "category": "Marketing",
+    "summary": "DoubleVerify's 2026 Global Insights Report surveying 2,020 marketers found that while 97% plan to use AI across media planning, buying, or optimization in 2026 and 98% of AI bidding users report performance gains, actual workflow deployment stays below 40%. Usage is projected to reach 40% for media brief summarization (up from 28% in 2024 and 37% in 2025), 40% for campaign activation (up from 35%), 36% for mid-flight optimization (up from 21% in 2024), and 34% for bidding optimization (up from 29%), as 35% of respondents flag recommendation accuracy and 29% cite data privacy compliance and ROI proof as top concerns.",
+    "angle": "Marketing panelists will press you on why 98% of advertisers using AI bidding see better results, yet two-thirds of marketers still refuse to hand programmatic bidding and mid-flight budget shifts over to algorithms. When pitching an AI-driven media plan for a consumer brand, how do you combine first-party CRM data with third-party verification so the CMO gets algorithmic ROAS gains without exposing the brand to opaque ad placements or privacy violations?",
+    "source": "https://www.medianews4u.com/97-of-marketers-plan-to-use-ai-in-2026-but-adoption-across-ad-workflows-remains-uneven-doubleverify-report/"
+  },
+  {
+    "headline": "RBI Caps BC Cash Pay-Ins at Rs 5,000 and Monthly Remit at Rs 25K",
+    "date": "2026-11-13",
+    "category": "Finance",
+    "summary": "The Reserve Bank of India (RBI) enforced the Domestic Money Transfer Directions, 2026 across commercial, regional rural, and co-operative banks, repealing two earlier circulars from October 2011 and July 2024. The rules cap cash payouts to unbanked recipients via ATMs or Business Correspondents (BCs) at Rs 10,000 per transaction and Rs 25,000 per beneficiary monthly, limit BC and ATM cash pay-ins to Rs 5,000 per transaction (Rs 25,000 monthly per remitter) with mandatory Officially Valid Document and two-factor authentication, and set a Rs 50,000 ceiling on walk-in branch NEFT cash remittances.",
+    "angle": "Finance interviewers will test the tradeoff between anti-money-laundering (AML) velocity controls and financial inclusion for migrant workers who remit cash through neighbourhood Business Correspondents. When a Rs 5,000 per-transaction cap and mandatory two-factor KYC raise compliance friction at BC outlets, does the rule push unbanked remitters into formal Jan Dhan accounts or drive them back toward informal hawala channels, and how does it hit fee income at payments banks?",
+    "source": "https://www.angelone.in/news/economy/rbi-issues-domestic-money-transfer-directions-2026-with-updated-limits-walk-in-neft-up-to-50-000"
+  },
+  {
     "headline": "AI Agent Vendors Shift to FTE Pricing at 20-40% of Human Wage Cost",
     "date": "2026-11-12",
     "category": "Product Management",

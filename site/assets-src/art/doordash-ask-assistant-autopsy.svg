@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" role="img">
+  <title>DoorDash Offline-to-Online Agent Split</title>
+  <desc>Minimalist geometric diagram contrasting a six-step live LLM loop stalling before a vertical boundary against a direct precomputed batch vector.</desc>
+  <defs>
+    <filter id="grain" x="0" y="0" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch"/>
+    </filter>
+  </defs>
+  <rect width="1600" height="900" fill="{{paper}}"/>
+  <path d="M100,120h1400v660h-1400zM100,450h1400M1050,120v660" fill="none" stroke="{{border}}" stroke-width="1"/>
+  <line x1="1050" y1="120" x2="1050" y2="780" stroke="{{ink}}" stroke-width="2" stroke-dasharray="8,8"/>
+  <circle cx="220" cy="290" r="28" fill="none" stroke="{{ink}}" stroke-width="2"/>
+  <circle cx="380" cy="290" r="28" fill="none" stroke="{{ink}}" stroke-width="2"/>
+  <circle cx="540" cy="290" r="28" fill="none" stroke="{{ink}}" stroke-width="2"/>
+  <circle cx="700" cy="290" r="28" fill="none" stroke="{{ink}}" stroke-width="2"/>
+  <circle cx="860" cy="290" r="28" fill="none" stroke="{{ink}}" stroke-width="2"/>
+  <rect x="970" y="250" width="60" height="80" fill="{{moss}}" fill-opacity="0.24" stroke="{{moss}}" stroke-width="2.5"/>
+  <line x1="248" y1="290" x2="352" y2="290" stroke="{{ink}}" stroke-width="1.5"/>
+  <line x1="408" y1="290" x2="512" y2="290" stroke="{{ink}}" stroke-width="1.5"/>
+  <line x1="568" y1="290" x2="672" y2="290" stroke="{{ink}}" stroke-width="1.5"/>
+  <line x1="728" y1="290" x2="832" y2="290" stroke="{{ink}}" stroke-width="1.5"/>
+  <line x1="888" y1="290" x2="970" y2="290" stroke="{{moss}}" stroke-width="2" stroke-dasharray="4,5"/>
+  <rect x="200" y="560" width="240" height="80" fill="{{ink}}" fill-opacity="0.06" stroke="{{ink}}" stroke-width="2"/>
+  <line x1="440" y1="600" x2="1360" y2="600" stroke="{{moss}}" stroke-width="3"/>
+  <circle cx="1050" cy="600" r="10" fill="{{moss}}"/>
+  <circle cx="1360" cy="600" r="24" fill="none" stroke="{{ink}}" stroke-width="2"/>
+  <rect width="1600" height="900" filter="url(#grain)" opacity="0.05"/>
+</svg>

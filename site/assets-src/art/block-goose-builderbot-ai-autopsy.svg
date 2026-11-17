@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" role="img">
+  <title>Block Payroll vs Cloud Compute Shift</title>
+  <desc>Minimalist geometric diagram showing a descending payroll block offset by a rising moss green cloud compute column along an interrupted MCP pipeline.</desc>
+  <defs>
+    <filter id="grain" x="0" y="0" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch"/>
+    </filter>
+  </defs>
+  <rect width="1600" height="900" fill="{{paper}}"/>
+  <path d="M100,100h1400v700h-1400zM100,450h1400M540,100v700M1060,100v700" fill="none" stroke="{{border}}" stroke-width="1"/>
+  <rect x="240" y="200" width="180" height="500" fill="none" stroke="{{border}}" stroke-width="1.5"/>
+  <rect x="240" y="420" width="180" height="280" fill="{{ink}}" fill-opacity="0.1" stroke="{{ink}}" stroke-width="2"/>
+  <rect x="440" y="340" width="160" height="360" fill="{{moss}}" fill-opacity="0.22" stroke="{{moss}}" stroke-width="2.5"/>
+  <line x1="600" y1="450" x2="820" y2="450" stroke="{{ink}}" stroke-width="2"/>
+  <circle cx="820" cy="450" r="70" fill="none" stroke="{{ink}}" stroke-width="2"/>
+  <line x1="890" y1="450" x2="1060" y2="450" stroke="{{moss}}" stroke-width="2.5" stroke-dasharray="6,6"/>
+  <circle cx="1260" cy="310" r="36" fill="none" stroke="{{ink}}" stroke-width="2"/>
+  <circle cx="1260" cy="450" r="36" fill="none" stroke="{{moss}}" stroke-width="2.5"/>
+  <circle cx="1260" cy="590" r="36" fill="none" stroke="{{ink}}" stroke-width="2"/>
+  <path d="M1060,450l164,-140M1060,450h164M1060,450l164,140" fill="none" stroke="{{border}}" stroke-width="1.5"/>
+  <rect width="1600" height="900" filter="url(#grain)" opacity="0.05"/>
+</svg>

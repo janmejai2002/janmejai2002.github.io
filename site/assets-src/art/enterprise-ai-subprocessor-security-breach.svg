@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" role="img">
+  <title>The Enterprise AI Subprocessor Blind Spot and Fourth-Party Data Leakage</title>
+  <desc>Three progressive rectangular perimeters on a subtle grid: the Enterprise and Primary SaaS boxes are joined by a solid ink conduit, while a secondary ochre analytics path branches into the third subprocessor box and leaks through a broken lower-right wall.</desc>
+  <defs>
+    <filter id="grain" x="0" y="0" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch"/>
+    </filter>
+  </defs>
+  <rect width="1600" height="900" fill="{{paper}}"/>
+  <g stroke="{{border}}" stroke-width="1" opacity="0.55">
+    <line x1="120" y1="180" x2="1480" y2="180"/>
+    <line x1="120" y1="450" x2="1480" y2="450"/>
+    <line x1="120" y1="720" x2="1480" y2="720"/>
+    <line x1="360" y1="120" x2="360" y2="780"/>
+    <line x1="800" y1="120" x2="800" y2="780"/>
+    <line x1="1240" y1="120" x2="1240" y2="780"/>
+  </g>
+  <g stroke="{{ink}}" stroke-width="2.5" fill="none">
+    <rect x="180" y="290" width="280" height="320"/>
+    <rect x="600" y="230" width="340" height="440"/>
+    <line x1="460" y1="450" x2="600" y2="450"/>
+  </g>
+  <g fill="{{ink}}">
+    <circle cx="320" cy="450" r="7"/>
+    <circle cx="770" cy="450" r="7"/>
+  </g>
+  <path d="M 1080 560 L 1080 230 L 1380 230 L 1380 510" fill="none" stroke="{{ink}}" stroke-width="2.5"/>
+  <path d="M 1080 610 L 1080 670 L 1310 670" fill="none" stroke="{{ink}}" stroke-width="2.5"/>
+  <line x1="940" y1="360" x2="1080" y2="360" stroke="{{ink}}" stroke-width="2" stroke-dasharray="6 5"/>
+  <g stroke="{{ochre}}" stroke-width="3" fill="none">
+    <path d="M 770 450 C 860 450, 950 560, 1210 560"/>
+    <path d="M 1210 560 C 1290 560, 1360 610, 1450 690" stroke-dasharray="7 5"/>
+    <rect x="1186" y="536" width="48" height="48"/>
+  </g>
+  <g fill="{{ochre}}">
+    <circle cx="1210" cy="560" r="6"/>
+    <circle cx="1365" cy="625" r="5"/>
+    <circle cx="1415" cy="662" r="5"/>
+    <circle cx="1455" cy="695" r="5"/>
+  </g>
+  <rect width="1600" height="900" filter="url(#grain)" opacity="0.05"/>
+</svg>
