@@ -1,5 +1,45 @@
 [
   {
+    "headline": "CBRE Forecasts 75M Sq Ft Quick-Commerce Warehouse Demand by 2030",
+    "date": "2026-11-18",
+    "category": "Operations",
+    "summary": "CBRE South Asia projects India's quick-commerce sector will require nearly 75 million sq. ft. of urban logistics space by 2030—split between 42 million sq. ft. for in-city dark stores and 33 million sq. ft. for 100,000–125,000 sq. ft. outskirts mother hubs that each replenish 30 to 50 stores. India's quick-commerce network currently runs 7,800 dark stores across 27 million sq. ft. in over 100 cities (projected to pass 12,000 stores by 2030) after warehousing take-up grew at an 81% CAGR from 2021 to 2025 to reach 4.3 million sq. ft. in 2025.",
+    "angle": "An operations panel will ask how you design inventory allocation and replenishment frequency between a 125,000 sq. ft. outskirts mother hub and 40 compact urban dark stores when expanding into tier-II cities.",
+    "source": "https://www.logisticsinsider.in/indias-quick-commerce-sector-to-drive-demand-for-75-million-sq-ft-of-urban-logistics-space-by-2030-cbre/"
+  },
+  {
+    "headline": "Gartner Projects India IT Spend to Hit Rs 16.9 Trillion in 2027",
+    "date": "2026-11-18",
+    "category": "Consulting",
+    "summary": "Speaking at its Kochi IT Symposium on November 17, 2026, Gartner forecast India's total IT spending will grow 10.6% from Rs 15.32 trillion in 2026 to Rs 16.94 trillion in 2027, led by a 40.3% surge in infrastructure-as-a-service (to Rs 815.75 billion) and a 28.4% rise in data center systems (to Rs 1.21 trillion). While software spending will climb 19.3% to Rs 2.60 trillion on embedded AI demand, IT services spending will grow just 6.2% from Rs 2.45 trillion to Rs 2.60 trillion as midmarket buyers adopt pre-built AI software platforms over traditional implementation contracts.",
+    "angle": "A consulting panel will test how an Indian IT advisory firm should restructure its service line mix and pricing when client spending on IaaS (+40.3%) and AI software (+19.3%) grows three to six times faster than IT services (+6.2%).",
+    "source": "https://www.gartner.com/en/newsroom/press-releases/2026-11-17-gartner-forecasts-india-it-spending-to-grow-10-percent-in-2027"
+  },
+  {
+    "headline": "Nifty Bank Crosses 62,000 Peak While Lenders Trade Below 5-Year P/B",
+    "date": "2026-11-18",
+    "category": "Finance",
+    "summary": "Nifty Bank rose 740+ points from its previous close to hit an all-time intraday high of 62,324.55 on November 17, 2026, bringing its November gain to 13% behind monthly rallies in Punjab National Bank (+20%), Yes Bank (+18%), HDFC Bank (+17.6%), and SBI (+14.3%). Even at record index levels and with banking drawing 17% of India's FY26 FDI inflows, major lenders trade below their five-year average price-to-book multiples, including HDFC Bank at 2.0x versus 2.8x, Kotak Mahindra Bank at 2.5x versus 2.9x, and SBI at 1.4x versus 1.5x.",
+    "angle": "A finance placement panel will press you on why Indian private and PSU banks trade below their five-year average price-to-book multiples even when Nifty Bank hits record highs and Q2 FY27 asset quality stays benign.",
+    "source": "https://www.angelone.in/news/market-updates/nifty-bank-hits-record-high-crosses-62-000-for-the-first-time-in-november-2026"
+  },
+  {
+    "headline": "Opera Q3 Revenue Rises 20% to $182.8M as Browser AI Lifts ARPU 22%",
+    "date": "2026-11-18",
+    "category": "Product Management",
+    "summary": "Browser and AI agent company Opera Limited reported a 20% year-over-year rise in Q3 2026 revenue to $182.8 million and a 52% jump in operating profit to $34.0 million (19% margin), as annualized ARPU across its 279 million monthly active users grew 22% to $2.60 while marketing spend stayed flat at $36.0 million. Advertising revenue rose 22% to $116.8 million (64% of revenue) and query revenue increased 17% to $65.0 million, while Opera GX gaming browser users grew 13% to 37 million MAUs and its MiniPay wallet passed 20 million activated wallets with $2 billion in cumulative volume.",
+    "angle": "A product management panel will ask how integrating local AI inference and agentic tools into a consumer browser shifts monetization between high-intent search queries (36% of revenue) and native ad inventory (64% of revenue) without raising user acquisition costs.",
+    "source": "https://www.sec.gov/Archives/edgar/data/1737450/000173745026000025/opra-ex99_1.htm"
+  },
+  {
+    "headline": "Ranveer Singh and Aman Gupta Launch H.I.M Men's Grooming Brand",
+    "date": "2026-11-18",
+    "category": "Marketing",
+    "summary": "Actor Ranveer Singh and entrepreneur Aman Gupta launched H.I.M (Handsome Indian Man) on November 17, 2026 with an eight-product face, body, and hair care portfolio built on a proprietary IN·XT molecule for Indian skin and weather. The brand targets India's Rs 2.2 lakh crore beauty and personal care market—projected to reach Rs 4 lakh crore by FY2031—where men's skincare routine searches have jumped 850% over five years and category sales are growing over 12% annually.",
+    "angle": "An IIM or XLRI marketing panel will ask how a new celebrity-founded D2C grooming brand can keep repeat purchase rates high and control customer acquisition costs once initial launch buzz fades against entrenched FMCG rivals.",
+    "source": "https://www.medianews4u.com/ranveer-singh-and-aman-gupta-launch-h-i-m-a-mens-personal-care-brand-for-indian-consumers/"
+  },
+  {
     "headline": "Bain Survey Finds Only 15% of Hospitals Cut Costs 10%+ Using AI",
     "date": "2026-11-17",
     "category": "Consulting",
