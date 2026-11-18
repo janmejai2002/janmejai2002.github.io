@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" role="img">
+<title>Pareto Prompt Evolution vs Scalar Rollout Budget</title>
+<desc>Minimalist geometric blueprint depicting a rising Pareto frontier staircase of prompt candidates above a dominated node marked with a broken budget line and cinnabar seal.</desc>
+<defs>
+<filter id="grain" x="0" y="0" width="100%" height="100%">
+<feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch"/>
+</filter>
+</defs>
+<rect width="1600" height="900" fill="{{paper}}"/>
+<rect x="120" y="100" width="1360" height="700" fill="none" stroke="{{border}}" stroke-width="1"/>
+<line x1="220" y1="700" x2="1380" y2="700" stroke="{{ink}}" stroke-width="2"/>
+<line x1="220" y1="180" x2="220" y2="700" stroke="{{ink}}" stroke-width="2"/>
+<line x1="220" y1="530" x2="1380" y2="530" stroke="{{border}}" stroke-width="1" stroke-dasharray="4,8"/>
+<line x1="220" y1="360" x2="1380" y2="360" stroke="{{border}}" stroke-width="1" stroke-dasharray="4,8"/>
+<polyline points="280,620 480,620 480,450 820,450 820,260 1280,260" fill="none" stroke="{{ink}}" stroke-width="2.5"/>
+<circle cx="480" cy="450" r="14" fill="{{paper}}" stroke="{{ink}}" stroke-width="2.5"/>
+<circle cx="820" cy="260" r="14" fill="{{paper}}" stroke="{{ink}}" stroke-width="2.5"/>
+<circle cx="1280" cy="260" r="14" fill="{{ink}}"/>
+<line x1="280" y1="660" x2="1280" y2="580" stroke="{{border}}" stroke-width="1.5" stroke-dasharray="6,6"/>
+<circle cx="650" cy="600" r="12" fill="{{paper}}" stroke="{{border}}" stroke-width="2"/>
+<line x1="1040" y1="180" x2="1040" y2="410" stroke="{{hanko}}" stroke-width="3"/>
+<line x1="1040" y1="490" x2="1040" y2="700" stroke="{{hanko}}" stroke-width="3"/>
+<rect x="1018" y="428" width="44" height="44" fill="none" stroke="{{hanko}}" stroke-width="3"/>
+<circle cx="1040" cy="450" r="7" fill="{{hanko}}"/>
+<rect width="1600" height="900" filter="url(#grain)" opacity="0.05"/>
+</svg>
