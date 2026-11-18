@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" role="img">
+<title>Tool Calling Two-Turn Handoff</title>
+<desc>Geometric diagram showing a text-only model passing a structured JSON request slip through a permission gate to an external application.</desc>
+<defs>
+<filter id="grain">
+<feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch"/>
+<feColorMatrix type="saturate" values="0"/>
+</filter>
+</defs>
+<rect width="1600" height="900" fill="{{paper}}"/>
+<g stroke="{{border}}" stroke-width="1.5" fill="none">
+<line x1="800" y1="120" x2="800" y2="780" stroke-dasharray="10 8"/>
+<rect x="140" y="180" width="520" height="540"/>
+<rect x="940" y="180" width="520" height="540"/>
+</g>
+<g stroke="{{ink}}" stroke-width="2" fill="none">
+<line x1="200" y1="260" x2="540" y2="260"/>
+<line x1="200" y1="310" x2="480" y2="310"/>
+<line x1="200" y1="360" x2="560" y2="360"/>
+<line x1="200" y1="410" x2="430" y2="410"/>
+<line x1="200" y1="540" x2="520" y2="540"/>
+<line x1="200" y1="590" x2="590" y2="590"/>
+<line x1="200" y1="640" x2="460" y2="640"/>
+<rect x="1000" y="240" width="180" height="120"/>
+<rect x="1220" y="240" width="180" height="120"/>
+<rect x="1000" y="400" width="400" height="100"/>
+<rect x="1000" y="540" width="180" height="120"/>
+<rect x="1220" y="540" width="180" height="120"/>
+</g>
+<g fill="{{plum}}" opacity="0.88">
+<rect x="620" y="385" width="360" height="52"/>
+<circle cx="800" cy="411" r="16"/>
+</g>
+<g stroke="{{plum}}" stroke-width="2.5" fill="none">
+<line x1="940" y1="495" x2="660" y2="495"/>
+<polyline points="682,479 660,495 682,511"/>
+<rect x="760" y="340" width="80" height="220"/>
+</g>
+<rect width="1600" height="900" filter="url(#grain)" opacity="0.05"/>
+</svg>
