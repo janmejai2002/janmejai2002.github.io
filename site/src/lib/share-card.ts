@@ -19,6 +19,8 @@ import { readFileSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
 // @ts-expect-error — plain .mjs module shared with scripts/make-images.mjs
 import { paint, PALETTE } from '../../scripts/lib/palette.mjs';
+import { crew, bowl, breakEven, crack } from './share-visuals';
+import type { Who, Mood } from './crew';
 
 export const W = 1200;
 export const H = 630;
@@ -29,6 +31,7 @@ const C = {
   tile: '#1C2840',
   cream: '#F6F4EF',
   dim: 'rgba(246,244,239,0.66)',
+  bright: 'rgba(246,244,239,0.9)',
   faint: 'rgba(246,244,239,0.42)',
   hair: 'rgba(246,244,239,0.16)',
   paper: PALETTE.light.paper as string,
@@ -103,7 +106,7 @@ function fracture(seed: string) {
   return pts;
 }
 
-function ground(seed: string) {
+function ground(seed: string, glow?: { x: number; y: number; color: string }) {
   const edge = fracture(seed);
   const line = edge.map(([x, y]) => `${x.toFixed(1)},${y.toFixed(1)}`).join(' ');
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">
@@ -114,9 +117,12 @@ function ground(seed: string) {
       <linearGradient id="gold" x1="0" x2="1" y1="0" y2="0">
         <stop offset="0" stop-color="${C.goldDeep}"/><stop offset=".5" stop-color="#F0D592"/><stop offset="1" stop-color="${C.goldDeep}"/>
       </linearGradient>
+      ${glow ? `<radialGradient id="accent" cx="${glow.x}" cy="${glow.y}" r="300" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="${glow.color}" stop-opacity=".2"/><stop offset="1" stop-color="${glow.color}" stop-opacity="0"/></radialGradient>` : ''}
+      <clipPath id="plate"><polygon points="0,0 ${W},0 ${[...edge].reverse().map(([x, y]) => `${x.toFixed(1)},${y.toFixed(1)}`).join(' ')}"/></clipPath>
     </defs>
     <rect width="${W}" height="${H}" fill="${C.paper}"/>
     <polygon points="0,0 ${W},0 ${[...edge].reverse().map(([x, y]) => `${x.toFixed(1)},${y.toFixed(1)}`).join(' ')}" fill="url(#glow)"/>
+    ${glow ? `<rect width="${W}" height="${H}" fill="url(#accent)" clip-path="url(#plate)"/>` : ''}
     <polyline points="${line}" fill="none" stroke="url(#gold)" stroke-width="5" stroke-linejoin="round" stroke-linecap="round"/>
   </svg>`;
 }
@@ -159,16 +165,6 @@ async function art(slug: string, size: number, ground = C.plate, float = false):
   }
   artCache.set(key, out);
   return out;
-}
-
-/** The kintsugi plate from the favicon, for cards with no article art. */
-function mark(size: number, accent: string) {
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="-130 -130 260 260">
-    <rect x="-104" y="-104" width="208" height="208" fill="none" stroke="${C.cream}" stroke-opacity=".22" stroke-width="5"/>
-    <rect x="-74" y="-74" width="148" height="148" fill="none" stroke="${C.cream}" stroke-opacity=".1" stroke-width="3"/>
-    <polyline points="8,-104 -8,-58 12,-14 -8,34 10,72 -4,104" fill="none" stroke="${accent}" stroke-width="7" stroke-linejoin="round"/>
-  </svg>`;
-  return `data:image/svg+xml;base64,${Buffer.from(svg).toString('base64')}`;
 }
 
 // ---- shared pieces ----------------------------------------------------------
@@ -239,7 +235,7 @@ function headline(text: string, size: number, accent: string, color = C.cream) {
 const fit = (text: string, steps: [number, number][]) =>
   steps.find(([max]) => text.length <= max)?.[1] ?? steps[steps.length - 1][1];
 
-function question(text: string, size = 30, lines = 2) {
+function question(text: string, size = 30, lines = 2, color = C.dim) {
   return h(
     'div',
     {
@@ -248,7 +244,7 @@ function question(text: string, size = 30, lines = 2) {
       fontWeight: 400,
       fontSize: size,
       lineHeight: 1.25,
-      color: C.dim,
+      color,
       // satori honours line-clamp only on a block box
       display: 'block',
       lineClamp: lines,
@@ -257,13 +253,48 @@ function question(text: string, size = 30, lines = 2) {
   );
 }
 
-async function render(seed: string, tree: Node) {
+async function render(seed: string, tree: Node, glow?: { x: number; y: number; color: string }) {
   const text = await satori(tree as never, { width: W, height: H, fonts: loadFonts() });
-  const base = await sharp(Buffer.from(ground(seed))).png().toBuffer();
+  const base = await sharp(Buffer.from(ground(seed, glow))).png().toBuffer();
   return sharp(base)
     .composite([{ input: Buffer.from(text) }])
-    .png({ compressionLevel: 9, palette: false })
+    // Quantised: flat colour quantises cleanly, and it keeps every card far
+    // under WhatsApp's ~300 KB preview limit as the bowl gains shards.
+    .png({ palette: true, quality: 95, dither: 1, effort: 10, compressionLevel: 9 })
     .toBuffer();
+}
+
+export interface Cast {
+  who: Who;
+  mood: Mood;
+}
+
+/** A crew member standing on the gold edge, bottom right. Their feet sit at
+ *  y~126 of a 142 viewBox, so the image is lifted to put them on the line. */
+async function standing(cast: Cast | undefined, size = 132, right = 30): Promise<Node> {
+  if (!cast) return null;
+  return h('div', { position: 'absolute', left: 0, top: 0, width: W, height: H }, ...(await standingParts(cast, size, right)));
+}
+
+async function standingParts(cast: Cast, size: number, right: number): Promise<Node[]> {
+  const src = await crew(cast.who, cast.mood, size);
+  const left = W - right - size;
+  const top = EDGE_Y - size * 0.93 + 4;
+  // A pool of plate colour behind the figure, so ink lines never tangle with art.
+  const boxTop = top - size * 0.3;
+  const boxH = EDGE_Y - 14 - boxTop;
+  return [h(
+    'div',
+    { position: 'absolute', left: left - size * 0.35, top: boxTop, width: size * 1.7, height: boxH, overflow: 'hidden' },
+    h('div', {
+      position: 'absolute',
+      left: 0,
+      top: 0,
+      width: size * 1.7,
+      height: size * 1.5,
+      backgroundImage: 'radial-gradient(closest-side, rgba(20,30,46,0.96) 45%, rgba(20,30,46,0) 100%)',
+    })
+  ), img(src, { position: 'absolute', left, top, width: size, height: size })];
 }
 
 const frame = (...children: Node[]) =>
@@ -277,15 +308,17 @@ export interface ArticleCard {
   trackLabel: string;
   accent: string;
   readingTime?: string;
+  /** Who from the crew turns up: the same casting the article page uses. */
+  cast?: Cast;
 }
 
 export async function articleCard(a: ArticleCard) {
   const accent = ACCENT[a.accent] ?? C.gold;
-  const pic = await art(a.slug, 500, C.plate, true);
+  const pic = await art(a.slug, 480, C.plate, true);
   const size = fit(a.title, [[34, 76], [46, 68], [58, 62], [70, 56]]);
   const textW = pic ? 670 : 1000;
   const tree = frame(
-    pic && img(pic, { position: 'absolute', left: 706, top: 24, width: 490, height: 490 }),
+    pic && img(pic, { position: 'absolute', left: 696, top: 16, width: 480, height: 480 }),
     // Wide drawings reach under the text column; this scrim keeps the words
     // on clean ground without boxing the art in.
     pic &&
@@ -312,16 +345,32 @@ export async function articleCard(a: ArticleCard) {
       h(
         'div',
         { flexDirection: 'column' },
-        a.question && h('div', { marginBottom: 22, width: textW - 30 }, question(a.question, 29, 3)),
+        // The hook: the reader's own question, set off by an accent rule so it
+        // reads as a voice, not a subtitle.
+        a.question &&
+          h(
+            'div',
+            { marginBottom: 24, width: textW - 30, borderLeft: `4px solid ${accent}`, paddingLeft: 20 },
+            question(a.question, 30, 3, C.bright)
+          ),
         headline(a.title, size, accent)
       )
     ),
+    await standing(a.cast),
     strip('Janmejai Singh Minhas  ·  janmejai2002.github.io')
   );
-  return render(a.slug, tree);
+  return render(a.slug, tree, pic ? { x: 936, y: 256, color: accent } : undefined);
 }
 
 // ---- page cards ---------------------------------------------------------------
+export type Visual =
+  | { kind: 'fan'; slugs: string[] }
+  | { kind: 'lines'; items: { text: string; tag: string; accent?: string }[] }
+  | { kind: 'bowl'; accents: string[]; lit?: boolean[] }
+  | { kind: 'crew'; accents: string[] }
+  | { kind: 'claims'; items: { subject: string; claim: string; seam: number }[] }
+  | { kind: 'chart' };
+
 export interface PageCard {
   key: string;
   label: string;
@@ -329,10 +378,9 @@ export interface PageCard {
   hook?: string;
   meta?: string;
   accent?: string;
-  /** Up to three article slugs whose art fans out on the right. */
-  arts?: string[];
-  /** Or up to three short lines (news headlines) stacked on the right. */
-  lines?: { text: string; tag: string; accent?: string }[];
+  visual?: Visual;
+  /** A crew member standing on the edge. */
+  cast?: Cast;
   footer?: string;
 }
 
@@ -346,7 +394,7 @@ async function fan(slugs: string[]) {
   ];
   return h(
     'div',
-    { position: 'absolute', left: 690, top: 18, width: 480, height: 500 },
+    { position: 'absolute', left: 670, top: 10, width: 480, height: 500 },
     ...tiles.map((src, i) =>
       h(
         'div',
@@ -368,14 +416,16 @@ async function fan(slugs: string[]) {
   );
 }
 
-function stack(lines: NonNullable<PageCard['lines']>) {
+/** Rows that read like cards in a feed: tag, then two lines of text. */
+function stack(items: { text: string; tag: string; accent?: string }[], cracks: (string | null)[] = []) {
   return h(
     'div',
-    { position: 'absolute', left: 708, top: 70, width: 430, flexDirection: 'column' },
-    ...lines.slice(0, 3).map((l, i) =>
+    { position: 'absolute', left: 690, top: 52, width: 380, flexDirection: 'column' },
+    ...items.slice(0, 3).map((l, i) =>
       h(
         'div',
         {
+          position: 'relative',
           flexDirection: 'column',
           background: C.tile,
           border: `2px solid ${C.hair}`,
@@ -385,7 +435,9 @@ function stack(lines: NonNullable<PageCard['lines']>) {
           marginBottom: 18,
           marginLeft: i * 18,
           opacity: 1 - i * 0.14,
+          boxShadow: '0 12px 28px rgba(0,0,0,0.35)',
         },
+        cracks[i] ? img(cracks[i]!, { position: 'absolute', left: 0, top: 0, width: 360 - i * 18, height: 108, opacity: 0.55 }) : null,
         h('div', { fontFamily: 'Inter', fontWeight: 700, fontSize: 17, color: l.accent ?? C.gold, marginBottom: 8 }, l.tag),
         h(
           'div',
@@ -397,20 +449,88 @@ function stack(lines: NonNullable<PageCard['lines']>) {
   );
 }
 
+async function lineup(accents: string[]) {
+  // All five on the gold edge, shoulder to shoulder, in front of the bowl they
+  // are still mending.
+  const cast: [Who, Mood, number][] = [
+    ['oops', 'swing', 176],
+    ['kiki', 'listen', 164],
+    ['tsugi', 'proud', 204],
+    ['fude', 'scribble', 172],
+    ['uso', 'doubt', 176],
+  ];
+  const [back, ...pics] = await Promise.all([
+    bowl(accents, 400, accents.map(() => false)),
+    ...cast.map(([w, m, sz]) => crew(w, m, sz)),
+  ]);
+  let x = 612;
+  return h(
+    'div',
+    { position: 'absolute', left: 0, top: 0, width: W, height: H },
+    img(back, { position: 'absolute', left: 716, top: 14, width: 400, height: 400, opacity: 0.6 }),
+    ...pics.map((src, i) => {
+      const sz = cast[i][2];
+      const node = img(src, { position: 'absolute', left: x, top: EDGE_Y - sz * 0.93 + 6, width: sz, height: sz });
+      x += sz * 0.62;
+      return node;
+    })
+  );
+}
+
+async function chart() {
+  const w = 450;
+  const hgt = 330;
+  const { src, cross } = await breakEven(w, hgt);
+  const left = 700;
+  const top = 92;
+  const tag = (text: string, color: string, x: number, y: number) =>
+    h('div', { position: 'absolute', left: left + x, top: top + y, fontFamily: 'Inter', fontWeight: 700, fontSize: 20, color }, text);
+  return h(
+    'div',
+    { position: 'absolute', left: 0, top: 0, width: W, height: H },
+    img(src, { position: 'absolute', left, top, width: w, height: hgt, boxShadow: '0 18px 40px rgba(0,0,0,0.4)' }),
+    tag('No cache', ACCENT.hanko, w - 140, 26),
+    tag('Cached', ACCENT.mizu, w - 120, 148),
+    tag('Break-even', C.gold, cross.x + 18, cross.y + 26)
+  );
+}
+
 export async function pageCard(p: PageCard) {
   const accent = ACCENT[p.accent ?? 'ochre'] ?? C.gold;
-  const side = p.arts?.length ? await fan(p.arts) : p.lines?.length ? stack(p.lines) : null;
-  const right = side ?? img(mark(420, accent), { position: 'absolute', left: 726, top: 58, width: 420, height: 420 });
-  const size = fit(p.title, [[24, 80], [38, 70], [52, 62], [80, 54]]);
+  const v = p.visual;
+  let side: Node = null;
+  let glow: { x: number; y: number; color: string } | undefined = { x: 920, y: 260, color: accent };
+  if (v?.kind === 'fan') side = await fan(v.slugs);
+  else if (v?.kind === 'lines') side = stack(v.items);
+  else if (v?.kind === 'claims') {
+    const cracks = await Promise.all(v.items.slice(0, 3).map((c, i) => crack(360 - i * 18, 108, c.seam, i + 3)));
+    side = stack(
+      v.items.map((c) => ({ text: c.claim, tag: c.subject, accent: ACCENT.hanko })),
+      cracks
+    );
+  } else if (v?.kind === 'chart') side = await chart();
+  else if (v?.kind === 'crew') side = await lineup(v.accents);
+  else {
+    const size = 452;
+    side = img(await bowl(v?.kind === 'bowl' ? v.accents : [], size, v?.kind === 'bowl' ? v.lit : undefined), {
+      position: 'absolute',
+      left: 676,
+      top: 38,
+      width: size,
+      height: size,
+    });
+    glow = { x: 902, y: 264, color: C.gold };
+  }
+  const size = fit(p.title, [[24, 80], [36, 70], [46, 60], [80, 54]]);
   const tree = frame(
-    right,
+    side,
     h(
       'div',
       {
         position: 'absolute',
         left: 72,
         top: 54,
-        width: 640,
+        width: 610,
         height: EDGE_Y - 96,
         flexDirection: 'column',
         justifyContent: 'space-between',
@@ -420,12 +540,13 @@ export async function pageCard(p: PageCard) {
         'div',
         { flexDirection: 'column' },
         headline(p.title, size, accent),
-        p.hook && h('div', { marginTop: 24, width: 600 }, question(p.hook, 29, 3))
+        p.hook && h('div', { marginTop: 24, width: 580 }, question(p.hook, 29, 3, C.bright))
       )
     ),
+    await standing(p.cast),
     strip(p.footer ?? 'Applied AI by Janmejai Singh Minhas')
   );
-  return render(p.key, tree);
+  return render(p.key, tree, glow);
 }
 
 export const png = (buf: Buffer) =>

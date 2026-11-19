@@ -27,8 +27,28 @@ that carries the wordmark. Reading order:
 3. The **title** in Inter 800. Its first figure ("20-Year-Old", "$900m", "3x",
    "40%") is lit in the accent. Bare years are skipped.
 
-X and LinkedIn often show only the image and the domain, so the card has to work
-without the text below it. A hand-made `ogImage` in frontmatter still wins.
+4. A crew member stands on the gold edge: the same `pickCrew()` casting the
+   article page uses, so the face on the card is the one the reader meets.
+
+The art gets a soft glow in the track's accent. X and LinkedIn often show only
+the image and the domain, so the card has to work without the text below it. A
+hand-made `ogImage` in frontmatter still wins.
+
+## Page visuals (`visual` in `share.ts`)
+
+| Kind | Used by | What it shows |
+|---|---|---|
+| `bowl` | home, about, default | The archive bowl from the homepage: one shard per piece, track colours, gold seams, unwritten shards dashed |
+| `bowl` + `lit` | tracks, topics | The same bowl with only that track's or topic's shards lit: "29 of the 93" at a glance |
+| `fan` | all articles | The three newest artworks, fanned |
+| `lines` | news pages | The three latest headlines with their function's accent |
+| `claims` | tracker | Live claims from `claims.ts`, each with a gold crack |
+| `chart` | calculator | The break-even shape the tool computes |
+| `crew` | crew | All five on the edge, in front of the unfinished bowl |
+
+The crew and the bowl are drawn by the site's own code (`lib/crew.ts`,
+`lib/bowl.ts`); `lib/share-visuals.ts` only inlines the on-plate colours,
+because librsvg cannot resolve CSS variables or `color-mix()`.
 
 **The pipeline's best lever is the `question` field.** A specific question
 ("Is my agent framework exposed to…?") does more on the card than any styling.

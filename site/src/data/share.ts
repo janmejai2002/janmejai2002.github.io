@@ -15,6 +15,8 @@ import { TOPICS } from './topics';
 import { allNews, categories, catSlug, months, monthLabel, NEWS_ACCENT } from './news-archive';
 import { newestFirst } from '../lib/posts';
 import { ACCENT, type PageCard } from '../lib/share-card';
+import { pickCrew } from '../lib/crew';
+import { CLAIMS } from './claims';
 
 /** The path a page passes to <Base image=…>. */
 export const cardFor = (key: string) => `/og/page/${key}.png`;
@@ -28,24 +30,44 @@ export const findCard = async (key: string) => (await pageCards()).find((c) => c
 
 async function buildCards(): Promise<PageCard[]> {
   const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(newestFirst);
+  const accentOf = Object.fromEntries(TRACKS.map((t) => [t.id, t.accent]));
   const newest = (filter: (p: (typeof posts)[number]) => boolean = () => true) =>
     posts.filter(filter).slice(0, 3).map((p) => p.id);
+  // Oldest first, the order the homepage bowl lays its shards in.
+  const chrono = [...posts].reverse();
+  const bowlAccents = chrono.map((p) => accentOf[p.data.track]);
+  /** The bowl with only the matching shards lit. */
+  const litBowl = (match: (p: (typeof posts)[number]) => boolean, accent?: string) => ({
+    kind: 'bowl' as const,
+    accents: accent ? chrono.map(() => accent) : bowlAccents,
+    lit: chrono.map(match),
+  });
   const headlines = (items: typeof allNews) =>
     items.slice(0, 3).map((i) => ({
       text: i.headline,
       tag: i.category,
       accent: ACCENT[NEWS_ACCENT[i.category] ?? 'ochre'],
     }));
+  const claims = CLAIMS.filter((c) => posts.some((p) => p.id === c.slug)).map((c) => ({
+    subject: c.subject,
+    claim: c.claim,
+    seam: c.seam,
+  }));
+  const cast = (page: { slug: string; title: string; question?: string; track: string }) => {
+    const { who, mood } = pickCrew(page);
+    return { who, mood };
+  };
 
   const cards: PageCard[] = [
     {
       key: 'home',
       label: 'Applied-AI journal',
       title: 'Applied AI, written while it is still wrong.',
-      hook: 'What benchmarks leave out, what breaks in production, and what the research says past the abstract.',
-      meta: plural(posts.length, 'piece'),
+      hook: `${plural(posts.length, 'piece')} on what benchmarks leave out and what breaks in production. The bowl is not finished.`,
+      meta: 'Five themes',
       accent: 'hanko',
-      arts: newest(),
+      visual: { kind: 'bowl', accents: bowlAccents },
+      cast: { who: 'tsugi', mood: 'proud' },
     },
     {
       key: 'default',
@@ -53,6 +75,8 @@ async function buildCards(): Promise<PageCard[]> {
       title: 'Applied AI, written while it is still wrong.',
       hook: 'Notes on building AI systems that are never finished.',
       accent: 'hanko',
+      visual: { kind: 'bowl', accents: bowlAccents },
+      cast: { who: 'tsugi', mood: 'paint' },
     },
     {
       key: 'blog',
@@ -60,7 +84,8 @@ async function buildCards(): Promise<PageCard[]> {
       title: `${posts.length} questions about AI, answered in full.`,
       hook: 'How models work, what they cost, and what happened when companies shipped them.',
       accent: 'mizu',
-      arts: newest(),
+      visual: { kind: 'fan', slugs: newest() },
+      cast: { who: 'fude', mood: 'scribble' },
     },
     ...TRACKS.map((t) => {
       const n = posts.filter((p) => p.data.track === t.id).length;
@@ -71,19 +96,21 @@ async function buildCards(): Promise<PageCard[]> {
         hook: t.ask + '.',
         meta: plural(n, 'piece'),
         accent: t.accent,
-        arts: newest((p) => p.data.track === t.id),
+        visual: litBowl((p) => p.data.track === t.id),
+        cast: cast({ slug: t.id, title: t.share, track: t.id }),
       };
     }),
     ...TOPICS.map((t) => {
       const slugs = (t.slugs as readonly string[]).filter((s) => posts.some((p) => p.id === s));
       return {
         key: `topic-${t.id}`,
-        label: `Reading path: ${t.label}`,
+        label: t.label,
         title: t.question,
         hook: t.intro.slice(0, t.intro.indexOf('.') + 1),
-        meta: plural(slugs.length, 'piece'),
+        meta: `Reading path, ${plural(slugs.length, 'piece')}`,
         accent: 'indigo',
-        arts: slugs.slice(0, 3),
+        visual: litBowl((p) => slugs.includes(p.id), 'indigo'),
+        cast: cast({ slug: t.id, title: t.question, track: 'technical' }),
       };
     }),
     {
@@ -93,7 +120,8 @@ async function buildCards(): Promise<PageCard[]> {
       hook: 'Each story comes with the angle an interviewer is primed to push on.',
       meta: plural(allNews.length, 'story', 'stories'),
       accent: 'ochre',
-      lines: headlines(allNews),
+      visual: { kind: 'lines', items: headlines(allNews) },
+      cast: { who: 'kiki', mood: 'listen' },
       footer: 'For Indian B-school interviews',
     },
     ...categories.map((c) => {
@@ -105,7 +133,8 @@ async function buildCards(): Promise<PageCard[]> {
         hook: 'Each story with the follow-up question a panel is primed to ask.',
         meta: plural(items.length, 'story', 'stories'),
         accent: NEWS_ACCENT[c] ?? 'ochre',
-        lines: headlines(items),
+        visual: { kind: 'lines' as const, items: headlines(items) },
+        cast: { who: 'kiki' as const, mood: 'listen' as const },
         footer: 'For Indian B-school interviews',
       };
     }),
@@ -118,7 +147,8 @@ async function buildCards(): Promise<PageCard[]> {
         hook: 'Each story with the angle an interviewer is likely to push on.',
         meta: plural(items.length, 'story', 'stories'),
         accent: 'ochre',
-        lines: headlines(items),
+        visual: { kind: 'lines' as const, items: headlines(items) },
+        cast: { who: 'kiki' as const, mood: 'listen' as const },
         footer: 'For Indian B-school interviews',
       };
     }),
@@ -127,14 +157,20 @@ async function buildCards(): Promise<PageCard[]> {
       label: 'About',
       title: 'Janmejai Singh Minhas',
       hook: 'Credit risk modelling at American Express. Clinical computer vision. Frontier-model red teaming.',
+      meta: `${plural(posts.length, 'piece')} so far`,
       accent: 'ochre',
+      visual: { kind: 'bowl', accents: bowlAccents },
+      cast: { who: 'fude', mood: 'scribble' },
     },
     {
       key: 'tracker',
       label: 'AI claims tracker',
       title: 'AI deployment claims, checked against the evidence.',
       hook: 'Each public claim gets a verdict and the primary source behind it.',
-      accent: 'moss',
+      meta: plural(claims.length, 'claim') + ' cracked open',
+      accent: 'hanko',
+      visual: { kind: 'claims', items: claims },
+      cast: { who: 'uso', mood: 'doubt' },
     },
     {
       key: 'prompt-caching-calculator',
@@ -142,6 +178,8 @@ async function buildCards(): Promise<PageCard[]> {
       title: 'Will prompt caching actually save you money?',
       hook: 'Cost per run, monthly savings, and the number of calls it takes to break even.',
       accent: 'mizu',
+      visual: { kind: 'chart' },
+      cast: { who: 'uso', mood: 'count' },
     },
     {
       key: 'crew',
@@ -149,6 +187,7 @@ async function buildCards(): Promise<PageCard[]> {
       title: 'Five small pieces of pottery run this site.',
       hook: 'One mends, one breaks, one listens, one writes, and one doubts everything.',
       accent: 'hanko',
+      visual: { kind: 'crew', accents: bowlAccents },
     },
   ];
   return cards;
