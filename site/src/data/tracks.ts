@@ -15,6 +15,8 @@ export const TRACKS = [
     blurb:
       'How models and AI systems actually work, and how they break once they are doing real work.',
     cta: 'Read the technical posts',
+    // The headline on this theme's share card (src/data/share.ts).
+    share: 'How AI actually works, and how it breaks.',
   },
   {
     id: 'business',
@@ -24,6 +26,7 @@ export const TRACKS = [
     blurb:
       'What AI changes about consulting, marketing and strategy — and how to judge a claim without being an engineer.',
     cta: 'Read the business posts',
+    share: 'Judge an AI claim without being an engineer.',
   },
   {
     id: 'basics',
@@ -33,6 +36,7 @@ export const TRACKS = [
     blurb:
       'AI explained in plain language, what is genuinely new this month, and the setups I have built.',
     cta: 'Start here',
+    share: 'AI in plain language, one idea at a time.',
   },
   {
     id: 'case-studies',
@@ -43,6 +47,7 @@ export const TRACKS = [
       'What a named company actually did with AI — in marketing, operations, support, engineering, anywhere real work happens — the mechanism, the published numbers, how much the evidence carries, and what you could apply.',
     meta: 'What named companies actually did with AI: the mechanism, the published numbers, how far the evidence carries, and what you could apply.',
     cta: 'Read the case studies',
+    share: 'What named companies actually did with AI.',
   },
   {
     id: 'talks',
@@ -52,6 +57,7 @@ export const TRACKS = [
     blurb:
       'One talk, keynote or podcast at a time, from a fixed list of sources worth listening to — what was actually claimed, and what holds up.',
     cta: 'Read the talk notes',
+    share: 'The talk, minus the hour. What holds up.',
   },
 ] as const;
 

@@ -11,6 +11,15 @@ export type NewsItem = {
 
 export const allNews = (news as NewsItem[]).slice().sort((a, b) => b.date.localeCompare(a.date));
 
+/** Each interview function's accent token, shared by the archive pages and their share cards. */
+export const NEWS_ACCENT: Record<string, string> = {
+  Finance: 'ochre',
+  Marketing: 'mizu',
+  Operations: 'moss',
+  'Product Management': 'plum',
+  Consulting: 'hanko',
+};
+
 export const catSlug = (c: string) => c.toLowerCase().replace(/[^a-z0-9]+/g, '-');
 
 export const categories = [...new Set(allNews.map((i) => i.category))].sort();

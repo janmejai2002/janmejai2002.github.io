@@ -153,9 +153,10 @@ const related = [...candidates.slice(offset), ...candidates.slice(0, offset)].sl
   updatedDate={updatedDate}
   keywords={keywords}
   image={social?.src ?? `/og/${post.id}.png`}
-  imageAlt={title}
+  imageAlt={`${title}${question ? ` — ${question}` : ''}`}
   section={TRACK.label}
   articleSection={TRACK.label}
+  readingTime={readingTime}
   wordCount={wordCount}
   alternativeHeadline={question}
   breadcrumbs={[
@@ -339,7 +340,7 @@ const related = [...candidates.slice(offset), ...candidates.slice(0, offset)].sl
               </a>
             )
           }
-          <button class="aend__share" type="button" data-share aria-live="polite">Copy link to this piece</button>
+          <button class="aend__share" type="button" data-share data-share-text={question ?? description} aria-live="polite">Copy link to this piece</button>
           <div class="aend__crew on-plate" data-endcrew data-who={casting.who} data-slugs={chrono.join(' ')} aria-live="polite">
             <div class="seat__who"><CrewActor who={casting.who} moods={['happy', 'proud']} /></div>
             <span class="crew-line" data-say></span>
@@ -537,7 +538,10 @@ const related = [...candidates.slice(offset), ...candidates.slice(0, offset)].sl
     if (native) share.textContent = 'Share this piece';
     share.addEventListener('click', async () => {
       try {
-        if (native) await navigator.share({ title: document.title, url });
+        // Lead with the reader's question: it is the line that makes someone
+        // tap, and the share sheet drops it into the message above the link.
+        const text = share.dataset.shareText;
+        if (native) await navigator.share({ title: document.title, ...(text ? { text } : {}), url });
         else {
           await navigator.clipboard.writeText(url);
           share.textContent = 'Link copied';

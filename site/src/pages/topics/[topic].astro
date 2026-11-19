@@ -16,6 +16,7 @@ const posts = (t.slugs as readonly string[])
 ---
 
 <Base
+  card={`topic-${t.id}`}
   title={`${t.label} — wAIbi-sabi`}
   description={t.intro.slice(0, t.intro.indexOf('.') + 1)}
   section="Topics"

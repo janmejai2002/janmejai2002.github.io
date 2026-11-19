@@ -12,6 +12,8 @@ export interface Props {
   updatedDate?: Date;
   keywords?: string[];
   image?: string;
+  /** Key of this page's share card in src/data/share.ts. Sets og:image and the social title. */
+  card?: string;
   imageAlt?: string;
   section?: string;
   progress?: boolean;
@@ -22,6 +24,7 @@ export interface Props {
   immersive?: boolean;
   headline?: string;
   articleSection?: string;
+  readingTime?: string;
   wordCount?: number;
   alternativeHeadline?: string;
   breadcrumbs?: { name: string; path?: string }[];

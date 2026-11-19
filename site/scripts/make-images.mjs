@@ -14,6 +14,7 @@
  *   npm run images
  */
 import sharp from 'sharp';
+import { paint } from './lib/palette.mjs';
 import { readFileSync, writeFileSync, mkdirSync, readdirSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join, basename } from 'node:path';
@@ -25,31 +26,6 @@ const artSrc = join(svgSrc, 'art');
 const artOut = join(here, '..', 'src', 'assets', 'art');
 mkdirSync(pub, { recursive: true });
 mkdirSync(artOut, { recursive: true });
-
-/** The two palettes, mirroring the tokens in src/styles/global.css. */
-const PALETTE = {
-  light: {
-    paper: '#F6F4EF', paper2: '#EFEBE3', ink: '#1A2639', border: '#DCD4C7',
-    card: '#EDE9E0', mizu: '#00A9B8', hanko: '#D2543F', moss: '#6E8C63',
-    ochre: '#C2913A', plum: '#8A6690', indigo: '#4E6E9C',
-  },
-  dark: {
-    paper: '#15181D', paper2: '#1B1F26', ink: '#E9E5DC', border: '#2E343D',
-    card: '#1C2129', mizu: '#4ECDD8', hanko: '#E87A64', moss: '#9BBA8E',
-    ochre: '#DDB667', plum: '#B694BC', indigo: '#85A5D0',
-  },
-};
-
-function paint(svg, theme) {
-  const p = PALETTE[theme];
-  const out = svg.replace(/\{\{(\w+)\}\}/g, (_, key) => {
-    if (!(key in p)) throw new Error(`unknown palette token {{${key}}}`);
-    return p[key];
-  });
-  const leftover = out.match(/\{\{\w+\}\}/);
-  if (leftover) throw new Error(`unsubstituted token ${leftover[0]}`);
-  return out;
-}
 
 const render = (svg, w, h) =>
   sharp(Buffer.from(svg), { density: 384 }).resize(w, h).png({ compressionLevel: 9 }).toBuffer();
