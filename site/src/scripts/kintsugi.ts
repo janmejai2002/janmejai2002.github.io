@@ -13,6 +13,8 @@
  * with no WebGL2: the page just never adds the `.gl` class.
  */
 
+import { GOLD_GLSL, goldBase } from '../lib/gold';
+
 const VERT = `#version 300 es
 in vec2 a;
 void main(){ gl_Position = vec4(a, 0., 1.); }`;
@@ -91,6 +93,7 @@ float swell(vec2 p){
        + .5 * sin(p.y * 3.7 + 1.3 * sin(p.x * 2.9 - uSeed));
 }
 
+${GOLD_GLSL}
 void main(){
   float aspect = uRes.x / uRes.y;
   vec2 uv = gl_FragCoord.xy / uRes;
@@ -177,25 +180,11 @@ void main(){
   // The bare crack is dark. Gold arrives later.
   vec3 gap = uBg * .16;
   float t = clamp(edge / max(w, 1e-4), 0., 1.);
-  float crown = 1. - t * t;
-  vec3 N = normalize(vec3(n.xy * .7 + normalize(d + 1e-4) * t * .55, .55 + crown * .5));
-  vec3 HG = normalize(normalize(vec3(toL, .3)) + vec3(0, 0, 1));
-
-  // Anisotropic brushed 24k gold powder (kinpun maki-e) along crack seam tangent
+  // The site's one gold material (lib/gold.ts), brushed along the seam.
   vec2 seamTan = normalize(vec2(-dir.y, dir.x) + (h.xy - .5) * .3);
-  vec3 tangent = normalize(vec3(seamTan, .12));
-  float dotTH = dot(tangent, HG);
-  float sinTH = sqrt(max(0., 1. - dotTH * dotTH));
-  float anisoGlint = pow(sinTH, 28.) * (fall * .8 + .2);
-
-  float flow = sin(fr * 62. - uTime * 7. + wVar * 5.) * .5 + .5;
   float molten = smoothstep(.2, 0., uGold - fr) * goldIn;
-
-  // Layered 24k gold palette: deep urushi gold base + lustrous brushed specular glint
-  vec3 goldBase = uAu * (.58 + .58 * crown);
-  vec3 goldGlint = vec3(1., .92, .64) * anisoGlint * 1.85;
-  vec3 gold = goldBase + goldGlint;
-  gold += vec3(1., .82, .46) * molten * (.7 + 1.1 * flow);
+  vec3 gold = kinGold(uAu, t, seamTan, toL, fall);
+  gold += kinMolten(uAu, fr * 62. + wVar * 5., uTime) * molten;
   col = mix(col, mix(gap, gold, goldIn), seam);
 
   // Plate edge sinks slightly, so the band reads as an object.
@@ -413,7 +402,7 @@ export function createPlate({ plate, claims, reduced }: Options): Plate | null {
     gl.uniform3fv(U.uBg, v('--tldr-bg'));
     gl.uniform3fv(U.uInk, v('--tldr-ink'));
     const a = v('--gold');
-    gl.uniform3f(U.uAu, Math.min(1, a[0] * 1.2), Math.min(1, a[1] * 1.14), Math.min(1, a[2] * 0.92));
+    gl.uniform3fv(U.uAu, goldBase(a));
     gl.uniform3fv(U.uMizu, v('--mizu'));
     gl.uniform3fv(U.uPlum, v('--plum'));
   };
