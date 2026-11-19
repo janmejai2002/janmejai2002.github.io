@@ -1,15 +1,26 @@
 ---
 /**
- * The archive as one kintsugi bowl: one shard per published article, oldest at
- * the centre, each cut from that article's own artwork and joined in gold.
+ * The archive as one kintsugi bowl: one piece per published article, oldest at
+ * the centre, each glazed in its theme's colour, carrying its own artwork, and
+ * joined to the rest in gold.
  *
- * The geometry lives in src/lib/bowl.ts and is computed at build time; the page
- * ships plain SVG and no layout code.
+ * It is drawn as a vessel, not a diagram: the pieces are the glazed inside of a
+ * bowl seen from above, with a lip, an outer wall, an unglazed foot and a shadow
+ * on the table (lib/bowl-form.ts). Turn it like a bowl on a wheel; look at a
+ * piece and its card rises with the drawing assembling; ask the crew on the rim
+ * to pick one. Geometry: lib/bowl.ts. Behaviour: scripts/bowl.ts. Live gold:
+ * scripts/bowl-gold.ts. The crew: scripts/bowl-scenes.ts. Without script it is
+ * a picture whose pieces are plain links.
  */
 import { getImage } from 'astro:assets';
 import type { CollectionEntry } from 'astro:content';
 import { TRACKS } from '../data/tracks';
-import { bowlGeometry, toPath, SIZE, C, R } from '../lib/bowl';
+import { bowlGeometry, toPath } from '../lib/bowl';
+import { SIZE, C, R, K, W, H, RIM_Y, DISC_TOP, BODY, FOOT, LIP_FRONT, FLOOR_SCALE, FLOOR_DROP, rimFront } from '../lib/bowl-form';
+import { liveArt } from '../lib/art';
+import { bowlWall, packWall } from '../lib/bowl-wall';
+import { ATLAS_COLS } from '../lib/bowl-form';
+import CrewActor from './CrewActor.astro';
 
 interface Props {
   /** Newest first, the order the index already sorts them in. */
@@ -23,6 +34,15 @@ const { capacity, cells, tones } = bowlGeometry(n);
 
 const accentOf = Object.fromEntries(TRACKS.map((t) => [t.id, t.accent]));
 const slugOf = (p: (typeof posts)[number]) => p.id.replace(/\.md$/, '');
+const centre = (pts: [number, number][]) => {
+  let x = 0;
+  let y = 0;
+  for (const p of pts) {
+    x += p[0];
+    y += p[1];
+  }
+  return [x / pts.length, y / pts.length];
+};
 
 const shards = await Promise.all(
   chrono.map(async (post, i) => {
@@ -33,113 +53,428 @@ const shards = await Promise.all(
     const y0 = Math.min(...ys);
     const w = Math.max(...xs) - x0;
     const h = Math.max(...ys) - y0;
-    const thumb = async (src?: ImageMetadata) =>
-      src ? (await getImage({ src, width: 280, format: 'webp', quality: 62 })).src : '';
+    const img = async (width: number, quality: number, src?: ImageMetadata) =>
+      src ? (await getImage({ src, width, format: 'webp', quality })).src : '';
+    const dark = post.data.heroImageDark ?? post.data.heroImage;
+    const [cx, cy] = centre(pts);
+    const slug = slugOf(post);
     return {
       i,
-      slug: slugOf(post),
+      slug,
       accent: accentOf[post.data.track],
       track: post.data.track,
       d: toPath(pts),
-      // Oversized, because the motif sits mid-frame and shards are small.
+      cx: cx.toFixed(0),
+      cy: cy.toFixed(0),
+      // Oversized, because the motif sits mid-frame and pieces are small.
       box: { x: x0 - w * 0.18, y: y0 - h * 0.18, w: w * 1.36, h: h * 1.36 },
-      light: await thumb(post.data.heroImage),
-      dark: await thumb(post.data.heroImageDark ?? post.data.heroImage),
+      light: await img(280, 62, post.data.heroImage),
+      dark: await img(280, 62, dark),
+      // Shown while its live drawing loads, and for a piece that has none.
+      cardLight: await img(640, 70, post.data.heroImage),
+      cardDark: await img(640, 70, dark),
+      live: !!liveArt(slug),
       tone: tones[i],
     };
   })
 );
 const ghosts = Array.from({ length: capacity - n }, (_, k) => toPath(cells[n + k]));
+// The bowl built from its pieces: its wall, cut into one piece per article.
+const wall = packWall(bowlWall(n));
+// A mended crack down the outside, from the front of the rim to the foot.
+const [crackX, crackY] = rimFront(63);
+const crack = `M${crackX.toFixed(0)} ${crackY.toFixed(0)}l-9 27l15 22l-12 28l8 26`;
+const crackBranch = `M${(crackX - 6).toFixed(0)} ${(crackY + 77).toFixed(0)}l-19 10l-6 14`;
 ---
 
-<figure class="bowl" data-bowl aria-hidden="true">
-  <svg viewBox={`0 0 ${SIZE} ${SIZE}`} data-bowl-svg>
-    <defs>
-      <clipPath id="bowl-disc"><circle cx={C} cy={C} r={R} /></clipPath>
-      {shards.map((s) => <clipPath id={`shard-${s.i}`}><path d={s.d} /></clipPath>)}
-      <linearGradient id="bowl-gold" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2={SIZE} y2={SIZE} data-bowl-gold>
-        <stop offset="0" style="stop-color:color-mix(in srgb, var(--ochre) 80%, black)" />
-        <stop offset=".4" style="stop-color:var(--ochre)" />
-        <stop offset=".5" style="stop-color:color-mix(in srgb, var(--ochre) 30%, white)" />
-        <stop offset=".6" style="stop-color:var(--ochre)" />
-        <stop offset="1" style="stop-color:color-mix(in srgb, var(--ochre) 80%, black)" />
-      </linearGradient>
-      <radialGradient id="bowl-well" cx=".5" cy=".46" r=".54">
-        <stop offset=".35" style="stop-color:var(--ink);stop-opacity:0" />
-        <stop offset=".86" style="stop-color:var(--ink);stop-opacity:.1" />
-        <stop offset="1" style="stop-color:var(--ink);stop-opacity:.3" />
-      </radialGradient>
-      <radialGradient id="bowl-shadow">
-        <stop offset=".62" style="stop-color:var(--ink);stop-opacity:.22" />
-        <stop offset="1" style="stop-color:var(--ink);stop-opacity:0" />
-      </radialGradient>
-    </defs>
+<figure
+  class="bowl"
+  id="bowl"
+  data-bowl
+  style={`--disc-top:${((DISC_TOP / H) * 100).toFixed(3)}%;--rim-rx:${((R / W) * 100).toFixed(2)}%;--rim-ry:${(((R * K) / H) * 100).toFixed(2)}%;--rim-cy:${((RIM_Y / H) * 100).toFixed(2)}%;--floor-scale:${FLOOR_SCALE};--floor-drop:${((FLOOR_DROP / SIZE) * 100).toFixed(2)}%`}
+>
+  <div
+    class="bowl__body"
+    data-bowl-body
+    tabindex="0"
+    role="group"
+    aria-roledescription="bowl"
+    aria-label={`The archive bowl: ${n} pieces, one per article`}
+    aria-describedby="bowl-help"
+  >
+    {/* The bowl built from its pieces, in 3D (scripts/bowl-3d.ts). When it runs,
+        the flat bowl below is only the state the page reads. */}
+    <div class="bowl__table" aria-hidden="true"></div>
+    <canvas
+      class="bowl__3d"
+      data-bowl-3d
+      data-wall-counts={wall.counts}
+      data-wall={wall.data}
+      data-atlas-light="/bowl/atlas-light.webp"
+      data-atlas-dark="/bowl/atlas-dark.webp"
+      data-atlas-cols={ATLAS_COLS}
+      aria-hidden="true"
+    ></canvas>
 
-    <ellipse cx={C} cy={C + 18} rx={R + 22} ry={R + 18} fill="url(#bowl-shadow)" />
-    <circle class="bowl__base" cx={C} cy={C} r={R} />
+    {/* The outside of the bowl, flat on screen: shadow, wall, foot, a mended crack. */}
+    <svg class="bowl__outside" viewBox={`0 0 ${W} ${H}`} data-bowl-frame aria-hidden="true">
+      <defs>
+        <radialGradient id="bowl-table">
+          <stop offset=".45" style="stop-color:var(--bowl-shadow);stop-opacity:.55" />
+          <stop offset="1" style="stop-color:var(--bowl-shadow);stop-opacity:0" />
+        </radialGradient>
+        {/* Lit from the upper left, as everything on the site is. */}
+        <linearGradient id="bowl-wall" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0" style="stop-color:var(--glaze-hi)" />
+          <stop offset=".34" style="stop-color:var(--glaze)" />
+          <stop offset=".8" style="stop-color:var(--glaze-lo)" />
+          <stop offset="1" style="stop-color:var(--glaze-lo)" />
+        </linearGradient>
+        <linearGradient id="bowl-wall-fall" x1="0" y1="0" x2="0" y2="1">
+          <stop offset=".35" style="stop-color:var(--bowl-shadow);stop-opacity:0" />
+          <stop offset="1" style="stop-color:var(--bowl-shadow);stop-opacity:.42" />
+        </linearGradient>
+        {/* The inside wall, seen over the far rim: lit under the lip, falling
+            into shade toward the floor. */}
+        <linearGradient id="bowl-inwall" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" style="stop-color:var(--glaze-hi)" />
+          <stop offset=".3" style="stop-color:var(--glaze)" />
+          <stop offset=".75" style="stop-color:var(--glaze-lo)" />
+        </linearGradient>
+        <pattern id="bowl-grain" width="200" height="200" patternUnits="userSpaceOnUse">
+          <image href="/textures/paper-noise-mono.webp" width="200" height="200" />
+        </pattern>
+        <linearGradient id="bowl-foot" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0" style="stop-color:var(--clay-hi)" />
+          <stop offset=".6" style="stop-color:var(--clay)" />
+          <stop offset="1" style="stop-color:var(--clay-lo)" />
+        </linearGradient>
+      </defs>
+      <ellipse cx={C} cy="712" rx="350" ry="58" fill="url(#bowl-table)" />
+      <path d={BODY} fill="url(#bowl-wall)" />
+      <path d={BODY} fill="url(#bowl-wall-fall)" />
+      <path d={BODY} fill="url(#bowl-grain)" class="bowl__grain" />
+      {/* Glaze runs thin over the lip and pools just under it. */}
+      <path class="bowl__pool" d={LIP_FRONT} />
+      <path class="bowl__drip" d="M196 500q9 52 1 92q-8-22-13-86z" />
+      <path class="bowl__drip" d="M452 551q6 38 0 66q-6-16-10-60z" />
+      <path class="bowl__foot" d={FOOT} fill="url(#bowl-foot)" />
+      <path class="bowl__crack" d={crack} />
+      <path class="bowl__crack" d={crackBranch} />
+      <path class="bowl__crack-lit" d={crack} />
+      <ellipse cx={C} cy={RIM_Y} rx={R} ry={(R * K).toFixed(1)} fill="url(#bowl-inwall)" />
+    </svg>
 
-    <g clip-path="url(#bowl-disc)">
-      <g class="bowl__ghosts">{ghosts.map((d) => <path d={d} />)}</g>
-      <g class="bowl__shards">
-        {shards.map((s) => (
-          <a
-            href={`/blog/${s.slug}/`}
-            tabindex="-1"
-            class="shard"
-            data-shard={s.slug}
-            data-track={s.track}
-            style={`--accent:var(--${s.accent});--tone:${s.tone.toFixed(2)};--order:${s.i}`}
-          >
-            <path class="shard__ground" d={s.d} />
-            <image
-              class="shard__art"
-              clip-path={`url(#shard-${s.i})`}
-              x={s.box.x.toFixed(1)}
-              y={s.box.y.toFixed(1)}
-              width={s.box.w.toFixed(1)}
-              height={s.box.h.toFixed(1)}
-              preserveAspectRatio="xMidYMid slice"
-              data-light={s.light}
-              data-dark={s.dark}
-            />
-            <path class="shard__tint" d={s.d} />
-            <path class="shard__seam" d={s.d} />
-          </a>
-        ))}
-      </g>
-    </g>
+    {/* The inside, tipped back so the reader looks down into it. Everything in
+        here lies in the bowl's own plane. */}
+    <div class="bowl__inside">
+    <div class="bowl__disc" data-bowl-disc>
+      <svg class="bowl__floor" viewBox={`0 0 ${SIZE} ${SIZE}`} aria-hidden="true">
+        <circle class="bowl__base" cx={C} cy={C} r={R} />
+      </svg>
 
-    <circle cx={C} cy={C} r={R} fill="url(#bowl-well)" pointer-events="none" />
-    <circle class="bowl__rim" cx={C} cy={C} r={R} />
-  </svg>
+      {/* A still window around the turning layer, so a turned square's corners
+          never poke past the screen edge on a phone. */}
+      <div class="bowl__window">
+        <div class="bowl__turn" data-spin>
+          <svg class="bowl__pieces" viewBox={`0 0 ${SIZE} ${SIZE}`} data-bowl-svg aria-hidden="true">
+            <defs>
+              <clipPath id="bowl-disc"><circle cx={C} cy={C} r={R} /></clipPath>
+              {shards.map((s) => <clipPath id={`shard-${s.i}`}><path d={s.d} /></clipPath>)}
+              {/* The SVG seams' gold: the fallback without WebGL, and the seam
+                  of a lifted piece. The live gold is scripts/bowl-gold.ts. */}
+              <linearGradient id="bowl-gold" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2={SIZE} y2={SIZE} data-bowl-gold>
+                <stop offset="0" style="stop-color:color-mix(in srgb, var(--gold) 70%, black)" />
+                <stop offset=".4" style="stop-color:var(--gold)" />
+                <stop offset=".5" style="stop-color:color-mix(in srgb, var(--gold) 40%, white)" />
+                <stop offset=".6" style="stop-color:var(--gold)" />
+                <stop offset="1" style="stop-color:color-mix(in srgb, var(--gold) 70%, black)" />
+              </linearGradient>
+            </defs>
+            <g clip-path="url(#bowl-disc)">
+              <g class="bowl__ghosts">{ghosts.map((d) => <path d={d} data-ghost />)}</g>
+              <g class="bowl__shards">
+                {shards.map((s) => (
+                  <a
+                    href={`/blog/${s.slug}/`}
+                    tabindex="-1"
+                    class="shard"
+                    data-shard={s.slug}
+                    data-i={s.i}
+                    data-track={s.track}
+                    data-cx={s.cx}
+                    data-cy={s.cy}
+                    data-card-light={s.cardLight}
+                    data-card-dark={s.cardDark}
+                    data-live={s.live ? '' : undefined}
+                    style={`--accent:var(--${s.accent});--mix-l:${(18 + s.tone * 16).toFixed(0)}%;--mix-d:${(30 + s.tone * 22).toFixed(0)}%;--order:${s.i}`}
+                  >
+                    <path class="shard__ground" d={s.d} />
+                    <image
+                      class="shard__art"
+                      clip-path={`url(#shard-${s.i})`}
+                      x={s.box.x.toFixed(1)}
+                      y={s.box.y.toFixed(1)}
+                      width={s.box.w.toFixed(1)}
+                      height={s.box.h.toFixed(1)}
+                      preserveAspectRatio="xMidYMid slice"
+                      data-light={s.light}
+                      data-dark={s.dark}
+                    />
+                    <path class="shard__tint" d={s.d} />
+                    <path class="shard__seam" d={s.d} />
+                  </a>
+                ))}
+              </g>
+            </g>
+          </svg>
+          <canvas class="bowl__gold" data-bowl-gl aria-hidden="true"></canvas>
+        </div>
+      </div>
+
+      {/* The inside wall: the near side falls into shade, the far side catches
+          the light, and the lip is a band of glaze around it all. */}
+      <svg class="bowl__inner" viewBox={`0 0 ${SIZE} ${SIZE}`} aria-hidden="true">
+        <defs>
+          <radialGradient id="bowl-well" cx=".5" cy=".4" r=".56">
+            <stop offset=".5" style="stop-color:var(--bowl-shadow);stop-opacity:0" />
+            <stop offset=".82" style="stop-color:var(--bowl-shadow);stop-opacity:calc(var(--well) * .32)" />
+            <stop offset="1" style="stop-color:var(--bowl-shadow);stop-opacity:var(--well)" />
+          </radialGradient>
+          <radialGradient id="bowl-gleam" cx=".3" cy=".2" r=".5">
+            <stop offset="0" style="stop-color:var(--glaze-gleam);stop-opacity:.22" />
+            <stop offset="1" style="stop-color:var(--glaze-gleam);stop-opacity:0" />
+          </radialGradient>
+        </defs>
+        <circle cx={C} cy={C} r={R} fill="url(#bowl-well)" />
+        <circle cx={C} cy={C} r={R} fill="url(#bowl-gleam)" />
+      </svg>
+    </div>
+    </div>
+
+    {/* The lip, in the rim's own plane, over everything inside. */}
+    <div class="bowl__rimplane" aria-hidden="true">
+      <svg viewBox={`0 0 ${SIZE} ${SIZE}`}>
+        <defs>
+          <linearGradient id="bowl-lip" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" style="stop-color:var(--glaze-gleam)" />
+            <stop offset=".45" style="stop-color:var(--glaze-hi)" />
+            <stop offset="1" style="stop-color:var(--glaze-lo)" />
+          </linearGradient>
+        </defs>
+        <circle class="bowl__lip" cx={C} cy={C} r={R + 6} />
+        <circle class="bowl__lip-edge" cx={C} cy={C} r={R - 3} />
+      </svg>
+    </div>
+
+    {/* The crew stand on the far rim. They never take a click. */}
+    <div class="bowl__stage" data-bowl-stage aria-hidden="true">
+      <CrewActor who="tsugi" moods={['idle', 'paint', 'proud']} />
+      <CrewActor who="kiki" moods={['listen', 'happy', 'idle']} />
+      <CrewActor who="oops" moods={['panic', 'swing', 'sideeye']} />
+      <CrewActor who="uso" moods={['doubt', 'sideeye', 'idle']} />
+      <CrewActor who="fude" moods={['scribble', 'idle', 'proud']} />
+    </div>
+
+    {/* The piece under the pointer, at a glance. Never takes a click: the piece does. */}
+    <div class="bowl__peek" data-bowl-peek aria-hidden="true" hidden>
+      <div class="bowl__frame">
+        <svg class="bowl__art" viewBox="0 0 1600 900" data-peek-art></svg>
+        <img data-peek-img alt="Artwork of the piece under the pointer" decoding="async" />
+      </div>
+      <p class="bowl__ck">
+        <span class="bowl__dot" aria-hidden="true"></span><span data-peek-meta></span>
+        <span class="bowl__read" data-peek-read hidden>Read</span>
+      </p>
+      <p class="bowl__ask" data-peek-ask></p>
+      <p class="bowl__go-hint">Click the piece to read it</p>
+    </div>
+
+    {/* A piece, lifted out of the bowl: on touch, from "Pick one for me", or
+        from an article's own bowl. Filled by scripts/bowl.ts. */}
+    <div class="bowl__card" data-bowl-card role="dialog" aria-modal="false" aria-labelledby="bowl-card-ask" hidden>
+      <button type="button" class="bowl__x" data-card-close aria-label="Put the piece back">
+        <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 3L13 13M13 3L3 13" /></svg>
+      </button>
+      <div class="bowl__frame">
+        <svg class="bowl__art" viewBox="0 0 1600 900" data-card-art aria-hidden="true"></svg>
+        <img data-card-img alt="The artwork of the piece lifted out of the bowl" decoding="async" />
+      </div>
+      <p class="bowl__ck">
+        <span class="bowl__dot" aria-hidden="true"></span><span data-card-track></span>
+        <span class="bowl__read" data-card-read hidden>Already in your bowl</span>
+      </p>
+      <p class="bowl__ask" id="bowl-card-ask" data-card-ask></p>
+      <p class="bowl__ct" data-card-title></p>
+      <div class="bowl__acts">
+        <a class="bowl__go" data-card-go href="/">Read this piece <span aria-hidden="true">→</span></a>
+        <button type="button" class="bowl__another" data-card-another>Another one</button>
+      </div>
+    </div>
+  </div>
+
+  {/* The way into an article (scripts/bowl-warp.ts). Moved to <body> when used. */}
+  <div class="warp" data-warp hidden aria-hidden="true">
+    <div class="warp__veil"></div>
+    <svg class="warp__seam" viewBox="0 0 100 100" preserveAspectRatio="none">
+      <polyline points="-2,58 14,55 22,61 37,52 49,57 58,49 71,55 83,47 102,52" pathLength="1" />
+    </svg>
+    <div class="warp__art" data-warp-art><svg viewBox="0 0 1600 900"></svg></div>
+    <div class="warp__crew" data-warp-crew>
+      <CrewActor who="tsugi" moods={['idle', 'happy']} />
+      <CrewActor who="oops" moods={['idle', 'happy']} />
+      <CrewActor who="kiki" moods={['idle', 'happy']} />
+      <CrewActor who="fude" moods={['idle', 'happy']} />
+      <CrewActor who="uso" moods={['idle', 'happy']} />
+    </div>
+  </div>
+
   <figcaption>
     <p class="bowl__now" data-bowl-now></p>
     {/* Who is on the piece being previewed. Filled by the page. */}
     <slot />
-    <p class="bowl__key">
-      Each piece is one article. The oldest sits at the centre, and the outer ring is
-      still unwritten.
+    <div class="bowl__bar" data-bowl-bar hidden>
+      <button type="button" class="bowl__pick" data-bowl-pick>
+        <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 2.5a7.5 7.5 0 1 1-7.1 5.1M2.6 3.2l.3 4.5 4.4-1" /></svg>
+        Pick one for me
+      </button>
+      <span class="bowl__progress" data-bowl-progress></span>
+    </div>
+    <p class="bowl__talk" data-bowl-talk>
+      <span class="bowl__key" id="bowl-help" data-quiet>
+        Each piece is one article. The oldest are at the foot, every new one goes
+        in at the rim, and the faint outline is where the bowl grows
+        next.<span class="bowl__how" data-bowl-how></span>
+      </span>
+      <span class="crew-line" data-say aria-live="polite"></span>
     </p>
   </figcaption>
 </figure>
 
 <style is:global>
-  .bowl { margin: 0; }
-  .bowl svg { display: block; width: 100%; height: auto; overflow: visible; }
-  .bowl__base { fill: var(--stone); }
-  .bowl__rim { fill: none; stroke: var(--border); stroke-width: 2; }
+  /* ---------- the bowl's own materials ----------
+     Pale glazed stoneware on paper, dark raku on the dark page, with an
+     unglazed clay foot. All of it is mixed from the site's tokens, so the bowl
+     re-skins with the theme and shares the page's palette. */
+  .bowl {
+    --glaze: color-mix(in srgb, var(--stone) 92%, var(--ink));
+    --glaze-hi: var(--paper);
+    --glaze-lo: color-mix(in srgb, var(--stone) 76%, var(--ink));
+    --glaze-gleam: var(--paper);
+    --clay: color-mix(in srgb, var(--ochre) 42%, var(--stone));
+    --clay-hi: color-mix(in srgb, var(--ochre) 28%, var(--paper));
+    --clay-lo: color-mix(in srgb, var(--ochre) 70%, var(--ink));
+    --bowl-in: var(--paper-2);
+    --bowl-shadow: var(--ink);
+    --well: .45;
+    --piece-ink: multiply;
+  }
+  :root[data-theme='dark'] .bowl {
+    --glaze: color-mix(in srgb, var(--stone) 86%, var(--ink));
+    --glaze-hi: color-mix(in srgb, var(--stone) 72%, var(--ink));
+    --glaze-lo: var(--paper);
+    --glaze-gleam: color-mix(in srgb, var(--ink) 55%, var(--stone));
+    --clay: color-mix(in srgb, var(--ochre) 20%, var(--stone));
+    --clay-hi: color-mix(in srgb, var(--ochre) 28%, var(--stone));
+    --clay-lo: color-mix(in srgb, var(--ochre) 12%, var(--paper));
+    --bowl-in: color-mix(in srgb, var(--paper-2) 90%, var(--ink));
+    --bowl-shadow: black;
+    --well: .34;
+    --piece-ink: screen;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme='light']) .bowl {
+      --glaze: color-mix(in srgb, var(--stone) 86%, var(--ink));
+      --glaze-hi: color-mix(in srgb, var(--stone) 72%, var(--ink));
+      --glaze-lo: var(--paper);
+      --glaze-gleam: color-mix(in srgb, var(--ink) 55%, var(--stone));
+      --clay: color-mix(in srgb, var(--ochre) 20%, var(--stone));
+      --clay-hi: color-mix(in srgb, var(--ochre) 28%, var(--stone));
+      --clay-lo: color-mix(in srgb, var(--ochre) 12%, var(--paper));
+      --bowl-in: color-mix(in srgb, var(--paper-2) 90%, var(--ink));
+      --bowl-shadow: black;
+      --well: .34;
+      --piece-ink: screen;
+    }
+  }
+
+  .bowl { position: relative; margin: 0; --glaze-in: var(--bowl-in); }
+
+  /* ---------- the bowl built from its pieces (3D) ---------- */
+  .bowl__3d, .bowl__table { display: none; }
+  .bowl.gl3d .bowl__body { aspect-ratio: 220 / 172; border-radius: 30%; }
+  .bowl.gl3d .bowl__3d { display: block; position: absolute; inset: 0; width: 100%; height: 100%; touch-action: pan-y; }
+  .bowl.gl3d .bowl__outside, .bowl.gl3d .bowl__inside, .bowl.gl3d .bowl__rimplane { display: none; }
+  .bowl.gl3d .bowl__table {
+    display: block; position: absolute; left: 22%; right: 22%; bottom: 7%; height: 9%;
+    border-radius: 50%; pointer-events: none;
+    background: radial-gradient(closest-side, color-mix(in srgb, var(--bowl-shadow) 38%, transparent), transparent);
+  }
+  html.js .bowl.gl3d { padding-top: 2%; }
+  /* Room above the far rim for whoever stands on it. */
+  html.js .bowl { padding-top: 9%; }
+  .bowl__body { position: relative; aspect-ratio: 1000 / 840; outline: none; border-radius: 40% 40% 30% 30%; }
+  .bowl__body:focus-visible { box-shadow: 0 0 0 3px var(--paper), 0 0 0 5px var(--gold); }
+  .bowl svg { display: block; overflow: visible; }
+  .bowl__outside { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .bowl__pool { fill: none; stroke: var(--glaze-gleam); stroke-opacity: .35; stroke-width: 5; stroke-linecap: round; }
+  .bowl__drip { fill: var(--glaze-lo); opacity: .3; }
+  .bowl__grain { opacity: .9; }
+  .bowl__crack { fill: none; stroke: color-mix(in srgb, var(--gold) 75%, black); stroke-width: 6; stroke-linecap: round; stroke-linejoin: round; }
+  .bowl__crack-lit { fill: none; stroke: color-mix(in srgb, var(--gold) 55%, white); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; opacity: .85; }
+
+  /* The inside: a 1000-unit square tipped back about its centre, which sits on
+     the rim's centre in the body's frame. */
+  /* The inside is seen only through the rim: the floor's near edge goes behind the lip. */
+  .bowl__inside {
+    position: absolute; inset: 0; pointer-events: none;
+    clip-path: ellipse(var(--rim-rx) var(--rim-ry) at 50% var(--rim-cy));
+  }
+  .bowl__inside .bowl__disc { pointer-events: auto; }
+  .bowl__disc, .bowl__rimplane {
+    position: absolute; left: 0; top: var(--disc-top); width: 100%; aspect-ratio: 1;
+    transform-origin: 50% 50%;
+  }
+  .bowl__disc { transform: translateY(var(--floor-drop)) rotateX(58deg) scale(var(--floor-scale)); }
+  .bowl__rimplane { transform: rotateX(58deg); pointer-events: none; }
+  .bowl__rimplane svg { width: 100%; height: 100%; }
+  .bowl__floor, .bowl__inner { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .bowl__inner { pointer-events: none; }
+  .bowl__base { fill: var(--bowl-in); }
+  .bowl__lip { fill: none; stroke: url(#bowl-lip); stroke-width: 15; }
+  .bowl__lip-edge { fill: none; stroke: var(--bowl-shadow); stroke-opacity: .22; stroke-width: 2.5; }
+  .bowl__window { position: absolute; inset: 0; overflow: hidden; border-radius: 50%; }
+  .bowl__turn { position: absolute; inset: 0; will-change: transform; }
+  .bowl__turn svg, .bowl__gold { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .bowl__gold { pointer-events: none; }
+  html.js .bowl__body { touch-action: pan-y; cursor: grab; user-select: none; -webkit-user-select: none; }
+  html.js .bowl.dragging .bowl__body { cursor: grabbing; }
+  /* With live gold, the canvas draws every seam except a lifted piece's own. */
+  .bowl.gl .shard__seam { visibility: hidden; }
+  .bowl.gl.hot .shard.on .shard__seam, .bowl.gl .shard.out .shard__seam { visibility: visible; }
+
+  /* The outer ring nobody has written yet: bare glaze, scored where it will break. */
   .bowl__ghosts path {
-    fill: var(--paper-2); fill-opacity: .35;
-    stroke: color-mix(in srgb, var(--stone) 85%, var(--border));
-    stroke-width: 1; stroke-dasharray: none;
+    fill: var(--bowl-in);
+    stroke: color-mix(in srgb, var(--gold) 40%, var(--bowl-in)); stroke-opacity: .7;
+    stroke-width: 1.5; stroke-dasharray: 5 6; stroke-linecap: round;
+    transition: fill .2s var(--ease);
   }
+  .bowl__ghosts path.on { fill: color-mix(in srgb, var(--gold) 10%, var(--bowl-in)); }
+
+  /* ---------- the pieces ----------
+     Each is glazed in its own theme's colour, at its own strength, and carries
+     its article's drawing in ink on top. Nothing washes over the drawing. */
   .shard { cursor: pointer; outline: none; }
-  .shard__ground { fill: var(--paper); }
-  .shard__art { mix-blend-mode: multiply; opacity: .9; }
-  .shard__tint {
-    fill: var(--accent); opacity: calc(var(--tone) * .4);
-    transition: opacity var(--dur-fast) var(--ease);
+  .bowl.dragging .shard { cursor: grabbing; }
+  .shard__ground { fill: color-mix(in srgb, var(--accent) var(--mix-l), var(--bowl-in)); transition: fill .3s var(--ease); }
+  /* On the dark glaze a pigment needs more body to read as itself. */
+  :root[data-theme='dark'] .shard__ground { fill: color-mix(in srgb, var(--accent) var(--mix-d), var(--bowl-in)); }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme='light']) .shard__ground { fill: color-mix(in srgb, var(--accent) var(--mix-d), var(--bowl-in)); }
   }
+  .shard__art { mix-blend-mode: var(--piece-ink); opacity: .9; transition: opacity .3s var(--ease); }
+  .shard__tint { fill: var(--accent); opacity: 0; transition: opacity var(--dur-fast) var(--ease); }
   .shard__seam {
     fill: none; stroke: url(#bowl-gold); stroke-width: 6.5; stroke-linejoin: round;
     transition: stroke-width var(--dur-fast) var(--ease);
@@ -148,19 +483,34 @@ const ghosts = Array.from({ length: capacity - n }, (_, k) => toPath(cells[n + k
   .shard > path, .shard > image { transform-box: view-box; }
 
   /* The written part of the bowl dims together, so what you picked stands out. */
-  .shard.off { opacity: .16; }
+  .shard.off { opacity: .22; }
   /* While someone is exploring, the piece they are on lifts clear of the rest. */
   .shard { transform-box: fill-box; transform-origin: center; }
-  .bowl.hot .shard:not(.on):not(.off) { opacity: .34; }
+  .bowl.hot .shard:not(.on):not(.off) { opacity: .55; }
   .bowl.hot .shard.on {
-    transform: scale(1.14);
-    filter: drop-shadow(0 6px 10px color-mix(in srgb, var(--ink) 38%, transparent));
+    transform: scale(1.2);
+    filter: drop-shadow(0 8px 10px color-mix(in srgb, var(--bowl-shadow) 45%, transparent));
   }
-  .bowl.hot .shard.on .shard__tint { opacity: .62; }
+  .bowl.hot .shard.on .shard__tint { opacity: .18; }
   .bowl.hot .shard.on .shard__seam { stroke-width: 8; }
+  .bowl.dragging .shard.on { transform: none; filter: none; }
 
-  /* Scrolled into view, it assembles in publication order. Each shard ends where
-     its resting style already is, so nothing depends on this having run. */
+  /* Lifted out: an empty socket, still outlined in gold, waits for it. */
+  .shard.out { opacity: 1 !important; transform: none !important; filter: none !important; }
+  .shard.out .shard__ground { fill: color-mix(in srgb, var(--bowl-shadow) 30%, var(--bowl-in)); }
+  .shard.out .shard__art, .shard.out .shard__tint { opacity: 0 !important; }
+  .shard.out .shard__seam { stroke-dasharray: 10 7; }
+  .shard.set .shard__seam { animation: seam-set .9s var(--ease); }
+  @keyframes seam-set { 30% { stroke-width: 13; } }
+  .shard.gilding .shard__seam { animation: seam-gild 1.6s var(--ease) both; }
+  @keyframes seam-gild { 0% { stroke-width: 2; } 45% { stroke-width: 15; } 100% { stroke-width: 9; } }
+
+  /* Finished by this reader: a breath of gold leaf over the glaze, and a heavier
+     seam (drawn by the live gold). Only ever set in their own browser. */
+  .shard.read .shard__tint { fill: var(--gold); opacity: .2; }
+  .shard.read .shard__seam { stroke-width: 9; }
+
+  /* Scrolled into view, it assembles in publication order. */
   .bowl.grow .shard {
     animation: shard-set .7s var(--ease) backwards;
     animation-delay: calc(var(--order) * 26ms);
@@ -168,23 +518,148 @@ const ghosts = Array.from({ length: capacity - n }, (_, k) => toPath(cells[n + k
   .bowl.grow.hot .shard { animation: none; }
   @keyframes shard-set { from { opacity: 0; } }
 
-  .bowl figcaption { margin-top: 1rem; }
-  .bowl__now { margin: 0; min-height: 4.65em; font-size: .9375rem; line-height: 1.55; color: var(--ink); text-wrap: pretty; }
-  .bowl__key { margin: .75rem 0 0; font-size: .8125rem; line-height: 1.5; color: var(--ink-soft); }
+  /* ---------- the crew on the rim ---------- */
+  .bowl__stage { position: absolute; inset: 0; pointer-events: none; z-index: 2; }
+  .bowl__stage .actor { --size: clamp(52px, 13%, 72px); }
 
-  /* Finished by this reader. Only ever set in their own browser. */
-  .shard.read .shard__tint { fill: var(--ochre); opacity: .62; }
-  .shard.read .shard__seam { stroke-width: 9; }
-  /* Pigment at full strength turns muddy on a dark glaze. */
-  :root[data-theme='dark'] .shard:not(.read) .shard__tint { opacity: calc(var(--tone) * .22); }
-  @media (prefers-color-scheme: dark) {
-    :root:not([data-theme='light']) .shard:not(.read) .shard__tint { opacity: calc(var(--tone) * .22); }
+  /* ---------- a piece's drawing, assembling (lib/art.ts) ---------- */
+  .bowl__frame {
+    position: relative; aspect-ratio: 16 / 9; overflow: hidden; border-radius: 8px 10px 6px 12px;
+    background: color-mix(in srgb, var(--accent, var(--gold)) 16%, var(--card));
   }
-  :root[data-theme='dark'] .shard__art { mix-blend-mode: screen; }
-  @media (prefers-color-scheme: dark) {
-    :root:not([data-theme='light']) .shard__art { mix-blend-mode: screen; }
+  .bowl__frame img, .bowl__art { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .bowl__frame img { object-fit: cover; }
+  .bowl__frame.live img { visibility: hidden; }
+  .bowl__art { overflow: visible; }
+  .bowl__art .p { transform-box: fill-box; transform-origin: center; }
+  @media (prefers-reduced-motion: no-preference) {
+    .bowl__art.play .p { animation: bowl-art-in .75s var(--ease) calc(var(--d) * .45) both; }
+    .bowl__art.play .p > * { animation: bowl-art-cool .7s ease-out calc(var(--d) * .45 + .45s) both; }
   }
+  @keyframes bowl-art-in {
+    from { opacity: 0; transform: translate(calc(var(--dx) * .45), calc(var(--dy) * .45)) rotate(var(--r)) scale(var(--s)); }
+  }
+  @keyframes bowl-art-cool { from { stroke: var(--gold); } }
+
+  /* ---------- the piece under the pointer ---------- */
+  .bowl__peek {
+    position: absolute; z-index: 4; left: 0; top: 0; width: min(17.5rem, 70%);
+    padding: .6rem .65rem .7rem; pointer-events: none;
+    background: var(--card); color: var(--ink);
+    border: 1px solid color-mix(in srgb, var(--gold) 45%, var(--border));
+    border-radius: 12px 14px 10px 16px;
+    box-shadow: 0 16px 34px -14px color-mix(in srgb, var(--bowl-shadow) 70%, transparent);
+    transition: opacity .16s var(--ease), translate .16s var(--ease);
+  }
+  .bowl__peek[hidden] { display: none; }
+  .bowl__peek.enter { opacity: 0; translate: 0 6px; }
+  .bowl__peek .bowl__ask { font-size: 1rem; }
+  .bowl__go-hint { margin: .45rem 0 0; font-size: .75rem; font-weight: 600; color: var(--ink-soft); }
+
+  /* ---------- the lifted piece ---------- */
+  .bowl__card {
+    position: absolute; left: 50%; top: 48%; z-index: 5;
+    translate: -50% -50%;
+    width: min(88%, 25rem); padding: .85rem .95rem 1rem;
+    background: var(--card); color: var(--ink);
+    border: 1px solid color-mix(in srgb, var(--gold) 55%, var(--border));
+    border-radius: 14px 18px 12px 20px;
+    box-shadow: 0 18px 40px -12px color-mix(in srgb, var(--bowl-shadow) 60%, transparent), 0 0 0 4px color-mix(in srgb, var(--gold) 14%, transparent);
+    transform-origin: var(--fx, 50%) var(--fy, 50%);
+  }
+  .bowl__card[hidden] { display: none; }
+  .bowl__card.in { animation: card-lift .5s cubic-bezier(.2, 1.3, .4, 1) both; }
+  .bowl__card.away { animation: card-drop .32s var(--ease) both; }
+  @keyframes card-lift { from { opacity: 0; transform: scale(.18) rotate(-8deg); } }
+  @keyframes card-drop { to { opacity: 0; transform: scale(.2) rotate(6deg); } }
+  .bowl__x {
+    position: absolute; top: .45rem; right: .45rem; z-index: 1;
+    display: grid; place-items: center; width: 2.25rem; height: 2.25rem;
+    border: 0; border-radius: 50%; background: color-mix(in srgb, var(--card) 80%, transparent); color: var(--ink); cursor: pointer;
+  }
+  .bowl__x svg { width: .85rem; height: .85rem; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; }
+  .bowl__x:hover, .bowl__x:focus-visible { background: var(--paper-2); }
+  .bowl__ck { display: flex; flex-wrap: wrap; align-items: center; gap: .4rem; margin: .65rem 0 0; font-size: .75rem; font-weight: 600; letter-spacing: .02em; color: var(--ink-soft); }
+  .bowl__dot { width: .5rem; height: .5rem; border-radius: 50%; background: var(--accent, var(--gold)); }
+  .bowl__read { margin-left: auto; padding: .1rem .45rem; border-radius: 99px; background: color-mix(in srgb, var(--gold) 24%, transparent); color: var(--ink); }
+  .bowl__ask { margin: .35rem 0 0; font-family: var(--serif); font-size: 1.125rem; line-height: 1.3; text-wrap: pretty; }
+  .bowl__ct { margin: .35rem 0 0; font-size: .8125rem; line-height: 1.4; color: var(--ink-soft); }
+  .bowl__acts { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem 1rem; margin-top: .85rem; }
+  .bowl__go {
+    display: inline-flex; align-items: center; gap: .35rem; min-height: 2.5rem; padding: .5rem .95rem; border-radius: 99px;
+    background: var(--solid); color: var(--on-solid); font-size: .875rem; font-weight: 600; text-decoration: none;
+  }
+  .bowl__go:hover, .bowl__go:focus-visible { background: color-mix(in srgb, var(--solid) 85%, var(--gold)); }
+  .bowl__another, .bowl__pick {
+    display: inline-flex; align-items: center; gap: .4rem; min-height: 2.5rem; padding: .4rem .2rem; border: 0; background: none;
+    font: inherit; font-size: .875rem; font-weight: 600; color: var(--ink); cursor: pointer;
+    text-decoration: underline; text-decoration-color: var(--gold); text-decoration-thickness: 2px; text-underline-offset: 4px;
+  }
+  .bowl__another:hover, .bowl__pick:hover { text-decoration-thickness: 3px; }
+
+  /* ---------- the card that comes out of a piece (3D) ----------
+     The drawing arrives first, out of the piece; the card forms around it. */
+  .bowl__card.bloom { translate: none; transform-origin: 50% 50%; cursor: pointer; width: min(18.5rem, 64%); padding: .7rem .75rem .8rem; }
+  .bowl__card.bloom .bowl__ask { font-size: 1.0625rem; }
+  @media (max-width: 560px) { .bowl__card.bloom { width: min(20rem, 88%); } }
+  .bowl__card.bloom.in { animation: none; }
+  .bowl__card.bloom::before {
+    content: ''; position: absolute; inset: 0; z-index: -1; border-radius: inherit;
+    background: inherit; box-shadow: inherit;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .bowl__card.bloom.in { background: transparent; border-color: transparent; box-shadow: none; }
+    .bowl__card.bloom.in::before { animation: card-form .35s var(--ease) .28s both; background: var(--card); box-shadow: 0 18px 40px -12px color-mix(in srgb, var(--bowl-shadow) 60%, transparent), 0 0 0 1px color-mix(in srgb, var(--gold) 55%, var(--border)); }
+    .bowl__card.bloom.in > :not(.bowl__frame) { animation: card-form .3s var(--ease) .36s both; }
+    .bowl__card.bloom.in .bowl__frame { animation: frame-ground .3s var(--ease) .3s both; }
+    .bowl__art.bloom .p { animation: bowl-art-bloom .62s cubic-bezier(.2, .9, .3, 1) calc(var(--d) * .28) both; }
+    .bowl__art.bloom .p > * { animation: bowl-art-cool .6s ease-out calc(var(--d) * .28 + .35s) both; }
+  }
+  @keyframes card-form { from { opacity: 0; } }
+  @keyframes frame-ground { from { background-color: transparent; } }
+  @keyframes bowl-art-bloom {
+    from { opacity: 0; transform: translate(calc(var(--ox, 0px) + var(--dx) * .12), calc(var(--oy, 0px) + var(--dy) * .12)) rotate(var(--r)) scale(.12); }
+    40% { opacity: 1; }
+  }
+  .bowl__card.bloom:hover .bowl__go { background: color-mix(in srgb, var(--solid) 85%, var(--gold)); }
+
+  /* ---------- the way into an article ---------- */
+  .warp { position: fixed; inset: 0; z-index: 100; pointer-events: none; }
+  .warp[hidden] { display: none; }
+  .warp__veil {
+    position: absolute; inset: 0; opacity: 0; transition: opacity .3s var(--ease);
+    background: radial-gradient(120% 90% at 50% 42%, color-mix(in srgb, var(--accent, var(--gold)) 12%, var(--paper)), var(--paper));
+  }
+  .warp.go .warp__veil { opacity: 1; }
+  .warp__seam { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .warp__seam polyline {
+    fill: none; stroke: var(--gold); stroke-width: .45; stroke-linejoin: round; stroke-linecap: round;
+    stroke-dasharray: 1; stroke-dashoffset: 1; filter: drop-shadow(0 0 6px color-mix(in srgb, var(--gold) 60%, transparent));
+  }
+  .warp.go .warp__seam polyline { transition: stroke-dashoffset .55s cubic-bezier(.5, 0, .2, 1) .18s; stroke-dashoffset: 0; }
+  .warp__art { position: fixed; transform-origin: 0 0; transition: transform .52s cubic-bezier(.2, .8, .2, 1); view-transition-name: piece-art; }
+  .warp__art svg { display: block; width: 100%; height: 100%; overflow: visible; }
+  .warp__crew { position: fixed; inset: 0; }
+  .warp__crew .actor { --size: 96px; }
+
+  /* ---------- the caption ---------- */
+  .bowl figcaption { margin-top: .75rem; }
+  .bowl__now { margin: 0; min-height: 4.65em; font-size: .9375rem; line-height: 1.55; color: var(--ink); text-wrap: pretty; }
+  .bowl__bar { display: flex; flex-wrap: wrap; align-items: center; gap: .2rem 1rem; margin-top: .4rem; }
+  .bowl__bar[hidden] { display: none; }
+  .bowl__pick svg { width: 1rem; height: 1rem; fill: none; stroke: var(--gold); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .bowl__pick:hover svg { animation: pick-turn .7s var(--ease); }
+  @keyframes pick-turn { to { transform: rotate(-360deg); } }
+  .bowl__progress { font-size: .8125rem; color: var(--ink-soft); }
+  .bowl__progress b { color: var(--ink); }
+  .bowl__talk { margin: .5rem 0 0; min-height: 3em; font-size: .8125rem; line-height: 1.5; color: var(--ink-soft); }
+  .bowl__talk .crew-line { font-size: 1rem; color: var(--ink); }
+  .bowl__talk .crew-line__who { color: var(--gold); }
+  .bowl__key { display: block; }
+
   @media (prefers-reduced-motion: reduce) {
-    .bowl.grow .shard { animation: none; }
+    .bowl.grow .shard, .shard.set .shard__seam, .shard.gilding .shard__seam,
+    .bowl__card.in, .bowl__card.away, .bowl__pick:hover svg { animation: none; }
+    .bowl__peek { transition: none; }
   }
 </style>

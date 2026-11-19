@@ -345,9 +345,9 @@ const related = [...candidates.slice(offset), ...candidates.slice(0, offset)].sl
             <span class="crew-line" data-say></span>
           </div>
         </div>
-        <a class="aend__bowl" href="/#writing">
+        <a class="aend__bowl" href={`/?piece=${slug}#bowl`}>
           <MiniBowl slugs={chrono} accents={chronoAccents} current={slug} art={bowlArt} />
-          <span>Piece {place} of {chrono.length}, and the bowl is not finished. <b>See every question →</b></span>
+          <span>Piece {place} of {chrono.length}, and the bowl is not finished. <b data-minibowl-count>Find it in the bowl, and pick your next piece →</b></span>
         </a>
       </div>
     </section>
@@ -796,6 +796,21 @@ const related = [...candidates.slice(offset), ...candidates.slice(0, offset)].sl
         // Storage refused. The reader just loses the gold.
       }
     };
+    // The small bowl at the foot shows the same gold as the homepage one.
+    try {
+      const done = new Set<string>(JSON.parse(localStorage.getItem('waibi:read') ?? '[]'));
+      let n = 0;
+      for (const p of document.querySelectorAll<SVGElement>('.minibowl [data-s]')) {
+        if (done.has(p.dataset.s ?? '')) {
+          p.classList.add('read');
+          n++;
+        }
+      }
+      const count = document.querySelector('[data-minibowl-count]');
+      if (n && count) count.textContent = `${n === 1 ? "One piece is" : `${n} pieces are`} gold in your bowl. Find this one there →`;
+    } catch {
+      // No storage, so the small bowl stays plain.
+    }
     const offerResume = () => {
       if (scrollY > innerHeight || location.hash) return;
       try {

@@ -273,6 +273,7 @@ const edgeLine = edge.map(([x, d]) => `${(x * 10).toFixed(0)},${(EDGE_DEPTH - d)
               style={`--accent:var(--${t.accent})`}
               data-extra={n >= INITIAL_ROWS ? '' : undefined}
               data-at={post.data.pubDate.valueOf()}
+              data-meta={[t.label, post.data.readingTime?.replace(' read', ''), dateOf(post.data.pubDate)].filter(Boolean).join(' · ')}
               data-who={castOf[slugOf(post)].who}
               data-mood={castOf[slugOf(post)].mood}
             >
@@ -368,6 +369,8 @@ const edgeLine = edge.map(([x, d]) => `${(x * 10).toFixed(0)},${(EDGE_DEPTH - d)
   import { createCast } from '../lib/crew-actor';
   import { createEdgeStage, type SceneName } from '../scripts/edge-scenes';
   import { createDirector, fill, choose } from '../lib/crew-director';
+  import { createBowl } from '../scripts/bowl';
+  import { createBowlScenes } from '../scripts/bowl-scenes';
   import { linesFor, JOB, type Moment } from '../lib/crew-lines';
 
   const CAP = 8;
@@ -397,13 +400,22 @@ const edgeLine = edge.map(([x, d]) => `${(x * 10).toFixed(0)},${(EDGE_DEPTH - d)
      open; the reader pours the gold by holding the plate, and the finding is
      written in as the gold goes in. If they don't, Tsugi does it for them. */
   const cast = seatEl ? createCast(seatEl, { reduced }) : null;
+  // One director for the whole page, so the crew in the hero and the crew on
+  // the bowl never talk over each other. The bowl has its own small budget.
   const director = createDirector({
     gapMs: 8000,
     budget: 3,
+    budgets: { bowl: 4 },
     rules: {
       'new-since': { once: true, priority: true },
       'mended-reader': { cooldownMs: 30000 },
       'strike-again': { once: true },
+      gilded: { once: true, channel: 'bowl', priority: true },
+      picked: { cooldownMs: 20000, channel: 'bowl' },
+      spun: { once: true, channel: 'bowl' },
+      reread: { once: true, channel: 'bowl' },
+      tally: { once: true, channel: 'bowl', priority: true },
+      unwritten: { once: true, channel: 'bowl' },
     },
   });
   const HINT = {
@@ -793,13 +805,24 @@ const edgeLine = edge.map(([x, d]) => `${(x * 10).toFixed(0)},${(EDGE_DEPTH - d)
     meta.append(el);
   };
 
-  // Finished pieces turn gold in the bowl.
+  // Finished pieces turn gold in the bowl. Those finished since the bowl was
+  // last seen wait for Tsugi, who gilds them when the bowl comes into view.
   const finished = store.get<string[]>('waibi:read', []).filter((s) => rowOf.has(s));
-  for (const s of shards) if (finished.includes(s.dataset.shard ?? '')) s.classList.add('read');
+  const gildedBefore = store.get<string[] | null>('waibi:gilded', null);
+  // A reader from before the bowl had a crew: only their latest few get the show.
+  const toGild = finished.filter((s) => !(gildedBefore ?? finished.slice(0, -3)).includes(s));
+  for (const s of shards) {
+    const slug = s.dataset.shard ?? '';
+    if (finished.includes(slug) && !toGild.includes(slug)) s.classList.add('read');
+  }
   for (const slug of finished) flag(rowOf.get(slug), 'Read');
-  if (finished.length) {
-    const key = document.querySelector('.bowl__key');
-    if (key) key.append(` The gold ones are yours: ${finished.length} of ${rows.length} read.`);
+  const progress = document.querySelector<HTMLElement>('[data-bowl-progress]');
+  if (progress) {
+    if (finished.length) {
+      const b = document.createElement('b');
+      b.textContent = String(finished.length);
+      progress.append(b, ` of ${rows.length} in gold. That part of the bowl is yours.`);
+    } else progress.textContent = 'Finish a piece and it turns gold here.';
   }
 
   // The piece they most recently left unfinished.
@@ -846,7 +869,8 @@ const edgeLine = edge.map(([x, d]) => `${(x * 10).toFixed(0)},${(EDGE_DEPTH - d)
   };
 
   const preview = (slug?: string, exploring = false) => {
-    if (!slug) return;
+    if (!slug || bowlApi?.dragging) return;
+    if (bowlApi) bowlApi.selected = slug;
     const row = rowOf.get(slug);
     castFor(row);
     for (const s of shards) {
@@ -946,22 +970,141 @@ const edgeLine = edge.map(([x, d]) => `${(x * 10).toFixed(0)},${(EDGE_DEPTH - d)
     ).observe(bowl);
     new MutationObserver(loadArt).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
     matchMedia('(prefers-color-scheme: dark)').addEventListener('change', loadArt);
+  }
 
-    // The seams catch the light as the pointer crosses the bowl.
-    const gold = document.querySelector('[data-bowl-gold]');
-    const svg = document.querySelector<SVGSVGElement>('[data-bowl-svg]');
-    if (gold && svg && !reduced) {
-      addEventListener('pointermove', (e) => {
-        const b = svg.getBoundingClientRect();
-        if (b.bottom < 0 || b.top > innerHeight) return;
-        const x = ((e.clientX - b.left) / b.width) * 1000;
-        const y = ((e.clientY - b.top) / b.height) * 1000;
-        gold.setAttribute('x1', String(x - 620));
-        gold.setAttribute('y1', String(y - 620));
-        gold.setAttribute('x2', String(x + 620));
-        gold.setAttribute('y2', String(y + 620));
-      }, { passive: true });
+  /* ---------- the bowl as a thing to handle, and its crew ---------- */
+  // Arriving from the bowl at the foot of an article: lift that piece out.
+  const askedFor = new URLSearchParams(location.search).get('piece');
+  function setupBowl() {
+    if (!bowl) return null;
+    const api = createBowl({
+      root: bowl,
+      reduced,
+      isDark,
+      info(slug) {
+        const row = rowOf.get(slug);
+        if (!row) return null;
+        return {
+          ask: row.querySelector('.q__ask')?.textContent ?? '',
+          title: row.querySelector('.q__title')?.textContent ?? '',
+          track: row.dataset.track ?? '',
+          meta: row.dataset.meta ?? '',
+          href: `/blog/${slug}/`,
+          read: finished.includes(slug),
+          who: row.dataset.who,
+        };
+      },
+      preview: (slug) => {
+        preview(slug, true);
+        for (const r of rows) r.classList.toggle('q--on', r.dataset.q === slug);
+      },
+      // Every piece the current filter leaves lit, in list order.
+      order: () => rows.filter((r) => !shardOf.get(r.dataset.q ?? '')?.classList.contains('off')).map((r) => r.dataset.q!),
+    });
+    const how = bowl.querySelector('[data-bowl-how]');
+    if (how) how.textContent = touch
+      ? ' Drag it to turn it. Tap a piece to see it, and tap its card to read it.'
+      : ' Drag it to turn it, rest on a piece to see it, and click to read it. The arrow keys work too.';
+    const bar = bowl.querySelector<HTMLElement>('[data-bowl-bar]');
+    if (bar) bar.hidden = false;
+    return api;
+  }
+  const shardOf = new Map(shards.map((s) => [s.dataset.shard ?? '', s]));
+  const bowlApi = setupBowl();
+
+  const talk = bowl?.querySelector<HTMLElement>('[data-bowl-talk]');
+  const rimEl = bowl?.querySelector<HTMLElement>('[data-bowl-stage]');
+  const rimCast = rimEl ? createCast(rimEl, { reduced, bubble: talk?.querySelector('[data-say]'), voice: talk }) : null;
+  const rim = bowlApi && rimCast
+    ? createBowlScenes({
+        bowl: bowlApi,
+        cast: rimCast,
+        reduced,
+        speak(moment, who, vars = {}) {
+          const a = rimCast.get(who);
+          const options = linesFor(moment, who as never);
+          if (!a || !options.length || !director.take(moment, performance.now())) return false;
+          rimCast.say(a, fill(choose(options, `${moment}:${Math.floor(Date.now() / 6e4)}`), vars), 4800);
+          return true;
+        },
+      })
+    : null;
+
+  /** A piece for the reader: unread first, inside whatever filter is on,
+   *  preferring the same theme as `near` when there is one. */
+  const choosePiece = (not?: string) => {
+    const live = rows.filter((r) => !shardOf.get(r.dataset.q ?? '')?.classList.contains('off')).map((r) => r.dataset.q!);
+    const pool = live.length ? live : rows.map((r) => r.dataset.q!);
+    const unread = pool.filter((s) => s !== not && !finished.includes(s));
+    const track = not ? rowOf.get(not)?.dataset.track : undefined;
+    const sameTrack = track ? unread.filter((s) => rowOf.get(s)?.dataset.track === track) : [];
+    const from = sameTrack.length ? sameTrack : unread.length ? unread : pool.filter((s) => s !== not);
+    return from[Math.floor(Math.random() * from.length)];
+  };
+
+  if (bowlApi) {
+    bowlApi.on('open', (slug) => {
+      preview(slug, true);
+      for (const r of rows) r.classList.toggle('q--on', r.dataset.q === slug);
+      if (finished.includes(slug)) rim?.reread();
+    });
+    bowlApi.on('close', () => rows.forEach((r) => r.classList.remove('q--on')));
+    bowlApi.on('pick', () => {
+      const slug = choosePiece(bowlApi.opened ?? undefined);
+      if (!slug) return;
+      bowlApi.close();
+      if (rim) rim.pick(slug);
+      else bowlApi.turnTo(slug, { spins: 1, ms: 1400 }).then(() => bowlApi.open(slug));
+    });
+    bowlApi.on('another', (from) => {
+      const slug = choosePiece(from);
+      if (!slug) return;
+      bowlApi.close();
+      window.setTimeout(() => (rim ? rim.pick(slug) : bowlApi.open(slug)), reduced ? 0 : 220);
+    });
+    bowlApi.on('flick', (v) => rim?.flung(v));
+    bowlApi.on('grab', () => store.set('waibi:turned', true));
+    bowlApi.on('ghost', () => {
+      if (bowlNow) bowlNow.textContent = 'Unwritten. The next article goes in this ring.';
+      rim?.unwritten();
+    });
+    for (const g of bowl?.querySelectorAll<SVGElement>('[data-ghost]') ?? []) {
+      g.addEventListener('pointerenter', () => {
+        if (bowlApi.dragging) return;
+        g.classList.add('on');
+        if (bowlNow) bowlNow.textContent = 'Unwritten. The next article goes in this ring.';
+      });
+      g.addEventListener('pointerleave', () => g.classList.remove('on'));
     }
+
+    // When the bowl first comes properly into view, once it has assembled:
+    // Tsugi gilds what the reader finished since last time, or Fude notes a
+    // milestone. Both answer the reader's own reading, never a timer.
+    const MILESTONES = [1, 3, 5, 10, 20, 35, 50, 75, 100];
+    new IntersectionObserver(
+      (entries, io) => {
+        if (!entries[0].isIntersecting) return;
+        io.disconnect();
+        window.setTimeout(async () => {
+          if (askedFor && rowOf.has(askedFor)) {
+            await bowlApi.turnTo(askedFor, { at: -90, ms: 900 });
+            bowlApi.open(askedFor);
+          }
+          // Someone who has never turned the bowl gets shown that it turns.
+          if (!askedFor && !toGild.length && !store.get('waibi:turned', false)) await bowlApi.nudge();
+          const gilded = toGild.length && rim ? await rim.gild(toGild) : false;
+          if (!gilded) for (const s of toGild) shardOf.get(s)?.classList.add('read');
+          store.set('waibi:gilded', finished);
+          const told = store.get<number>('waibi:tally', 0);
+          const reached = MILESTONES.filter((m) => m <= finished.length).pop() ?? 0;
+          if (reached > told) {
+            store.set('waibi:tally', reached);
+            if (!toGild.length) rim?.tally(finished.length);
+          }
+        }, reduced ? 0 : Math.min(2600, shards.length * 26 + 400));
+      },
+      { threshold: 0.55 }
+    ).observe(bowl!);
   }
 
   more?.addEventListener('click', () => {
@@ -1002,6 +1145,9 @@ const edgeLine = edge.map(([x, d]) => `${(x * 10).toFixed(0)},${(EDGE_DEPTH - d)
   };
   addEventListener('hashchange', fromHash);
   fromHash();
+  // Sent here from an article's bowl: go to the bowl once the list has settled
+  // its length, or the jump lands somewhere the page has since moved away from.
+  if (askedFor && bowl) requestAnimationFrame(() => bowl.scrollIntoView({ block: 'center' }));
 </script>
 
 <style is:global>

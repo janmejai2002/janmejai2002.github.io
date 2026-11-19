@@ -92,6 +92,7 @@
 .plateart { min-width: 0; position: relative; margin: 0 -2.5rem 0 calc(.5rem - var(--top-gap)); cursor: pointer; }
 .liveart {
   display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; overflow: visible; cursor: pointer;
+  view-transition-name: piece-art;
   --paper: var(--tldr-bg); --paper-2: #1B1F26; --card: #1C2129; --ink: var(--tldr-ink); --border: #3A4350;
   --mizu: #4ECDD8; --hanko: #E87A64; --moss: #9BBA8E; --ochre: #DDB667; --plum: #B694BC; --indigo: #85A5D0;
 }

@@ -1,11 +1,14 @@
 ---
 /**
- * The bowl at the foot of an article. Every other piece is a plain shard; this
- * one carries the article's own art and lands in its place when the reader
- * arrives (see .aend in styles/article.css). Whole-number coordinates, because
- * it ships on every page.
+ * The bowl at the foot of an article: the same bowl as the homepage, built from
+ * the same pieces (lib/bowl-wall.ts), drawn flat at build time and turned so
+ * this article's own piece faces the reader, front and centre. Every other piece
+ * is plain glaze in its theme's colour; this one carries the article's art and
+ * lands in its place when the reader arrives (see .aend in styles/article.css).
+ * Whole-number coordinates, because it ships on every page.
  */
-import { bowlGeometry, toPath, SIZE, C, R } from '../lib/bowl';
+import { bowlWall } from '../lib/bowl-wall';
+import { ELEVATION, FRAME, PHI0 } from '../lib/bowl-form';
 
 interface Props {
   /** Oldest first. */
@@ -17,64 +20,91 @@ interface Props {
   art?: string;
 }
 const { slugs, current, accents, art } = Astro.props;
-const { capacity, cells } = bowlGeometry(slugs.length);
-const at = slugs.indexOf(current);
-const others = cells
-  .slice(0, slugs.length)
-  .flatMap((c, i) => (i === at ? [] : [{ d: toPath(c, 0), accent: accents[i] }]));
-const ghosts = cells.slice(slugs.length, capacity).map((c) => toPath(c, 0));
-const cell = cells[at];
-const mine = cell ? toPath(cell, 0) : undefined;
-const box = cell
+const n = slugs.length;
+const { capacity, cells } = bowlWall(n);
+const at = Math.max(0, slugs.indexOf(current));
+
+const TAU = Math.PI * 2;
+const SE = Math.sin((ELEVATION * Math.PI) / 180);
+const CE = Math.cos((ELEVATION * Math.PI) / 180);
+const S = 400; // px per world unit
+const VW = Math.round(FRAME.x * 2 * S);
+const VH = Math.round((FRAME.yMax - FRAME.yMin) * S);
+const centre = (c: [number, number][]) => c.reduce((a, p) => [a[0] + p[0] / c.length, a[1] + p[1] / c.length], [0, 0]);
+// Turn the bowl so this piece sits at the front.
+const turn = Math.PI / 2 - TAU * centre(cells[at])[0];
+const project = (u: number, phi: number) => {
+  const th = u * TAU + turn;
+  const s = Math.sin(phi);
+  const y = 1 - Math.cos(phi);
+  const z = s * Math.sin(th);
+  return { x: (s * Math.cos(th) + FRAME.x) * S, y: (FRAME.yMax - (y * CE - z * SE)) * S, z };
+};
+const pathOf = (c: [number, number][]) => {
+  const pts = c.map(([u, p]) => project(u, p));
+  return { d: `M${pts.map((p) => `${p.x.toFixed(0)} ${p.y.toFixed(0)}`).join('L')}Z`, pts };
+};
+const pieces = cells.slice(0, n).map((c, i) => {
+  const [cu, cp] = centre(c);
+  return { i, ...pathOf(c), z: project(cu, cp).z, accent: accents[i], slug: slugs[i] };
+});
+// Painter's order: the inside of the far wall, then the floor, then the near wall.
+const back = pieces.filter((p) => p.z < 0 && p.i !== at);
+const front = pieces.filter((p) => p.z >= 0 && p.i !== at).sort((a, b) => a.z - b.z);
+const ghostFront = cells.slice(n, capacity).map(pathOf).filter((g) => g.pts.reduce((a, p) => a + p.z, 0) > 0);
+const floorY = (1 - Math.cos(PHI0)) * CE;
+const floorR = Math.sin(PHI0);
+const floor = { cx: (FRAME.x * S).toFixed(0), cy: ((FRAME.yMax - floorY) * S).toFixed(0), rx: (floorR * S).toFixed(0), ry: (floorR * SE * S).toFixed(0) };
+const mine = pieces[at];
+const box = mine
   ? (() => {
-      const xs = cell.map((p) => p[0]);
-      const ys = cell.map((p) => p[1]);
+      const xs = mine.pts.map((p) => p.x);
+      const ys = mine.pts.map((p) => p.y);
       const [x, y] = [Math.floor(Math.min(...xs)), Math.floor(Math.min(...ys))];
       return { x, y, width: Math.ceil(Math.max(...xs)) - x, height: Math.ceil(Math.max(...ys)) - y };
     })()
   : undefined;
 ---
 
-<svg class="minibowl" viewBox={`0 0 ${SIZE} ${SIZE}`} aria-hidden="true">
-  <defs>
-    <clipPath id="minibowl-disc"><circle cx={C} cy={C} r={R} /></clipPath>
-    {mine && <clipPath id="minibowl-cell"><path d={mine} /></clipPath>}
-  </defs>
-  <circle class="minibowl__base" cx={C} cy={C} r={R} />
-  <g clip-path="url(#minibowl-disc)">
-    {ghosts.map((d) => <path class="minibowl__ghost" d={d} />)}
-    {others.map((s) => <path class={`minibowl__shard minibowl__shard--${s.accent}`} d={s.d} />)}
-    {mine && <path class="minibowl__slot" d={mine} />}
-  </g>
+<svg class="minibowl" viewBox={`0 0 ${VW} ${VH}`} aria-hidden="true">
+  <defs>{mine && <clipPath id="minibowl-cell"><path d={mine.d} /></clipPath>}</defs>
+  <ellipse class="minibowl__table" cx={floor.cx} cy={(VH - 0.33 * S).toFixed(0)} rx={(0.62 * S).toFixed(0)} ry={(0.1 * S).toFixed(0)} />
+  {back.map((s) => <path class={`minibowl__shard minibowl__shard--in minibowl__shard--${s.accent}`} d={s.d} data-s={s.slug} />)}
+  <ellipse class="minibowl__floor" {...floor} />
+  {front.map((s) => <path class={`minibowl__shard minibowl__shard--${s.accent}`} d={s.d} data-s={s.slug} />)}
+  {ghostFront.map((g) => <path class="minibowl__ghost" d={g.d} />)}
+  {mine && <path class="minibowl__slot" d={mine.d} />}
   {
     mine && box && (
       <g class="minibowl__mine">
-        <g clip-path="url(#minibowl-disc)">
-          <g clip-path="url(#minibowl-cell)">
-            <rect class="minibowl__fill" {...box} />
-            {art && <image href={art} {...box} preserveAspectRatio="xMidYMid slice" />}
-          </g>
-          <path class="minibowl__seam" d={mine} pathLength="1" />
+        <g clip-path="url(#minibowl-cell)">
+          <rect class="minibowl__fill" {...box} />
+          {art && <image href={art} {...box} preserveAspectRatio="xMidYMid slice" />}
         </g>
+        <path class="minibowl__seam" d={mine.d} pathLength="1" />
       </g>
     )
   }
-  <circle class="minibowl__rim" cx={C} cy={C} r={R} />
 </svg>
 
 <style is:global>
   .minibowl { display: block; width: 100%; height: auto; overflow: visible; }
-  .minibowl__base { fill: var(--stone); }
-  .minibowl__rim { fill: none; stroke: var(--border); stroke-width: 4; }
-  .minibowl__ghost { fill: none; stroke: color-mix(in srgb, var(--stone) 80%, var(--border)); stroke-width: 1.5; stroke-dasharray: none; }
-  .minibowl__shard { fill: var(--card); stroke: color-mix(in srgb, var(--ochre) 60%, var(--stone)); stroke-width: 4; stroke-linejoin: round; }
-  .minibowl__shard--mizu { fill: color-mix(in srgb, var(--mizu) 30%, var(--card)); }
-  .minibowl__shard--ochre { fill: color-mix(in srgb, var(--ochre) 30%, var(--card)); }
-  .minibowl__shard--plum { fill: color-mix(in srgb, var(--plum) 30%, var(--card)); }
-  .minibowl__shard--moss { fill: color-mix(in srgb, var(--moss) 30%, var(--card)); }
-  .minibowl__shard--hanko { fill: color-mix(in srgb, var(--hanko) 30%, var(--card)); }
-  .minibowl__shard--indigo { fill: color-mix(in srgb, var(--indigo) 30%, var(--card)); }
-  .minibowl__slot { fill: var(--paper-2); stroke: color-mix(in srgb, var(--stone) 80%, var(--border)); stroke-width: 1.5; stroke-dasharray: none; }
+  .minibowl__table { fill: var(--ink); opacity: .12; }
+  .minibowl__floor { fill: color-mix(in srgb, var(--stone) 70%, var(--ink)); }
+  .minibowl__ghost { fill: none; stroke: color-mix(in srgb, var(--gold) 40%, var(--stone)); stroke-width: 2; stroke-dasharray: 6 7; opacity: .7; }
+  .minibowl__shard { fill: var(--card); stroke: var(--gold); stroke-width: 3; stroke-linejoin: round; }
+  .minibowl__shard--mizu { fill: color-mix(in srgb, var(--mizu) 34%, var(--card)); }
+  .minibowl__shard--ochre { fill: color-mix(in srgb, var(--ochre) 34%, var(--card)); }
+  .minibowl__shard--plum { fill: color-mix(in srgb, var(--plum) 34%, var(--card)); }
+  .minibowl__shard--moss { fill: color-mix(in srgb, var(--moss) 34%, var(--card)); }
+  .minibowl__shard--hanko { fill: color-mix(in srgb, var(--hanko) 34%, var(--card)); }
+  .minibowl__shard--indigo { fill: color-mix(in srgb, var(--indigo) 34%, var(--card)); }
+  /* The inside of the far wall sits in its own shade. */
+  .minibowl__shard--in { filter: brightness(.72); }
+  /* Read by this reader (set in their browser by layouts/Post.astro). */
+  .minibowl__shard.read { fill: color-mix(in srgb, var(--gold) 58%, var(--card)); stroke-width: 4.5; }
+  .minibowl__shard { transition: fill .6s var(--ease); }
+  .minibowl__slot { fill: var(--paper-2); stroke: color-mix(in srgb, var(--gold) 50%, var(--stone)); stroke-width: 2; stroke-dasharray: 6 6; }
   .minibowl__fill { fill: var(--card); }
-  .minibowl__seam { fill: none; stroke: var(--ochre); stroke-width: 15; stroke-linejoin: round; stroke-dasharray: 1; }
+  .minibowl__seam { fill: none; stroke: var(--gold); stroke-width: 10; stroke-linejoin: round; stroke-dasharray: 1; }
 </style>
