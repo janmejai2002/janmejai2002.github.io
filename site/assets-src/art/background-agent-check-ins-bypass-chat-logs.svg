@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" role="img">
+<title>Background Agent Check-Ins vs MCP Gateway</title>
+<desc>Geometric diagram contrasting an idle interactive chat timeline with unprompted background polling pulses blocked at an MCP gateway.</desc>
+<defs>
+<filter id="grain">
+<feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch"/>
+<feColorMatrix type="saturate" values="0"/>
+</filter>
+</defs>
+<rect width="1600" height="900" fill="{{paper}}"/>
+<g stroke="{{border}}" stroke-width="1.5" fill="none">
+<rect x="140" y="160" width="1320" height="180"/>
+<line x1="140" y1="410" x2="1460" y2="410" stroke-dasharray="10 8"/>
+<rect x="140" y="520" width="1320" height="220"/>
+</g>
+<g stroke="{{ink}}" stroke-width="2.5" fill="none">
+<line x1="180" y1="250" x2="1420" y2="250"/>
+<circle cx="260" cy="250" r="10" fill="{{ink}}"/>
+<circle cx="380" cy="250" r="10" fill="{{ink}}"/>
+</g>
+<g fill="{{mizu}}" opacity="0.9">
+<rect x="140" y="452" width="1320" height="28"/>
+</g>
+<g stroke="{{ink}}" stroke-width="3" fill="none">
+<line x1="220" y1="740" x2="220" y2="480"/>
+<line x1="260" y1="740" x2="260" y2="480"/>
+<line x1="300" y1="740" x2="300" y2="480"/>
+<line x1="420" y1="740" x2="420" y2="480"/>
+<line x1="460" y1="740" x2="460" y2="480"/>
+<line x1="540" y1="740" x2="540" y2="480"/>
+<line x1="580" y1="740" x2="580" y2="480"/>
+<line x1="620" y1="740" x2="620" y2="480"/>
+<line x1="740" y1="740" x2="740" y2="480"/>
+<line x1="780" y1="740" x2="780" y2="480"/>
+<line x1="860" y1="740" x2="860" y2="480"/>
+<line x1="900" y1="740" x2="900" y2="480"/>
+<line x1="940" y1="740" x2="940" y2="480"/>
+<line x1="1060" y1="740" x2="1060" y2="480"/>
+<line x1="1100" y1="740" x2="1100" y2="480"/>
+<line x1="1180" y1="740" x2="1180" y2="480"/>
+<line x1="1220" y1="740" x2="1220" y2="480"/>
+<line x1="1260" y1="740" x2="1260" y2="480"/>
+<line x1="1340" y1="740" x2="1340" y2="480"/>
+<line x1="1380" y1="740" x2="1380" y2="480"/>
+</g>
+<g stroke="{{mizu}}" stroke-width="4" fill="none">
+<line x1="1100" y1="740" x2="1100" y2="440"/>
+<line x1="1220" y1="740" x2="1220" y2="440"/>
+</g>
+<rect width="1600" height="900" filter="url(#grain)" opacity="0.05"/>
+</svg>

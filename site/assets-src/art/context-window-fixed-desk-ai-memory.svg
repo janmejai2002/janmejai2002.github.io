@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" role="img">
+<title>Context Window Fixed Working Desk</title>
+<desc>Geometric diagram of a fixed context window desk packed with system prompts, tools, files, and chat turns.</desc>
+<defs>
+<filter id="grain">
+<feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch"/>
+<feColorMatrix type="saturate" values="0"/>
+</filter>
+</defs>
+<rect width="1600" height="900" fill="{{paper}}"/>
+<g stroke="{{border}}" stroke-width="1.5" fill="none">
+<line x1="120" y1="200" x2="1480" y2="200"/>
+<line x1="120" y1="700" x2="1480" y2="700"/>
+<rect x="240" y="240" width="1160" height="420"/>
+</g>
+<g stroke="{{ink}}" stroke-width="2.5" fill="none">
+<rect x="130" y="275" width="130" height="350" stroke-dasharray="8 6" transform="rotate(-4 195 450)"/>
+<rect x="290" y="265" width="160" height="370"/>
+<rect x="470" y="265" width="210" height="175"/>
+<rect x="470" y="460" width="210" height="175"/>
+<rect x="700" y="265" width="250" height="370"/>
+<line x1="700" y1="355" x2="950" y2="355"/>
+<line x1="700" y1="445" x2="950" y2="445"/>
+<line x1="700" y1="535" x2="950" y2="535"/>
+<rect x="970" y="265" width="190" height="370"/>
+</g>
+<g fill="{{plum}}" opacity="0.88">
+<rect x="1180" y="265" width="195" height="370"/>
+</g>
+<g stroke="{{plum}}" stroke-width="2.5" fill="none">
+<line x1="240" y1="220" x2="1400" y2="220"/>
+<line x1="240" y1="210" x2="240" y2="230"/>
+<line x1="1400" y1="210" x2="1400" y2="230"/>
+</g>
+<rect width="1600" height="900" filter="url(#grain)" opacity="0.05"/>
+</svg>

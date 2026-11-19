@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" role="img">
+<title>Anthropic Compute Commitments vs Enterprise Liquidity</title>
+<desc>Geometric diagram contrasting ascending compute lease horizons against liquidity reserves and an ochre multi-cloud bypass rail.</desc>
+<defs>
+<filter id="grain">
+<feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch"/>
+<feColorMatrix type="saturate" values="0"/>
+</filter>
+</defs>
+<rect width="1600" height="900" fill="{{paper}}"/>
+<g stroke="{{border}}" stroke-width="1.5" fill="none">
+<line x1="120" y1="180" x2="1480" y2="180"/>
+<line x1="120" y1="680" x2="1480" y2="680"/>
+<line x1="120" y1="430" x2="1480" y2="430" stroke-dasharray="8 8"/>
+</g>
+<g stroke="{{ink}}" stroke-width="2.5" fill="none">
+<rect x="200" y="540" width="240" height="140"/>
+<rect x="520" y="340" width="320" height="340"/>
+<rect x="920" y="135" width="440" height="545"/>
+<line x1="200" y1="610" x2="440" y2="610"/>
+<line x1="520" y1="460" x2="840" y2="460"/>
+<line x1="920" y1="280" x2="1360" y2="280"/>
+<line x1="920" y1="460" x2="1360" y2="460"/>
+</g>
+<g fill="{{ochre}}" opacity="0.88">
+<rect x="200" y="720" width="520" height="44"/>
+<rect x="760" y="732" width="600" height="20"/>
+<circle cx="1360" cy="742" r="14"/>
+</g>
+<g stroke="{{ochre}}" stroke-width="2.5" fill="none">
+<line x1="200" y1="540" x2="200" y2="720" stroke-dasharray="6 6"/>
+<line x1="520" y1="680" x2="520" y2="720" stroke-dasharray="6 6"/>
+</g>
+<rect width="1600" height="900" filter="url(#grain)" opacity="0.05"/>
+</svg>
