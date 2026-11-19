@@ -69,6 +69,17 @@ function check(path, html) {
     fail('declares summary_large_image with no og:image');
   }
 
+  // 4b. ...and the card must be a file this build actually emitted, small
+  // enough that WhatsApp (which silently drops previews over ~300 KB) shows it.
+  const og = html.match(/property="og:image" content="https:\/\/[^/]+(\/[^"]+)"/)?.[1];
+  if (og) {
+    const file = join(dist, decodeURI(og));
+    let size = -1;
+    try { size = statSync(file).size; } catch {}
+    if (size < 0) fail(`og:image ${og} was not emitted by the build`);
+    else if (size > 300 * 1024) fail(`og:image ${og} is ${Math.round(size / 1024)} KB; WhatsApp drops previews over ~300 KB`);
+  }
+
   // 5. Every content image needs alt text.
   for (const img of html.match(/<img[^>]*>/g) ?? []) {
     if (!/\balt="[^"]+"/.test(img)) fail(`img without alt text: ${img.slice(0, 90)}`, 'G-IMAGE');

@@ -3,7 +3,7 @@ import Base from '../../layouts/Base.astro';
 import NewsBrowser from '../../components/NewsBrowser.astro';
 import NewsNav from '../../components/NewsNav.astro';
 import DomainMark from '../../components/DomainMark.astro';
-import { allNews, categories, catSlug, months, monthLabel } from '../../data/news-archive';
+import { allNews, categories, catSlug, months, monthLabel, NEWS_ACCENT } from '../../data/news-archive';
 import { plateEdge, EDGE_DEPTH } from '../../lib/bowl';
 
 export function getStaticPaths() {
@@ -35,14 +35,7 @@ export function getStaticPaths() {
 
 const { heading, title, description, items, isCategory, categoryName } = Astro.props;
 
-const accentOf: Record<string, string> = {
-  Finance: 'ochre',
-  Marketing: 'mizu',
-  Operations: 'moss',
-  'Product Management': 'plum',
-  Consulting: 'hanko',
-};
-const currentAccent = categoryName ? accentOf[categoryName] ?? 'ochre' : 'ochre';
+const currentAccent = categoryName ? NEWS_ACCENT[categoryName] ?? 'ochre' : 'ochre';
 const uniqueDates = new Set(items.map((i: any) => i.date)).size;
 
 const edge = plateEdge(categoryName ? `news-${catSlug(categoryName)}` : `news-${heading}`);
@@ -85,6 +78,7 @@ const pageSchema = {
 ---
 
 <Base
+  card={`news-${isCategory ? catSlug(categoryName!) : Astro.params.archive}`}
   title={title}
   description={description}
   section="BSchool"

@@ -12,6 +12,7 @@ const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
 ---
 
 <Base
+  card="blog"
   title="All Articles — wAIbi-sabi"
   description={`All ${posts.length} wAIbi-sabi articles on applied AI: how models work, what they cost, and what happened when companies deployed them.`}
   section="Archive"

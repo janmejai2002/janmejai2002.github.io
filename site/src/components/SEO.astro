@@ -1,5 +1,6 @@
 ---
 import { GOOGLE_SITE_VERIFICATION, BING_SITE_VERIFICATION, UMAMI_WEBSITE_ID, CLARITY_PROJECT_ID } from '../seo';
+import { cardFor, findCard } from '../data/share';
 
 export interface Props {
   title: string;
@@ -10,10 +11,14 @@ export interface Props {
   keywords?: string[];
   /** Path or already-absolute URL of the social card. Falls back site-wide. */
   image?: string;
+  /** Key of a page card in src/data/share.ts; its headline becomes the social title. */
+  card?: string;
   imageAlt?: string;
   /** The article's own title, without the site suffix that <title> may carry. */
   headline?: string;
   articleSection?: string;
+  /** "9 min read" — shown as a label in Slack, Discord and other unfurls. */
+  readingTime?: string;
   wordCount?: number;
   alternativeHeadline?: string;
   breadcrumbs?: { name: string; path?: string }[];
@@ -30,10 +35,12 @@ const {
   pubDate,
   updatedDate,
   keywords = [],
-  image,
-  imageAlt,
+  image: imageProp,
+  imageAlt: imageAltProp,
+  card,
   headline,
   articleSection,
+  readingTime,
   wordCount,
   alternativeHeadline,
   breadcrumbs,
@@ -43,17 +50,25 @@ const {
   faq = [],
 } = Astro.props;
 
+const shareCard = card ? await findCard(card) : undefined;
+if (card && !shareCard) throw new Error(`SEO: no share card "${card}" in src/data/share.ts`);
+const image = imageProp ?? (card ? cardFor(card) : undefined);
+const imageAlt = imageAltProp ?? (shareCard ? [shareCard.title, shareCard.hook].filter(Boolean).join(' — ') : undefined);
+
 const canonical = new URL(Astro.url.pathname, Astro.site).href;
 // Crawlers will not resolve a relative og:image, so everything is absolutised
 // against `site`. The default card exists so `summary_large_image` is never a
-// promise the page cannot keep.
-const ogImage = new URL(image ?? '/og-default.png', Astro.site).href;
-const ogImageAlt = imageAlt ?? 'wAIbi-sabi — applied AI notes by Janmejai Singh Minhas';
+// promise the page cannot keep. Cards are generated (src/data/share.ts).
+const ogImage = new URL(image ?? cardFor('default'), Astro.site).href;
 const siteName = 'wAIbi-sabi';
 const personId = new URL('/#person', Astro.site).href;
 const websiteId = new URL('/#website', Astro.site).href;
 const isHome = Astro.url.pathname === '/';
-const socialTitle = headline ?? title;
+// og:site_name already says wAIbi-sabi under every card, so the suffix <title>
+// carries for search results is noise in a feed.
+const socialTitle = headline ?? shareCard?.title ?? (title.replace(/\s+[—|–-]\s+wAIbi-sabi$/, '') || title);
+const ogImageAlt =
+  imageAlt ?? (image ? socialTitle : 'wAIbi-sabi: applied AI, written while it is still wrong. By Janmejai Singh Minhas.');
 
 const person = {
   '@type': 'Person',
@@ -188,8 +203,13 @@ const schema = { '@context': 'https://schema.org', '@graph': graph };
 <meta property="og:locale" content="en_IN" />
 {pubDate && <meta property="article:published_time" content={pubDate.toISOString()} />}
 {updatedDate && <meta property="article:modified_time" content={updatedDate.toISOString()} />}
+{type === 'article' && <meta property="article:author" content={new URL('/about/', Astro.site).href} />}
+{type === 'article' && articleSection && <meta property="article:section" content={articleSection} />}
+{type === 'article' && keywords.slice(0, 6).map((k) => <meta property="article:tag" content={k} />)}
 
 <meta property="og:image" content={ogImage} />
+<meta property="og:image:secure_url" content={ogImage} />
+<meta property="og:image:type" content="image/png" />
 <meta property="og:image:alt" content={ogImageAlt} />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
@@ -199,6 +219,11 @@ const schema = { '@context': 'https://schema.org', '@graph': graph };
 <meta name="twitter:description" content={description} />
 <meta name="twitter:image" content={ogImage} />
 <meta name="twitter:image:alt" content={ogImageAlt} />
+{/* Slack, Discord and a few others print these two pairs under the unfurl. */}
+{readingTime && <meta name="twitter:label1" content="Reading time" />}
+{readingTime && <meta name="twitter:data1" content={readingTime} />}
+{type === 'article' && articleSection && <meta name="twitter:label2" content="Filed under" />}
+{type === 'article' && articleSection && <meta name="twitter:data2" content={articleSection} />}
 
 {/* ?v=2: the kintsugi mark replaced the ensō on 2026-08-26, and browsers
     cache favicons far past normal asset rules — the query forces the refetch.
