@@ -61,9 +61,10 @@
         float m = smoothstep(0.35, 0.85, mix(f1, f2, 0.55));
         vec3 col = mix(u_a, u_b, m);
 
-        // Grain, so the field reads as paper rather than as a gradient.
-        float g = hash(gl_FragCoord.xy + fract(u_t)) * 0.06 - 0.03;
-        gl_FragColor = vec4(col + g, (m * 0.55 + 0.12) * u_amp);
+        // The paper grain itself is the fractal-noise overlay on body; this
+        // canvas is drawn small and scaled up, so per-pixel grain here would
+        // only turn into blocks.
+        gl_FragColor = vec4(col, (m * 0.55 + 0.12) * u_amp);
       }
     `;
 
@@ -127,7 +128,10 @@
     };
 
     const resize = () => {
-      const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+      // A soft field drifting slowly needs very few pixels: about a third of a
+      // CSS pixel each, smoothed back up by the browser. That is around a
+      // twentieth of the work of drawing it at full resolution.
+      const dpr = 0.34;
       const w = Math.floor(window.innerWidth * dpr);
       const h = Math.floor(window.innerHeight * dpr);
       if (cvs.width !== w || cvs.height !== h) {
@@ -141,8 +145,8 @@
     let raf = 0;
     let last = 0;
     const draw = (t: number) => {
-      // ~30fps is plenty for something moving this slowly, and halves the cost.
-      if (t - last > 33) {
+      // It moves a few pixels a minute; 12 frames a second is already smooth.
+      if (t - last > 83) {
         last = t;
         gl.uniform1f(uT, t / 1000);
         gl.drawArrays(gl.TRIANGLES, 0, 3);
@@ -202,10 +206,12 @@
     pointer-events: none;
     /* Texture, not decoration. It should be felt before it is noticed. */
     opacity: 0.16;
-    mix-blend-mode: multiply;
+    /* No blend mode. It sits behind everything, over a flat background, where
+       multiply looks the same as plain opacity, but a blended full-screen layer
+       makes the browser recomposite the whole page on every scroll and frame. */
   }
-  :root[data-theme='dark'] #grain { mix-blend-mode: screen; opacity: 0.07; }
+  :root[data-theme='dark'] #grain { opacity: 0.07; }
   @media (prefers-color-scheme: dark) {
-    :root:not([data-theme='light']) #grain { mix-blend-mode: screen; opacity: 0.07; }
+    :root:not([data-theme='light']) #grain { opacity: 0.07; }
   }
 </style>

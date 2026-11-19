@@ -50,9 +50,11 @@
   --gold: #C2913A;
   --solid: var(--ink);
   --on-solid: var(--paper);
-  --noise-colour: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  /* Pre-rendered by scripts/make-paper-noise.mjs. An inline SVG turbulence filter here
+     re-rasterised across the page on every animated frame and made it stutter. */
+  --noise-colour: url('/textures/paper-noise.webp');
   /* Colour noise reads as speckle on a dark ground, so dark gets it in grey. */
-  --noise-mono: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  --noise-mono: url('/textures/paper-noise-mono.webp');
   --paper-noise: var(--noise-colour);
 
   --font: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
@@ -741,4 +743,13 @@ footer a:hover { color: var(--mizu); }
   .main--immersive .themetoggle { order: 1; }
   .main--immersive .topnav a:not(.topnav__mark) { order: 2; }
   .main--immersive .topnav__spacer { margin-left: 0; }
+}
+
+/* Moving between pages: a short cross-fade everywhere, and a piece's drawing
+   carried straight from the archive bowl into its article's plate
+   (components/Bowl.astro .warp__art and styles/article.css .liveart). */
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition { navigation: auto; }
+  ::view-transition-group(root) { animation-duration: .32s; }
+  ::view-transition-group(piece-art) { animation-duration: .55s; animation-timing-function: cubic-bezier(.2, .8, .2, 1); }
 }
