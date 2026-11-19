@@ -50,6 +50,16 @@ test('priority moments skip the gap and the budget, but not once', () => {
   assert.equal(d.take('end', 3), false);
 });
 
+test('a channel has its own budget but shares the quiet gap', () => {
+  const d = createDirector({ gapMs: 100, budget: 1, budgets: { bowl: 2 }, rules: { b1: { channel: 'bowl' }, b2: { channel: 'bowl' }, b3: { channel: 'bowl' } } });
+  assert.equal(d.take('hero', 0), true);
+  assert.equal(d.take('hero2', 200), false); // page budget spent
+  assert.equal(d.take('b1', 50), false); // still inside the shared gap
+  assert.equal(d.take('b1', 300), true);
+  assert.equal(d.take('b2', 400), true);
+  assert.equal(d.take('b3', 500), false); // bowl budget spent
+});
+
 test('no input, no lines: the director never speaks on its own', () => {
   const d = createDirector();
   assert.equal(d.spoken().length, 0);

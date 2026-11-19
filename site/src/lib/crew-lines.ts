@@ -17,7 +17,14 @@ export type Moment =
   | 'back'          // the reader left the tab for a while and came back
   | 'resume'        // the reader followed "pick up where you left off"
   | 'finished'      // the reader reached the end, at a reading pace
-  | 'quick';        // the reader reached the end very quickly
+  | 'quick'         // the reader reached the end very quickly
+  // The archive bowl on the homepage.
+  | 'gilded'        // Tsugi gilds the seams of pieces read since the last visit
+  | 'picked'        // the reader asked the bowl to pick a piece for them
+  | 'spun'          // the reader spun the bowl hard
+  | 'reread'        // the reader lifted out a piece they have already read
+  | 'tally'         // the reader's read count passed a milestone
+  | 'unwritten';    // the reader tried to lift out a piece nobody has written
 
 type Lines = Partial<Record<Who, string[]>> & { any?: string[] };
 
@@ -64,6 +71,28 @@ export const LINES: Record<Moment, Lines> = {
   },
   quick: {
     any: ['That was quick. I will count it anyway: {n} of {total}.'],
+  },
+  gilded: {
+    tsugi: [
+      'You read it, I gilded it. Fair split.',
+      'Fresh gold on your pieces. Mind, it is still wet.',
+      '{n} new seams. I did the fiddly bits.',
+    ],
+  },
+  picked: {
+    kiki: ['This one was humming.', 'I heard this one calling you.', 'Listen. That one.'],
+  },
+  spun: {
+    oops: ['It is glued, not welded!', 'Whoa. Whoa. Whoaaa.', 'Not the spin cycle again.'],
+  },
+  reread: {
+    uso: ['Again? Checking my sums, are you.', 'Back for a second look. Good instinct.'],
+  },
+  tally: {
+    fude: ['Logged: {n} pieces in your bowl.', '{n} read. I need a bigger notebook.'],
+  },
+  unwritten: {
+    fude: ['Blank. I have not got to that one yet.', 'That piece is still in my head.'],
   },
 };
 

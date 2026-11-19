@@ -39,9 +39,19 @@ export interface Cast {
 
 const wait = (ms: number) => new Promise<void>((r) => setTimeout(r, ms));
 
-export function createCast(stage: HTMLElement, opts: { reduced: boolean }): Cast {
+export function createCast(
+  stage: HTMLElement,
+  opts: {
+    reduced: boolean;
+    /** The line slot, when it sits outside the stage (for example in a caption). */
+    bubble?: HTMLElement | null;
+    /** Gets `is-speaking` while a line shows, so its [data-quiet] text steps aside. */
+    voice?: HTMLElement | null;
+  }
+): Cast {
   const { reduced } = opts;
-  const bubble = stage.querySelector<HTMLElement>('[data-say]');
+  const bubble = opts.bubble ?? stage.querySelector<HTMLElement>('[data-say]');
+  const voice = opts.voice ?? stage;
   const actors = new Map<string, ActorImpl>();
   let lookAt: { x: number; y: number } | null = null;
   let raf = 0;
@@ -209,13 +219,13 @@ export function createCast(stage: HTMLElement, opts: { reduced: boolean }): Cast
         bubble.append(who, ' ');
       }
       bubble.append(text);
-      stage.classList.add('is-speaking');
+      voice.classList.add('is-speaking');
       hushTimer = window.setTimeout(() => cast.hush(), ms);
     },
     hush() {
       clearTimeout(hushTimer);
       speaking = null;
-      stage.classList.remove('is-speaking');
+      voice.classList.remove('is-speaking');
     },
     get speaking() {
       return speaking;
@@ -225,3 +235,63 @@ export function createCast(stage: HTMLElement, opts: { reduced: boolean }): Cast
 }
 
 export { wait };
+
+/** Where a character stands at one moment of a path: feet at (x, y) in stage
+ *  pixels, leaning by `tilt` degrees, facing `face` (1 right, -1 left). */
+export interface Pose {
+  x: number;
+  y: number;
+  tilt?: number;
+  face?: number;
+}
+
+const smooth = (t: number) => (t < 0.5 ? 2 * t * t : 1 - (-2 * t + 2) ** 2 / 2);
+
+/**
+ * Carry a character along any path: a gold edge, a bowl's rim, a jump. `at(t)`
+ * maps progress 0..1 (already eased) to a pose. With reduced motion they are
+ * placed at the end at once. `stop()` on the returned handle ends it early, where
+ * it is, and still resolves `done`.
+ */
+export function follow(
+  a: Actor,
+  ms: number,
+  at: (t: number) => Pose,
+  opts: { reduced?: boolean; walk?: boolean; ease?: (t: number) => number } = {}
+): { done: Promise<void>; stop(): void } {
+  const ease = opts.ease ?? smooth;
+  const put = (p: Pose) => {
+    a.place(p.x, p.y);
+    a.el.style.setProperty('--tilt', `${(p.tilt ?? 0).toFixed(2)}deg`);
+    if (p.face) a.el.style.setProperty('--face', String(p.face));
+  };
+  let stopped = false;
+  let finish = () => {};
+  const done = new Promise<void>((res) => (finish = res));
+  if (opts.reduced || ms <= 0) {
+    put(at(1));
+    finish();
+    return { done, stop() {} };
+  }
+  const t0 = performance.now();
+  if (opts.walk !== false) a.el.classList.add('walking');
+  const frame = (now: number) => {
+    if (stopped) return;
+    const t = Math.min(1, (now - t0) / ms);
+    put(at(ease(t)));
+    if (t < 1) requestAnimationFrame(frame);
+    else {
+      a.el.classList.remove('walking');
+      finish();
+    }
+  };
+  requestAnimationFrame(frame);
+  return {
+    done,
+    stop() {
+      stopped = true;
+      a.el.classList.remove('walking');
+      finish();
+    },
+  };
+}

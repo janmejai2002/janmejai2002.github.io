@@ -22,6 +22,9 @@ export interface MomentRule {
   cooldownMs?: number;
   /** Speaks even inside the global quiet gap, and outside the budget. */
   priority?: boolean;
+  /** Counts against this stage's own budget (see `budgets`) instead of the
+   *  page's. The quiet gap is still shared: one voice at a time per page. */
+  channel?: string;
 }
 
 export interface DirectorOptions {
@@ -29,6 +32,9 @@ export interface DirectorOptions {
   gapMs?: number;
   /** Lines allowed per page view, not counting priority moments. */
   budget?: number;
+  /** Separate budgets for stages further down the page, so a reader who plays
+   *  with the hero does not leave the bowl with nothing to say. */
+  budgets?: Record<string, number>;
   rules?: Record<string, MomentRule>;
 }
 
@@ -46,7 +52,7 @@ export function createDirector(opts: DirectorOptions = {}): Director {
   const log: { moment: string; at: number }[] = [];
   const last = new Map<string, number>();
   let lastAny = -Infinity;
-  let used = 0;
+  const used = new Map<string, number>();
 
   return {
     take(moment, now) {
@@ -56,8 +62,11 @@ export function createDirector(opts: DirectorOptions = {}): Director {
       if (prev !== undefined && now - prev < (rule.cooldownMs ?? 0)) return false;
       if (!rule.priority) {
         if (now - lastAny < gap) return false;
-        if (used >= budget) return false;
-        used++;
+        const ch = rule.channel ?? '';
+        const cap = rule.channel ? (opts.budgets?.[rule.channel] ?? budget) : budget;
+        const n = used.get(ch) ?? 0;
+        if (n >= cap) return false;
+        used.set(ch, n + 1);
       }
       last.set(moment, now);
       lastAny = now;
