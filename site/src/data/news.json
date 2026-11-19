@@ -1,5 +1,45 @@
 [
   {
+    "headline": "60% of Gen Z Call AI-Made Brand Ads Lazy, Accenture Survey Finds",
+    "date": "2026-11-19",
+    "category": "Marketing",
+    "summary": "Accenture Song's Life Trends 2027 survey of 28,000 people across 26 countries found 50% of consumers say their feeds feel irrelevant and 60% of 18-to-24-year-olds view brands using AI for ads or content as lazy, careless, and cheap. The study also found 63% expect companies to earn local trust by creating jobs, while 67% earned income outside their primary job and 15% used AI to build a product or service to sell.",
+    "angle": "An IIM or XLRI marketing panel will ask how a brand can cut creative production costs with generative AI without triggering the 60% Gen Z trust penalty on synthetic advertising.",
+    "source": "https://newsroom.accenture.com/news/2026/accenture-life-trends-2027-finds-people-want-progress-in-an-ai-era-but-on-their-own-terms"
+  },
+  {
+    "headline": "Amazon Expands 3.5% Fuel Surcharge to Bulk Storage and Distribution",
+    "date": "2026-11-19",
+    "category": "Operations",
+    "summary": "Amazon is extending its 3.5% fuel and logistics surcharge on February 1, 2027 to US Multi-Channel Distribution and Warehousing and Distribution transportation fees after Q3 shipping costs climbed 11% year-on-year, with three percentage points tied to fuel and linehaul inflation. The company will also raise Fulfillment by Amazon per-unit fees by an average of $0.19 starting January 15, 2027—up from $0.08 in 2026—while folding its 181-day aged inventory surcharge into a single age-based monthly storage rate.",
+    "angle": "An operations panel will ask how a D2C or third-party seller should rebalance inventory replenishment between Amazon's bulk warehousing and independent 3PLs when fulfillment fees rise $0.19 per unit and fast-turning stock under six months is rewarded over aged inventory.",
+    "source": "https://www.supplychaindive.com/news/amazon-to-expand-fuel-and-logistics-surcharge-to-more-services/874693/"
+  },
+  {
+    "headline": "Bain Survey Shows Only 25% Rebuild Workflows as AI Hiring Rebounds",
+    "date": "2026-11-19",
+    "category": "Consulting",
+    "summary": "Bain & Company's August 2026 survey of 200 executives shows 33% of companies now capture measurable revenue gains or cost cuts from AI (up from 23% a year earlier), and 49% of firms that fully rebuilt workflows beat targets versus 23% of light adapters, yet only 25% are rebuilding workflows substantially. Meanwhile, expected AI-driven downsizing reversed in software development—swinging from a 2% projected headcount cut in Q1 2026 to a 10% increase in Q3—even as 59% of tech executives see high disruption risk versus 32% outside tech.",
+    "angle": "A consulting panel will ask why 75% of enterprises stop short of full workflow redesign despite double the odds of beating AI targets, and how an advisory firm should pitch headcount transformation when software engineering demand is rising 10%.",
+    "source": "https://www.bain.com/insights/survey-workflow-redesign-is-key-to-ai-success/"
+  },
+  {
+    "headline": "Mahanadi Coalfields Targets Rs 90,010 Cr Valuation in Rs 8,981 Cr IPO",
+    "date": "2026-11-19",
+    "category": "Finance",
+    "summary": "Coal India subsidiary Mahanadi Coalfields opens its Rs 8,981.12 crore pure offer-for-sale IPO on November 19, 2026 at a Rs 129 to Rs 136 price band, valuing the miner at Rs 90,010 crore—37.6% of Coal India's market capitalization at 8.43x FY26 earnings versus Coal India's 7.12x to 7.96x. The unit generated 34% of Coal India's FY26 net profit (Rs 10,698 crore on a 35% PAT margin versus 18.5% for the parent) and paid Rs 7,650 crore in dividends, even though full-year profit fell roughly 10% from FY24 and H1 FY27 output dropped 9.3%.",
+    "angle": "A finance panel will ask whether Mahanadi Coalfields deserves an 8.43x P/E premium over parent Coal India given its 53.8% return on net worth, or a conglomerate discount because 68.6% of sales go to power plants while output fell 9.3% in H1 FY27.",
+    "source": "https://upstox.com/news/market-news/ipo/mahanadi-coalfields-vs-coal-india-is-the-subsidiary-worth-a-higher-valuation-than-its-parent/article-203643/"
+  },
+  {
+    "headline": "Netlify Nears $130M ARR on 130% Growth With Agent App Builder",
+    "date": "2026-11-19",
+    "category": "Product Management",
+    "summary": "Netlify expects annual recurring revenue to approach $130 million by end-2026 on nearly 130% year-on-year growth, driven by an over 400% six-month surge in users new to AI building, up to 100,000 daily signups, and over 1 million weekly projects. Its redesigned platform pairs Agent Runners and 150+ connectors with Netlify Server—already running 10,000+ servers—allowing nontechnical staff and developers to collaborate in one Git workflow, mirroring an internal help desk Netlify built in six hours that automated 80% of routine support work.",
+    "angle": "A product management panel will press you on how a developer infrastructure platform can monetize 100,000 daily AI-builder signups without cannibalizing paid seats when nontechnical teams replace off-the-shelf SaaS tools with internally built apps.",
+    "source": "https://www.netlify.com/press/netlify-unveils-new-ai-app-building-experience-as-annual-recurring-revenue-approaches-130-million/"
+  },
+  {
     "headline": "CBRE Forecasts 75M Sq Ft Quick-Commerce Warehouse Demand by 2030",
     "date": "2026-11-18",
     "category": "Operations",
