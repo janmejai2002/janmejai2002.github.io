@@ -7,7 +7,7 @@ checks yourself; do not ask the user to.
 
 ## 1. Read the handoffs
 
-In this order, from `C:\Users\Janmejai\PluginsClaude`:
+In this order, from `C:\Users\Janmejai\janmejai2002.github.io`:
 
 1. `docs/HANDOFF-NEXT-SESSION.md` — where the last session stopped, and its
    "Watch for" / "still not done" items.

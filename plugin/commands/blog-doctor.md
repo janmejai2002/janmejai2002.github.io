@@ -7,7 +7,7 @@ ask the user to. Read the `blog-os` skill if it is not already in context.
 
 ## 1. Run the headless doctor
 
-From `C:\Users\Janmejai\PluginsClaude\site`:
+From `C:\Users\Janmejai\janmejai2002.github.io\site`:
 
 ```
 node scripts/doctor.mjs --deep

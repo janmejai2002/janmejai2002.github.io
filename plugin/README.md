@@ -2,7 +2,7 @@
 
 A Claude Code plugin that packages the operating knowledge and session rituals
 for the **wAIbi-sabi blog OS** — the Notion-controlled, routine-driven Astro
-publishing system in this repo (`C:\Users\Janmejai\PluginsClaude`, live at
+publishing system in this repo (`C:\Users\Janmejai\janmejai2002.github.io`, live at
 <https://janmejai2002.github.io>).
 
 It exists because every session on this project starts the same way — "read
@@ -53,7 +53,7 @@ docs (that drift is itself one of the project's recorded lessons).
 This is a directory-source plugin, same shape as `stratx`.
 
 ```
-/plugin marketplace add C:\Users\Janmejai\PluginsClaude\plugin
+/plugin marketplace add C:\Users\Janmejai\janmejai2002.github.io\plugin
 /plugin install waibi-sabi-os@waibi-sabi-os
 ```
 

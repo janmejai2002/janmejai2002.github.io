@@ -9,7 +9,7 @@ with the evidence. Do not ask the user to check anything manually.
 
 - Make sure no Astro dev server is running (`npm run build` OOMs against it).
   Stop any preview server you started this session.
-- From `C:\Users\Janmejai\PluginsClaude\site`:
+- From `C:\Users\Janmejai\janmejai2002.github.io\site`:
 
   ```
   npm run build

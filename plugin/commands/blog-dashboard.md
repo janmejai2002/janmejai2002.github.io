@@ -35,7 +35,7 @@ basics-radar"`, `"last run failed"`.
 
 ## 2. Build it
 
-From `C:\Users\Janmejai\PluginsClaude\site`:
+From `C:\Users\Janmejai\janmejai2002.github.io\site`:
 
 ```
 node scripts/dashboard.mjs --augment <scratchpad>/aug.json --out <scratchpad>/blog-dashboard.html

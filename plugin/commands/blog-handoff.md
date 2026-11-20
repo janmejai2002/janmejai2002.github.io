@@ -2,7 +2,7 @@
 description: Rewrite docs/HANDOFF-NEXT-SESSION.md so the next session can pick up cold — what landed and is verified, what is open, what to watch for, and the paste-in prompt.
 ---
 
-Regenerate `C:\Users\Janmejai\PluginsClaude\docs\HANDOFF-NEXT-SESSION.md` from
+Regenerate `C:\Users\Janmejai\janmejai2002.github.io\docs\HANDOFF-NEXT-SESSION.md` from
 this session's work. Match the existing file's structure and voice — read the
 current version first.
 
