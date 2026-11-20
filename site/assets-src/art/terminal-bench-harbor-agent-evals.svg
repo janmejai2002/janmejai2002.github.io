@@ -1,0 +1,23 @@
+<svg viewBox="0 0 1600 900" width="1600" height="900" role="img" xmlns="http://www.w3.org/2000/svg">
+  <title>Separate Verifier Container Isolation</title>
+  <desc>Minimal geometric diagram of Harbor separate-verifier architecture: left dashed agent container torn down, right solid verifier container receiving an artifact block with a vermilion hanko seal.</desc>
+  <defs>
+    <filter id="grain">
+      <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch"/>
+      <feColorMatrix type="saturate" values="0"/>
+    </filter>
+  </defs>
+  <rect width="1600" height="900" fill="{{paper}}"/>
+  <rect x="200" y="210" width="440" height="480" fill="none" stroke="{{border}}" stroke-width="3" stroke-dasharray="14 10"/>
+  <line x1="220" y1="230" x2="620" y2="670" stroke="{{ink}}" stroke-width="2.5" opacity="0.45"/>
+  <line x1="620" y1="230" x2="220" y2="670" stroke="{{ink}}" stroke-width="2.5" opacity="0.45"/>
+  <rect x="360" y="390" width="120" height="120" fill="none" stroke="{{border}}" stroke-width="2"/>
+  <line x1="640" y1="450" x2="960" y2="450" stroke="{{ink}}" stroke-width="3"/>
+  <rect x="770" y="420" width="60" height="60" fill="{{ink}}"/>
+  <rect x="960" y="210" width="440" height="480" fill="none" stroke="{{ink}}" stroke-width="4"/>
+  <rect x="1110" y="380" width="140" height="140" fill="none" stroke="{{ink}}" stroke-width="3"/>
+  <rect x="1150" y="420" width="60" height="60" fill="{{hanko}}"/>
+  <rect x="1310" y="240" width="56" height="56" fill="{{hanko}}"/>
+  <circle cx="800" cy="450" r="6" fill="{{hanko}}"/>
+  <rect width="1600" height="900" filter="url(#grain)" opacity="0.05"/>
+</svg>
