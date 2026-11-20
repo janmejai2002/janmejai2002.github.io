@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" role="img">
+  <title>Diminishing Returns and Role-Based Token Caps</title>
+  <desc>Geometric plot of a saturating output curve cut by three vertical budget thresholds, leaving a dashed ochre tail where extra token spend yields minimal output.</desc>
+  <defs>
+    <filter id="grain" x="0" y="0" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch"/>
+    </filter>
+  </defs>
+  <rect width="1600" height="900" fill="{{paper}}"/>
+  <rect x="120" y="100" width="1360" height="700" fill="none" stroke="{{border}}" stroke-width="1"/>
+  <path d="M200,200H1400M200,330H1400M200,460H1400M200,590H1400M350,160V720M550,160V720M750,160V720M950,160V720M1150,160V720" stroke="{{border}}" stroke-width="1"/>
+  <path d="M200,720H1420M200,140V720" stroke="{{ink}}" stroke-width="2"/>
+  <path d="M200,720C280,500 420,340 650,275C760,244 860,232 950,226" fill="none" stroke="{{ink}}" stroke-width="3.5"/>
+  <path d="M950,226C1100,218 1250,215 1400,214" fill="none" stroke="{{ochre}}" stroke-width="3.5" stroke-dasharray="12,8"/>
+  <line x1="350" y1="160" x2="350" y2="720" stroke="{{ink}}" stroke-width="1.5" stroke-dasharray="5,5"/>
+  <line x1="650" y1="160" x2="650" y2="720" stroke="{{ink}}" stroke-width="1.5" stroke-dasharray="5,5"/>
+  <line x1="950" y1="160" x2="950" y2="720" stroke="{{ochre}}" stroke-width="2.5"/>
+  <circle cx="350" cy="498" r="7" fill="{{ink}}"/>
+  <circle cx="650" cy="275" r="7" fill="{{ink}}"/>
+  <circle cx="950" cy="226" r="9" fill="{{ochre}}"/>
+  <circle cx="1400" cy="214" r="7" fill="none" stroke="{{ochre}}" stroke-width="2.5"/>
+  <rect width="1600" height="900" filter="url(#grain)" opacity="0.055"/>
+</svg>
