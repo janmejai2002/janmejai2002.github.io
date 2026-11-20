@@ -1,5 +1,45 @@
 [
   {
+    "headline": "Accenture Plans 950 Meta-Linked Job Cuts in Portugal as AI Automates",
+    "date": "2026-11-20",
+    "category": "Consulting",
+    "summary": "Accenture plans to cut roughly 950 Trust & Safety roles in Lisbon—about 17% of its Portugal workforce—by January 2027 through a voluntary exit program for 1,400 eligible staff as Meta shifts content moderation toward automated AI screening. The restructuring prompted Miraflores workers to approve a November 21 strike and raises margin pressure on Indian IT and BPO outsourcers that depend on large headcount-billed digital operations contracts.",
+    "angle": "A consulting panel will ask how global IT and BPO firms protect revenue and headcount utilization when hyperscaler clients automate Trust & Safety and customer-support workflows in-house.",
+    "source": "https://the420.in/metas-ai-push-leaves-accenture-facing-major-workforce-reductions-in-portugal/"
+  },
+  {
+    "headline": "Anthropic Lists at $1.5T Valuation After Record $81.3B IPO Debut",
+    "date": "2026-11-20",
+    "category": "Finance",
+    "summary": "Anthropic debuted on Nasdaq on November 19, 2026 at $100 per share—a 20% premium to its $83 issue price—after upsizing its IPO from $1.3 trillion to a $1.5 trillion valuation. Including a $26 billion private placement alongside the $81.3 billion public issue, the $107.3 billion total raise surpassed SpaceX's $75 billion June IPO to become the largest listing in equity market history.",
+    "angle": "A finance panel will test how you value a $1.5 trillion pure-play frontier AI listing when compute capex stays heavy and CEO Dario Amodei warns that safety checks will pace new model releases.",
+    "source": "https://upstox.com/news/market-news/us-stocks/anthropic-ipo-lists-at-20-premium-at-100-per-share-raises-record-81-3-billion-at-1-5-trillion-valuation/article-203733/"
+  },
+  {
+    "headline": "SaaS Giants Shift From Seats to Agent Pricing in $465B Market",
+    "date": "2026-11-20",
+    "category": "Product Management",
+    "summary": "Precedence Research valued the global SaaS market at $465.03 billion in 2026 (up from $408.21 billion in 2025 and projected to reach $1,367.68 billion by 2035) as enterprise vendors move from per-seat licenses to usage and outcome pricing for AI agents. Salesforce's Agentforce ARR now exceeds $1.5 billion (up over 240%), Adobe's AI-first ARR grew over 150%, Workday's AI ARR neared $600 million (+200%), and ServiceNow raised its 2026 AI contract target to $1.7 billion.",
+    "angle": "A product management panel will ask how an enterprise SaaS vendor prices AI agents on usage or outcomes without cannibalizing per-seat subscription ARR or eroding gross margins under higher inference costs.",
+    "source": "https://www.globenewswire.com/news-release/2026/11/19/3406918/0/en/software-as-a-service-saas-market-to-reach-usd-1-367-68-billion-by-2035-as-ai-agents-reshape-pricing-and-salesforce-adobe-servicenow-and-workday-build-new-ai-revenue-lines.html"
+  },
+  {
+    "headline": "TCI Express Commits Rs 500 Cr to Automated Sorting Centres",
+    "date": "2026-11-20",
+    "category": "Operations",
+    "summary": "TCI Express announced on November 19, 2026 a Rs 500 crore five-year investment plan and three new company-owned sorting centres in Ahmedabad, Lucknow, and Kolkata adding roughly 4 lakh sq ft of processing space, with Ahmedabad and Kolkata fully automated. In Q2 FY27, overall operating revenue rose 8.9% year-on-year to Rs 335.9 crore (Rs 26.7 crore PAT), led by 51.6% growth in e-commerce express and 29.4% growth in domestic air express.",
+    "angle": "An operations panel will ask why an asset-light express carrier commits Rs 500 crore to company-owned automated hubs and separate vertical networks when e-commerce express grows 51.6% while core surface express grows 9.4%.",
+    "source": "https://www.logisticsinsider.in/tci-express-500-crore-investment-sorting-centres/"
+  },
+  {
+    "headline": "Zee 5 Links OTT Ad Targeting to 825M Transaction Profiles via Vserv",
+    "date": "2026-11-20",
+    "category": "Marketing",
+    "summary": "Zee 5 expanded its partnership with Vserv AudiencePro on November 19, 2026 to combine its OTT viewing data with Vserv's transaction-led consumer intelligence covering over 825 million user profiles and 5,000 audience segments. Advertisers across FMCG, automotive, BFSI, D2C, and fintech can now target cohorts such as premium car buyers and high-value credit card users using real-world purchase signals alongside content preferences.",
+    "angle": "An IIM or XLRI marketing panel will ask how deterministic transaction-data OTT targeting changes media-mix allocation between connected TV brand campaigns and lower-funnel retail media networks.",
+    "source": "https://www.medianews4u.com/zee-5-deepens-partnership-with-vserv-audiencepro-to-strengthen-ott-advertising-capabilities/"
+  },
+  {
     "headline": "60% of Gen Z Call AI-Made Brand Ads Lazy, Accenture Survey Finds",
     "date": "2026-11-19",
     "category": "Marketing",
