@@ -1,0 +1,25 @@
+<svg viewBox="0 0 1600 900" width="1600" height="900" role="img" xmlns="http://www.w3.org/2000/svg">
+  <title>Agent Memory Tiers and KV Cache Invalidation</title>
+  <desc>Minimal geometric schematic of tiered agent memory (working, recall, archival) linked to a prefix-cache bar disrupted by a vermilion hanko mutation block.</desc>
+  <defs>
+    <filter id="grain">
+      <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch"/>
+      <feColorMatrix type="saturate" values="0"/>
+    </filter>
+  </defs>
+  <rect width="1600" height="900" fill="{{paper}}"/>
+  <rect x="180" y="200" width="360" height="120" fill="none" stroke="{{ink}}" stroke-width="4"/>
+  <rect x="210" y="230" width="60" height="60" fill="{{hanko}}"/>
+  <rect x="180" y="390" width="360" height="120" fill="none" stroke="{{border}}" stroke-width="3" stroke-dasharray="12 8"/>
+  <rect x="180" y="580" width="360" height="120" fill="none" stroke="{{ink}}" stroke-width="3"/>
+  <line x1="360" y1="320" x2="360" y2="390" stroke="{{ink}}" stroke-width="2.5"/>
+  <line x1="360" y1="510" x2="360" y2="580" stroke="{{ink}}" stroke-width="2.5"/>
+  <line x1="540" y1="260" x2="720" y2="450" stroke="{{ink}}" stroke-width="2.5"/>
+  <rect x="720" y="390" width="130" height="120" fill="{{ink}}"/>
+  <rect x="870" y="390" width="130" height="120" fill="{{ink}}"/>
+  <rect x="1020" y="390" width="130" height="120" fill="{{hanko}}"/>
+  <rect x="1170" y="390" width="130" height="120" fill="none" stroke="{{border}}" stroke-width="3" stroke-dasharray="10 8"/>
+  <rect x="1320" y="390" width="130" height="120" fill="none" stroke="{{border}}" stroke-width="3" stroke-dasharray="10 8"/>
+  <circle cx="1085" cy="340" r="8" fill="{{hanko}}"/>
+  <rect width="1600" height="900" filter="url(#grain)" opacity="0.05"/>
+</svg>
