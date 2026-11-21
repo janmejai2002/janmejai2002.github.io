@@ -1,5 +1,45 @@
 [
   {
+    "headline": "Airtel Tops Kantar BrandZ India at $43.2B as Blinkit Debuts at $4.3B",
+    "date": "2026-11-21",
+    "category": "Marketing",
+    "summary": "Airtel became the first telecom provider to top Kantar's BrandZ Top 100 Most Valuable Indian Brands ranking at $43.22 billion (up 5% year-on-year), even as the Top 100's combined value fell 12% to $460.3 billion. Meesho led all risers with a 64% jump to $1.9 billion on 45% FY26 order growth, while Blinkit debuted at No. 27 at $4.3 billion and brands that grew Meaningful Difference gained 7% on average versus a 13% drop for flat peers.",
+    "angle": "An IIM or XLRI marketing panel will ask how a telecom or quick-commerce brand builds Meaningful Difference to outgrow a 12% category valuation contraction without discounting away unit margins.",
+    "source": "https://www.medianews4u.com/airtel-tops-kantar-brandz-2026-as-indias-most-valuable-brand-at-43-2-billion-report/"
+  },
+  {
+    "headline": "BCG Survey Finds 75% of CMOs Doubt Agencies Can Scale Agentic AI",
+    "date": "2026-11-21",
+    "category": "Consulting",
+    "summary": "Boston Consulting Group and MMA Global's 2026 survey of 60 senior CMOs shows agentic AI accounts for 7% of marketing team capacity today and is expected to reach 27% within two to three years, cutting external agency talent share from 25% to 16%. While 75% of CMOs say creative agencies and 73% say media agencies are not AI-ready, 64% are redesigning operating models to shift away from FTE- and time-based agency billing.",
+    "angle": "A consulting panel will ask how an agency or advisory firm should replace FTE-based retainers with outcome pricing when clients expect agentic AI to take 27% of team workload and move strategy in-house.",
+    "source": "https://www.bcg.com/publications/2026/agentic-ai-reshaping-marketing-team"
+  },
+  {
+    "headline": "Model ML Hits $1.5B Valuation After 12x ARR Surge in Banking Agents",
+    "date": "2026-11-21",
+    "category": "Product Management",
+    "summary": "London-based financial AI agent platform Model ML raised a $250 million Series B at a $1.5 billion valuation during a $991 million fintech funding week, after Q3 2026 ARR jumped twelvefold year-on-year and daily active users grew 26-fold. In the same week, tax AI agent firm Blue J raised $176 million above a $700 million valuation and Arva AI raised $20 million to automate back-office banking decisions.",
+    "angle": "A product management panel will press you on what drives 26x daily active user retention in vertical AI agents for bankers and tax teams compared with horizontal copilots that stall after pilot trials.",
+    "source": "https://fintech.global/2026/11/20/almost-1bn-raised-in-fintech-deals-in-strong-week-for-investment/"
+  },
+  {
+    "headline": "RBI Sets Rs 10 Lakh Per-Remittance Rule for Services Forex Filings",
+    "date": "2026-11-21",
+    "category": "Finance",
+    "summary": "The Reserve Bank of India clarified on November 20, 2026 that its Rs 10 lakh ($10,760.79) services-trade forex reporting threshold applies to each individual inward remittance, not aggregate receipts over a period. Non-individual service exporters receiving over Rs 10 lakh in a single payment must submit an Export Declaration Form before bank credit, while resident individuals stay exempt and banks must publish trade operating procedures online.",
+    "angle": "A finance panel will test how a per-remittance Rs 10 lakh Export Declaration Form rule affects working-capital credit timelines and bank compliance costs for mid-sized Indian IT and SaaS exporters.",
+    "source": "https://www.angelone.in/news/economy/rbi-clarifies-scope-of-forex-rules-for-services-imports-and-exports-with-new-faqs"
+  },
+  {
+    "headline": "Walmart Store Fulfillment Lifts Q3 Online Sales 23% Toward Break-Even",
+    "date": "2026-11-21",
+    "category": "Operations",
+    "summary": "Walmart reported Q3 online US sales up 23% year-on-year on November 19, 2026 (within 5.2% overall revenue growth to $188.8 billion), reaching 96% of US households in three hours or less. Over 80% of Walmart's US e-commerce orders are now fulfilled from physical stores, pushing its standalone online business close to break-even even before counting advertising revenue.",
+    "angle": "An operations panel will ask you to compare fulfilling rapid e-commerce orders from existing retail stores (80% of Walmart's volume) against dedicated quick-commerce dark stores on picking productivity and inventory accuracy.",
+    "source": "https://www.retaildive.com/news/walmart-ecommerce-boom-fulfillment-speed-q3-earnings/875166/"
+  },
+  {
     "headline": "Accenture Plans 950 Meta-Linked Job Cuts in Portugal as AI Automates",
     "date": "2026-11-20",
     "category": "Consulting",
