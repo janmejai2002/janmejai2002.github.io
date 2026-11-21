@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" role="img">
+  <title>From Raw Text Predictor to RLHF Assistant</title>
+  <desc>Geometric diagram of branching prediction paths narrowed by two vertical post-training gates into a single plum trajectory with a subtle sycophancy drift.</desc>
+  <defs>
+    <filter id="grain" x="0" y="0" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch"/>
+    </filter>
+  </defs>
+  <rect width="1600" height="900" fill="{{paper}}"/>
+  <rect x="120" y="100" width="1360" height="700" fill="none" stroke="{{border}}" stroke-width="1"/>
+  <path d="M220,450L580,220M220,450L580,320M220,450L580,450M220,450L580,580M220,450L580,680" stroke="{{border}}" stroke-width="1.5" stroke-dasharray="8,6"/>
+  <line x1="580" y1="160" x2="580" y2="740" stroke="{{ink}}" stroke-width="2.5"/>
+  <path d="M580,320L920,410M580,450L920,450M580,580L920,490" stroke="{{ink}}" stroke-width="1.5" stroke-dasharray="6,6"/>
+  <line x1="920" y1="160" x2="920" y2="740" stroke="{{ink}}" stroke-width="2.5"/>
+  <line x1="220" y1="450" x2="1380" y2="450" stroke="{{plum}}" stroke-width="3.5"/>
+  <path d="M920,450C1060,450 1160,340 1280,290" fill="none" stroke="{{plum}}" stroke-width="2" stroke-dasharray="8,6"/>
+  <circle cx="220" cy="450" r="8" fill="{{ink}}"/>
+  <circle cx="580" cy="450" r="7" fill="{{plum}}"/>
+  <circle cx="920" cy="450" r="7" fill="{{plum}}"/>
+  <circle cx="1280" cy="290" r="10" fill="none" stroke="{{plum}}" stroke-width="2.5"/>
+  <circle cx="1380" cy="450" r="8" fill="{{plum}}"/>
+  <rect width="1600" height="900" filter="url(#grain)" opacity="0.055"/>
+</svg>

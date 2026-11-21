@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" role="img">
+  <title>Looped Middle Transformer Layers and Memory Bandwidth</title>
+  <desc>Geometric diagram of four transformer layer blocks where two middle blocks loop three times via mizu arcs, multiplying reads on the memory rail below.</desc>
+  <defs>
+    <filter id="grain" x="0" y="0" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch"/>
+    </filter>
+  </defs>
+  <rect width="1600" height="900" fill="{{paper}}"/>
+  <rect x="120" y="100" width="1360" height="700" fill="none" stroke="{{border}}" stroke-width="1"/>
+  <rect x="220" y="280" width="180" height="260" fill="none" stroke="{{ink}}" stroke-width="2"/>
+  <rect x="510" y="280" width="240" height="260" fill="none" stroke="{{ink}}" stroke-width="2.5"/>
+  <rect x="850" y="280" width="240" height="260" fill="none" stroke="{{ink}}" stroke-width="2.5"/>
+  <rect x="1200" y="280" width="180" height="260" fill="none" stroke="{{ink}}" stroke-width="2"/>
+  <path d="M400,410H510M750,410H850M1090,410H1200" stroke="{{ink}}" stroke-width="2"/>
+  <path d="M550,310V510M590,310V510M630,310V510M670,310V510M710,310V510M890,310V510M930,310V510M970,310V510M1010,310V510M1050,310V510" stroke="{{border}}" stroke-width="1"/>
+  <path d="M1090,280C1090,150 510,150 510,280" fill="none" stroke="{{mizu}}" stroke-width="3.5"/>
+  <path d="M1040,280C1040,190 560,190 560,280" fill="none" stroke="{{mizu}}" stroke-width="2.5" stroke-dasharray="10,6"/>
+  <line x1="200" y1="660" x2="1400" y2="660" stroke="{{ink}}" stroke-width="2"/>
+  <rect x="510" y="642" width="580" height="36" fill="{{mizu}}" opacity="0.75"/>
+  <circle cx="510" cy="280" r="7" fill="{{mizu}}"/>
+  <circle cx="1090" cy="280" r="7" fill="{{mizu}}"/>
+  <rect width="1600" height="900" filter="url(#grain)" opacity="0.055"/>
+</svg>

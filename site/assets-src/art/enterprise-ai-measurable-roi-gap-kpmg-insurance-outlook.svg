@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" role="img">
+  <title>The Enterprise AI Orchestration Gap</title>
+  <desc>Geometric diagram of enterprise AI budget lines hitting misaligned legacy core blocks, with only one thin ochre line reaching measurable return.</desc>
+  <defs>
+    <filter id="grain" x="0" y="0" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch"/>
+    </filter>
+  </defs>
+  <rect width="1600" height="900" fill="{{paper}}"/>
+  <rect x="120" y="100" width="1360" height="700" fill="none" stroke="{{border}}" stroke-width="1"/>
+  <path d="M200,200H520M200,260H520M200,320H520M200,380H520M200,440H520M200,500H520M200,560H520M200,620H520M200,680H520" stroke="{{ink}}" stroke-width="2"/>
+  <rect x="580" y="180" width="260" height="140" fill="none" stroke="{{ink}}" stroke-width="2"/>
+  <rect x="620" y="380" width="260" height="140" fill="none" stroke="{{ink}}" stroke-width="2" stroke-dasharray="8,6"/>
+  <rect x="560" y="580" width="260" height="140" fill="none" stroke="{{border}}" stroke-width="1.5"/>
+  <path d="M520,260H580M520,320H580M520,380H620M520,440H620M520,500H620M520,560H560M520,620H560M520,680H560" stroke="{{border}}" stroke-width="1.5"/>
+  <line x1="960" y1="160" x2="960" y2="740" stroke="{{ink}}" stroke-width="2"/>
+  <path d="M200,200H580M840,250H1380" fill="none" stroke="{{ochre}}" stroke-width="3.5"/>
+  <line x1="580" y1="250" x2="840" y2="250" stroke="{{ochre}}" stroke-width="3.5"/>
+  <circle cx="960" cy="250" r="8" fill="{{ochre}}"/>
+  <circle cx="1380" cy="250" r="7" fill="{{ochre}}"/>
+  <rect width="1600" height="900" filter="url(#grain)" opacity="0.055"/>
+</svg>
