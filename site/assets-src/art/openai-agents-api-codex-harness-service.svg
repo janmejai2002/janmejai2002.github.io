@@ -1,0 +1,27 @@
+<svg viewBox="0 0 1600 900" width="1600" height="900" role="img" xmlns="http://www.w3.org/2000/svg">
+  <title>Decoupled Cloud Harness and Remote Sandboxes</title>
+  <desc>Minimal geometric diagram of OpenAI Agents API architecture: cloud harness with turn checkpoints bridged across an idempotent sync node to isolated remote sandboxes.</desc>
+  <defs>
+    <filter id="grain">
+      <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch"/>
+      <feColorMatrix type="saturate" values="0"/>
+    </filter>
+  </defs>
+  <rect width="1600" height="900" fill="{{paper}}"/>
+  <rect x="180" y="210" width="420" height="480" fill="none" stroke="{{ink}}" stroke-width="4"/>
+  <rect x="230" y="270" width="320" height="52" fill="{{ink}}"/>
+  <rect x="230" y="350" width="240" height="52" fill="{{ink}}"/>
+  <rect x="230" y="430" width="280" height="52" fill="none" stroke="{{border}}" stroke-width="3"/>
+  <rect x="230" y="540" width="70" height="70" fill="{{hanko}}"/>
+  <line x1="600" y1="450" x2="770" y2="450" stroke="{{ink}}" stroke-width="3"/>
+  <line x1="830" y1="450" x2="1000" y2="450" stroke="{{ink}}" stroke-width="3" stroke-dasharray="10 8"/>
+  <circle cx="800" cy="450" r="26" fill="none" stroke="{{ink}}" stroke-width="3"/>
+  <circle cx="800" cy="450" r="10" fill="{{hanko}}"/>
+  <rect x="1000" y="210" width="420" height="210" fill="none" stroke="{{ink}}" stroke-width="3"/>
+  <rect x="1040" y="250" width="140" height="130" fill="none" stroke="{{border}}" stroke-width="2.5"/>
+  <rect x="1220" y="280" width="70" height="70" fill="{{ink}}"/>
+  <rect x="1000" y="480" width="420" height="210" fill="none" stroke="{{border}}" stroke-width="3" stroke-dasharray="12 8"/>
+  <rect x="1040" y="520" width="140" height="130" fill="none" stroke="{{border}}" stroke-width="2.5"/>
+  <rect x="1220" y="550" width="70" height="70" fill="{{hanko}}"/>
+  <rect width="1600" height="900" filter="url(#grain)" opacity="0.05"/>
+</svg>
