@@ -1,35 +1,35 @@
 {
-  "generated": "2026-11-21T01:36:12.410Z",
+  "generated": "2026-11-22T01:06:11.548Z",
   "radar": {
-    "total": 93,
-    "unrated": 57,
+    "total": 96,
+    "unrated": 60,
     "maybeLater": 1,
     "byStatus": {
-      "Radar Idea": 73,
+      "Radar Idea": 76,
       "Drafting": 6,
       "Published": 14
     },
     "byTrack": {
-      "Technical": 45,
-      "Business": 28,
-      "Basics": 20,
+      "Technical": 46,
+      "Business": 29,
+      "Basics": 21,
       "Case Studies": 0,
       "Talks": 0
     },
-    "newestIdea": "2026-11-20T22:06:00.000Z"
+    "newestIdea": "2026-11-21T22:21:00.000Z"
   },
   "production": {
-    "total": 108,
+    "total": 113,
     "inFlight": 2,
     "draftReady": 0,
     "approved": 0,
     "byTrack": {
-      "Technical": 30,
-      "Business": 23,
-      "Basics": 21,
-      "Case Studies": 18,
-      "Talks": 16
+      "Technical": 31,
+      "Business": 24,
+      "Basics": 22,
+      "Case Studies": 19,
+      "Talks": 17
     },
-    "newestDraft": "2026-11-20"
+    "newestDraft": "2026-11-21"
   }
 }

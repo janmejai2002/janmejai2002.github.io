@@ -1,5 +1,45 @@
 [
   {
+    "headline": "Audit of 2,900+ AI Startups Finds 53.4% Earn $0 and 2.5% Hold 72%",
+    "date": "2026-11-22",
+    "category": "Product Management",
+    "summary": "BigIdeasDB's November 21, 2026 audit of verified revenue across 2,900+ AI startups found 53.4% earn $0, only 73 (2.5%) clear $10,000 in monthly recurring revenue, and seven clear $100,000 MRR—with the top 2.5% capturing $2.6 million of the category's $3.6 million monthly total (72%). B2B AI products reach $10,000 MRR 1.7 times as often as B2C tools (3.3% versus 2.0%) and earn 62% higher median revenue ($216 versus $133 a month), led by outbound sales and AI search visibility tools at 23% of the $10,000+ tier.",
+    "angle": "A product management panel will press you on why 53.4% of AI startups fail to monetize and how a PM designs outcome-tied B2B workflows that avoid the $190 median AI wrapper trap.",
+    "source": "https://bigideasdb.com/top-ai-saas-companies"
+  },
+  {
+    "headline": "CrowdStrike Eyes $32B Zscaler Deal as Zscaler Shares Jump 16%",
+    "date": "2026-11-22",
+    "category": "Finance",
+    "summary": "CrowdStrike ($235 billion valuation) is in active merger talks to acquire cloud security rival Zscaler ($32 billion market cap), sending Zscaler shares up 16% after hours on November 21, 2026. Although Zscaler posted record FY26 revenue of $3.35 billion across 11,000 customers, its stock had fallen over 13% this year without an annual profit since 2018, pulling it into a $244 billion cybersecurity consolidation wave alongside Google's $32 billion Wiz and Palo Alto's $25 billion CyberArk deals.",
+    "angle": "A finance panel will ask how you value a $32 billion unprofitable SaaS security leader growing to $3.35 billion in revenue when AI-driven platform consolidation compresses standalone multiples.",
+    "source": "https://emergent.sh/news/crowdstrike-zscaler-merger-talks-signal-ai"
+  },
+  {
+    "headline": "Luminous Rebrands Around Connected Solar to Cut Home Bills Up to 20%",
+    "date": "2026-11-22",
+    "category": "Marketing",
+    "summary": "Luminous Power Technologies unveiled a new master-brand identity, logo, and \"Har Soch Mein Power\" tagline on November 21, 2026, shifting its 38-year-old inverter and battery portfolio toward connected home solar and EV mobility. Its \"Solar Wali Soch\" campaign with Sachin Tendulkar promotes the PoweriQ connected ecosystem, which links solar panels, inverters, and batteries to deliver up to 20% higher power generation or equivalent electricity bill savings.",
+    "angle": "An IIM or XLRI marketing panel will ask how a 38-year-old legacy power-backup brand avoids cannibalizing inverter sales while repositioning around higher-ticket connected solar ecosystems.",
+    "source": "https://www.medianews4u.com/luminous-unveils-new-brand-identity-taps-sachin-tendulkar-for-solar-wali-soch-campaign/"
+  },
+  {
+    "headline": "Omdia Survey Finds 55% of Firms Prefer On-Prem AI Infrastructure",
+    "date": "2026-11-22",
+    "category": "Consulting",
+    "summary": "An Omdia survey commissioned by Schneider Electric (reported November 21, 2026) found 55% of enterprise leaders across APAC, Europe, and North America prefer company-owned, on-premises infrastructure for AI due to data privacy, reliability, and regulatory compliance. While 73% are running five or more proofs of concept and 63% plan generative AI rollouts, only 23% have AI models delivering business value today, as AI server racks draw 30 kW to 120 kW versus 5 kW to 15 kW for standard racks.",
+    "angle": "A consulting panel will ask how an enterprise technology advisor reconciles a 55% client preference for on-premises AI with 30–120 kW rack power constraints when only 23% of firms capture AI value today.",
+    "source": "https://datacentremagazine.com/news/this-weeks-top-five-stories-in-the-data-centre-industry-21-november-2026"
+  },
+  {
+    "headline": "P&G Plans Up to 30% Factory and Logistics Job Cuts in $10B Drive",
+    "date": "2026-11-22",
+    "category": "Operations",
+    "summary": "Procter & Gamble is preparing to cut 20% to nearly 30% of its manufacturing and logistics workforce (roughly 52,000 production staff across 35 countries) by 2030 as part of a $10 billion cost-savings program after profit rose just 1% and commodity inflation added $1.4 billion in annual costs. The company has already opened 15 unmanned facilities and plans to extend automated operations across its logistics network to lift productivity 20% by 2030.",
+    "angle": "An operations panel will ask how an FMCG supply chain balances dark-factory and warehouse automation capex against labor-flexibility risks when profit growth slows to 1% and commodity costs jump $1.4 billion.",
+    "source": "https://www.logisticsinsider.in/pg-to-shed-up-to-30-of-factory-and-logistics-jobs-by-2030/"
+  },
+  {
     "headline": "Airtel Tops Kantar BrandZ India at $43.2B as Blinkit Debuts at $4.3B",
     "date": "2026-11-21",
     "category": "Marketing",
