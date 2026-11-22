@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" role="img">
+  <title>Frontier Spend Concentration vs Tiered Model Routing</title>
+  <desc>Geometric diagram of three tall frontier spend pillars contrasted with a split routing fork diverting routine token streams into a lower ochre serverless lane.</desc>
+  <defs>
+    <filter id="grain" x="0" y="0" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch"/>
+    </filter>
+  </defs>
+  <rect width="1600" height="900" fill="{{paper}}"/>
+  <rect x="120" y="100" width="1360" height="700" fill="none" stroke="{{border}}" stroke-width="1"/>
+  <rect x="220" y="180" width="130" height="520" fill="none" stroke="{{ink}}" stroke-width="2.5"/>
+  <rect x="390" y="250" width="130" height="450" fill="none" stroke="{{ink}}" stroke-width="2.5"/>
+  <rect x="560" y="420" width="130" height="280" fill="none" stroke="{{ink}}" stroke-width="2"/>
+  <line x1="180" y1="700" x2="1420" y2="700" stroke="{{ink}}" stroke-width="2"/>
+  <path d="M760,360H960L1060,260H1380" fill="none" stroke="{{ink}}" stroke-width="2.5"/>
+  <path d="M760,420H960L1060,540H1380M760,460H940L1060,580H1380M760,500H920L1060,620H1380" fill="none" stroke="{{ochre}}" stroke-width="3"/>
+  <circle cx="960" cy="420" r="7" fill="{{ochre}}"/>
+  <circle cx="1380" cy="260" r="7" fill="{{ink}}"/>
+  <circle cx="1380" cy="580" r="8" fill="{{ochre}}"/>
+  <rect width="1600" height="900" filter="url(#grain)" opacity="0.055"/>
+</svg>
