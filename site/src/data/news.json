@@ -1,5 +1,45 @@
 [
   {
+    "headline": "Australian Private Debt Hits A$255B Under Tighter Scrutiny",
+    "date": "2026-11-23",
+    "category": "Consulting",
+    "summary": "Alvarez & Marsal's November 2026 review shows Australian private debt AUM rose 14% to A$255 billion, nearly matching the A$256 billion corporate bond market while funding 14% of corporate lending and 19% of commercial real estate loans. Three-year net returns have climbed above 8% since 2024, yet heightened regulatory scrutiny has prompted some investors to seek redemptions and forced weaker managers to halt payouts.",
+    "angle": "A consulting panel will ask how turnaround and risk advisors should value illiquid private credit portfolios when redemptions spike during a regulatory crackdown. Expect questions on underwriting governance, liquidity mismatches in listed trusts, and why scale favours large managers.",
+    "source": "https://www.alvarezandmarsal.com/thought-leadership/australian-private-debt-market-review-2026"
+  },
+  {
+    "headline": "India's DPDP Consent Rules Threaten Open Ad Exchanges",
+    "date": "2026-11-23",
+    "category": "Marketing",
+    "summary": "India's Digital Personal Data Protection consent-manager rules opened on November 13 ahead of the May 13, 2027 enforcement deadline across 983.29 million wireless internet users. Because open-exchange programmatic ads hold a 42.0% share of the Rs 30,081 crore market at a blended Rs 55 CPM, proving consent across six or seven adtech intermediaries favours logged-in retail media walled gardens.",
+    "angle": "An IIM panel would ask how a D2C brand's media mix changes when third-party mobile IDs lose addressability and customer acquisition shifts toward Amazon or Flipkart retail media. You should explain why logged-in first-party consent lowers compliance liability even if media CPMs rise.",
+    "source": "https://www.pheonixresearch.com/information-technology/media-system/article/thirteen-may-2027-the-date-indias-consent-rules-reach-the-only-identifier-that-matters/"
+  },
+  {
+    "headline": "Pune FDA Suspends Amazon, BigBasket Dark Store Licences",
+    "date": "2026-11-23",
+    "category": "Operations",
+    "summary": "Maharashtra's Food and Drug Administration suspended the food licences of Amazon and BigBasket dark stores in Pune on November 21 after finding expired sweets, fungal growth, and food stored next to soap. In a parallel statewide enforcement drive, 319 inspections across drug units and pharmacies led to 114 licence suspensions or cancellations and Rs 2.28 crore in seizures.",
+    "angle": "An operations panel at IIM or XLRI will test how 10-minute dark-store layouts balance high SKU density against Schedule IV hygiene and cold-chain compliance. Be ready to design a daily FIFO audit and store-level quality gate that does not break pick-pack SLAs.",
+    "source": "https://www.freepressjournal.in/pune/pune-fda-suspends-amazon-bigbasket-dark-store-licences-12-drug-establishments-face-action"
+  },
+  {
+    "headline": "RBI Governor Urges Banks to Shift Focus to MSME Loans",
+    "date": "2026-11-23",
+    "category": "Finance",
+    "summary": "RBI Governor Sanjay Malhotra told bankers in Pune that splitting Rs 1,000 crore across small and micro-enterprises delivers 100 to 1,000 times the economic payoff of lending to one large corporate. With over 60 crore financial inclusion accounts now open, Bank of Maharashtra has grown its business correspondent network from 3,000 to 10,000 in two years.",
+    "angle": "An IIM finance panel will press you on the unit-economics tension between MSME underwriting costs and large-corporate ticket sizes. Expect follow-ups on how digital public infrastructure and business correspondents reduce origination and monitoring costs without spiking NPAs.",
+    "source": "https://government.economictimes.indiatimes.com/news/economy/rbi-governer-sanjay-malhotra-urges-banks-to-step-up-small-business-lending-for-greater-economic-gains/136067695"
+  },
+  {
+    "headline": "SaaS Pricing Index Finds $19 Median Entry, 64% Free Tiers",
+    "date": "2026-11-23",
+    "category": "Product Management",
+    "summary": "PURIST's November 2026 index of 307 business software tools across 32 categories puts the median cheapest paid plan at $19 per month, with 61% starting below $25 and 64% offering a free tier. Flat account pricing makes up 52% of entry plans at a $25 median, while per-user pricing covers 43% at a $15 median and annual billing saves a median 20%.",
+    "angle": "A PM panel will ask when to pick flat workspace pricing over per-seat pricing for an AI-enabled B2B tool. You should discuss how free tiers drive bottom-up adoption in developer and productivity apps while seat-based models risk penalising teams as automation cuts headcount.",
+    "source": "https://www.purist.online/pages/saas-pricing-index"
+  },
+  {
     "headline": "Audit of 2,900+ AI Startups Finds 53.4% Earn $0 and 2.5% Hold 72%",
     "date": "2026-11-22",
     "category": "Product Management",
