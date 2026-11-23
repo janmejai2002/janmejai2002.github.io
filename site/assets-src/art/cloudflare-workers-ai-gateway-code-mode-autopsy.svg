@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" role="img">
+  <title>Cloudflare AI Gateway proxy compression and split inference routing</title>
+  <desc>Thirty-four small schema rectangles on the left converge through a vertical proxy gate into two moss-accented routing paths on the right, with one offset square below the grid.</desc>
+  <defs>
+    <filter id="grain" x="0" y="0" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch"/>
+    </filter>
+  </defs>
+  <rect width="1600" height="900" fill="{{paper}}"/>
+  <rect x="80" y="80" width="1440" height="740" fill="none" stroke="{{border}}" stroke-width="1.5"/>
+  <line x1="640" y1="80" x2="640" y2="820" stroke="{{border}}" stroke-width="1"/>
+  <rect x="140" y="160" width="70" height="50" fill="none" stroke="{{ink}}" stroke-width="1.5"/>
+  <rect x="230" y="160" width="70" height="50" fill="none" stroke="{{ink}}" stroke-width="1.5"/>
+  <rect x="320" y="160" width="70" height="50" fill="none" stroke="{{ink}}" stroke-width="1.5"/>
+  <rect x="410" y="160" width="70" height="50" fill="none" stroke="{{ink}}" stroke-width="1.5"/>
+  <rect x="140" y="230" width="70" height="50" fill="none" stroke="{{ink}}" stroke-width="1.5"/>
+  <rect x="230" y="230" width="70" height="50" fill="none" stroke="{{ink}}" stroke-width="1.5"/>
+  <rect x="320" y="230" width="70" height="50" fill="none" stroke="{{ink}}" stroke-width="1.5"/>
+  <rect x="410" y="230" width="70" height="50" fill="none" stroke="{{ink}}" stroke-width="1.5"/>
+  <rect x="140" y="300" width="70" height="50" fill="none" stroke="{{ink}}" stroke-width="1.5"/>
+  <rect x="230" y="300" width="70" height="50" fill="none" stroke="{{ink}}" stroke-width="1.5"/>
+  <rect x="320" y="300" width="70" height="50" fill="none" stroke="{{ink}}" stroke-width="1.5"/>
+  <rect x="410" y="300" width="70" height="50" fill="none" stroke="{{ink}}" stroke-width="1.5"/>
+  <rect x="140" y="370" width="70" height="50" fill="none" stroke="{{ink}}" stroke-width="1.5"/>
+  <rect x="230" y="370" width="70" height="50" fill="none" stroke="{{ink}}" stroke-width="1.5"/>
+  <rect x="320" y="370" width="70" height="50" fill="none" stroke="{{ink}}" stroke-width="1.5"/>
+  <rect x="410" y="370" width="70" height="50" fill="none" stroke="{{ink}}" stroke-width="1.5"/>
+  <rect x="140" y="440" width="70" height="50" fill="none" stroke="{{ink}}" stroke-width="1.5"/>
+  <rect x="230" y="440" width="70" height="50" fill="none" stroke="{{ink}}" stroke-width="1.5"/>
+  <rect x="320" y="440" width="70" height="50" fill="none" stroke="{{ink}}" stroke-width="1.5"/>
+  <rect x="410" y="440" width="70" height="50" fill="none" stroke="{{ink}}" stroke-width="1.5"/>
+  <rect x="140" y="510" width="70" height="50" fill="none" stroke="{{ink}}" stroke-width="1.5"/>
+  <rect x="230" y="510" width="70" height="50" fill="none" stroke="{{ink}}" stroke-width="1.5"/>
+  <rect x="320" y="510" width="70" height="50" fill="none" stroke="{{ink}}" stroke-width="1.5"/>
+  <rect x="410" y="510" width="70" height="50" fill="none" stroke="{{ink}}" stroke-width="1.5"/>
+  <rect x="140" y="580" width="70" height="50" fill="none" stroke="{{ink}}" stroke-width="1.5"/>
+  <rect x="230" y="580" width="70" height="50" fill="none" stroke="{{ink}}" stroke-width="1.5"/>
+  <rect x="320" y="580" width="70" height="50" fill="none" stroke="{{ink}}" stroke-width="1.5"/>
+  <rect x="410" y="580" width="70" height="50" fill="none" stroke="{{ink}}" stroke-width="1.5"/>
+  <line x1="480" y1="255" x2="620" y2="410" stroke="{{border}}" stroke-width="1.5"/>
+  <line x1="480" y1="395" x2="620" y2="430" stroke="{{border}}" stroke-width="1.5"/>
+  <line x1="480" y1="535" x2="620" y2="470" stroke="{{border}}" stroke-width="1.5"/>
+  <line x1="480" y1="605" x2="620" y2="490" stroke="{{border}}" stroke-width="1.5"/>
+  <rect x="620" y="220" width="40" height="460" fill="{{paper}}" stroke="{{ink}}" stroke-width="2.5"/>
+  <rect x="628" y="390" width="24" height="120" fill="{{moss}}" stroke="{{ink}}" stroke-width="1.5"/>
+  <line x1="660" y1="420" x2="940" y2="290" stroke="{{ink}}" stroke-width="2.5"/>
+  <line x1="660" y1="480" x2="940" y2="610" stroke="{{moss}}" stroke-width="3.5"/>
+  <circle cx="1140" cy="290" r="130" fill="none" stroke="{{ink}}" stroke-width="2"/>
+  <path d="M1140,160 A130,130 0 1,1 1030,360" fill="none" stroke="{{moss}}" stroke-width="4"/>
+  <rect x="940" y="530" width="120" height="120" fill="{{moss}}" fill-opacity="0.22" stroke="{{moss}}" stroke-width="2.5"/>
+  <rect x="1090" y="530" width="120" height="120" fill="none" stroke="{{ink}}" stroke-width="2"/>
+  <rect x="1240" y="530" width="120" height="120" fill="none" stroke="{{ink}}" stroke-width="2"/>
+  <rect x="1390" y="530" width="80" height="80" fill="none" stroke="{{border}}" stroke-width="1.5" stroke-dasharray="6,6"/>
+  <rect x="1265" y="695" width="75" height="75" transform="rotate(9 1302 732)" fill="none" stroke="{{moss}}" stroke-width="2.5"/>
+  <rect width="1600" height="900" filter="url(#grain)" opacity="0.05"/>
+</svg>
