@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" role="img">
+  <title>Internal Approval Workflow Hijack</title>
+  <desc>Geometric diagram showing an intact perimeter firewall wall while a shifted ochre ledger gate diverts an internal payout rail.</desc>
+  <defs>
+    <filter id="grain" x="0" y="0" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch"/>
+    </filter>
+  </defs>
+  <rect width="1600" height="900" fill="{{paper}}"/>
+  <rect x="120" y="100" width="1360" height="700" fill="none" stroke="{{border}}" stroke-width="1"/>
+  <line x1="260" y1="160" x2="260" y2="740" stroke="{{ink}}" stroke-width="4"/>
+  <line x1="285" y1="160" x2="285" y2="740" stroke="{{border}}" stroke-width="1.5" stroke-dasharray="8,6"/>
+  <rect x="420" y="320" width="200" height="140" fill="none" stroke="{{ink}}" stroke-width="2"/>
+  <rect x="740" y="460" width="200" height="140" fill="none" stroke="{{ochre}}" stroke-width="3"/>
+  <rect x="1060" y="320" width="200" height="140" fill="none" stroke="{{ink}}" stroke-width="2"/>
+  <line x1="340" y1="390" x2="740" y2="390" stroke="{{ink}}" stroke-width="2"/>
+  <line x1="940" y1="390" x2="1380" y2="390" stroke="{{border}}" stroke-width="1.5" stroke-dasharray="6,6"/>
+  <path d="M620,390L740,530H1380" fill="none" stroke="{{ochre}}" stroke-width="3.5"/>
+  <circle cx="620" cy="390" r="7" fill="{{ink}}"/>
+  <circle cx="740" cy="530" r="8" fill="{{ochre}}"/>
+  <circle cx="1380" cy="530" r="8" fill="{{ochre}}"/>
+  <rect width="1600" height="900" filter="url(#grain)" opacity="0.055"/>
+</svg>
