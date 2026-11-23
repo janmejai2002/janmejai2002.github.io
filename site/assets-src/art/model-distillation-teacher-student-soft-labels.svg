@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" role="img">
+  <title>Model Distillation and Dark Knowledge Transfer</title>
+  <desc>Geometric diagram of a large teacher grid sending primary and runner-up probability rays across a filter gate into a small student box, including a subtle plum flaw ray.</desc>
+  <defs>
+    <filter id="grain" x="0" y="0" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch"/>
+    </filter>
+  </defs>
+  <rect width="1600" height="900" fill="{{paper}}"/>
+  <rect x="120" y="100" width="1360" height="700" fill="none" stroke="{{border}}" stroke-width="1"/>
+  <rect x="220" y="170" width="280" height="560" fill="none" stroke="{{ink}}" stroke-width="2.5"/>
+  <path d="M220,282H500M220,394H500M220,506H500M220,618H500M313,170V730M406,170V730" stroke="{{border}}" stroke-width="1"/>
+  <line x1="800" y1="160" x2="800" y2="740" stroke="{{ink}}" stroke-width="2" stroke-dasharray="10,6"/>
+  <rect x="1080" y="340" width="240" height="220" fill="none" stroke="{{ink}}" stroke-width="2.5"/>
+  <line x1="500" y1="450" x2="1080" y2="450" stroke="{{ink}}" stroke-width="4"/>
+  <line x1="500" y1="330" x2="1080" y2="410" stroke="{{ink}}" stroke-width="2"/>
+  <line x1="500" y1="570" x2="1080" y2="490" stroke="{{border}}" stroke-width="1.5"/>
+  <path d="M500,660C700,660 880,530 1080,530" fill="none" stroke="{{plum}}" stroke-width="3" stroke-dasharray="8,6"/>
+  <circle cx="800" cy="595" r="7" fill="none" stroke="{{plum}}" stroke-width="2.5"/>
+  <circle cx="1080" cy="530" r="8" fill="{{plum}}"/>
+  <circle cx="1080" cy="450" r="7" fill="{{ink}}"/>
+  <rect width="1600" height="900" filter="url(#grain)" opacity="0.055"/>
+</svg>
