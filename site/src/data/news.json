@@ -1,5 +1,45 @@
 [
   {
+    "headline": "3M India Targets $100M Consumer Business via Quick Commerce",
+    "date": "2026-11-24",
+    "category": "Marketing",
+    "summary": "3M India aims to grow its consumer business from Rs 537.24 crore ($58 million) in FY26 past $100 million by lifting annual growth to 17-18% and scaling mounting products tenfold over three years. Scotch-Brite contributes nearly 45% of consumer revenue, while e-commerce supplies 35-36% of sales, with quick commerce driving nearly 70% of that online share.",
+    "angle": "An IIM marketing panel will ask how a legacy brand uses Rs 10 entry scrub pads to cross-sell higher-margin Command hooks without diluting its premium positioning. Expect follow-ups on managing channel conflict as quick commerce slows deep discounting and shoppers shift back toward modern and general trade.",
+    "source": "https://www.afaqs.com/news/mktg/3m-india-sets-100-million-consumer-business-target-bets-on-deeper-household-penetration-12831716"
+  },
+  {
+    "headline": "Deloitte Survey: GenAI Shoppers Spend 61% More Over BFCM Week",
+    "date": "2026-11-24",
+    "category": "Consulting",
+    "summary": "Deloitte's survey of 1,200 consumers shows Black Friday-Cyber Monday participation hitting a 10-year high of 87% with flat average spending of $624, while shoppers using both social media and GenAI plan to spend 61% more ($765 versus $476). Nearly 94% of Gen Z buyers plan to participate at an average spend of $752, with 40% relying on buy-now-pay-later financing.",
+    "angle": "A consulting panel will ask how a retail advisory team recommends inventory and margin allocation when volume rises (87% participation) while average basket spend stays flat at $624. Expect follow-ups on why high-income shoppers ($200K+) doubling their off-price visits from 16% to 34% forces brands to protect full-price equity.",
+    "source": "https://www.deloitte.com/us/en/about/press-room/deloitte-black-friday-cyber-monday-survey.html"
+  },
+  {
+    "headline": "Flipkart Wholesale Cuts Logistics Costs 6% Across 26 B2B Stores",
+    "date": "2026-11-24",
+    "category": "Operations",
+    "summary": "Flipkart Wholesale cut logistics costs by 6%, vehicle deployment by 8%, and idle time by 10% across 26 stores and one cross-dock hub by digitising dispatch and routing with FarEye. The B2B network handles over 200,000 orders and about 195,000 vehicle assignments each month, automating e-way bill compliance as kirana procurement shifts online.",
+    "angle": "An IIM or XLRI operations panel will ask why an 8% drop in vehicle deployment yields a 6% cost reduction due to fixed hub overheads. Expect follow-ups on how automated e-way bills and route consolidation cut turnaround times when serving fragmented kirana stores.",
+    "source": "https://www.logisticsinsider.in/flipkart-wholesale-cuts-logistics-costs-by-6-vehicle-deployment-by-8-through-fareye-partnership/"
+  },
+  {
+    "headline": "RBI Keeps SBI, HDFC, ICICI on 2026 Systemically Important List",
+    "date": "2026-11-24",
+    "category": "Finance",
+    "summary": "The Reserve Bank of India retained SBI, HDFC Bank, and ICICI Bank on its 2026 list of Domestic Systemically Important Banks, keeping capital surcharges unchanged from December 2025 based on March 31, 2026 data. SBI remains in Bucket 4 with an extra 0.80% CET1 buffer on risk-weighted assets, while HDFC Bank holds 0.40% in Bucket 2 and ICICI Bank holds 0.20% in Bucket 1.",
+    "angle": "An IIM finance panel will ask how an extra 0.80% CET1 surcharge affects SBI's return on equity and credit pricing compared with mid-sized private banks outside the D-SIB buckets. Be ready to explain why systemic interconnectedness forces regulators to hold higher capital buffers over and above the capital conservation buffer.",
+    "source": "https://bfsi.economictimes.indiatimes.com/articles/rbi-retains-sbi-hdfc-bank-and-icici-bank-in-2026-list-of-systemically-important-banks/136101582"
+  },
+  {
+    "headline": "Richpanel Hits 50% Support Automation in 30 Days Using Boss AI",
+    "date": "2026-11-24",
+    "category": "Product Management",
+    "summary": "Richpanel completed roughly 300 AI customer-support deployments over six months and hit its 50% automation guarantee within 30 days across every client. The startup routes setup and procedure-writing across 20-30 tools to GPT-6 Astra and GPT-6.1 Sol via its Boss AI manager, while using GPT-6 Luna for high-volume chats to beat outsourced support costs.",
+    "angle": "A PM panel will ask why Richpanel splits workloads between expensive reasoning models for one-time setup and cheaper models for daily ticket volume, and how an outcome-based 50% automation guarantee changes enterprise sales cycles. You should explain how automating onboarding removes the forward-deployed engineer bottleneck in B2B SaaS.",
+    "source": "https://openai.com/business/customer-stories/richpanel-ai-customer-support/"
+  },
+  {
     "headline": "Australian Private Debt Hits A$255B Under Tighter Scrutiny",
     "date": "2026-11-23",
     "category": "Consulting",
