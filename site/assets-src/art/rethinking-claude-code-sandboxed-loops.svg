@@ -1,0 +1,34 @@
+<svg viewBox="0 0 1600 900" width="1600" height="900" role="img" xmlns="http://www.w3.org/2000/svg">
+  <title>Orchestrator, Sandboxes, and Exit-Code-2 Verification Gates</title>
+  <desc>Minimal geometric diagram of one orchestrator node fanning out to three isolated sandbox containers gated by exit-code-2 verification bars.</desc>
+  <defs>
+    <filter id="grain">
+      <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch"/>
+      <feColorMatrix type="saturate" values="0"/>
+    </filter>
+  </defs>
+  <rect width="1600" height="900" fill="{{paper}}"/>
+  <rect x="640" y="130" width="320" height="120" fill="none" stroke="{{ink}}" stroke-width="4"/>
+  <rect x="676" y="166" width="48" height="48" fill="{{hanko}}"/>
+  <rect x="748" y="172" width="176" height="36" fill="{{ink}}"/>
+  <line x1="800" y1="250" x2="320" y2="380" stroke="{{ink}}" stroke-width="2.5"/>
+  <line x1="800" y1="250" x2="800" y2="380" stroke="{{ink}}" stroke-width="2.5"/>
+  <line x1="800" y1="250" x2="1280" y2="380" stroke="{{ink}}" stroke-width="2.5"/>
+  <rect x="170" y="380" width="300" height="220" fill="none" stroke="{{ink}}" stroke-width="3"/>
+  <rect x="210" y="420" width="220" height="100" fill="{{ink}}"/>
+  <rect x="210" y="544" width="220" height="20" fill="{{ink}}"/>
+  <rect x="650" y="380" width="300" height="220" fill="none" stroke="{{ink}}" stroke-width="3"/>
+  <rect x="690" y="420" width="220" height="100" fill="none" stroke="{{border}}" stroke-width="3" stroke-dasharray="10 8"/>
+  <rect x="690" y="544" width="220" height="20" fill="{{hanko}}"/>
+  <path d="M 950 554 L 1010 554 L 1010 470 L 950 470" fill="none" stroke="{{hanko}}" stroke-width="3"/>
+  <circle cx="950" cy="470" r="7" fill="{{hanko}}"/>
+  <rect x="1130" y="380" width="300" height="220" fill="none" stroke="{{ink}}" stroke-width="3"/>
+  <rect x="1170" y="420" width="220" height="100" fill="{{ink}}"/>
+  <rect x="1170" y="544" width="220" height="20" fill="{{ink}}"/>
+  <line x1="320" y1="600" x2="320" y2="710" stroke="{{ink}}" stroke-width="3"/>
+  <line x1="1280" y1="600" x2="1280" y2="710" stroke="{{ink}}" stroke-width="3"/>
+  <rect x="220" y="710" width="1160" height="36" fill="none" stroke="{{border}}" stroke-width="3"/>
+  <rect x="290" y="718" width="60" height="20" fill="{{ink}}"/>
+  <rect x="1250" y="718" width="60" height="20" fill="{{ink}}"/>
+  <rect width="1600" height="900" filter="url(#grain)" opacity="0.05"/>
+</svg>
