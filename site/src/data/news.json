@@ -1,5 +1,45 @@
 [
   {
+    "headline": "BCG: 96% of Indian Workers Use AI, but Only 20% in APAC See Clarity",
+    "date": "2026-11-25",
+    "category": "Consulting",
+    "summary": "BCG's survey of 6,349 Asia-Pacific workers shows 96% of Indian employees use AI regularly and save 15 hours a week, compared with 85% usage regionally and 6.8 hours saved in Japan. Yet only 20% across APAC have strong strategic clarity on AI, even though clarity lifts measurable business impact by 22 percentage points versus 4 points for better tools.",
+    "angle": "A consulting panel will ask why 96% employee AI adoption in India still fails to translate into enterprise P&L impact when only 20% have strategic clarity. Expect follow-ups on how change-management teams redesign end-to-end workflows and use leadership communication (which lifts trust from 3% to 61%) to capture those saved hours.",
+    "source": "https://www.bcg.com/press/24november2026-asia-pacific-strategic-clarity-key-value-ai"
+  },
+  {
+    "headline": "iFood Scales Coding Agents Across 15,000 Repos at $0.04 Per Run",
+    "date": "2026-11-25",
+    "category": "Product Management",
+    "summary": "iFood scaled an internal Remote Agents Platform across more than 15,000 code repositories, completing over 25,000 tasks and consuming 27 billion tokens at an average cost of $0.04 per run. Using GPT-5.6 Luna inside isolated sandboxes with Structured Outputs more than doubled both fix accuracy and vulnerabilities resolved for its security team.",
+    "angle": "A PM panel will ask how to design an internal developer platform where asynchronous agent runs cost $0.04 each and require deterministic guardrails like Structured Outputs to verify success. You should explain why wrapping AI execution in a simple REST API unlocked adoption across teams without each squad building its own runtime.",
+    "source": "https://openai.com/business/customer-stories/ifood/"
+  },
+  {
+    "headline": "India Inc Rushes to Raise $2.7B in Bonds Before RBI Rate Decision",
+    "date": "2026-11-25",
+    "category": "Finance",
+    "summary": "Indian companies are lining up at least Rs 250 billion ($2.7 billion) in bond sales before the RBI's December 4 policy meeting after AAA corporate yields fell 20-30 bps in November. Firms have already raised nearly Rs 900 billion via private placements this month, keeping 2026 corporate debt issuance on track to top Rs 10 trillion.",
+    "angle": "An IIM finance panel will ask why corporate treasurers lock in long-tenor debt during a 20-30 bps yield dip even when consensus expects only a 25 bps RBI hike after October's 25 bps move. Be ready to discuss duration risk, credit spreads, and how event risk shapes corporate capital structure timing.",
+    "source": "https://bfsi.economictimes.indiatimes.com/articles/india-inc-rushes-to-raise-2-7-billion-debt-ahead-of-expected-rbi-rate-hike/136118628"
+  },
+  {
+    "headline": "Indian Brands Win 23 SMARTIES APAC Medals Led by Retail Media",
+    "date": "2026-11-25",
+    "category": "Marketing",
+    "summary": "Indian brands and agencies won 23 medals, including 14 Gold, across 16 campaigns at SMARTIES APAC 2026, with Titan taking Best in Show. Winning retail media campaigns on Amazon Ads included Castrol posting 80% sales growth, L'Oreal adding 35% sales in 60 days, and Pedigree acquiring 8x new customers.",
+    "angle": "An IIM marketing panel will ask why retail media campaigns on Amazon Ads are winning top effectiveness awards over traditional upper-funnel brand films. Expect follow-ups on how FMCG and legacy brands measure incremental customer acquisition (like Pedigree's 8x claim) against cannibalising existing marketplace demand.",
+    "source": "https://www.afaqs.com/companies/india-wins-23-medals-at-smarties-apac-2026-titan-takes-best-in-show-12837939"
+  },
+  {
+    "headline": "Under Armour Targets 50% SKU Cut as Inventory Hits $1.1 Billion",
+    "date": "2026-11-25",
+    "category": "Operations",
+    "summary": "Under Armour aims to cut its SKU count by 50% after clearing a 25% reduction earlier in 2026, while licensing youth apparel to Centric Brands to free working capital. The retailer ended fiscal Q2 2027 with $1.1 billion in inventory, up 4% year over year, and is delaying factory shipments while using AI to shorten lead times.",
+    "angle": "An operations panel at IIM or XLRI will press you on the trade-off between SKU rationalisation (cutting 50% of assortment) and lost shelf variety when inventory sits at $1.1 billion. Expect questions on how licensing non-core lines like youth apparel converts fixed working capital into asset-light royalty streams.",
+    "source": "https://www.supplychaindive.com/news/under-armour-continues-efforts-to-trim-skus-lead-times/875483/"
+  },
+  {
     "headline": "3M India Targets $100M Consumer Business via Quick Commerce",
     "date": "2026-11-24",
     "category": "Marketing",
