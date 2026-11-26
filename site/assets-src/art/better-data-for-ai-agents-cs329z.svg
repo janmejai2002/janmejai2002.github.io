@@ -1,0 +1,24 @@
+<svg viewBox="0 0 1600 900" width="1600" height="900" role="img" xmlns="http://www.w3.org/2000/svg">
+  <title>The RL Goldilocks Learnability Window</title>
+  <desc>Minimal geometric diagram of nine rollout buckets from 0/8 to 8/8: dashed outer zero-gradient buckets and solid inner buckets framed by a vermilion hanko bracket.</desc>
+  <defs>
+    <filter id="grain">
+      <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch"/>
+      <feColorMatrix type="saturate" values="0"/>
+    </filter>
+  </defs>
+  <rect width="1600" height="900" fill="{{paper}}"/>
+  <line x1="160" y1="680" x2="1440" y2="680" stroke="{{border}}" stroke-width="3"/>
+  <rect x="200" y="240" width="96" height="440" fill="none" stroke="{{border}}" stroke-width="3" stroke-dasharray="12 8"/>
+  <rect x="336" y="480" width="96" height="200" fill="{{ink}}"/>
+  <rect x="472" y="380" width="96" height="300" fill="{{ink}}"/>
+  <rect x="608" y="300" width="96" height="380" fill="{{ink}}"/>
+  <rect x="744" y="260" width="96" height="420" fill="{{hanko}}"/>
+  <rect x="880" y="300" width="96" height="380" fill="{{ink}}"/>
+  <rect x="1016" y="380" width="96" height="300" fill="{{ink}}"/>
+  <rect x="1152" y="480" width="96" height="200" fill="{{ink}}"/>
+  <rect x="1288" y="340" width="96" height="340" fill="none" stroke="{{border}}" stroke-width="3" stroke-dasharray="12 8"/>
+  <path d="M 336 210 L 336 170 L 1248 170 L 1248 210" fill="none" stroke="{{hanko}}" stroke-width="4"/>
+  <rect x="768" y="146" width="48" height="48" fill="{{hanko}}"/>
+  <rect width="1600" height="900" filter="url(#grain)" opacity="0.05"/>
+</svg>
