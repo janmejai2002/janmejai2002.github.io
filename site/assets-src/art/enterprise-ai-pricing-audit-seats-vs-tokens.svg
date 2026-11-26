@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" role="img">
+  <title>Enterprise AI Seats vs Diverging Token Prices</title>
+  <desc>Geometric diagram contrasting a dominant block of uniform seat licenses on the left with diverging upward ochre and downward ink token-price steps on the right.</desc>
+  <defs>
+    <filter id="grain" x="0" y="0" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch"/>
+    </filter>
+  </defs>
+  <rect width="1600" height="900" fill="{{paper}}"/>
+  <rect x="120" y="100" width="1360" height="700" fill="none" stroke="{{border}}" stroke-width="1"/>
+  <rect x="200" y="200" width="540" height="500" fill="none" stroke="{{ink}}" stroke-width="2.5"/>
+  <path d="M200,262H740M200,325H740M200,387H740M200,450H740M200,512H740M200,575H740M200,637H740M290,200V700M380,200V700M470,200V700M560,200V700M650,200V700" stroke="{{border}}" stroke-width="1"/>
+  <line x1="820" y1="700" x2="1400" y2="700" stroke="{{ink}}" stroke-width="2"/>
+  <rect x="860" y="340" width="90" height="360" fill="none" stroke="{{ink}}" stroke-width="2"/>
+  <rect x="980" y="412" width="90" height="288" fill="none" stroke="{{ink}}" stroke-width="2"/>
+  <rect x="1120" y="450" width="90" height="250" fill="none" stroke="{{ink}}" stroke-width="1.5" stroke-dasharray="6,6"/>
+  <rect x="1240" y="200" width="90" height="500" fill="{{ochre}}" opacity="0.85"/>
+  <path d="M905,340L1025,412M1165,450L1285,200" stroke="{{ochre}}" stroke-width="3"/>
+  <circle cx="1025" cy="412" r="6" fill="{{ink}}"/>
+  <circle cx="1285" cy="200" r="8" fill="{{ochre}}"/>
+  <rect width="1600" height="900" filter="url(#grain)" opacity="0.055"/>
+</svg>

@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" role="img">
+  <title>Persistent Evidence State vs Truncated Chat History</title>
+  <desc>Geometric diagram showing a broken dashed chat stream below a persistent state grid anchored by solid mizu evidence pointers and an independent controller gate.</desc>
+  <defs>
+    <filter id="grain" x="0" y="0" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch"/>
+    </filter>
+  </defs>
+  <rect width="1600" height="900" fill="{{paper}}"/>
+  <rect x="120" y="100" width="1360" height="700" fill="none" stroke="{{border}}" stroke-width="1"/>
+  <line x1="200" y1="660" x2="660" y2="660" stroke="{{ink}}" stroke-width="2"/>
+  <line x1="660" y1="660" x2="1380" y2="660" stroke="{{border}}" stroke-width="1.5" stroke-dasharray="8,10"/>
+  <rect x="240" y="200" width="680" height="260" fill="none" stroke="{{ink}}" stroke-width="2.5"/>
+  <path d="M240,286H920M240,373H920M410,200V460M580,200V460M750,200V460" stroke="{{border}}" stroke-width="1"/>
+  <rect x="1080" y="240" width="260" height="180" fill="none" stroke="{{ink}}" stroke-width="2.5"/>
+  <path d="M325,660V460M495,660V460M665,660V460M835,660V460" stroke="{{mizu}}" stroke-width="3"/>
+  <line x1="920" y1="330" x2="1080" y2="330" stroke="{{mizu}}" stroke-width="3.5"/>
+  <circle cx="325" cy="460" r="7" fill="{{mizu}}"/>
+  <circle cx="495" cy="460" r="7" fill="{{mizu}}"/>
+  <circle cx="665" cy="460" r="7" fill="{{mizu}}"/>
+  <circle cx="835" cy="460" r="7" fill="{{mizu}}"/>
+  <circle cx="1080" cy="330" r="8" fill="{{mizu}}"/>
+  <rect width="1600" height="900" filter="url(#grain)" opacity="0.055"/>
+</svg>

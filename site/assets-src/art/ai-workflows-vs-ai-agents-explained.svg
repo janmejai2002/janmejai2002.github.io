@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" role="img">
+  <title>Fixed AI Workflows vs Looping AI Agents</title>
+  <desc>Geometric diagram contrasting a straight deterministic workflow track above with a looping plum agent path constrained by an iteration cap wall below.</desc>
+  <defs>
+    <filter id="grain" x="0" y="0" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch"/>
+    </filter>
+  </defs>
+  <rect width="1600" height="900" fill="{{paper}}"/>
+  <rect x="120" y="100" width="1360" height="700" fill="none" stroke="{{border}}" stroke-width="1"/>
+  <line x1="220" y1="270" x2="1380" y2="270" stroke="{{ink}}" stroke-width="3"/>
+  <rect x="340" y="225" width="140" height="90" fill="{{paper}}" stroke="{{ink}}" stroke-width="2.5"/>
+  <rect x="680" y="225" width="140" height="90" fill="{{paper}}" stroke="{{ink}}" stroke-width="2.5"/>
+  <rect x="1020" y="225" width="140" height="90" fill="{{paper}}" stroke="{{ink}}" stroke-width="2.5"/>
+  <rect x="260" y="420" width="1060" height="290" fill="none" stroke="{{border}}" stroke-width="1.5" stroke-dasharray="10,6"/>
+  <path d="M220,565H480C580,565 580,460 480,460C380,460 380,640 520,640H780C880,640 880,480 760,480C660,480 660,590 800,590H1220" fill="none" stroke="{{plum}}" stroke-width="3.5"/>
+  <line x1="1220" y1="450" x2="1220" y2="680" stroke="{{ink}}" stroke-width="4"/>
+  <circle cx="220" cy="270" r="7" fill="{{ink}}"/>
+  <circle cx="1380" cy="270" r="7" fill="{{ink}}"/>
+  <circle cx="220" cy="565" r="7" fill="{{plum}}"/>
+  <circle cx="1220" cy="590" r="8" fill="{{plum}}"/>
+  <rect width="1600" height="900" filter="url(#grain)" opacity="0.055"/>
+</svg>
