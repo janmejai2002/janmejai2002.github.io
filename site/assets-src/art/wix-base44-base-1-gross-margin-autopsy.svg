@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" role="img">
+  <title>Wix Base44 gross margin lift from Base 1 and eject data gap</title>
+  <desc>A flat near-zero baseline on the left steps up into a 58 percent moss-shaded margin column in the center, while an empty dashed-interior schema box sits on the right.</desc>
+  <defs>
+    <filter id="grain" x="0" y="0" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch"/>
+    </filter>
+  </defs>
+  <rect width="1600" height="900" fill="{{paper}}"/>
+  <rect x="80" y="80" width="1440" height="740" fill="none" stroke="{{border}}" stroke-width="1.5"/>
+  <line x1="120" y1="700" x2="1480" y2="700" stroke="{{ink}}" stroke-width="2"/>
+  <rect x="160" y="670" width="240" height="30" fill="none" stroke="{{ink}}" stroke-width="2"/>
+  <line x1="220" y1="220" x2="220" y2="630" stroke="{{border}}" stroke-width="1.5" stroke-dasharray="6,6"/>
+  <line x1="340" y1="220" x2="340" y2="630" stroke="{{border}}" stroke-width="1.5" stroke-dasharray="6,6"/>
+  <line x1="400" y1="685" x2="540" y2="520" stroke="{{moss}}" stroke-width="2.5"/>
+  <rect x="540" y="280" width="280" height="420" fill="{{moss}}" fill-opacity="0.22" stroke="{{moss}}" stroke-width="3"/>
+  <rect x="570" y="310" width="220" height="120" fill="none" stroke="{{moss}}" stroke-width="2"/>
+  <circle cx="680" cy="560" r="65" fill="none" stroke="{{ink}}" stroke-width="2"/>
+  <path d="M680,495 A65,65 0 1,1 615,560" fill="none" stroke="{{moss}}" stroke-width="3.5"/>
+  <line x1="820" y1="490" x2="1040" y2="490" stroke="{{ink}}" stroke-width="2" stroke-dasharray="8,6"/>
+  <path d="M1040,260 L1380,260 L1380,700 L1040,700 L1040,340" fill="none" stroke="{{ink}}" stroke-width="2.5"/>
+  <rect x="1080" y="300" width="260" height="360" fill="none" stroke="{{border}}" stroke-width="1.5" stroke-dasharray="6,8"/>
+  <line x1="1120" y1="400" x2="1300" y2="400" stroke="{{border}}" stroke-width="1.5"/>
+  <line x1="1120" y1="480" x2="1300" y2="480" stroke="{{border}}" stroke-width="1.5"/>
+  <line x1="1120" y1="560" x2="1300" y2="560" stroke="{{border}}" stroke-width="1.5"/>
+  <rect width="1600" height="900" filter="url(#grain)" opacity="0.05"/>
+</svg>
