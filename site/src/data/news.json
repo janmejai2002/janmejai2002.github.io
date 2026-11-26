@@ -1,5 +1,45 @@
 [
   {
+    "headline": "47% of Teams Let Coding Agents Review Their Own AI-Written Code",
+    "date": "2026-11-26",
+    "category": "Product Management",
+    "summary": "LeadDev's 2026 survey of 377 engineering leaders shows pull requests per developer rose at least 25% for half of teams, making code review the top delivery bottleneck for 45% and slowing review cycles for 38%. Nearly 47% of organisations now use AI coding agents to review code those same agents wrote, yet only 26% feel very confident they understand AI-generated changes and 14% enforce consistent review standards.",
+    "angle": "A PM panel will ask why faster code generation (PRs up 25%) can still slow total product velocity when review becomes the bottleneck. You should discuss how to design risk-tiered human-in-the-loop gates and separate review agents from generation agents to protect release quality.",
+    "source": "https://venturebeat.com/technology/nearly-half-of-surveyed-engineers-and-leaders-say-the-ai-agents-that-write-their-code-also-review-it"
+  },
+  {
+    "headline": "Bain: AI Infrastructure Needs $4.2T in New Revenue by 2031",
+    "date": "2026-11-26",
+    "category": "Consulting",
+    "summary": "Bain & Company's 2026 Technology Report estimates hyperscaler capital spending will hit $780 billion in 2026 and $1.5 trillion annually by 2031, requiring a $6 trillion AI market to pay for itself. Since enterprise and consumer AI only cover $1.2 trillion to $1.8 trillion, Bain projects a $4.2 trillion revenue gap that physical AI ($900 billion) and autonomous operations ($400 billion) must help close.",
+    "angle": "A consulting panel will ask you to stress-test Bain's $6 trillion AI market math and explain why cost-cutting alone cannot justify $1.5 trillion in annual capex. Expect follow-ups on how non-tech CEOs in manufacturing or healthcare capture new revenue pools beyond incremental seat productivity.",
+    "source": "https://www.cio.com/article/4251589/ai-needs-4-2-trillion-in-new-revenue-which-industries-could-create-it.html"
+  },
+  {
+    "headline": "Sensex Jumps 1,502 Points to 83,938 as FIIs Rotate Out of AI",
+    "date": "2026-11-26",
+    "category": "Finance",
+    "summary": "The Sensex climbed 1,502.29 points (1.82%) to 83,938.28 and the Nifty rose 469.60 points to 25,819.25 on November 25, helped by Rs 5,672.99 crore in foreign investor inflows and Brent crude dipping to $91.38 a barrel. While South Korea's Kospi tumbled 6.16% and Japan's Nikkei fell 2.78%, Indian financials and consumer stocks rallied as global funds rotated out of crowded AI trades.",
+    "angle": "An IIM finance panel will ask why Indian equities decoupled from a 6.16% Kospi sell-off during a global tech valuation pullback. Be ready to explain how FII sector rotation toward domestic banks and lower crude oil prices cushion India's current account and equity multiples.",
+    "source": "https://bfsi.economictimes.indiatimes.com/amp/articles/sensex-jumps-1502-points-nifty-surges-to-25819-on-foreign-fund-inflows-lower-crude-oil/136158779"
+  },
+  {
+    "headline": "Shoe Station Reverses Rebrand After Q3 Sales Fall 5.8% to $280M",
+    "date": "2026-11-26",
+    "category": "Marketing",
+    "summary": "Shoe Station Group posted Q3 net sales of $280 million, down 5.8% year over year, and is now returning at least 75% of 104 evaluated stores back to its Shoe Carnival banner. Shoppers struggled with straight-line shelving that hid assortment depth, forcing a $4 million Q4 reversal across 74 stores as full-year sales track down 3.8% to 4.3%.",
+    "angle": "An IIM marketing panel will ask why a multi-banner retailer failed to convert moderate-income Shoe Carnival shoppers into higher-end Shoe Station buyers and how store layout affects perceived assortment. Expect questions on when to localise a portfolio of brands versus consolidating under one flagship banner.",
+    "source": "https://www.retaildive.com/news/shoe-station-flip-flops-rebanner-plan-again-shoe-carnival/875727/"
+  },
+  {
+    "headline": "US Proposes 15%-35% Section 301 Tariffs on 14 Partners, 25% on India",
+    "date": "2026-11-26",
+    "category": "Operations",
+    "summary": "The U.S. Trade Representative proposed Section 301 tariffs of 15% to 35% on 14 trading partners over excess manufacturing capacity, slating India for 25%, Vietnam for 35%, China for up to 20%, and the EU for 15%. Public comments close January 5, 2027, and India's rate could drop to 17% under a reciprocal deal as importers face higher net duties.",
+    "angle": "An IIM or XLRI operations panel will ask how a global manufacturer rebalances China+1 sourcing when Vietnam faces a 35% proposed tariff and India faces 25%, compared with 15% in the EU or Japan. Expect questions on landed-cost modelling, supplier switching lead times, and dual-sourcing resilience.",
+    "source": "https://www.supplychaindive.com/news/us-readies-tariffs-over-manufacturing-capacity-production-concerns/875639/"
+  },
+  {
     "headline": "BCG: 96% of Indian Workers Use AI, but Only 20% in APAC See Clarity",
     "date": "2026-11-25",
     "category": "Consulting",
