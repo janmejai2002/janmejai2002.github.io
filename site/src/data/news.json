@@ -1,5 +1,45 @@
 [
   {
+    "headline": "BFS Agentic Ops Market Hits $500M-$800M, Growing 2x-3x in Production",
+    "date": "2026-11-27",
+    "category": "Product Management",
+    "summary": "Everest Group estimates the banking and financial services agentic business operations market reached $500 million to $800 million in CY2025, growing two to three times as banks move pilots into live workflows. Platforms like Firstsource's Kairos shift BPO pricing from headcount effort to outcome-linked contracts across mortgage underwriting, KYC/AML, and collections.",
+    "angle": "A PM panel will ask how an enterprise BPO transitions from per-seat FTE billing to outcome-linked agentic pricing without cannibalising its own revenue base. You should explain how human-in-the-loop exception routing preserves auditability in regulated banking workflows.",
+    "source": "https://www.aninews.in/news/business/firstsource-named-a-leader-in-bfs-agentic-business-operations-and-a-major-contender-and-star-performer-in-fcc-operations-services-by-everest-group20261126101321/"
+  },
+  {
+    "headline": "Capgemini Raises EUR 321M in 13th ESOP Across 37,000+ Staff",
+    "date": "2026-11-27",
+    "category": "Consulting",
+    "summary": "Capgemini's 13th Employee Share Ownership Plan drew more than 37,000 subscribers across 37 countries, issuing 3 million shares at EUR 106.89 (a 12.5% discount) to raise EUR 321 million. The consulting group offset dilution by buying back 3 million shares for EUR 367 million, keeping employee ownership near 8% of share capital.",
+    "angle": "A consulting or HR strategy panel will ask why an IT and advisory firm spends EUR 367 million on share buybacks to neutralise a EUR 321 million employee equity plan. Be ready to discuss talent retention economics, cash-flow trade-offs, and how employee ownership aligns consultants with margin expansion.",
+    "source": "https://www.capgemini.com/news/press-releases/success-of-capgeminis-13th-employee-share-ownership-plan/"
+  },
+  {
+    "headline": "Ocean Rates Stay Up 138% YoY as Congestion Idles 3.6M TEUs",
+    "date": "2026-11-27",
+    "category": "Operations",
+    "summary": "DHL Global Forwarding reports ocean container rates remain up 138% year over year as port congestion idles 3.6 million TEUs, or over 10% of the global fleet and roughly 15% of effective capacity. With bunker fuel up 69% since February and fewer than one in three vessels arriving on time at major Asian ports, backlogs will persist into mid-2027.",
+    "angle": "An IIM or XLRI operations panel will ask how an Indian exporter structures 2027 freight contracts across fixed commitments, hybrid tiers, and spot bookings when schedule reliability falls below 33%. Expect questions on safety-stock sizing and multi-port routing when Suez returns trigger vessel bunching.",
+    "source": "https://www.freightwaves.com/news/ocean-rates-still-double-last-year-as-congestion-idles-3-6-million-teus"
+  },
+  {
+    "headline": "SEBI Keeps BSE 200, Nifty CPSE on Significant List Despite AUM Miss",
+    "date": "2026-11-27",
+    "category": "Finance",
+    "summary": "SEBI retained the BSE 200 and Nifty CPSE on its Significant Indices list after both missed the Rs 20,000 crore daily average mutual fund AUM threshold during the January-June 2026 review. Under SEBI's May 2026 circular, an index stays designated unless it falls short for three straight years across six consecutive half-yearly checks.",
+    "angle": "An IIM finance panel will ask why SEBI enforces a three-year grace period before dropping benchmarks from regulatory oversight. Be ready to explain how index concentration, passive fund tracking error, and index-provider governance affect retail mutual fund investors.",
+    "source": "https://cfo.economictimes.indiatimes.com/news/governance-risk-compliance/sebi-retains-bse-200-nifty-cpse-in-list-of-significant-indices-despite-not-meeting-aum-threshold/136177297"
+  },
+  {
+    "headline": "The Body Shop Targets Men's Skincare as Male Buyers Hit 33% Share",
+    "date": "2026-11-27",
+    "category": "Marketing",
+    "summary": "Men already generate one-third of The Body Shop's roughly Rs 411 crore India business, prompting a 5-to-6-product men's skincare launch in Q2 2027 into an Rs 18,630 crore category growing 9% annually. The retailer raised digital spending 20-30% this year, lifting online sales from 25% to 35% of revenue as quick commerce drives last-minute gifting.",
+    "angle": "An IIM marketing panel will ask how a unisex beauty retailer launches a dedicated men's line against specialist D2C rivals like Beardo without alienating its core female shoppers. Expect follow-ups on balancing physical store renovations across 200 outlets with quick-commerce gifting.",
+    "source": "https://www.afaqs.com/news/mktg/men-account-for-a-third-of-the-body-shops-salesand-the-brand-wants-even-more-12841507"
+  },
+  {
     "headline": "47% of Teams Let Coding Agents Review Their Own AI-Written Code",
     "date": "2026-11-26",
     "category": "Product Management",
