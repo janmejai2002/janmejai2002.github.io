@@ -1,0 +1,23 @@
+<svg viewBox="0 0 1600 900" width="1600" height="900" role="img" xmlns="http://www.w3.org/2000/svg">
+  <title>Agent Data Scaling: Inverted-U Curve and Mode Collapse</title>
+  <desc>Minimal geometric diagram of an inverted-U scaling curve rising through solid ink blocks to a vermilion hanko peak and falling into dashed mode-collapse blocks.</desc>
+  <defs>
+    <filter id="grain">
+      <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch"/>
+      <feColorMatrix type="saturate" values="0"/>
+    </filter>
+  </defs>
+  <rect width="1600" height="900" fill="{{paper}}"/>
+  <line x1="200" y1="700" x2="1400" y2="700" stroke="{{border}}" stroke-width="3"/>
+  <line x1="200" y1="180" x2="200" y2="700" stroke="{{border}}" stroke-width="3"/>
+  <path d="M 240 650 Q 800 110 1360 620" fill="none" stroke="{{ink}}" stroke-width="4"/>
+  <rect x="300" y="540" width="84" height="160" fill="{{ink}}"/>
+  <rect x="440" y="420" width="84" height="280" fill="{{ink}}"/>
+  <rect x="580" y="310" width="84" height="390" fill="{{ink}}"/>
+  <rect x="758" y="220" width="84" height="480" fill="{{hanko}}"/>
+  <circle cx="800" cy="220" r="14" fill="{{hanko}}"/>
+  <rect x="940" y="330" width="84" height="370" fill="none" stroke="{{border}}" stroke-width="3" stroke-dasharray="12 8"/>
+  <rect x="1080" y="450" width="84" height="250" fill="none" stroke="{{border}}" stroke-width="3" stroke-dasharray="12 8"/>
+  <rect x="1220" y="570" width="84" height="130" fill="none" stroke="{{hanko}}" stroke-width="3" stroke-dasharray="10 8"/>
+  <rect width="1600" height="900" filter="url(#grain)" opacity="0.05"/>
+</svg>
