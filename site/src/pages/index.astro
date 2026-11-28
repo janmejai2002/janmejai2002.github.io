@@ -927,10 +927,61 @@ const edgeLine = edge.map(([x, d]) => `${(x * 10).toFixed(0)},${(EDGE_DEPTH - d)
       render();
     });
   }
+  let listHoverSlug: string | null = null;
+  let listHoverTimer = 0;
+  let listOpenedByHover = false;
+  const focusPieceFromList = (slug?: string) => {
+    if (!slug) return;
+    preview(slug, true);
+    if (!bowlApi || bowlApi.dragging || touch) return;
+    if (listHoverSlug === slug) return;
+    listHoverSlug = slug;
+    for (const r of rows) r.classList.toggle('q--on', r.dataset.q === slug);
+    clearTimeout(listHoverTimer);
+    // Short dwell prevents frantic spinning when sweeping quickly across rows,
+    // while rotating smoothly to bring the hovered piece to the front with its card.
+    listHoverTimer = window.setTimeout(() => {
+      if (listHoverSlug !== slug || bowlApi.dragging) return;
+      listOpenedByHover = true;
+      bowlApi.turnTo(slug, { at: 110, ms: 420 });
+      bowlApi.open(slug, { mode: 'hover' });
+    }, 85);
+  };
+  const leaveListHover = () => {
+    listHoverSlug = null;
+    clearTimeout(listHoverTimer);
+    rows.forEach((r) => r.classList.remove('q--on'));
+  };
+
   for (const r of rows) {
-    r.addEventListener('pointerenter', () => preview(r.dataset.q, true));
-    r.addEventListener('focusin', () => preview(r.dataset.q, true));
+    r.addEventListener('pointerenter', (e) => {
+      if (e.pointerType === 'mouse') focusPieceFromList(r.dataset.q);
+      else preview(r.dataset.q, true);
+    });
+    r.addEventListener('focusin', () => focusPieceFromList(r.dataset.q));
   }
+  const qsEl = document.querySelector<HTMLElement>('[data-qs]');
+  const shelfEl = document.querySelector<HTMLElement>('.shelf');
+  let listPtr: { x: number; y: number } | null = null;
+  let scrollRaf = 0;
+  qsEl?.addEventListener('pointermove', (e) => {
+    if (e.pointerType !== 'mouse') return;
+    listPtr = { x: e.clientX, y: e.clientY };
+  }, { passive: true });
+  qsEl?.addEventListener('pointerleave', () => {
+    listPtr = null;
+    leaveListHover();
+  });
+  addEventListener('scroll', () => {
+    if (!listPtr || touch || scrollRaf || !bowlApi || bowlApi.dragging) return;
+    scrollRaf = requestAnimationFrame(() => {
+      scrollRaf = 0;
+      if (!listPtr) return;
+      const el = document.elementFromPoint(listPtr.x, listPtr.y)?.closest<HTMLElement>('[data-q]');
+      if (el && !el.hidden && el.dataset.q) focusPieceFromList(el.dataset.q);
+    });
+  }, { passive: true });
+
   for (const s of shards) {
     s.addEventListener('pointerenter', () => {
       preview(s.dataset.shard, true);
@@ -939,7 +990,15 @@ const edgeLine = edge.map(([x, d]) => `${(x * 10).toFixed(0)},${(EDGE_DEPTH - d)
     s.addEventListener('pointerleave', () => rows.forEach((r) => r.classList.remove('q--on')));
   }
 
-  document.querySelector('.shelf')?.addEventListener('pointerleave', () => bowl?.classList.remove('hot'));
+  shelfEl?.addEventListener('pointerleave', () => {
+    listPtr = null;
+    leaveListHover();
+    bowl?.classList.remove('hot');
+    if (listOpenedByHover && bowlApi?.opened) {
+      listOpenedByHover = false;
+      bowlApi.close();
+    }
+  });
 
   // Thumbnails wait until the bowl is close, and follow the theme.
   const isDark = () => {
@@ -1045,11 +1104,15 @@ const edgeLine = edge.map(([x, d]) => `${(x * 10).toFixed(0)},${(EDGE_DEPTH - d)
 
   if (bowlApi) {
     bowlApi.on('open', (slug) => {
+      listOpenedByHover = false;
       preview(slug, true);
       for (const r of rows) r.classList.toggle('q--on', r.dataset.q === slug);
       if (finished.includes(slug)) rim?.reread();
     });
-    bowlApi.on('close', () => rows.forEach((r) => r.classList.remove('q--on')));
+    bowlApi.on('close', () => {
+      listOpenedByHover = false;
+      rows.forEach((r) => r.classList.remove('q--on'));
+    });
     bowlApi.on('pick', () => {
       const slug = choosePiece(bowlApi.opened ?? undefined);
       if (!slug) return;

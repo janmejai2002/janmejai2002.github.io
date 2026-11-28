@@ -1,0 +1,421 @@
+---
+import Base from '../../../layouts/Base.astro';
+import { plateEdge, EDGE_DEPTH } from '../../../lib/bowl';
+import {
+  INFERENCE_CAMPUS_TIERS,
+  INFERENCE_TRACK_GROUPS,
+  INFERENCE_UNITS,
+  INFERENCE_CHECKOUT,
+} from '../../../data/inference';
+
+const edge = plateEdge('inference-campus');
+const clip = `polygon(0 0, 100% 0, ${[...edge].reverse().map(([x, d]) => `${x.toFixed(1)}% calc(100% - ${d.toFixed(1)}px)`).join(',')})`;
+const line = edge.map(([x, d]) => `${(x * 10).toFixed(0)},${(EDGE_DEPTH - d).toFixed(1)}`).join(' ');
+---
+
+<Base
+  card="inference-campus"
+  title="INFERENCE Campus & PlaceCom Bulk Licensing — wAIbi-sabi"
+  description="Institutional and club bulk seat licensing for B-school placement committees, consulting clubs, and product cohorts. 50-seat and 200-seat packs."
+  section="INFERENCE"
+  pageType="WebPage"
+  breadcrumbs={[
+    { name: 'Home', path: '/' },
+    { name: 'INFERENCE', path: '/inference/' },
+    { name: 'Campus licensing' },
+  ]}
+  immersive={true}
+  wide={true}
+  grain={true}
+>
+  <section class="pg-plate" style={`clip-path:${clip}`} aria-labelledby="campus-title">
+    <div class="wrap pg-plate__in">
+      <div class="campus-top">
+        <span class="hanko-mark">Campus &amp; PlaceCom Licensing</span>
+        <a class="linkish campus-back" href="/inference/">← Back to INFERENCE Edition</a>
+      </div>
+
+      <h1 id="campus-title" class="pg-plate__title">
+        Equip your entire placement cohort with one institutional license.
+      </h1>
+
+      <p class="pg-plate__desc">
+        Built for Indian and global B-school placement committees, Consulting &amp; ProdMan clubs,
+        and corporate analyst cohorts. Single invoice, coordinator seat distribution, custom club
+        stamp, and optional live case workshop.
+      </p>
+
+      <div class="campus-actions">
+        <a
+          class="inf-btn inf-btn--primary"
+          href={INFERENCE_CHECKOUT.campusInquiry.fiftySeats}
+          data-campus-sku="campus-50"
+        >
+          Request 50-seat pack (₹45,000)
+        </a>
+        <a
+          class="inf-btn inf-btn--ghost"
+          href={INFERENCE_CHECKOUT.campusInquiry.twoHundredSeats}
+          data-campus-sku="campus-200"
+        >
+          Request 200-seat batch (₹1,40,000)
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <svg class="pg-edge" viewBox={`0 0 1000 ${EDGE_DEPTH}`} preserveAspectRatio="none" aria-hidden="true">
+    <polyline points={line} class="pg-edge__glow" vector-effect="non-scaling-stroke" />
+    <polyline points={line} class="pg-edge__gold" vector-effect="non-scaling-stroke" />
+  </svg>
+
+  <div class="wrap campus-body">
+    <section class="campus-sec" aria-labelledby="campus-tiers-heading">
+      <p class="campus-kicker">Cohort pricing</p>
+      <h2 id="campus-tiers-heading">Institutional &amp; student club packs</h2>
+
+      <div class="campus-grid">
+        {INFERENCE_CAMPUS_TIERS.map((tier) => (
+          <article class:list={['campus-card', tier.highlighted && 'campus-card--hero']}>
+            <span class="campus-card__badge">{tier.badge}</span>
+            <h3>{tier.name}</h3>
+            <div class="campus-card__price">
+              <strong>{tier.priceInr}</strong>
+              <span>{tier.perSeatInr} · Global: {tier.priceUsd}</span>
+            </div>
+            <ul>
+              {tier.features.map((f) => (
+                <li>{f}</li>
+              ))}
+            </ul>
+            <a
+              href={tier.ctaHref}
+              class:list={['inf-btn', tier.highlighted ? 'inf-btn--primary' : 'inf-btn--secondary', 'campus-card__cta']}
+              data-campus-sku={tier.id}
+            >
+              {tier.ctaLabel}
+            </a>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <section class="campus-sec" aria-labelledby="campus-syllabus-heading">
+      <p class="campus-kicker">Included syllabus packet</p>
+      <h2 id="campus-syllabus-heading">All 36 units across 7 placement domains</h2>
+      <p class="campus-lead">
+        Every seat receives all 36 units (150,033 words, 34 vector diagrams, 178 primary sources)
+        plus both quarterly India and Global model inserts. Preview five full units immediately in
+        the <a class="linkish" href="/inference/read/">Free Edition hub</a>.
+      </p>
+
+      <div class="campus-tracks">
+        {INFERENCE_TRACK_GROUPS.map((g) => {
+          const list = INFERENCE_UNITS.filter((u) => u.trackId === g.id);
+          return (
+            <article class="campus-track" style={`--track-accent:var(--${g.accent})`}>
+              <div class="campus-track__head">
+                <h3>{g.label}</h3>
+                <span>{list.length} units</span>
+              </div>
+              <p>{g.summary}</p>
+            </article>
+          );
+        })}
+      </div>
+    </section>
+
+    <section class="campus-sec campus-contact" aria-labelledby="campus-contact-heading">
+      <h2 id="campus-contact-heading">Direct coordinator rollout</h2>
+      <p>
+        Send your club name, batch size, and preferred delivery date to{' '}
+        <a href={`mailto:${INFERENCE_CHECKOUT.contactEmail}`}>{INFERENCE_CHECKOUT.contactEmail}</a>.
+        We issue a consolidated invoice, a single PlaceCom license-key sheet, and watermarked A4
+        copies within 24 hours of confirmation.
+      </p>
+    </section>
+  </div>
+</Base>
+
+<script>
+  for (const link of document.querySelectorAll<HTMLAnchorElement>('[data-campus-sku]')) {
+    link.addEventListener('click', () => {
+      const sku = link.dataset.campusSku || 'campus-bulk';
+      const w = window as unknown as { umami?: { track?: (name: string, data: Record<string, string>) => void } };
+      w.umami?.track?.('inference_cta', { sku, currency: 'INR' });
+    });
+  }
+</script>
+
+<style>
+  .pg-plate {
+    position: relative;
+    color: var(--tldr-ink);
+    background:
+      radial-gradient(50rem 26rem at 88% 10%, color-mix(in srgb, var(--ochre) 16%, transparent), transparent 70%),
+      radial-gradient(42rem 22rem at 6% 110%, color-mix(in srgb, var(--moss) 14%, transparent), transparent 70%),
+      var(--tldr-bg);
+    overflow: hidden;
+  }
+  .pg-plate::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: var(--paper-noise);
+    opacity: 0.7;
+    pointer-events: none;
+  }
+  .pg-plate__in {
+    position: relative;
+    z-index: 1;
+    padding-block: clamp(2.25rem, 4vw, 3.5rem) calc(22px + clamp(2rem, 3vw, 2.75rem));
+  }
+  .campus-top {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: .75rem 1.25rem;
+    margin-bottom: 1.15rem;
+  }
+  .hanko-mark {
+    display: inline-flex;
+    align-items: center;
+    font-family: var(--font);
+    font-size: .6875rem;
+    font-weight: 800;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--hanko);
+    background: color-mix(in srgb, var(--hanko) 14%, transparent);
+    border: 1.25px solid color-mix(in srgb, var(--hanko) 65%, transparent);
+    padding: .24rem .65rem;
+    border-radius: 4px;
+  }
+  .campus-back {
+    color: var(--tldr-dim);
+    font-size: .9375rem;
+    font-weight: 600;
+    text-decoration: none;
+  }
+  .campus-back:hover {
+    color: var(--tldr-ink);
+  }
+  .pg-plate__title {
+    margin: 0;
+    max-width: 54rem;
+    font-family: var(--font);
+    font-size: clamp(2rem, 4.2vw, 3.2rem);
+    font-weight: 800;
+    line-height: 1.07;
+    letter-spacing: -.03em;
+    color: var(--tldr-ink);
+  }
+  .pg-plate__desc {
+    margin: 1rem 0 0;
+    max-width: 44rem;
+    font-size: 1.0625rem;
+    line-height: 1.62;
+    color: var(--tldr-dim);
+  }
+  .campus-actions {
+    margin-top: 1.65rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: .85rem;
+  }
+  .inf-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    padding: .7rem 1.35rem;
+    border-radius: 10px;
+    font-family: var(--font);
+    font-size: .9375rem;
+    font-weight: 700;
+    text-decoration: none;
+    border: 1.5px solid transparent;
+  }
+  .inf-btn--primary {
+    background: var(--ochre);
+    color: var(--tldr-bg);
+    border-color: var(--ochre);
+  }
+  .inf-btn--ghost {
+    background: transparent;
+    color: var(--tldr-ink);
+    border-color: var(--tldr-hair);
+  }
+  .inf-btn--secondary {
+    background: var(--solid);
+    color: var(--on-solid);
+    border-color: var(--border);
+  }
+
+  .pg-edge {
+    display: block;
+    position: relative;
+    width: 100%;
+    height: 22px;
+    margin-top: -22px;
+    overflow: visible;
+    pointer-events: none;
+  }
+  .pg-edge__glow {
+    fill: none;
+    stroke: color-mix(in srgb, var(--ochre) 40%, transparent);
+    stroke-width: 4;
+    filter: blur(1.5px);
+  }
+  .pg-edge__gold {
+    fill: none;
+    stroke: var(--ochre);
+    stroke-width: 1.75;
+    stroke-linejoin: miter;
+  }
+
+  .campus-body {
+    padding-top: clamp(2.25rem, 4vw, 3.5rem);
+    padding-bottom: 4.5rem;
+  }
+  .campus-sec {
+    margin-top: 3.5rem;
+  }
+  .campus-sec:first-child {
+    margin-top: 0;
+  }
+  .campus-kicker {
+    margin: 0 0 .35rem;
+    font-size: .8125rem;
+    font-weight: 700;
+    color: var(--ochre);
+  }
+  .campus-sec h2 {
+    margin: 0 0 1.25rem;
+    font-size: clamp(1.5rem, 2.6vw, 2rem);
+    font-weight: 800;
+    letter-spacing: -.02em;
+  }
+  .campus-lead {
+    margin: 0 0 1.5rem;
+    max-width: 48rem;
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--ink-soft);
+  }
+  .campus-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
+    gap: 1rem;
+  }
+  .campus-card {
+    display: flex;
+    flex-direction: column;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 1.4rem;
+  }
+  .campus-card--hero {
+    border: 2px solid var(--ochre);
+    background: color-mix(in srgb, var(--ochre) 7%, var(--card));
+  }
+  .campus-card__badge {
+    font-size: .8125rem;
+    font-weight: 700;
+    color: var(--ochre);
+    margin-bottom: .4rem;
+  }
+  .campus-card h3 {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 800;
+  }
+  .campus-card__price {
+    margin: 1rem 0;
+    padding: .9rem 0;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+  .campus-card__price strong {
+    display: block;
+    font-size: 1.85rem;
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+  }
+  .campus-card__price span {
+    display: block;
+    margin-top: .25rem;
+    font-size: .8125rem;
+    color: var(--ink-faint);
+  }
+  .campus-card ul {
+    margin: 0 0 1.25rem;
+    padding-left: 1.1rem;
+    font-size: .9375rem;
+    line-height: 1.55;
+    color: var(--ink-soft);
+    flex: 1;
+  }
+  .campus-card li {
+    margin-bottom: .45rem;
+  }
+  .campus-card__cta {
+    width: 100%;
+  }
+
+  .campus-tracks {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
+    gap: .9rem;
+  }
+  .campus-track {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--track-accent, var(--ochre));
+    border-radius: 14px;
+    padding: 1.15rem 1.25rem;
+  }
+  .campus-track__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: .5rem;
+    margin-bottom: .45rem;
+  }
+  .campus-track__head h3 {
+    margin: 0;
+    font-size: 1.0625rem;
+    font-weight: 700;
+  }
+  .campus-track__head span {
+    font-size: .8125rem;
+    font-weight: 600;
+    color: var(--ink-faint);
+  }
+  .campus-track p {
+    margin: 0;
+    font-size: .875rem;
+    line-height: 1.55;
+    color: var(--ink-soft);
+  }
+
+  .campus-contact {
+    background: var(--stone);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.4rem;
+  }
+  .campus-contact h2 {
+    margin-bottom: .6rem;
+    font-size: 1.25rem;
+  }
+  .campus-contact p {
+    margin: 0;
+    font-size: .9375rem;
+    line-height: 1.65;
+    color: var(--ink-soft);
+    max-width: 50rem;
+  }
+</style>

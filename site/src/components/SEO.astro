@@ -60,10 +60,21 @@ const canonical = new URL(Astro.url.pathname, Astro.site).href;
 // against `site`. The default card exists so `summary_large_image` is never a
 // promise the page cannot keep. Cards are generated (src/data/share.ts).
 const ogImage = new URL(image ?? cardFor('default'), Astro.site).href;
+const ogImagePath = new URL(ogImage).pathname.toLowerCase();
+const ogImageType = ogImagePath.endsWith('.webp')
+  ? 'image/webp'
+  : ogImagePath.endsWith('.jpg') || ogImagePath.endsWith('.jpeg')
+    ? 'image/jpeg'
+    : 'image/png';
 const siteName = 'wAIbi-sabi';
-const personId = new URL('/#person', Astro.site).href;
-const websiteId = new URL('/#website', Astro.site).href;
+const origin = Astro.site ? new URL(Astro.site).origin : 'https://janmejai2002.github.io';
+const personId = `${origin}/#person`;
+const orgId = `${origin}/#org`;
+const websiteId = `${origin}/#website`;
 const isHome = Astro.url.pathname === '/';
+const isNewsRoute = Astro.url.pathname === '/news' || Astro.url.pathname.startsWith('/news/');
+const inLanguage = isNewsRoute ? 'en-IN' : 'en';
+const ogLocale = isNewsRoute ? 'en_IN' : 'en_US';
 // og:site_name already says wAIbi-sabi under every card, so the suffix <title>
 // carries for search results is noise in a feed.
 const socialTitle = headline ?? shareCard?.title ?? (title.replace(/\s+[—|–-]\s+wAIbi-sabi$/, '') || title);
@@ -89,6 +100,30 @@ const person = {
     'Credit Risk Modelling',
   ],
   sameAs: ['https://linkedin.com/in/janmejai', 'https://github.com/janmejai2002'],
+};
+
+const organization = {
+  '@type': 'Organization',
+  '@id': orgId,
+  name: siteName,
+  url: origin,
+  founder: { '@id': personId },
+  logo: {
+    '@type': 'ImageObject',
+    url: new URL('/apple-touch-icon.png', Astro.site).href,
+    width: 180,
+    height: 180,
+  },
+};
+
+const website = {
+  '@type': 'WebSite',
+  '@id': websiteId,
+  name: siteName,
+  url: Astro.site?.href ?? origin,
+  inLanguage,
+  author: { '@id': personId },
+  publisher: { '@id': orgId },
 };
 
 const breadcrumbNode = breadcrumbs?.length
@@ -125,6 +160,8 @@ const graph =
   type === 'article'
     ? [
         person,
+        organization,
+        website,
         ...breadcrumbNode,
         ...faqNode,
         {
@@ -133,34 +170,25 @@ const graph =
           ...(alternativeHeadline ? { alternativeHeadline } : {}),
           ...(articleSection ? { articleSection } : {}),
           ...(wordCount ? { wordCount } : {}),
-          inLanguage: 'en-IN',
+          inLanguage,
           isPartOf: { '@id': websiteId },
           url: canonical,
           description,
           datePublished: pubDate?.toISOString(),
           dateModified: (updatedDate ?? pubDate)?.toISOString(),
           author: { '@id': personId },
-          publisher: { '@id': personId },
+          publisher: { '@id': orgId },
           image: ogImage,
           mainEntityOfPage: { '@type': 'WebPage', '@id': canonical },
           ...(keywords.length ? { keywords: keywords.join(', ') } : {}),
         },
       ]
     : isHome
-      ? [
-          person,
-          {
-            '@type': 'WebSite',
-            '@id': websiteId,
-            name: siteName,
-            url: Astro.site?.href,
-            inLanguage: 'en-IN',
-            author: { '@id': personId },
-            publisher: { '@id': personId },
-          },
-        ]
+      ? [person, organization, website]
       : [
           person,
+          organization,
+          website,
           ...breadcrumbNode,
           ...faqNode,
           {
@@ -169,6 +197,7 @@ const graph =
             url: canonical,
             name: socialTitle,
             description,
+            inLanguage,
             isPartOf: { '@id': websiteId },
             ...pageSchema,
           },
@@ -200,7 +229,7 @@ const schema = { '@context': 'https://schema.org', '@graph': graph };
 <meta property="og:description" content={description} />
 <meta property="og:url" content={canonical} />
 <meta property="og:site_name" content={siteName} />
-<meta property="og:locale" content="en_IN" />
+<meta property="og:locale" content={ogLocale} />
 {pubDate && <meta property="article:published_time" content={pubDate.toISOString()} />}
 {updatedDate && <meta property="article:modified_time" content={updatedDate.toISOString()} />}
 {type === 'article' && <meta property="article:author" content={new URL('/about/', Astro.site).href} />}
@@ -209,7 +238,7 @@ const schema = { '@context': 'https://schema.org', '@graph': graph };
 
 <meta property="og:image" content={ogImage} />
 <meta property="og:image:secure_url" content={ogImage} />
-<meta property="og:image:type" content="image/png" />
+<meta property="og:image:type" content={ogImageType} />
 <meta property="og:image:alt" content={ogImageAlt} />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />

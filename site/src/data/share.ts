@@ -189,6 +189,74 @@ async function buildCards(): Promise<PageCard[]> {
       accent: 'hanko',
       visual: { kind: 'crew', accents: bowlAccents },
     },
+    {
+      key: 'inference',
+      label: 'INFERENCE · 2027 Edition',
+      title: '150,033 words of applied AI for business and placement rooms.',
+      hook: '36 units across 7 domains, 34 vector diagrams, and 178 verified primary sources. Five units free to read.',
+      meta: 'By Janmejai Singh Minhas & Chaitanya Sharma',
+      accent: 'ochre',
+      visual: {
+        kind: 'lines',
+        items: [
+          { tag: 'Foundations & Inserts', text: 'Token economics, RAG privacy, and India DPDP / RBI FREE-AI', accent: ACCENT.mizu },
+          { tag: 'Consulting & Finance', text: '10 enterprise cases, 10 guesstimates, and credit risk models', accent: ACCENT.ochre },
+          { tag: 'Product, Marketing, Ops & HR', text: 'Eval harnesses, MMM attribution, RUL, and bias audits', accent: ACCENT.moss },
+        ],
+      },
+      cast: { who: 'fude', mood: 'scribble' },
+    },
+    {
+      key: 'inference-read',
+      label: 'INFERENCE Free Edition',
+      title: 'Five complete units of INFERENCE, open to read.',
+      hook: 'Ch 00, Ch 01, State of Play (Nov 2026), India Briefing, and one worked Consulting Casebook case.',
+      meta: '5 of 36 units free',
+      accent: 'mizu',
+      visual: {
+        kind: 'lines',
+        items: [
+          { tag: 'Ch 00 & Ch 01', text: 'AI in one sitting & Not all AI is ChatGPT', accent: ACCENT.mizu },
+          { tag: 'Insert A & Insert B', text: 'State of Play Nov 2026 & India DPDP / RBI FREE-AI', accent: ACCENT.ochre },
+          { tag: 'Case 01 Preview', text: 'PE Due Diligence: Testing an 80% AI support claim', accent: ACCENT.hanko },
+        ],
+      },
+      cast: { who: 'kiki', mood: 'listen' },
+    },
+    {
+      key: 'inference-glossary',
+      label: 'INFERENCE Glossary',
+      title: '116 AI and business terms, defined without hype.',
+      hook: 'From KV cache and speculative decoding to RBI FREE-AI, DPDP Data Fiduciary, and Weibull hazard modeling.',
+      meta: '116 terms',
+      accent: 'indigo',
+      visual: {
+        kind: 'lines',
+        items: [
+          { tag: 'Inference & Evals', text: 'Token, context caching, model routing, eval harness', accent: ACCENT.mizu },
+          { tag: 'India & Finance', text: 'Data Fiduciary, RBI FREE-AI, ECL, base rate fallacy', accent: ACCENT.ochre },
+          { tag: 'Ops, Marketing & HR', text: 'OEE, bullwhip effect, Bayesian MMM, four-fifths rule', accent: ACCENT.moss },
+        ],
+      },
+      cast: { who: 'uso', mood: 'count' },
+    },
+    {
+      key: 'inference-campus',
+      label: 'INFERENCE Campus Licensing',
+      title: 'Cohort licensing for B-school PlaceComs and clubs.',
+      hook: '50-seat and 200-seat packs with custom club stamps, single invoices, and live AI case Q&A.',
+      meta: '50 & 200 seat tiers',
+      accent: 'ochre',
+      visual: {
+        kind: 'lines',
+        items: [
+          { tag: '50-Seat Club Pack', text: 'INR 45,000 for Consulting, ProdMan, or Finance clubs', accent: ACCENT.ochre },
+          { tag: '200-Seat Batch Pack', text: 'INR 1,40,000 with Anki deck, 25 drills & live Q&A', accent: ACCENT.moss },
+          { tag: '36/36 Units Included', text: 'Full 2027 Edition + 1 year of Insert A & B updates', accent: ACCENT.mizu },
+        ],
+      },
+      cast: { who: 'tsugi', mood: 'proud' },
+    },
   ];
   return cards;
 }

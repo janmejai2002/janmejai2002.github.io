@@ -1,0 +1,553 @@
+---
+import { getCollection, render } from 'astro:content';
+import Base from '../../../layouts/Base.astro';
+import { plateEdge, EDGE_DEPTH } from '../../../lib/bowl';
+
+export async function getStaticPaths() {
+  const entries = await getCollection('inference');
+  return entries.map((entry) => ({
+    params: { slug: entry.id },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const allFree = (await getCollection('inference')).sort((a, b) => a.data.order - b.data.order);
+const nextFree = allFree.find((e) => e.data.order === entry.data.order + 1) ?? allFree[0];
+
+const { Content } = await render(entry);
+// Astro 5 glob collection entries carry pre-rendered HTML on entry.rendered.html,
+// allowing clean static injection of the subtle mid-article contextual callout.
+const renderedHtml = (entry as unknown as { rendered?: { html?: string } }).rendered?.html ?? '';
+
+const contextualCallout = `
+<aside class="inf-midgate" aria-label="Continue this track">
+  <span class="inf-midgate__dot" aria-hidden="true"></span>
+  <div class="inf-midgate__body">
+    <p class="inf-midgate__title">Preparing for ${entry.data.track} interviews or deployment reviews?</p>
+    <p class="inf-midgate__copy">This unit is one of 5 free previews from INFERENCE (36 units total). The full edition adds ${entry.data.nextLocked.title} and all six domain casebooks.</p>
+    <div class="inf-midgate__links">
+      <a href="/inference/#pricing">Get the 2027 Edition (from ₹499 / $19)</a>
+      <a href="/inference/glossary/">Open 116-term glossary</a>
+    </div>
+  </div>
+</aside>`;
+
+function injectMidCallout(html: string): string {
+  if (!html) return '';
+  let count = 0;
+  let injected = false;
+  const out = html.replace(/<h2\b/g, (match) => {
+    count += 1;
+    if (count === 3 && !injected) {
+      injected = true;
+      return `${contextualCallout}\n${match}`;
+    }
+    return match;
+  });
+  if (!injected) {
+    // Fallback: inject before the last <h2> if fewer than 3 <h2> headings
+    const lastIdx = out.lastIndexOf('<h2');
+    if (lastIdx > 0) {
+      return out.slice(0, lastIdx) + contextualCallout + '\n' + out.slice(lastIdx);
+    }
+  }
+  return out;
+}
+
+const processedHtml = renderedHtml ? injectMidCallout(renderedHtml) : '';
+
+const headEdge = plateEdge(`inf-read-${entry.id}`);
+const footEdge = plateEdge(`inf-read-end-${entry.id}`);
+const headClip = `polygon(0 0,100% 0,${[...headEdge].reverse().map(([x, d]) => `${x.toFixed(1)}% calc(100% - ${d.toFixed(1)}px)`).join(',')})`;
+const footClip = `polygon(${footEdge.map(([x, d]) => `${x.toFixed(1)}% ${d.toFixed(1)}px`).join(',')},100% 100%,0 100%)`;
+const headLine = headEdge.map(([x, d]) => `${(x * 10).toFixed(0)},${(EDGE_DEPTH - d).toFixed(1)}`).join(' ');
+const footLine = footEdge.map(([x, d]) => `${(x * 10).toFixed(0)},${d.toFixed(1)}`).join(' ');
+---
+
+<Base
+  card="inference-read"
+  title={`${entry.data.title} — INFERENCE Free Edition`}
+  description={entry.data.deck}
+  section="INFERENCE"
+  pageType="Article"
+  readingTime={entry.data.readingTime}
+  breadcrumbs={[
+    { name: 'Home', path: '/' },
+    { name: 'INFERENCE', path: '/inference/' },
+    { name: 'Free Edition', path: '/inference/read/' },
+    { name: entry.data.title },
+  ]}
+  immersive={true}
+  wide={true}
+  grain={false}
+  progress={true}
+>
+  <div class="inf-reader" style={`--accent:var(--${entry.data.accent})`}>
+    <!-- Top Track-Map Bar -->
+    <div class="trackbar">
+      <div class="wrap trackbar__in">
+        <div class="trackbar__pos">
+          <span class="trackbar__dot" aria-hidden="true"></span>
+          <span>{entry.data.part} · Free Preview ({entry.data.order} of {allFree.length} free units)</span>
+        </div>
+        <nav class="trackbar__nav" aria-label="Free Edition units">
+          <a href="/inference/read/">All 5 free units</a>
+          <a href="/inference/glossary/">Glossary (116)</a>
+          <a class="trackbar__cta" href="/inference/#pricing">Full 36-unit Edition →</a>
+        </nav>
+      </div>
+    </div>
+
+    <!-- Dark Ceramic Opening Plate -->
+    <header class="pg-plate" style={`clip-path:${headClip}`}>
+      <div class="wrap pg-plate__in">
+        <div class="reader-meta">
+          <span class="reader-badge">{entry.data.unitNumber}</span>
+          <span>{entry.data.track}</span>
+          <span>·</span>
+          <span>{entry.data.readingTime}</span>
+        </div>
+        <h1>{entry.data.title}</h1>
+        <p class="reader-deck">{entry.data.deck}</p>
+        <p class="reader-hook">{entry.data.hook}</p>
+      </div>
+    </header>
+
+    <svg class="pg-edge" viewBox={`0 0 1000 ${EDGE_DEPTH}`} preserveAspectRatio="none" aria-hidden="true">
+      <polyline points={headLine} class="pg-edge__gold" vector-effect="non-scaling-stroke" />
+    </svg>
+
+    <!-- Magazine-Grade Reading Column -->
+    <article class="wrap reader-wrap">
+      <div class="body">
+        {processedHtml ? <Fragment set:html={processedHtml} /> : <Content />}
+      </div>
+      {!processedHtml && (
+        <aside class="inf-midgate" aria-label="Continue this track">
+          <span class="inf-midgate__dot" aria-hidden="true"></span>
+          <div class="inf-midgate__body">
+            <p class="inf-midgate__title">Preparing for {entry.data.track} interviews or deployment reviews?</p>
+            <p class="inf-midgate__copy">
+              This unit is one of 5 free previews from INFERENCE (36 units total). The full edition
+              adds {entry.data.nextLocked.title} and all six domain casebooks.
+            </p>
+            <div class="inf-midgate__links">
+              <a href="/inference/#pricing">Get the 2027 Edition (from ₹499 / $19)</a>
+              <a href="/inference/glossary/">Open 116-term glossary</a>
+            </div>
+          </div>
+        </aside>
+      )}
+    </article>
+
+    <!-- Dark Plate "Continue to the Full Edition" Gate -->
+    <section class="plate inf-gate" style={`clip-path:${footClip}`} aria-labelledby="gate-heading">
+      <svg class="gate-edge" viewBox={`0 0 1000 ${EDGE_DEPTH}`} preserveAspectRatio="none" aria-hidden="true">
+        <polyline points={footLine} vector-effect="non-scaling-stroke" />
+      </svg>
+
+      <div class="wrap inf-gate__in">
+        <div class="inf-gate__locked">
+          <span class="gate-kicker">Continue to the Full Edition · Next locked unit</span>
+          <h2 id="gate-heading">{entry.data.nextLocked.title}</h2>
+          <p class="gate-meta">{entry.data.nextLocked.track} · {entry.data.nextLocked.words}</p>
+          <ul class="gate-outcomes">
+            {entry.data.nextLocked.outcomes.map((o) => (
+              <li>{o}</li>
+            ))}
+          </ul>
+          <div class="gate-actions">
+            <a class="inf-btn inf-btn--primary" href="/inference/#pricing">
+              Get the Full 36-Unit Edition (₹1,999 / $49)
+            </a>
+            <a class="inf-btn inf-btn--ghost" href="/inference/#tracks">
+              Inspect all 36 units
+            </a>
+          </div>
+        </div>
+
+        <aside class="inf-gate__next">
+          <span class="gate-next__label">Next free unit ({nextFree.data.order} of {allFree.length})</span>
+          <a class="gate-next__card" href={`/inference/read/${nextFree.id}/`}>
+            <strong>{nextFree.data.unitNumber}: {nextFree.data.title}</strong>
+            <span>{nextFree.data.deck}</span>
+            <b>Read free unit →</b>
+          </a>
+        </aside>
+      </div>
+    </section>
+  </div>
+</Base>
+
+<style>
+  .trackbar {
+    background: var(--paper-2);
+    border-bottom: 1px solid var(--border);
+    font-size: .8125rem;
+  }
+  .trackbar__in {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: .5rem 1.25rem;
+    padding-block: .6rem;
+  }
+  .trackbar__pos {
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    font-weight: 700;
+    color: var(--ink);
+  }
+  .trackbar__dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--ochre);
+    flex-shrink: 0;
+  }
+  .trackbar__nav {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: .5rem 1.15rem;
+  }
+  .trackbar__nav a {
+    text-decoration: none;
+    color: var(--ink-soft);
+    font-weight: 600;
+  }
+  .trackbar__nav a:hover {
+    color: var(--ink);
+  }
+  .trackbar__cta {
+    color: var(--ochre) !important;
+    font-weight: 700 !important;
+  }
+
+  .pg-plate {
+    position: relative;
+    color: var(--tldr-ink);
+    background:
+      radial-gradient(50rem 26rem at 88% 10%, color-mix(in srgb, var(--accent) 16%, transparent), transparent 70%),
+      var(--tldr-bg);
+  }
+  .pg-plate__in {
+    padding-block: clamp(2rem, 3.8vw, 3.25rem) calc(22px + clamp(1.75rem, 3vw, 2.5rem));
+  }
+  .reader-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: .5rem;
+    font-size: .875rem;
+    font-weight: 600;
+    color: var(--tldr-dim);
+    margin-bottom: .9rem;
+  }
+  .reader-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: .18rem .55rem;
+    border-radius: 4px;
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    font-size: .75rem;
+    font-weight: 800;
+  }
+  .pg-plate h1 {
+    margin: 0;
+    max-width: 46rem;
+    font-size: clamp(2rem, 4.2vw, 3.15rem);
+    font-weight: 800;
+    line-height: 1.07;
+    letter-spacing: -.03em;
+    color: var(--tldr-ink);
+  }
+  .reader-deck {
+    margin: .85rem 0 0;
+    max-width: 44rem;
+    font-size: 1.0625rem;
+    line-height: 1.55;
+    color: var(--tldr-dim);
+  }
+  .reader-hook {
+    margin: 1.35rem 0 0;
+    max-width: 44rem;
+    padding-left: 1rem;
+    border-left: 3px solid var(--ochre);
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 1.0625rem;
+    line-height: 1.55;
+    color: var(--tldr-ink);
+  }
+
+  .pg-edge {
+    display: block;
+    position: relative;
+    width: 100%;
+    height: 22px;
+    margin-top: -22px;
+    overflow: visible;
+    pointer-events: none;
+  }
+  .pg-edge__gold {
+    fill: none;
+    stroke: var(--ochre);
+    stroke-width: 1.75;
+  }
+
+  .reader-wrap {
+    padding-top: clamp(2.25rem, 4vw, 3.25rem);
+    padding-bottom: 4rem;
+  }
+  .reader-wrap .body {
+    max-width: var(--measure);
+    margin-inline: auto;
+  }
+
+  /* Custom directive boxes inside .body */
+  :global(.reader-wrap .inf-box) {
+    margin: 2rem 0;
+    padding: 1.25rem 1.35rem;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent, var(--ochre));
+    background: var(--card);
+  }
+  :global(.reader-wrap .inf-box--stat) {
+    background: var(--stone);
+    border-left-color: var(--ochre);
+  }
+  :global(.reader-wrap .inf-box--myth) {
+    border-left-color: var(--hanko);
+  }
+  :global(.reader-wrap .inf-box--case) {
+    border-left-color: var(--moss);
+  }
+  :global(.reader-wrap .inf-box--recap) {
+    background: var(--paper-2);
+    border-left-color: var(--indigo);
+  }
+  :global(.reader-wrap .inf-box__label) {
+    margin: 0 0 .7rem !important;
+    font-size: .8125rem !important;
+    font-weight: 800;
+    color: var(--accent, var(--ochre));
+  }
+  :global(.reader-wrap .inf-box__stat) {
+    margin: 0 0 .45rem !important;
+    font-size: 1.75rem !important;
+    font-weight: 800;
+    letter-spacing: -.03em;
+    color: var(--ink);
+  }
+  :global(.reader-wrap .inf-box > p:last-child),
+  :global(.reader-wrap .inf-box > ul:last-child),
+  :global(.reader-wrap .inf-box > ol:last-child) {
+    margin-bottom: 0;
+  }
+  :global(.reader-wrap .inf-answers) {
+    margin: 1.5rem 0 2.25rem;
+    padding: 1rem 1.25rem;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: var(--paper-2);
+  }
+  :global(.reader-wrap .inf-answers summary) {
+    font-weight: 700;
+    color: var(--ink);
+    cursor: pointer;
+  }
+  :global(.reader-wrap .inf-mark) {
+    background: color-mix(in srgb, var(--ochre) 20%, transparent);
+    color: var(--ink);
+    padding: .05em .25em;
+    border-radius: 3px;
+  }
+  :global(.reader-wrap .inf-formula) {
+    margin: 1.25rem 0;
+    padding: .85rem 1rem;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--paper-2);
+    overflow-x: auto;
+  }
+  :global(.reader-wrap .inf-formula code) {
+    background: none;
+    border: 0;
+    padding: 0;
+    font-family: monospace;
+    font-size: .9375rem;
+    color: var(--ink);
+  }
+
+  /* Subtle mid-article contextual upgrade callout */
+  :global(.inf-midgate) {
+    margin: 2.5rem 0;
+    padding: 1.25rem 1.35rem;
+    border-radius: 14px;
+    border: 1px solid var(--border);
+    background: var(--stone);
+    display: flex;
+    gap: .95rem;
+    align-items: flex-start;
+  }
+  :global(.inf-midgate__dot) {
+    width: 7px;
+    height: 7px;
+    margin-top: .5rem;
+    background: var(--ochre);
+    transform: rotate(45deg);
+    flex-shrink: 0;
+  }
+  :global(.inf-midgate__title) {
+    margin: 0 0 .35rem !important;
+    font-size: 1rem !important;
+    font-weight: 800;
+    color: var(--ink);
+  }
+  :global(.inf-midgate__copy) {
+    margin: 0 0 .75rem !important;
+    font-size: .9375rem !important;
+    line-height: 1.55;
+    color: var(--ink-soft);
+  }
+  :global(.inf-midgate__links) {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .5rem 1.25rem;
+    font-size: .875rem;
+    font-weight: 700;
+  }
+
+  /* Bottom dark plate gate */
+  .inf-gate {
+    position: relative;
+    color: var(--tldr-ink);
+    background:
+      radial-gradient(50rem 26rem at 88% 20%, color-mix(in srgb, var(--ochre) 16%, transparent), transparent 70%),
+      var(--tldr-bg);
+    clip-path: var(--edge);
+  }
+  .gate-edge {
+    display: block;
+    width: 100%;
+    height: 22px;
+    overflow: visible;
+    pointer-events: none;
+  }
+  .gate-edge polyline {
+    fill: none;
+    stroke: var(--ochre);
+    stroke-width: 1.75;
+  }
+  .inf-gate__in {
+    padding-block: clamp(2rem, 4vw, 3.25rem) clamp(2.5rem, 4.5vw, 3.75rem);
+    display: grid;
+    grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+    gap: 2rem 3rem;
+    align-items: start;
+  }
+  @media (max-width: 48rem) {
+    .inf-gate__in {
+      grid-template-columns: 1fr;
+    }
+  }
+  .gate-kicker {
+    display: block;
+    font-size: .8125rem;
+    font-weight: 700;
+    color: var(--ochre);
+    margin-bottom: .45rem;
+  }
+  .inf-gate h2 {
+    margin: 0 0 .45rem;
+    font-size: clamp(1.5rem, 2.8vw, 2.15rem);
+    font-weight: 800;
+    line-height: 1.15;
+    color: var(--tldr-ink);
+  }
+  .gate-meta {
+    margin: 0 0 1.15rem;
+    font-size: .9375rem;
+    color: var(--tldr-dim);
+  }
+  .gate-outcomes {
+    margin: 0 0 1.5rem;
+    padding-left: 1.2rem;
+    font-size: .9375rem;
+    line-height: 1.6;
+    color: var(--tldr-ink);
+  }
+  .gate-outcomes li {
+    margin-bottom: .45rem;
+  }
+  .gate-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .85rem;
+  }
+  .inf-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    padding: .7rem 1.35rem;
+    border-radius: 10px;
+    font-family: var(--font);
+    font-size: .9375rem;
+    font-weight: 700;
+    text-decoration: none;
+    border: 1.5px solid transparent;
+  }
+  .inf-btn--primary {
+    background: var(--ochre);
+    color: var(--tldr-bg);
+    border-color: var(--ochre);
+  }
+  .inf-btn--ghost {
+    background: transparent;
+    color: var(--tldr-ink);
+    border-color: var(--tldr-hair);
+  }
+
+  .gate-next__label {
+    display: block;
+    font-size: .8125rem;
+    font-weight: 700;
+    color: var(--tldr-dim);
+    margin-bottom: .6rem;
+  }
+  .gate-next__card {
+    display: flex;
+    flex-direction: column;
+    gap: .45rem;
+    padding: 1.25rem;
+    border-radius: 14px;
+    border: 1px solid var(--tldr-hair);
+    background: color-mix(in srgb, var(--tldr-ink) 5%, transparent);
+    text-decoration: none;
+    color: var(--tldr-ink);
+  }
+  .gate-next__card:hover {
+    border-color: var(--ochre);
+  }
+  .gate-next__card strong {
+    font-size: 1.0625rem;
+    line-height: 1.3;
+  }
+  .gate-next__card span {
+    font-size: .875rem;
+    line-height: 1.5;
+    color: var(--tldr-dim);
+  }
+  .gate-next__card b {
+    margin-top: .25rem;
+    font-size: .875rem;
+    color: var(--ochre);
+  }
+</style>

@@ -74,18 +74,30 @@ jobs:
 
       - name: Submit changed URLs
         run: |
-          if ! git cat-file -e "${{ github.event.before }}" 2>/dev/null; then
-            echo "No usable before-SHA (new branch or force push) — skipping."
+          before="${{ github.event.before }}"
+          if [ -z "$before" ] || [ "$before" = "0000000000000000000000000000000000000000" ] || ! git cat-file -e "${before}^{commit}" 2>/dev/null; then
+            echo "No usable before-SHA (missing, zero-SHA, new branch, or force push) — skipping."
             exit 0
           fi
-          urls=$(git diff --name-only "${{ github.event.before }}" "${{ github.sha }}" | while read -r f; do
+          urls=$(git diff --name-only --diff-filter=ACMR "$before" "${{ github.sha }}" | while IFS= read -r f; do
             case "$f" in
               site/src/content/blog/*.md) echo "https://janmejai2002.github.io/blog/$(basename "$f" .md)/";;
               site/src/pages/index.astro) echo "https://janmejai2002.github.io/";;
               site/src/pages/about.astro) echo "https://janmejai2002.github.io/about/";;
-              site/src/pages/projects.astro) echo "https://janmejai2002.github.io/projects/";;
-              site/src/pages/news/index.astro|site/src/data/news.json) echo "https://janmejai2002.github.io/news/";;
-              site/src/pages/status.astro|site/src/data/status.json) echo "https://janmejai2002.github.io/status/";;
+              site/src/pages/blog/index.astro) echo "https://janmejai2002.github.io/blog/";;
+              site/src/pages/news/index.astro|"site/src/pages/news/[archive].astro"|site/src/data/news.json|site/src/data/news-archive.ts) echo "https://janmejai2002.github.io/news/";;
+              site/src/pages/tracker.astro|site/src/data/agent-tracker.ts) echo "https://janmejai2002.github.io/tracker/";;
+              site/src/pages/tools/prompt-caching-calculator.astro|site/src/data/caching.ts) echo "https://janmejai2002.github.io/tools/prompt-caching-calculator/";;
+              "site/src/pages/topics/[topic].astro"|site/src/data/topics.ts)
+                for id in $(sed -n "s/^[[:space:]]*id:[[:space:]]*'\([^']*\)'.*/\1/p" site/src/data/topics.ts); do
+                  echo "https://janmejai2002.github.io/topics/${id}/"
+                done
+                ;;
+              "site/src/pages/[track].astro"|site/src/data/tracks.ts)
+                for id in $(sed -n "s/^[[:space:]]*id:[[:space:]]*'\([^']*\)'.*/\1/p" site/src/data/tracks.ts); do
+                  echo "https://janmejai2002.github.io/${id}/"
+                done
+                ;;
             esac
           done | sort -u)
           if [ -z "$urls" ]; then

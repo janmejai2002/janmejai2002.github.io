@@ -83,11 +83,40 @@ const TLDR = /<div class="tldr">[\s\S]*?<\/div>/;
 const tldr = rendered.match(TLDR)?.[0].replace(/(<h2\b[^>]*>)[\s\S]*?(<\/h2>)/, '$1The short version$2');
 const prose = tldr ? rendered.replace(TLDR, '') : rendered;
 
-// Extract first point for FAQPage schema
-const faq = question && tldr
+// Extract clean summary bullets from the TL;DR list for FAQPage schema without
+// splitting on hyphens (which truncates compound words like "multi-action").
+const decodeEntities = (text: string) =>
+  text
+    .replace(/&#x([0-9a-f]+);/gi, (_, hex) => String.fromCodePoint(parseInt(hex, 16)))
+    .replace(/&#(\d+);/g, (_, dec) => String.fromCodePoint(parseInt(dec, 10)))
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"')
+    .replace(/&apos;/g, "'")
+    .replace(/&nbsp;/g, ' ');
+const cleanTldrText = (html: string) =>
+  decodeEntities(
+    html
+      .replace(/<(?:br|\/p|\/div|\/li)\b[^>]*>/gi, ' ')
+      .replace(/<[^>]*>/g, '')
+  )
+    .replace(/\s+/g, ' ')
+    .trim();
+const tldrItems = tldr
+  ? [...tldr.matchAll(/<li\b[^>]*>([\s\S]*?)<\/li>/gi)]
+      .map((m) => cleanTldrText(m[1]))
+      .filter(Boolean)
+  : [];
+const faqAnswer = tldrItems.length
+  ? tldrItems.slice(0, 2).join(' ')
+  : tldr
+    ? cleanTldrText(tldr.replace(/<h2\b[^>]*>[\s\S]*?<\/h2>/gi, ''))
+    : '';
+const faq = question && faqAnswer
   ? [{
-      question: question,
-      answer: tldr.replace(/<[^>]*>/g, '').split('-').filter(Boolean)[0].trim()
+      question,
+      answer: faqAnswer,
     }]
   : [];
 
@@ -530,6 +559,18 @@ const related = [...candidates.slice(offset), ...candidates.slice(0, offset)].sl
     }
   }
 
+  // ---- cookieless Umami engagement events (guarded so dev / blocked scripts are silent no-ops)
+  type UmamiWindow = Window & {
+    umami?: { track?: (event: string, data?: Record<string, string | number | boolean>) => void };
+  };
+  const trackEvent = (event: string, data?: Record<string, string | number | boolean>) => {
+    const umami = (window as UmamiWindow).umami;
+    if (typeof umami?.track === 'function') {
+      if (data) umami.track(event, data);
+      else umami.track(event);
+    }
+  };
+
   // ---- pass it on: the phone's own share sheet where there is one
   const share = document.querySelector<HTMLButtonElement>('[data-share]');
   if (share) {
@@ -537,6 +578,7 @@ const related = [...candidates.slice(offset), ...candidates.slice(0, offset)].sl
     const native = typeof navigator.share === 'function';
     if (native) share.textContent = 'Share this piece';
     share.addEventListener('click', async () => {
+      trackEvent('share_click');
       try {
         // Lead with the reader's question: it is the line that makes someone
         // tap, and the share sheet drops it into the message above the link.
@@ -551,6 +593,23 @@ const related = [...candidates.slice(offset), ...candidates.slice(0, offset)].sl
         // Cancelling the share sheet lands here, and needs no message.
       }
     });
+  }
+
+  // ---- outbound source clicks in the article body, TL;DR brief, or margin notes
+  const onOutboundClick = (e: MouseEvent) => {
+    const link = (e.target as Element | null)?.closest<HTMLAnchorElement>('a[href]');
+    if (!link) return;
+    let url: URL;
+    try {
+      url = new URL(link.href, location.href);
+    } catch {
+      return;
+    }
+    if ((url.protocol !== 'http:' && url.protocol !== 'https:') || url.hostname === location.hostname) return;
+    trackEvent('outbound_source_click', { host: url.hostname.replace(/^www\./, '') });
+  };
+  for (const scope of [body, margins, document.querySelector<HTMLElement>('[data-brief]')]) {
+    scope?.addEventListener('click', onOutboundClick);
   }
 
   // The bowl's shard lands once, when the bowl is on screen.
@@ -863,12 +922,28 @@ const related = [...candidates.slice(offset), ...candidates.slice(0, offset)].sl
       });
     };
 
+    let hit50 = false;
+    let hit90 = false;
+    const trackScrollDepth = () => {
+      if (!hit50 && readShare >= 0.5) {
+        hit50 = true;
+        trackEvent('scroll_50');
+      }
+      if (!hit90 && readShare >= 0.9) {
+        hit90 = true;
+        trackEvent('scroll_90');
+      }
+    };
+
     let shown: HTMLElement | null | undefined;
     const update = () => {
       const y = scrollY + innerHeight * 0.3;
       let i = -1;
       for (let k = 0; k < tops.length; k++) if (tops[k] <= y) i = k;
       const head = i >= 0 ? heads[i] : null;
+
+      const finish = bodyTop + body.offsetHeight;
+      readShare = Math.max(0, Math.min(1, (scrollY + innerHeight * 0.55 - bodyTop) / Math.max(1, finish - bodyTop)));
 
       buildArt?.();
       updateDock();
@@ -916,6 +991,7 @@ const related = [...candidates.slice(offset), ...candidates.slice(0, offset)].sl
       requestAnimationFrame(() => {
         queued = false;
         update();
+        trackScrollDepth();
       });
     };
     const refresh = () => {

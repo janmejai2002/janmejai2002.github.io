@@ -1,0 +1,1143 @@
+---
+import Base from '../../layouts/Base.astro';
+import { plateEdge, EDGE_DEPTH } from '../../lib/bowl';
+import {
+  INFERENCE_STATS,
+  INFERENCE_TRACK_GROUPS,
+  INFERENCE_UNITS,
+  INFERENCE_SKUS,
+  INFERENCE_DOMAIN_OPTIONS,
+  INFERENCE_AUTHORS,
+  INFERENCE_FAQS,
+  getCheckoutHref,
+} from '../../data/inference';
+
+const edge = plateEdge('inference');
+const clip = `polygon(0 0, 100% 0, ${[...edge].reverse().map(([x, d]) => `${x.toFixed(1)}% calc(100% - ${d.toFixed(1)}px)`).join(',')})`;
+const line = edge.map(([x, d]) => `${(x * 10).toFixed(0)},${(EDGE_DEPTH - d).toFixed(1)}`).join(' ');
+
+const unitsByTrack = Object.fromEntries(
+  INFERENCE_TRACK_GROUPS.map((g) => [g.id, INFERENCE_UNITS.filter((u) => u.trackId === g.id)])
+);
+
+const productSchema = {
+  sku: 'INFERENCE-2027-V1',
+  category: 'Educational Book / Digital Compendium',
+  brand: { '@type': 'Brand', name: 'wAIbi-sabi' },
+  author: [
+    { '@type': 'Person', name: 'Janmejai Singh Minhas', url: 'https://janmejai2002.github.io/about/' },
+    { '@type': 'Person', name: 'Chaitanya Sharma' },
+  ],
+  offers: [
+    {
+      '@type': 'Offer',
+      name: 'Individual Domain Track (INR)',
+      price: '499',
+      priceCurrency: 'INR',
+      availability: 'https://schema.org/InStock',
+      url: 'https://janmejai2002.github.io/inference/#pricing',
+    },
+    {
+      '@type': 'Offer',
+      name: 'Individual Domain Track (USD)',
+      price: '19',
+      priceCurrency: 'USD',
+      availability: 'https://schema.org/InStock',
+      url: 'https://janmejai2002.github.io/inference/#pricing',
+    },
+    {
+      '@type': 'Offer',
+      name: 'Full 36-Unit Edition (INR)',
+      price: '1999',
+      priceCurrency: 'INR',
+      availability: 'https://schema.org/InStock',
+      url: 'https://janmejai2002.github.io/inference/#pricing',
+    },
+    {
+      '@type': 'Offer',
+      name: 'Full 36-Unit Edition (USD)',
+      price: '49',
+      priceCurrency: 'USD',
+      availability: 'https://schema.org/InStock',
+      url: 'https://janmejai2002.github.io/inference/#pricing',
+    },
+    {
+      '@type': 'Offer',
+      name: 'Placement Accelerator Bundle (INR)',
+      price: '3499',
+      priceCurrency: 'INR',
+      availability: 'https://schema.org/InStock',
+      url: 'https://janmejai2002.github.io/inference/#pricing',
+    },
+    {
+      '@type': 'Offer',
+      name: 'Placement Accelerator Bundle (USD)',
+      price: '79',
+      priceCurrency: 'USD',
+      availability: 'https://schema.org/InStock',
+      url: 'https://janmejai2002.github.io/inference/#pricing',
+    },
+  ],
+};
+---
+
+<Base
+  card="inference"
+  title="INFERENCE (2027 Edition) — Applied AI Compendium for Business & Placements"
+  description="150,033 words across 36 units and 7 business domains, backed by 178 verified primary sources. Read 5 units free or get the complete 2027 Edition."
+  section="INFERENCE"
+  pageType="Product"
+  keywords={[
+    'INFERENCE AI Compendium',
+    'AI consulting casebook',
+    'MBA AI placement prep India',
+    'applied AI economics',
+    'RBI FREE-AI DPDP AI guide',
+    'AI product management frameworks',
+  ]}
+  breadcrumbs={[{ name: 'Home', path: '/' }, { name: 'INFERENCE' }]}
+  schema={productSchema}
+  faq={INFERENCE_FAQS}
+  immersive={true}
+  wide={true}
+  grain={true}
+>
+  <section class="pg-plate" style={`clip-path:${clip}`} aria-labelledby="inf-hero-title">
+    <div class="wrap pg-plate__in">
+      <div class="inf-hero__top">
+        <span class="hanko-mark">{INFERENCE_STATS.edition}</span>
+        <span class="inf-hero__authors">By Janmejai Singh Minhas &amp; Chaitanya Sharma</span>
+      </div>
+
+      <p class="inf-hero__angle" id="inf-angle-kicker">
+        Built for B-school placements, consulting case rounds, and applied-AI operators.
+      </p>
+
+      <h1 id="inf-hero-title" class="pg-plate__title">
+        The applied AI compendium for people who sit in business, product, and placement rooms.
+      </h1>
+
+      <p class="pg-plate__desc">
+        From token unit economics and RAG privacy to six full domain casebooks across consulting,
+        finance, product, marketing, operations, and HR. Every claim traces to a primary source.
+      </p>
+
+      <div class="inf-hero__actions">
+        <a
+          class="inf-btn inf-btn--primary"
+          href="#pricing"
+          data-umami-sku="hero-edition"
+        >
+          Get the 2027 Edition
+        </a>
+        <a class="inf-btn inf-btn--ghost" href="/inference/read/">
+          Read 5 Free Units
+        </a>
+        <a class="linkish inf-hero__glossary" href="/inference/glossary/">
+          Browse {INFERENCE_STATS.glossaryTerms}-term glossary →
+        </a>
+      </div>
+
+      <dl class="inf-proof" aria-label="Compendium specifications">
+        <div>
+          <dt>Words</dt>
+          <dd>{INFERENCE_STATS.words}</dd>
+        </div>
+        <div>
+          <dt>Units</dt>
+          <dd>{INFERENCE_STATS.unitsTotal} complete</dd>
+        </div>
+        <div>
+          <dt>Domains</dt>
+          <dd>{INFERENCE_STATS.domains} tracks + Inserts</dd>
+        </div>
+        <div>
+          <dt>Primary sources</dt>
+          <dd>{INFERENCE_STATS.sources} verified</dd>
+        </div>
+        <div>
+          <dt>Glossary &amp; figures</dt>
+          <dd>{INFERENCE_STATS.glossaryTerms} terms · {INFERENCE_STATS.diagrams} SVGs</dd>
+        </div>
+      </dl>
+    </div>
+  </section>
+
+  <svg class="pg-edge" viewBox={`0 0 1000 ${EDGE_DEPTH}`} preserveAspectRatio="none" aria-hidden="true">
+    <polyline points={line} class="pg-edge__glow" vector-effect="non-scaling-stroke" />
+    <polyline points={line} class="pg-edge__gold" vector-effect="non-scaling-stroke" />
+  </svg>
+
+  <div class="wrap inf-body">
+    <!-- Why generic AI content fails -->
+    <section class="inf-sec" aria-labelledby="contrast-heading">
+      <div class="inf-sec__head">
+        <p class="inf-kicker">The gap</p>
+        <h2 id="contrast-heading">Why generic AI reading fails when the room pushes back</h2>
+      </div>
+      <div class="inf-contrast">
+        <article class="inf-card">
+          <span class="inf-card__tag">AI newsletters &amp; threads</span>
+          <h3>Model-release noise without P&amp;L math</h3>
+          <p>
+            Weekly summaries celebrate benchmark leaderboards while skipping inference cost per
+            query, human QA overhead, and why 95% of enterprise pilots stall before hitting EBIT.
+          </p>
+        </article>
+        <article class="inf-card">
+          <span class="inf-card__tag">Engineering textbooks</span>
+          <h3>CUDA and gradient math built for model trainers</h3>
+          <p>
+            You do not need backpropagation derivations to evaluate a ₹400 crore due-diligence
+            target, audit RBI FREE-AI explainability, or price outcome-based consulting pods.
+          </p>
+        </article>
+        <article class="inf-card inf-card--accent">
+          <span class="inf-card__tag">INFERENCE · 2027 Edition</span>
+          <h3>Mechanism to margin math to interview rubric</h3>
+          <p>
+            Each unit moves in order: how the machinery works, where it fails quantitatively, what
+            statutory rules apply (DPDP, RBI FREE-AI, EU AI Act), and how to defend a decision.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <!-- Interactive 7-track curriculum explorer -->
+    <section class="inf-sec" id="tracks" aria-labelledby="explorer-heading">
+      <div class="inf-sec__head inf-sec__head--row">
+        <div>
+          <p class="inf-kicker">Syllabus · 36 of 36 units complete</p>
+          <h2 id="explorer-heading">Explore all 7 domains and quarterly inserts</h2>
+        </div>
+        <div class="inf-sec__links">
+          <a class="linkish" href="/inference/read/">Open Free Edition hub →</a>
+          <a class="linkish" href="/inference/glossary/">Search 116-term glossary →</a>
+        </div>
+      </div>
+
+      <div class="inf-tabs" role="tablist" aria-label="INFERENCE domain tracks">
+        {INFERENCE_TRACK_GROUPS.map((g, idx) => {
+          const trackUnits = unitsByTrack[g.id] ?? [];
+          const freeCount = trackUnits.filter((u) => u.isFree).length;
+          return (
+            <button
+              type="button"
+              role="tab"
+              class:list={['inf-tab', idx === 0 && 'is-active']}
+              aria-selected={idx === 0 ? 'true' : 'false'}
+              aria-controls={`panel-${g.id}`}
+              data-track-tab={g.id}
+              style={`--tab-accent:var(--${g.accent})`}
+            >
+              <span class="inf-tab__dot" aria-hidden="true"></span>
+              <span class="inf-tab__name">{g.label}</span>
+              <span class="inf-tab__count">
+                {trackUnits.length} units{freeCount > 0 ? ` · ${freeCount} free` : ''}
+              </span>
+            </button>
+          );
+        })}
+      </div>
+
+      <div class="inf-panels">
+        {INFERENCE_TRACK_GROUPS.map((g, idx) => {
+          const trackUnits = unitsByTrack[g.id] ?? [];
+          return (
+            <div
+              id={`panel-${g.id}`}
+              role="tabpanel"
+              class:list={['inf-panel', idx !== 0 && 'is-hidden']}
+              data-track-panel={g.id}
+              style={`--panel-accent:var(--${g.accent})`}
+            >
+              <p class="inf-panel__summary">{g.summary}</p>
+              <div class="inf-unitlist">
+                {trackUnits.map((u) => (
+                  <article class:list={['inf-unit', u.isFree && 'inf-unit--free']}>
+                    <div class="inf-unit__meta">
+                      <span class="inf-unit__num">{u.unitNumber}</span>
+                      <span class:list={['inf-badge', u.isFree ? 'inf-badge--free' : 'inf-badge--paid']}>
+                        {u.freeScope ?? 'Paid Edition'}
+                      </span>
+                    </div>
+                    <h3 class="inf-unit__title">{u.title}</h3>
+                    <p class="inf-unit__deck">{u.deck}</p>
+                    <div class="inf-unit__foot">
+                      {u.isFree && u.freeSlug ? (
+                        <a class="linkish inf-unit__cta" href={`/inference/read/${u.freeSlug}/`}>
+                          Read free unit →
+                        </a>
+                      ) : (
+                        <a class="linkish inf-unit__cta" href="#pricing">
+                          Included in {g.label} &amp; Full Edition →
+                        </a>
+                      )}
+                    </div>
+                  </article>
+                ))}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      <!-- Sample zero-overflow SVG figure preview -->
+      <figure class="diagram inf-preview-fig">
+        <svg viewBox="0 0 720 220" role="img" aria-label="Sample diagram from INFERENCE comparing rules, predictive ML, and generative AI">
+          <rect x="16" y="18" width="218" height="184" rx="10" fill="var(--paper-2)" stroke="var(--ochre)" stroke-width="1.5" />
+          <text x="32" y="46" fill="var(--ochre)" font-family="var(--font)" font-size="13" font-weight="700">Written Rules</text>
+          <text x="32" y="72" fill="var(--ink)" font-family="var(--font)" font-size="12" font-weight="600">Fixed statutory logic</text>
+          <text x="32" y="94" fill="var(--ink-soft)" font-family="var(--font)" font-size="11">Output: yes / no gate</text>
+          <text x="32" y="114" fill="var(--ink-soft)" font-family="var(--font)" font-size="11">Data: policy thresholds</text>
+          <text x="32" y="134" fill="var(--ink-soft)" font-family="var(--font)" font-size="11">Audit: line-by-line rule</text>
+          <text x="32" y="176" fill="var(--ink-faint)" font-family="var(--font)" font-size="11">Ch 01 · Zero API cost</text>
+
+          <rect x="251" y="18" width="218" height="184" rx="10" fill="var(--paper-2)" stroke="var(--mizu)" stroke-width="1.5" />
+          <text x="267" y="46" fill="var(--mizu)" font-family="var(--font)" font-size="13" font-weight="700">Predictive ML</text>
+          <text x="267" y="72" fill="var(--ink)" font-family="var(--font)" font-size="12" font-weight="600">Structured rows &amp; labels</text>
+          <text x="267" y="94" fill="var(--ink-soft)" font-family="var(--font)" font-size="11">Output: score or forecast</text>
+          <text x="267" y="114" fill="var(--ink-soft)" font-family="var(--font)" font-size="11">Data: bureau, POS, churn</text>
+          <text x="267" y="134" fill="var(--ink-soft)" font-family="var(--font)" font-size="11">Audit: holdout error &amp; SHAP</text>
+          <text x="267" y="176" fill="var(--ink-faint)" font-family="var(--font)" font-size="11">Ch 01 &amp; Ch 22 · Deterministic</text>
+
+          <rect x="486" y="18" width="218" height="184" rx="10" fill="var(--paper-2)" stroke="var(--plum)" stroke-width="1.5" />
+          <text x="502" y="46" fill="var(--plum)" font-family="var(--font)" font-size="13" font-weight="700">Generative AI</text>
+          <text x="502" y="72" fill="var(--ink)" font-family="var(--font)" font-size="12" font-weight="600">Unstructured text &amp; PDFs</text>
+          <text x="502" y="94" fill="var(--ink-soft)" font-family="var(--font)" font-size="11">Output: summary, tag, code</text>
+          <text x="502" y="114" fill="var(--ink-soft)" font-family="var(--font)" font-size="11">Data: contracts, calls, logs</text>
+          <text x="502" y="134" fill="var(--ink-soft)" font-family="var(--font)" font-size="11">Audit: eval suite + human QA</text>
+          <text x="502" y="176" fill="var(--ink-faint)" font-family="var(--font)" font-size="11">Ch 02–07 · Token metered</text>
+        </svg>
+        <figcaption>
+          Sample vector diagram from INFERENCE (re-skinned automatically for light and dark themes across all 34 figures).
+        </figcaption>
+      </figure>
+    </section>
+
+    <!-- Pricing Matrix with INR / USD Currency Toggle -->
+    <section class="inf-sec" id="pricing" aria-labelledby="pricing-heading">
+      <div class="inf-sec__head inf-sec__head--row">
+        <div>
+          <p class="inf-kicker">Editions &amp; licensing</p>
+          <h2 id="pricing-heading">Choose your track or get the full 2027 Edition</h2>
+        </div>
+
+        <div class="inf-currency" role="group" aria-label="Currency selector">
+          <button
+            type="button"
+            class="inf-currency__btn is-active"
+            data-currency-btn="INR"
+            aria-pressed="true"
+          >
+            India · ₹ INR
+          </button>
+          <button
+            type="button"
+            class="inf-currency__btn"
+            data-currency-btn="USD"
+            aria-pressed="false"
+          >
+            Global · $ USD
+          </button>
+        </div>
+      </div>
+
+      <div class="inf-pricing">
+        {INFERENCE_SKUS.map((sku) => (
+          <article class:list={['inf-sku', sku.highlighted && 'inf-sku--hero']} data-sku-card={sku.id}>
+            <div class="inf-sku__top">
+              <span class="inf-sku__badge">{sku.badge}</span>
+              <h3>{sku.name}</h3>
+              <p class="inf-sku__tag">{sku.tagline}</p>
+            </div>
+
+            <div class="inf-sku__price">
+              <strong
+                class="inf-sku__amount"
+                data-price-inr={sku.priceInrLabel}
+                data-price-usd={sku.priceUsdLabel}
+              >
+                {sku.priceInrLabel}
+              </strong>
+              <span class="inf-sku__cadence">{sku.cadenceLabel}</span>
+            </div>
+
+            {sku.id === 'domain-track' && (
+              <div class="inf-sku__select-wrap">
+                <label for="domain-track-select" class="inf-sku__select-label">Choose domain track</label>
+                <select id="domain-track-select" class="inf-sku__select">
+                  {INFERENCE_DOMAIN_OPTIONS.map((opt) => (
+                    <option value={opt.id}>{opt.label}</option>
+                  ))}
+                </select>
+              </div>
+            )}
+
+            <ul class="inf-sku__features">
+              {sku.features.map((f) => (
+                <li>{f}</li>
+              ))}
+            </ul>
+
+            <a
+              href={getCheckoutHref(sku.id, 'INR', sku.id === 'domain-track' ? 'consulting' : undefined)}
+              class:list={['inf-btn', sku.highlighted ? 'inf-btn--primary' : 'inf-btn--secondary', 'inf-sku__cta']}
+              data-checkout-cta={sku.id}
+              data-href-inr={getCheckoutHref(sku.id, 'INR', sku.id === 'domain-track' ? 'consulting' : undefined)}
+              data-href-usd={getCheckoutHref(sku.id, 'USD', sku.id === 'domain-track' ? 'consulting' : undefined)}
+            >
+              {sku.ctaLabel}
+            </a>
+          </article>
+        ))}
+      </div>
+
+      <div class="inf-guarantee">
+        <div>
+          <strong>7-day evidence-first refund guarantee.</strong> Read Chapters 00 to 05 and a full
+          domain track. If INFERENCE does not sharpen how you frame AI economics, cases, or
+          deployment decisions, reply with your order ID for a full refund.
+        </div>
+        <div>
+          <strong>14-day 100% upgrade credit.</strong> Start with any Individual Domain Track (₹499 /
+          $19) and apply 100% of what you paid toward the Full 36-Unit Edition or Accelerator Bundle
+          within 14 days.
+        </div>
+      </div>
+    </section>
+
+    <!-- Credibility & Authors -->
+    <section class="inf-sec" aria-labelledby="authors-heading">
+      <div class="inf-sec__head">
+        <p class="inf-kicker">Authors &amp; verification standard</p>
+        <h2 id="authors-heading">Built by practitioners who audit models and publish the evidence</h2>
+      </div>
+
+      <div class="inf-authors">
+        {INFERENCE_AUTHORS.map((a) => (
+          <article class="inf-author" style={`--author-accent:var(--${a.accent})`}>
+            <p class="inf-author__role">{a.role}</p>
+            <h3>{a.name}</h3>
+            <p class="inf-author__bio">{a.bio}</p>
+            <a class="linkish" href={a.linkHref}>{a.linkLabel} →</a>
+          </article>
+        ))}
+      </div>
+
+      <div class="inf-bridge">
+        <div>
+          <strong>Open-ledger verification on wAIbi-sabi.</strong> INFERENCE shares its citation
+          standard with wAIbi-sabi: 178 primary sources (SEC filings, RBI circulars, MeitY rules,
+          peer-reviewed studies), 34 zero-overflow vector diagrams, and zero synthetic case studies.
+        </div>
+        <div class="inf-bridge__links">
+          <a class="linkish" href="/tracker/">Inspect AI Claims Tracker →</a>
+          <a class="linkish" href="/news/">Browse B-School Interview Archive →</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Objection-Crushing FAQ -->
+    <section class="inf-sec" id="faq" aria-labelledby="faq-heading">
+      <div class="inf-sec__head">
+        <p class="inf-kicker">Questions</p>
+        <h2 id="faq-heading">Frequently asked questions</h2>
+      </div>
+
+      <div class="inf-faqs">
+        {INFERENCE_FAQS.map((item, i) => (
+          <details class="inf-faq" open={i === 0}>
+            <summary>{item.question}</summary>
+            <p>{item.answer}</p>
+          </details>
+        ))}
+      </div>
+    </section>
+  </div>
+</Base>
+
+<script>
+  import { getCheckoutHref, type Currency, type InferenceSku } from '../../data/inference';
+
+  // 1. Query param ?angle=mba | exec message match
+  const params = new URLSearchParams(location.search);
+  const angle = params.get('angle');
+  const kicker = document.getElementById('inf-angle-kicker');
+  if (kicker && angle === 'mba') {
+    kicker.textContent =
+      'Built for 2026-27 B-school SIP, Finals, and AI case interviews across consulting, finance, and product.';
+  } else if (kicker && angle === 'exec') {
+    kicker.textContent =
+      'Built for operators, product managers, and consultants auditing AI margins, governance, and deployment failures.';
+  }
+
+  // 2. Track Explorer Tabs
+  const tabs = [...document.querySelectorAll<HTMLButtonElement>('[data-track-tab]')];
+  const panels = [...document.querySelectorAll<HTMLElement>('[data-track-panel]')];
+  const activateTrack = (trackId: string) => {
+    for (const t of tabs) {
+      const active = t.dataset.trackTab === trackId;
+      t.classList.toggle('is-active', active);
+      t.setAttribute('aria-selected', active ? 'true' : 'false');
+    }
+    for (const p of panels) {
+      p.classList.toggle('is-hidden', p.dataset.trackPanel !== trackId);
+    }
+  };
+  for (const t of tabs) {
+    t.addEventListener('click', () => {
+      if (t.dataset.trackTab) activateTrack(t.dataset.trackTab);
+    });
+  }
+  const initialTrack = params.get('track');
+  if (initialTrack && tabs.some((t) => t.dataset.trackTab === initialTrack)) {
+    activateTrack(initialTrack);
+  }
+
+  // 3. INR / USD Currency Toggle + Domain Selector + Umami CTA tracking
+  const currencyBtns = [...document.querySelectorAll<HTMLButtonElement>('[data-currency-btn]')];
+  const domainSelect = document.getElementById('domain-track-select') as HTMLSelectElement | null;
+  let activeCurrency: Currency = 'INR';
+
+  try {
+    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || '';
+    if (tz && !/Kolkata|Calcutta|Asia\/Dhaka|Asia\/Colombo/i.test(tz)) {
+      activeCurrency = 'USD';
+    }
+  } catch {}
+
+  const applyCurrency = (curr: Currency) => {
+    activeCurrency = curr;
+    for (const b of currencyBtns) {
+      const on = b.dataset.currencyBtn === curr;
+      b.classList.toggle('is-active', on);
+      b.setAttribute('aria-pressed', on ? 'true' : 'false');
+    }
+    for (const el of document.querySelectorAll<HTMLElement>('.inf-sku__amount')) {
+      el.textContent = curr === 'INR' ? el.dataset.priceInr || '' : el.dataset.priceUsd || '';
+    }
+    const selectedDomain = domainSelect?.value || 'consulting';
+    for (const link of document.querySelectorAll<HTMLAnchorElement>('[data-checkout-cta]')) {
+      const sku = link.dataset.checkoutCta as InferenceSku['id'];
+      link.href = getCheckoutHref(sku, curr, sku === 'domain-track' ? selectedDomain : undefined);
+    }
+  };
+
+  for (const b of currencyBtns) {
+    b.addEventListener('click', () => {
+      const next = b.dataset.currencyBtn as Currency;
+      if (next) applyCurrency(next);
+    });
+  }
+  domainSelect?.addEventListener('change', () => applyCurrency(activeCurrency));
+  applyCurrency(activeCurrency);
+
+  for (const link of document.querySelectorAll<HTMLAnchorElement>('[data-umami-sku], [data-checkout-cta]')) {
+    link.addEventListener('click', () => {
+      const sku = link.dataset.checkoutCta || link.dataset.umamiSku || 'unknown';
+      const w = window as unknown as { umami?: { track?: (name: string, data: Record<string, string>) => void } };
+      w.umami?.track?.('inference_cta', { sku, currency: activeCurrency });
+    });
+  }
+</script>
+
+<style>
+  .pg-plate {
+    position: relative;
+    color: var(--tldr-ink);
+    background:
+      radial-gradient(56rem 28rem at 88% 8%, color-mix(in srgb, var(--ochre) 16%, transparent), transparent 70%),
+      radial-gradient(48rem 26rem at 8% 110%, color-mix(in srgb, var(--mizu) 15%, transparent), transparent 70%),
+      var(--tldr-bg);
+    overflow: hidden;
+  }
+  .pg-plate::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: var(--paper-noise);
+    opacity: 0.7;
+    pointer-events: none;
+  }
+  .pg-plate__in {
+    position: relative;
+    z-index: 1;
+    padding-block: clamp(2.25rem, 4.5vw, 3.75rem) calc(22px + clamp(2rem, 3.5vw, 3rem));
+  }
+  .inf-hero__top {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: .75rem 1.15rem;
+    margin-bottom: 1.15rem;
+  }
+  .hanko-mark {
+    display: inline-flex;
+    align-items: center;
+    font-family: var(--font);
+    font-size: .6875rem;
+    font-weight: 800;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--hanko);
+    background: color-mix(in srgb, var(--hanko) 14%, transparent);
+    border: 1.25px solid color-mix(in srgb, var(--hanko) 65%, transparent);
+    padding: .24rem .65rem;
+    border-radius: 4px;
+  }
+  .inf-hero__authors {
+    font-size: .875rem;
+    font-weight: 500;
+    color: var(--tldr-dim);
+  }
+  .inf-hero__angle {
+    margin: 0 0 .65rem;
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 1.0625rem;
+    line-height: 1.4;
+    color: var(--ochre);
+  }
+  .pg-plate__title {
+    margin: 0;
+    max-width: 58rem;
+    font-family: var(--font);
+    font-size: clamp(2.1rem, 4.4vw, 3.45rem);
+    font-weight: 800;
+    line-height: 1.06;
+    letter-spacing: -.03em;
+    color: var(--tldr-ink);
+    text-wrap: balance;
+  }
+  .pg-plate__desc {
+    margin: 1.1rem 0 0;
+    max-width: 46rem;
+    font-size: 1.0625rem;
+    line-height: 1.62;
+    color: var(--tldr-dim);
+  }
+  .inf-hero__actions {
+    margin-top: 1.75rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: .85rem 1.25rem;
+  }
+  .inf-hero__glossary {
+    color: var(--tldr-ink);
+    font-size: .9375rem;
+    font-weight: 600;
+    text-decoration: none;
+    border-bottom: 1px solid var(--ochre);
+    padding-bottom: .15rem;
+  }
+  .inf-proof {
+    margin: 2.1rem 0 0;
+    padding-top: 1.35rem;
+    border-top: 1px solid var(--tldr-hair);
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+    gap: 1rem;
+  }
+  .inf-proof dt {
+    font-size: .75rem;
+    font-weight: 600;
+    color: var(--tldr-dim);
+  }
+  .inf-proof dd {
+    margin: .2rem 0 0;
+    font-size: 1.0625rem;
+    font-weight: 700;
+    color: var(--tldr-ink);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .pg-edge {
+    display: block;
+    position: relative;
+    width: 100%;
+    height: 22px;
+    margin-top: -22px;
+    overflow: visible;
+    pointer-events: none;
+  }
+  .pg-edge__glow {
+    fill: none;
+    stroke: color-mix(in srgb, var(--ochre) 40%, transparent);
+    stroke-width: 4;
+    filter: blur(1.5px);
+  }
+  .pg-edge__gold {
+    fill: none;
+    stroke: var(--ochre);
+    stroke-width: 1.75;
+    stroke-linejoin: miter;
+  }
+
+  /* Buttons */
+  .inf-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    padding: .7rem 1.35rem;
+    border-radius: 10px;
+    font-family: var(--font);
+    font-size: .9375rem;
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+    border: 1.5px solid transparent;
+    transition: transform var(--dur-fast) var(--ease), background-color var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease);
+  }
+  .inf-btn:hover {
+    transform: translateY(-1px);
+  }
+  .inf-btn--primary {
+    background: var(--ochre);
+    color: var(--tldr-bg);
+    border-color: var(--ochre);
+  }
+  .inf-btn--ghost {
+    background: transparent;
+    color: var(--tldr-ink);
+    border-color: var(--tldr-hair);
+  }
+  .inf-btn--ghost:hover {
+    border-color: var(--tldr-ink);
+  }
+  .inf-btn--secondary {
+    background: var(--solid);
+    color: var(--on-solid);
+    border-color: var(--border);
+  }
+
+  /* Body sections */
+  .inf-body {
+    padding-top: clamp(2.5rem, 4.5vw, 4rem);
+    padding-bottom: 4.5rem;
+  }
+  .inf-sec {
+    margin-top: 4rem;
+  }
+  .inf-sec:first-child {
+    margin-top: 0;
+  }
+  .inf-sec__head {
+    margin-bottom: 1.5rem;
+  }
+  .inf-sec__head--row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 1rem;
+  }
+  .inf-sec__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .75rem 1.35rem;
+    font-size: .9375rem;
+    font-weight: 600;
+  }
+  .inf-kicker {
+    margin: 0 0 .35rem;
+    font-size: .8125rem;
+    font-weight: 700;
+    color: var(--ochre);
+  }
+  .inf-sec h2 {
+    margin: 0;
+    font-size: clamp(1.5rem, 2.8vw, 2.15rem);
+    font-weight: 800;
+    letter-spacing: -.022em;
+    line-height: 1.15;
+    color: var(--ink);
+  }
+
+  /* Contrast grid */
+  .inf-contrast {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
+    gap: 1rem;
+  }
+  .inf-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.35rem 1.4rem;
+  }
+  .inf-card--accent {
+    border-left: 3px solid var(--ochre);
+    background: color-mix(in srgb, var(--ochre) 6%, var(--card));
+  }
+  .inf-card__tag {
+    display: block;
+    font-size: .8125rem;
+    font-weight: 700;
+    color: var(--ink-faint);
+    margin-bottom: .4rem;
+  }
+  .inf-card--accent .inf-card__tag {
+    color: var(--ochre);
+  }
+  .inf-card h3 {
+    margin: 0 0 .55rem;
+    font-size: 1.125rem;
+    font-weight: 800;
+    line-height: 1.25;
+  }
+  .inf-card p {
+    margin: 0;
+    font-size: .9375rem;
+    line-height: 1.6;
+    color: var(--ink-soft);
+  }
+
+  /* Curriculum explorer */
+  .inf-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .5rem;
+    margin-bottom: 1.25rem;
+  }
+  .inf-tab {
+    appearance: none;
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    min-height: 44px;
+    padding: .5rem .9rem;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--card);
+    color: var(--ink-soft);
+    font-family: var(--font);
+    font-size: .875rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: border-color var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease), background-color var(--dur-fast) var(--ease);
+  }
+  .inf-tab:hover {
+    color: var(--ink);
+    border-color: var(--tab-accent);
+  }
+  .inf-tab.is-active {
+    color: var(--ink);
+    border-color: var(--tab-accent);
+    background: color-mix(in srgb, var(--tab-accent) 12%, var(--card));
+  }
+  .inf-tab__dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--tab-accent);
+    flex-shrink: 0;
+  }
+  .inf-tab__count {
+    font-size: .8125rem;
+    color: var(--ink-faint);
+    font-weight: 500;
+  }
+
+  .inf-panel.is-hidden {
+    display: none;
+  }
+  .inf-panel__summary {
+    margin: 0 0 1.15rem;
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--ink-soft);
+    max-width: 52rem;
+  }
+  .inf-unitlist {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));
+    gap: .9rem;
+  }
+  .inf-unit {
+    display: flex;
+    flex-direction: column;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--panel-accent, var(--border));
+    border-radius: 14px;
+    padding: 1.15rem 1.25rem;
+  }
+  .inf-unit--free {
+    background: color-mix(in srgb, var(--panel-accent) 6%, var(--card));
+  }
+  .inf-unit__meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: .5rem;
+    margin-bottom: .5rem;
+  }
+  .inf-unit__num {
+    font-size: .8125rem;
+    font-weight: 700;
+    color: var(--ink-faint);
+  }
+  .inf-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: .18rem .55rem;
+    border-radius: 999px;
+    font-size: .8125rem;
+    font-weight: 700;
+  }
+  .inf-badge--free {
+    background: color-mix(in srgb, var(--moss) 18%, transparent);
+    color: var(--moss);
+    border: 1px solid color-mix(in srgb, var(--moss) 45%, transparent);
+  }
+  .inf-badge--paid {
+    background: var(--paper-2);
+    color: var(--ink-faint);
+    border: 1px solid var(--border);
+  }
+  .inf-unit__title {
+    margin: 0 0 .45rem;
+    font-size: 1.0625rem;
+    font-weight: 700;
+    line-height: 1.3;
+    color: var(--ink);
+  }
+  .inf-unit__deck {
+    margin: 0 0 .9rem;
+    font-size: .875rem;
+    line-height: 1.55;
+    color: var(--ink-soft);
+    flex: 1;
+  }
+  .inf-unit__cta {
+    font-size: .875rem;
+    font-weight: 600;
+  }
+  .inf-preview-fig {
+    margin-top: 2rem;
+  }
+
+  /* Currency switcher & Pricing */
+  .inf-currency {
+    display: inline-flex;
+    padding: .25rem;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: var(--card);
+    gap: .25rem;
+  }
+  .inf-currency__btn {
+    appearance: none;
+    border: 0;
+    background: transparent;
+    color: var(--ink-soft);
+    font-family: var(--font);
+    font-size: .875rem;
+    font-weight: 700;
+    min-height: 44px;
+    padding: .45rem .95rem;
+    border-radius: 9px;
+    cursor: pointer;
+    transition: background-color var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease);
+  }
+  .inf-currency__btn.is-active {
+    background: var(--solid);
+    color: var(--on-solid);
+  }
+
+  .inf-pricing {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(16.5rem, 1fr));
+    gap: 1rem;
+    align-items: stretch;
+  }
+  .inf-sku {
+    display: flex;
+    flex-direction: column;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 1.4rem;
+  }
+  .inf-sku--hero {
+    border: 2px solid var(--ochre);
+    background: color-mix(in srgb, var(--ochre) 7%, var(--card));
+  }
+  .inf-sku__badge {
+    display: inline-block;
+    font-size: .8125rem;
+    font-weight: 700;
+    color: var(--ochre);
+    margin-bottom: .4rem;
+  }
+  .inf-sku h3 {
+    margin: 0 0 .4rem;
+    font-size: 1.25rem;
+    font-weight: 800;
+    line-height: 1.2;
+  }
+  .inf-sku__tag {
+    margin: 0;
+    font-size: .875rem;
+    line-height: 1.5;
+    color: var(--ink-soft);
+  }
+  .inf-sku__price {
+    margin: 1.2rem 0 1rem;
+    padding: 1rem 0;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+  .inf-sku__amount {
+    display: block;
+    font-size: 2rem;
+    font-weight: 800;
+    letter-spacing: -.03em;
+    color: var(--ink);
+    font-variant-numeric: tabular-nums;
+    line-height: 1.1;
+  }
+  .inf-sku__cadence {
+    display: block;
+    margin-top: .35rem;
+    font-size: .8125rem;
+    color: var(--ink-faint);
+  }
+  .inf-sku__select-wrap {
+    margin-bottom: 1rem;
+  }
+  .inf-sku__select-label {
+    display: block;
+    font-size: .8125rem;
+    font-weight: 600;
+    color: var(--ink-soft);
+    margin-bottom: .35rem;
+  }
+  .inf-sku__select {
+    width: 100%;
+    min-height: 44px;
+    padding: .5rem .65rem;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font);
+    font-size: .875rem;
+  }
+  .inf-sku__features {
+    margin: 0 0 1.35rem;
+    padding-left: 1.1rem;
+    font-size: .875rem;
+    line-height: 1.55;
+    color: var(--ink-soft);
+    flex: 1;
+  }
+  .inf-sku__features li {
+    margin-bottom: .45rem;
+  }
+  .inf-sku__cta {
+    width: 100%;
+  }
+
+  .inf-guarantee {
+    margin-top: 1.25rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
+    gap: 1rem;
+    background: var(--stone);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.25rem 1.35rem;
+    font-size: .9375rem;
+    line-height: 1.58;
+    color: var(--ink-soft);
+  }
+  .inf-guarantee strong {
+    color: var(--ink);
+  }
+
+  /* Authors */
+  .inf-authors {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
+    gap: 1rem;
+  }
+  .inf-author {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--author-accent, var(--mizu));
+    border-radius: 14px;
+    padding: 1.35rem;
+  }
+  .inf-author__role {
+    margin: 0 0 .35rem;
+    font-size: .8125rem;
+    font-weight: 700;
+    color: var(--author-accent, var(--mizu));
+  }
+  .inf-author h3 {
+    margin: 0 0 .55rem;
+    font-size: 1.2rem;
+    font-weight: 800;
+  }
+  .inf-author__bio {
+    margin: 0 0 .9rem;
+    font-size: .9375rem;
+    line-height: 1.6;
+    color: var(--ink-soft);
+  }
+  .inf-bridge {
+    margin-top: 1rem;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    background: var(--paper-2);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.15rem 1.35rem;
+    font-size: .9375rem;
+    line-height: 1.55;
+    color: var(--ink-soft);
+  }
+  .inf-bridge strong {
+    color: var(--ink);
+  }
+  .inf-bridge__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .75rem 1.25rem;
+    font-weight: 600;
+  }
+
+  /* FAQs */
+  .inf-faqs {
+    display: grid;
+    gap: .75rem;
+    max-width: 56rem;
+  }
+  .inf-faq {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1rem 1.25rem;
+  }
+  .inf-faq summary {
+    font-weight: 700;
+    font-size: 1rem;
+    line-height: 1.4;
+    color: var(--ink);
+    cursor: pointer;
+    min-height: 28px;
+  }
+  .inf-faq p {
+    margin: .75rem 0 0;
+    font-size: .9375rem;
+    line-height: 1.65;
+    color: var(--ink-soft);
+  }
+</style>

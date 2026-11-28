@@ -1,0 +1,411 @@
+---
+import Base from '../../../layouts/Base.astro';
+import { plateEdge, EDGE_DEPTH } from '../../../lib/bowl';
+import { INFERENCE_GLOSSARY, INFERENCE_TRACK_GROUPS } from '../../../data/inference';
+
+const edge = plateEdge('inference-glossary');
+const clip = `polygon(0 0, 100% 0, ${[...edge].reverse().map(([x, d]) => `${x.toFixed(1)}% calc(100% - ${d.toFixed(1)}px)`).join(',')})`;
+const line = edge.map(([x, d]) => `${(x * 10).toFixed(0)},${(EDGE_DEPTH - d).toFixed(1)}`).join(' ');
+
+const trackCounts = Object.fromEntries(
+  INFERENCE_TRACK_GROUPS.map((g) => [
+    g.id,
+    INFERENCE_GLOSSARY.filter((item) => item.trackId === g.id).length,
+  ])
+);
+---
+
+<Base
+  card="inference-glossary"
+  title="AI & Business Glossary (116 Terms) — INFERENCE"
+  description="Searchable 116-term glossary of applied AI, inference economics, credit risk, product evals, operations, and Indian AI governance (DPDP, RBI FREE-AI)."
+  section="INFERENCE"
+  pageType="DefinedTermSet"
+  breadcrumbs={[
+    { name: 'Home', path: '/' },
+    { name: 'INFERENCE', path: '/inference/' },
+    { name: 'Glossary' },
+  ]}
+  schema={{
+    hasDefinedTerm: INFERENCE_GLOSSARY.slice(0, 30).map((g) => ({
+      '@type': 'DefinedTerm',
+      name: g.term,
+      description: g.def,
+      url: `https://janmejai2002.github.io/inference/glossary/#${g.id}`,
+    })),
+  }}
+  immersive={true}
+  wide={true}
+  grain={true}
+>
+  <section class="pg-plate" style={`clip-path:${clip}`} aria-labelledby="glossary-title">
+    <div class="wrap pg-plate__in">
+      <div class="gl-top">
+        <span class="hanko-mark">Reference · {INFERENCE_GLOSSARY.length} Defined Terms</span>
+        <a class="linkish gl-back" href="/inference/">← Back to INFERENCE</a>
+      </div>
+
+      <h1 id="glossary-title" class="pg-plate__title">
+        The 116-term AI and business glossary.
+      </h1>
+
+      <p class="pg-plate__desc">
+        Plain-language definitions across inference economics, consulting due diligence, RBI
+        FREE-AI, DPDP compliance, product evaluation harnesses, and industrial operations. Every
+        term links to its parent INFERENCE unit.
+      </p>
+    </div>
+  </section>
+
+  <svg class="pg-edge" viewBox={`0 0 1000 ${EDGE_DEPTH}`} preserveAspectRatio="none" aria-hidden="true">
+    <polyline points={line} class="pg-edge__glow" vector-effect="non-scaling-stroke" />
+    <polyline points={line} class="pg-edge__gold" vector-effect="non-scaling-stroke" />
+  </svg>
+
+  <div class="wrap gl-body">
+    <div class="gl-controls">
+      <div class="gl-search-wrap">
+        <label for="glossary-search" class="sr">Search glossary terms and definitions</label>
+        <input
+          id="glossary-search"
+          class="gl-search"
+          type="search"
+          placeholder="Search 116 terms (e.g. KV cache, FREE-AI, DPDP, base rate, MMM, Weibull)..."
+          autocomplete="off"
+        />
+        <span class="gl-count" id="glossary-count" aria-live="polite">
+          Showing {INFERENCE_GLOSSARY.length} of {INFERENCE_GLOSSARY.length} terms
+        </span>
+      </div>
+
+      <div class="gl-filters" role="group" aria-label="Filter terms by INFERENCE track">
+        <button type="button" class="gl-pill is-active" data-track-filter="all" aria-pressed="true">
+          All ({INFERENCE_GLOSSARY.length})
+        </button>
+        {INFERENCE_TRACK_GROUPS.filter((g) => (trackCounts[g.id] ?? 0) > 0).map((g) => (
+          <button
+            type="button"
+            class="gl-pill"
+            data-track-filter={g.id}
+            aria-pressed="false"
+            style={`--pill-accent:var(--${g.accent})`}
+          >
+            <span class="gl-pill__dot" aria-hidden="true"></span>
+            {g.label} ({trackCounts[g.id]})
+          </button>
+        ))}
+      </div>
+    </div>
+
+    <div class="gl-grid" id="glossary-grid">
+      {INFERENCE_GLOSSARY.map((item) => (
+        <article
+          id={item.id}
+          class="gl-card"
+          data-term={item.term.toLowerCase()}
+          data-def={item.def.toLowerCase()}
+          data-track={item.trackId}
+          data-unit={item.unitTitle.toLowerCase()}
+          style={`--term-accent:var(--${item.accent})`}
+        >
+          <div class="gl-card__top">
+            <span class="gl-card__track">{item.trackLabel}</span>
+            <span class="gl-card__unit">{item.unitNumber}</span>
+          </div>
+          <h2>{item.term}</h2>
+          <p class="gl-card__def">{item.def}</p>
+          <div class="gl-card__foot">
+            {item.isFreeUnit && item.freeSlug ? (
+              <a class="linkish" href={`/inference/read/${item.freeSlug}/`}>
+                Free unit: {item.unitTitle} →
+              </a>
+            ) : (
+              <a class="linkish" href={`/inference/?track=${item.trackId}#pricing`}>
+                Applied in {item.unitNumber}: {item.unitTitle} →
+              </a>
+            )}
+            {item.blogSlug && (
+              <a class="gl-card__blog" href={`/blog/${item.blogSlug}/`}>
+                wAIbi-sabi deep dive
+              </a>
+            )}
+          </div>
+        </article>
+      ))}
+    </div>
+
+    <p class="gl-empty is-hidden" id="glossary-empty">
+      No glossary terms match that query in the selected track. Clear the filter or search another term.
+    </p>
+  </div>
+</Base>
+
+<script>
+  const input = document.getElementById('glossary-search') as HTMLInputElement | null;
+  const countEl = document.getElementById('glossary-count');
+  const emptyEl = document.getElementById('glossary-empty');
+  const cards = [...document.querySelectorAll<HTMLElement>('.gl-card')];
+  const pills = [...document.querySelectorAll<HTMLButtonElement>('[data-track-filter]')];
+  let activeTrack = 'all';
+
+  function applyFilter() {
+    const q = (input?.value || '').trim().toLowerCase();
+    let visible = 0;
+    for (const c of cards) {
+      const matchTrack = activeTrack === 'all' || c.dataset.track === activeTrack;
+      const matchQuery =
+        !q ||
+        (c.dataset.term || '').includes(q) ||
+        (c.dataset.def || '').includes(q) ||
+        (c.dataset.unit || '').includes(q);
+      const show = matchTrack && matchQuery;
+      c.classList.toggle('is-hidden', !show);
+      if (show) visible += 1;
+    }
+    if (countEl) countEl.textContent = `Showing ${visible} of ${cards.length} terms`;
+    emptyEl?.classList.toggle('is-hidden', visible > 0);
+  }
+
+  input?.addEventListener('input', applyFilter);
+  for (const p of pills) {
+    p.addEventListener('click', () => {
+      activeTrack = p.dataset.trackFilter || 'all';
+      for (const b of pills) {
+        const on = b === p;
+        b.classList.toggle('is-active', on);
+        b.setAttribute('aria-pressed', on ? 'true' : 'false');
+      }
+      applyFilter();
+    });
+  }
+</script>
+
+<style>
+  .pg-plate {
+    position: relative;
+    color: var(--tldr-ink);
+    background:
+      radial-gradient(50rem 26rem at 88% 10%, color-mix(in srgb, var(--indigo) 16%, transparent), transparent 70%),
+      radial-gradient(42rem 22rem at 6% 110%, color-mix(in srgb, var(--ochre) 14%, transparent), transparent 70%),
+      var(--tldr-bg);
+    overflow: hidden;
+  }
+  .pg-plate::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: var(--paper-noise);
+    opacity: 0.7;
+    pointer-events: none;
+  }
+  .pg-plate__in {
+    position: relative;
+    z-index: 1;
+    padding-block: clamp(2.25rem, 4vw, 3.5rem) calc(22px + clamp(2rem, 3vw, 2.75rem));
+  }
+  .gl-top {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: .75rem 1.25rem;
+    margin-bottom: 1.15rem;
+  }
+  .hanko-mark {
+    display: inline-flex;
+    align-items: center;
+    font-family: var(--font);
+    font-size: .6875rem;
+    font-weight: 800;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--hanko);
+    background: color-mix(in srgb, var(--hanko) 14%, transparent);
+    border: 1.25px solid color-mix(in srgb, var(--hanko) 65%, transparent);
+    padding: .24rem .65rem;
+    border-radius: 4px;
+  }
+  .gl-back {
+    color: var(--tldr-dim);
+    font-size: .9375rem;
+    font-weight: 600;
+    text-decoration: none;
+  }
+  .gl-back:hover {
+    color: var(--tldr-ink);
+  }
+  .pg-plate__title {
+    margin: 0;
+    max-width: 52rem;
+    font-family: var(--font);
+    font-size: clamp(2rem, 4.2vw, 3.2rem);
+    font-weight: 800;
+    line-height: 1.07;
+    letter-spacing: -.03em;
+    color: var(--tldr-ink);
+  }
+  .pg-plate__desc {
+    margin: 1rem 0 0;
+    max-width: 46rem;
+    font-size: 1.0625rem;
+    line-height: 1.62;
+    color: var(--tldr-dim);
+  }
+
+  .pg-edge {
+    display: block;
+    position: relative;
+    width: 100%;
+    height: 22px;
+    margin-top: -22px;
+    overflow: visible;
+    pointer-events: none;
+  }
+  .pg-edge__glow {
+    fill: none;
+    stroke: color-mix(in srgb, var(--ochre) 40%, transparent);
+    stroke-width: 4;
+    filter: blur(1.5px);
+  }
+  .pg-edge__gold {
+    fill: none;
+    stroke: var(--ochre);
+    stroke-width: 1.75;
+    stroke-linejoin: miter;
+  }
+
+  .gl-body {
+    padding-top: clamp(2rem, 3.8vw, 3rem);
+    padding-bottom: 4.5rem;
+  }
+  .gl-controls {
+    display: grid;
+    gap: 1rem;
+    margin-bottom: 1.75rem;
+  }
+  .gl-search-wrap {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: .75rem 1.25rem;
+  }
+  .gl-search {
+    flex: 1 1 20rem;
+    min-height: 44px;
+    padding: .65rem .95rem;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--card);
+    color: var(--ink);
+    font-family: var(--font);
+    font-size: .9375rem;
+  }
+  .gl-count {
+    font-size: .875rem;
+    font-weight: 600;
+    color: var(--ink-faint);
+    font-variant-numeric: tabular-nums;
+  }
+  .gl-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .45rem;
+  }
+  .gl-pill {
+    appearance: none;
+    display: inline-flex;
+    align-items: center;
+    gap: .45rem;
+    min-height: 44px;
+    padding: .4rem .85rem;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: var(--card);
+    color: var(--ink-soft);
+    font-family: var(--font);
+    font-size: .8125rem;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .gl-pill.is-active {
+    background: var(--solid);
+    color: var(--on-solid);
+    border-color: var(--solid);
+  }
+  .gl-pill__dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--pill-accent, var(--ochre));
+  }
+
+  .gl-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(19.5rem, 1fr));
+    gap: .9rem;
+  }
+  .gl-card {
+    display: flex;
+    flex-direction: column;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--term-accent, var(--ochre));
+    border-radius: 14px;
+    padding: 1.15rem 1.25rem;
+    scroll-margin-top: 5.5rem;
+  }
+  .gl-card.is-hidden,
+  .gl-empty.is-hidden {
+    display: none;
+  }
+  .gl-card__top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: .5rem;
+    margin-bottom: .45rem;
+    font-size: .8125rem;
+    font-weight: 700;
+  }
+  .gl-card__track {
+    color: var(--term-accent, var(--ochre));
+  }
+  .gl-card__unit {
+    color: var(--ink-faint);
+  }
+  .gl-card h2 {
+    margin: 0 0 .45rem;
+    font-size: 1.0625rem;
+    font-weight: 800;
+    line-height: 1.3;
+    color: var(--ink);
+  }
+  .gl-card__def {
+    margin: 0 0 .9rem;
+    font-size: .875rem;
+    line-height: 1.58;
+    color: var(--ink-soft);
+    flex: 1;
+  }
+  .gl-card__foot {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: .4rem .8rem;
+    padding-top: .7rem;
+    border-top: 1px solid var(--border-soft);
+    font-size: .8125rem;
+    font-weight: 600;
+  }
+  .gl-card__blog {
+    color: var(--ink-faint);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .gl-empty {
+    padding: 2.5rem 0;
+    font-size: 1rem;
+    color: var(--ink-faint);
+  }
+</style>

@@ -1,0 +1,473 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../../layouts/Base.astro';
+import { plateEdge, EDGE_DEPTH } from '../../../lib/bowl';
+import { INFERENCE_STATS, INFERENCE_TRACK_GROUPS, INFERENCE_UNITS } from '../../../data/inference';
+
+const freeEntries = (await getCollection('inference')).sort((a, b) => a.data.order - b.data.order);
+
+const edge = plateEdge('inference-read');
+const clip = `polygon(0 0, 100% 0, ${[...edge].reverse().map(([x, d]) => `${x.toFixed(1)}% calc(100% - ${d.toFixed(1)}px)`).join(',')})`;
+const line = edge.map(([x, d]) => `${(x * 10).toFixed(0)},${(EDGE_DEPTH - d).toFixed(1)}`).join(' ');
+
+const lockedUnits = INFERENCE_UNITS.filter((u) => !u.isFree);
+---
+
+<Base
+  card="inference-read"
+  title="INFERENCE Free Edition — 5 Complete Units & 36-Unit Syllabus"
+  description="Read 5 full units of INFERENCE free: Ch 00 AI in one sitting, Ch 01 Not all AI is ChatGPT, State of Play Nov 2026, India Briefing, and a worked Consulting Casebook case."
+  section="INFERENCE"
+  pageType="CollectionPage"
+  breadcrumbs={[
+    { name: 'Home', path: '/' },
+    { name: 'INFERENCE', path: '/inference/' },
+    { name: 'Free Edition' },
+  ]}
+  immersive={true}
+  wide={true}
+  grain={true}
+>
+  <section class="pg-plate" style={`clip-path:${clip}`} aria-labelledby="read-hub-title">
+    <div class="wrap pg-plate__in">
+      <div class="hub-top">
+        <span class="hanko-mark">Free Edition · 5 of 36 Units</span>
+        <a class="linkish hub-back" href="/inference/">← Sales overview &amp; pricing</a>
+      </div>
+
+      <h1 id="read-hub-title" class="pg-plate__title">
+        Read five complete units before you decide.
+      </h1>
+
+      <p class="pg-plate__desc">
+        Start with the Foundations opener (Ch 00), the decision split (Ch 01), both quarterly
+        inserts (Global State of Play and India Briefing), and one full worked PE due-diligence
+        case from the Consulting Casebook.
+      </p>
+
+      <div class="hub-actions">
+        <a class="inf-btn inf-btn--primary" href={`/inference/read/${freeEntries[0]?.id}/`}>
+          Start with Ch 00: AI in one sitting
+        </a>
+        <a class="inf-btn inf-btn--ghost" href="/inference/glossary/">
+          Search 116-term glossary
+        </a>
+        <a class="inf-btn inf-btn--ghost" href="/inference/#pricing">
+          Get all 36 units (from ₹499)
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <svg class="pg-edge" viewBox={`0 0 1000 ${EDGE_DEPTH}`} preserveAspectRatio="none" aria-hidden="true">
+    <polyline points={line} class="pg-edge__glow" vector-effect="non-scaling-stroke" />
+    <polyline points={line} class="pg-edge__gold" vector-effect="non-scaling-stroke" />
+  </svg>
+
+  <div class="wrap hub-body">
+    <section class="hub-sec" aria-labelledby="free-units-heading">
+      <p class="hub-kicker">Available in full · zero signup required</p>
+      <h2 id="free-units-heading">The 5 Free Edition units</h2>
+
+      <div class="free-grid">
+        {freeEntries.map((entry) => (
+          <a
+            class="free-card"
+            href={`/inference/read/${entry.id}/`}
+            style={`--card-accent:var(--${entry.data.accent})`}
+          >
+            <div class="free-card__meta">
+              <span class="free-card__unit">{entry.data.unitNumber} · {entry.data.track}</span>
+              <span class="free-card__time">{entry.data.readingTime}</span>
+            </div>
+            <h3>{entry.data.title}</h3>
+            <p class="free-card__hook">{entry.data.hook}</p>
+            <p class="free-card__deck">{entry.data.deck}</p>
+            <span class="free-card__cta">Read full unit →</span>
+          </a>
+        ))}
+      </div>
+    </section>
+
+    <section class="hub-sec" aria-labelledby="locked-roadmap-heading">
+      <div class="hub-sec__head">
+        <div>
+          <p class="hub-kicker">Paid Edition roadmap · {lockedUnits.length} remaining units</p>
+          <h2 id="locked-roadmap-heading">What sits in the full {INFERENCE_STATS.words}-word 2027 Edition</h2>
+        </div>
+        <a class="inf-btn inf-btn--primary" href="/inference/#pricing">
+          Get the Full Edition (₹1,999 / $49)
+        </a>
+      </div>
+
+      <div class="roadmap">
+        {INFERENCE_TRACK_GROUPS.map((g) => {
+          const list = INFERENCE_UNITS.filter((u) => u.trackId === g.id);
+          return (
+            <section class="roadmap-group" style={`--group-accent:var(--${g.accent})`}>
+              <header class="roadmap-group__head">
+                <div>
+                  <h3>{g.label}</h3>
+                  <p>{g.summary}</p>
+                </div>
+                <span class="roadmap-group__count">{list.length} units</span>
+              </header>
+              <ol class="roadmap-list">
+                {list.map((u) => (
+                  <li class:list={['roadmap-item', u.isFree && 'roadmap-item--free']}>
+                    <div class="roadmap-item__left">
+                      <span class="roadmap-item__num">{u.unitNumber}</span>
+                      <div>
+                        <strong>{u.title}</strong>
+                        <p>{u.deck}</p>
+                      </div>
+                    </div>
+                    <div class="roadmap-item__right">
+                      {u.isFree && u.freeSlug ? (
+                        <a class="roadmap-badge roadmap-badge--free" href={`/inference/read/${u.freeSlug}/`}>
+                          {u.freeScope ?? 'Free'} →
+                        </a>
+                      ) : (
+                        <a class="roadmap-badge roadmap-badge--locked" href="/inference/#pricing">
+                          Paid Edition
+                        </a>
+                      )}
+                    </div>
+                  </li>
+                ))}
+              </ol>
+            </section>
+          );
+        })}
+      </div>
+    </section>
+  </div>
+</Base>
+
+<style>
+  .pg-plate {
+    position: relative;
+    color: var(--tldr-ink);
+    background:
+      radial-gradient(50rem 26rem at 88% 10%, color-mix(in srgb, var(--mizu) 15%, transparent), transparent 70%),
+      radial-gradient(42rem 22rem at 6% 110%, color-mix(in srgb, var(--ochre) 14%, transparent), transparent 70%),
+      var(--tldr-bg);
+    overflow: hidden;
+  }
+  .pg-plate::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: var(--paper-noise);
+    opacity: 0.7;
+    pointer-events: none;
+  }
+  .pg-plate__in {
+    position: relative;
+    z-index: 1;
+    padding-block: clamp(2.25rem, 4vw, 3.5rem) calc(22px + clamp(2rem, 3vw, 2.75rem));
+  }
+  .hub-top {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: .75rem 1.25rem;
+    margin-bottom: 1.15rem;
+  }
+  .hanko-mark {
+    display: inline-flex;
+    align-items: center;
+    font-family: var(--font);
+    font-size: .6875rem;
+    font-weight: 800;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--hanko);
+    background: color-mix(in srgb, var(--hanko) 14%, transparent);
+    border: 1.25px solid color-mix(in srgb, var(--hanko) 65%, transparent);
+    padding: .24rem .65rem;
+    border-radius: 4px;
+  }
+  .hub-back {
+    color: var(--tldr-dim);
+    font-size: .9375rem;
+    font-weight: 600;
+    text-decoration: none;
+  }
+  .hub-back:hover {
+    color: var(--tldr-ink);
+  }
+  .pg-plate__title {
+    margin: 0;
+    max-width: 52rem;
+    font-family: var(--font);
+    font-size: clamp(2rem, 4.2vw, 3.2rem);
+    font-weight: 800;
+    line-height: 1.07;
+    letter-spacing: -.03em;
+    color: var(--tldr-ink);
+  }
+  .pg-plate__desc {
+    margin: 1rem 0 0;
+    max-width: 44rem;
+    font-size: 1.0625rem;
+    line-height: 1.62;
+    color: var(--tldr-dim);
+  }
+  .hub-actions {
+    margin-top: 1.65rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: .85rem;
+  }
+  .inf-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    padding: .7rem 1.35rem;
+    border-radius: 10px;
+    font-family: var(--font);
+    font-size: .9375rem;
+    font-weight: 700;
+    text-decoration: none;
+    border: 1.5px solid transparent;
+  }
+  .inf-btn--primary {
+    background: var(--ochre);
+    color: var(--tldr-bg);
+    border-color: var(--ochre);
+  }
+  .inf-btn--ghost {
+    background: transparent;
+    color: var(--tldr-ink);
+    border-color: var(--tldr-hair);
+  }
+
+  .pg-edge {
+    display: block;
+    position: relative;
+    width: 100%;
+    height: 22px;
+    margin-top: -22px;
+    overflow: visible;
+    pointer-events: none;
+  }
+  .pg-edge__glow {
+    fill: none;
+    stroke: color-mix(in srgb, var(--ochre) 40%, transparent);
+    stroke-width: 4;
+    filter: blur(1.5px);
+  }
+  .pg-edge__gold {
+    fill: none;
+    stroke: var(--ochre);
+    stroke-width: 1.75;
+    stroke-linejoin: miter;
+  }
+
+  .hub-body {
+    padding-top: clamp(2.25rem, 4vw, 3.5rem);
+    padding-bottom: 4.5rem;
+  }
+  .hub-sec {
+    margin-top: 3.75rem;
+  }
+  .hub-sec:first-child {
+    margin-top: 0;
+  }
+  .hub-sec__head {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  .hub-kicker {
+    margin: 0 0 .35rem;
+    font-size: .8125rem;
+    font-weight: 700;
+    color: var(--ochre);
+  }
+  .hub-sec h2 {
+    margin: 0 0 1.25rem;
+    font-size: clamp(1.5rem, 2.6vw, 2rem);
+    font-weight: 800;
+    letter-spacing: -.02em;
+  }
+  .hub-sec__head h2 {
+    margin-bottom: 0;
+  }
+
+  .free-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(19rem, 1fr));
+    gap: 1rem;
+  }
+  .free-card {
+    display: flex;
+    flex-direction: column;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--card-accent, var(--ochre));
+    border-radius: 16px;
+    padding: 1.35rem 1.45rem;
+    text-decoration: none;
+    transition: transform var(--dur-fast) var(--ease), box-shadow var(--dur-fast) var(--ease);
+  }
+  .free-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 26px var(--shadow);
+  }
+  .free-card__meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: .5rem;
+    margin-bottom: .6rem;
+    font-size: .8125rem;
+    font-weight: 700;
+  }
+  .free-card__unit {
+    color: var(--card-accent, var(--ochre));
+  }
+  .free-card__time {
+    color: var(--ink-faint);
+    font-weight: 500;
+  }
+  .free-card h3 {
+    margin: 0 0 .6rem;
+    font-size: 1.25rem;
+    font-weight: 800;
+    line-height: 1.25;
+    color: var(--ink);
+  }
+  .free-card__hook {
+    margin: 0 0 .6rem;
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: .9375rem;
+    line-height: 1.5;
+    color: var(--ink);
+  }
+  .free-card__deck {
+    margin: 0 0 1rem;
+    font-size: .875rem;
+    line-height: 1.55;
+    color: var(--ink-soft);
+    flex: 1;
+  }
+  .free-card__cta {
+    font-size: .875rem;
+    font-weight: 700;
+    color: var(--card-accent, var(--ochre));
+  }
+
+  .roadmap {
+    display: grid;
+    gap: 1.5rem;
+  }
+  .roadmap-group {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-top: 3px solid var(--group-accent, var(--ochre));
+    border-radius: 16px;
+    padding: 1.35rem 1.45rem;
+  }
+  .roadmap-group__head {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: .75rem;
+    margin-bottom: 1rem;
+    padding-bottom: .9rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .roadmap-group__head h3 {
+    margin: 0 0 .25rem;
+    font-size: 1.15rem;
+    font-weight: 800;
+  }
+  .roadmap-group__head p {
+    margin: 0;
+    font-size: .875rem;
+    line-height: 1.5;
+    color: var(--ink-soft);
+    max-width: 48rem;
+  }
+  .roadmap-group__count {
+    font-size: .8125rem;
+    font-weight: 700;
+    color: var(--ink-faint);
+  }
+  .roadmap-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: .75rem;
+  }
+  .roadmap-item {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: .75rem 1.25rem;
+    padding: .75rem .9rem;
+    border-radius: 10px;
+    background: var(--paper-2);
+    border: 1px solid var(--border-soft);
+  }
+  .roadmap-item--free {
+    border-color: color-mix(in srgb, var(--moss) 40%, var(--border));
+  }
+  .roadmap-item__left {
+    display: flex;
+    align-items: flex-start;
+    gap: .85rem;
+    flex: 1 1 20rem;
+  }
+  .roadmap-item__num {
+    font-size: .8125rem;
+    font-weight: 800;
+    color: var(--group-accent, var(--ochre));
+    white-space: nowrap;
+    padding-top: .15rem;
+  }
+  .roadmap-item__left strong {
+    display: block;
+    font-size: .9375rem;
+    line-height: 1.35;
+    color: var(--ink);
+  }
+  .roadmap-item__left p {
+    margin: .2rem 0 0;
+    font-size: .8125rem;
+    line-height: 1.45;
+    color: var(--ink-soft);
+  }
+  .roadmap-badge {
+    display: inline-flex;
+    align-items: center;
+    min-height: 36px;
+    padding: .3rem .75rem;
+    border-radius: 999px;
+    font-size: .8125rem;
+    font-weight: 700;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  .roadmap-badge--free {
+    background: color-mix(in srgb, var(--moss) 18%, transparent);
+    color: var(--moss);
+    border: 1px solid color-mix(in srgb, var(--moss) 45%, transparent);
+  }
+  .roadmap-badge--locked {
+    background: var(--paper);
+    color: var(--ink-faint);
+    border: 1px solid var(--border);
+  }
+</style>

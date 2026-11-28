@@ -71,4 +71,30 @@ const blog = defineCollection({
       }),
 });
 
-export const collections = { blog };
+const inference = defineCollection({
+  loader: glob({
+    pattern: '**/*.md',
+    base: './src/content/inference',
+    generateId: ({ entry }) => entry.replace(/\.md$/, ''),
+  }),
+  schema: z.object({
+    title: z.string(),
+    unitNumber: z.string(),
+    part: z.string(),
+    track: z.string(),
+    accent: z.enum(['mizu', 'ochre', 'plum', 'moss', 'hanko', 'indigo']).default('ochre'),
+    deck: z.string(),
+    hook: z.string(),
+    readingTime: z.string(),
+    order: z.number(),
+    nextLocked: z.object({
+      id: z.string(),
+      title: z.string(),
+      track: z.string(),
+      words: z.string(),
+      outcomes: z.array(z.string()),
+    }),
+  }),
+});
+
+export const collections = { blog, inference };
