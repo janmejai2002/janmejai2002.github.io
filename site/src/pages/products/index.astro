@@ -1,0 +1,1198 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import { plateEdge, EDGE_DEPTH } from '../../lib/bowl';
+import { INFERENCE_STATS } from '../../data/inference';
+import { CLAIMS } from '../../data/agent-tracker';
+import newsEntries from '../../data/news.json';
+import {
+  BUYER_SEGMENTS,
+  PRODUCTS,
+  ECOSYSTEM_NODES,
+  PRODUCTS_FAQS,
+} from '../../data/products';
+
+const publishedPosts = await getCollection('blog', ({ data }) => !data.draft);
+const articleCount = publishedPosts.length;
+const newsCount = newsEntries.length;
+const claimsCount = CLAIMS.length;
+
+const edge = plateEdge('products-catalog');
+const clip = `polygon(0 0, 100% 0, ${[...edge].reverse().map(([x, d]) => `${x.toFixed(1)}% calc(100% - ${d.toFixed(1)}px)`).join(',')})`;
+const line = edge.map(([x, d]) => `${(x * 10).toFixed(0)},${(EDGE_DEPTH - d).toFixed(1)}`).join(' ');
+
+const siteOrigin = Astro.site?.href ?? 'https://janmejai2002.github.io/';
+const itemListSchema = {
+  mainEntity: {
+    '@type': 'ItemList',
+    name: 'wAIbi-sabi & INFERENCE Product Catalog',
+    description:
+      'Multi-product ecosystem built from the wAIbi-sabi applied-AI corpus, 708-entry B-school interview archive, INFERENCE compendium, and AI claims ledger.',
+    numberOfItems: PRODUCTS.length,
+    itemListElement: PRODUCTS.map((p, idx) => ({
+      '@type': 'ListItem',
+      position: idx + 1,
+      item: {
+        '@type': p.schemaType,
+        name: p.name,
+        description: p.tagline,
+        url: new URL(p.checkout.primaryHref, siteOrigin).href,
+        offers: [
+          {
+            '@type': 'Offer',
+            name: `${p.name} (INR)`,
+            price: String(p.priceInr),
+            priceCurrency: 'INR',
+            availability: 'https://schema.org/InStock',
+            url: new URL(p.checkout.primaryHref, siteOrigin).href,
+          },
+          {
+            '@type': 'Offer',
+            name: `${p.name} (USD)`,
+            price: String(p.priceUsd),
+            priceCurrency: 'USD',
+            availability: 'https://schema.org/InStock',
+            url: new URL(p.checkout.primaryHref, siteOrigin).href,
+          },
+        ],
+      },
+    })),
+  },
+};
+
+const segmentLabels = Object.fromEntries(BUYER_SEGMENTS.map((s) => [s.id, s.label]));
+---
+
+<Base
+  title="Products & Advisory Ecosystem — wAIbi-sabi & INFERENCE"
+  description="Compendiums, B-school interview dossiers, enterprise AI claims intelligence, campus cohort licenses, and fixed-scope red-teaming advisory derived from wAIbi-sabi."
+  section="Products"
+  pageType="CollectionPage"
+  keywords={[
+    'INFERENCE AI Compendium',
+    'MBA AI interview dossier',
+    'AI red-teaming advisory',
+    'deterministic eval harness consulting',
+    'enterprise AI claims intelligence',
+    'B-school campus AI licensing',
+  ]}
+  breadcrumbs={[{ name: 'Home', path: '/' }, { name: 'Products' }]}
+  schema={itemListSchema}
+  faq={PRODUCTS_FAQS}
+  immersive={true}
+  wide={true}
+  grain={true}
+>
+  <section class="pg-plate" style={`clip-path:${clip}`} aria-labelledby="prod-hero-title">
+    <div class="wrap pg-plate__in">
+      <div class="prod-hero__top">
+        <span class="hanko-mark">Product &amp; Advisory Ecosystem</span>
+        <span class="prod-hero__sub">Built from {articleCount} articles · {newsCount} news briefs · {INFERENCE_STATS.words} words</span>
+      </div>
+
+      <h1 id="prod-hero-title" class="pg-plate__title">
+        Five ways to put the wAIbi-sabi knowledge base to work inside your room.
+      </h1>
+
+      <p class="pg-plate__desc">
+        Everything published on the open web stays free to read and verify. Below is the structured
+        product and advisory layer built on top of it: print-grade compendiums, offline interview
+        vaults, enterprise claims intelligence, campus cohort packs, and fixed-scope engineering sprints.
+      </p>
+
+      <div class="prod-hero__actions">
+        <a class="prod-btn prod-btn--primary" href="#catalog" data-product-cta="hero-catalog" data-cta-action="jump">
+          Browse all 5 products
+        </a>
+        <a class="prod-btn prod-btn--ghost" href="/advisory/" data-product-cta="hero-advisory" data-cta-action="explore">
+          Book B2B Red-Team Advisory
+        </a>
+        <a class="linkish prod-hero__link" href="/inference/">
+          Explore INFERENCE 2027 →
+        </a>
+      </div>
+
+      <dl class="prod-proof" aria-label="Knowledge base corpus metrics">
+        <div>
+          <dt>Applied-AI articles</dt>
+          <dd>{articleCount} published</dd>
+        </div>
+        <div>
+          <dt>B-School archive</dt>
+          <dd>{newsCount} interview briefs</dd>
+        </div>
+        <div>
+          <dt>INFERENCE compendium</dt>
+          <dd>{INFERENCE_STATS.words} words · {INFERENCE_STATS.unitsTotal} units</dd>
+        </div>
+        <div>
+          <dt>Claims &amp; tools</dt>
+          <dd>{claimsCount} graded claims · Calculator</dd>
+        </div>
+      </dl>
+    </div>
+  </section>
+
+  <svg class="pg-edge" viewBox={`0 0 1000 ${EDGE_DEPTH}`} preserveAspectRatio="none" aria-hidden="true">
+    <polyline points={line} class="pg-edge__glow" vector-effect="non-scaling-stroke" />
+    <polyline points={line} class="pg-edge__gold" vector-effect="non-scaling-stroke" />
+  </svg>
+
+  <div class="wrap prod-body">
+    <!-- Storefront Controls: Buyer Segmentation + Currency Toggle -->
+    <section class="prod-sec" id="catalog" aria-labelledby="catalog-heading">
+      <div class="prod-sec__head prod-sec__head--controls">
+        <div>
+          <p class="prod-kicker">Storefront · Dual-rail INR &amp; USD pricing</p>
+          <h2 id="catalog-heading">Filter by buyer role and currency</h2>
+        </div>
+
+        <div class="prod-currency" role="group" aria-label="Currency selector">
+          <button
+            type="button"
+            class="prod-currency__btn is-active"
+            data-currency-btn="INR"
+            aria-pressed="true"
+          >
+            India · ₹ INR
+          </button>
+          <button
+            type="button"
+            class="prod-currency__btn"
+            data-currency-btn="USD"
+            aria-pressed="false"
+          >
+            Global · $ USD
+          </button>
+        </div>
+      </div>
+
+      <div class="prod-segments" role="tablist" aria-label="Filter catalog by buyer persona">
+        {BUYER_SEGMENTS.map((seg, idx) => (
+          <button
+            type="button"
+            role="tab"
+            class:list={['prod-seg', idx === 0 && 'is-active']}
+            aria-selected={idx === 0 ? 'true' : 'false'}
+            data-segment-btn={seg.id}
+            data-segment-summary={seg.roleSummary}
+            style={`--seg-accent:var(--${seg.accent})`}
+          >
+            <span class="prod-seg__dot" aria-hidden="true"></span>
+            <span>{seg.label}</span>
+          </button>
+        ))}
+      </div>
+
+      <p class="prod-segment-note" id="segment-note" aria-live="polite">
+        {BUYER_SEGMENTS[0].roleSummary}
+      </p>
+
+      <!-- Cursor-Spotlight Product Cards -->
+      <div class="prod-grid" id="product-grid">
+        {PRODUCTS.map((item) => (
+          <article
+            id={item.slug}
+            class:list={['prod-card', item.highlighted && 'prod-card--hero']}
+            data-product-card={item.id}
+            data-segments={item.buyerSegments.join(',')}
+            style={`--card-accent:var(--${item.accent})`}
+          >
+            <div class="prod-card__spotlight" aria-hidden="true"></div>
+            <div class="prod-card__inner">
+              <div class="prod-card__meta">
+                <span class="prod-card__stream">{item.streamLabel}</span>
+                <span class="prod-card__badge">{item.badge}</span>
+              </div>
+
+              <h3 class="prod-card__title">{item.name}</h3>
+              <p class="prod-card__tagline">{item.tagline}</p>
+              <p class="prod-card__desc">{item.description}</p>
+
+              <div class="prod-card__buyers" aria-label="Recommended buyers">
+                {item.buyerSegments.map((segId) => (
+                  <span class="prod-buyer-pill">{segmentLabels[segId]}</span>
+                ))}
+              </div>
+
+              <div class="prod-card__pricebox">
+                <strong
+                  class="prod-card__amount"
+                  data-price-inr={item.priceInrLabel}
+                  data-price-usd={item.priceUsdLabel}
+                >
+                  {item.priceInrLabel}
+                </strong>
+                <span class="prod-card__cadence">{item.cadenceLabel}</span>
+              </div>
+
+              {item.subTiers && (
+                <ul class="prod-tiers" aria-label={`${item.name} tier breakdown`}>
+                  {item.subTiers.map((tier) => (
+                    <li>
+                      <span class="prod-tiers__name">{tier.label}</span>
+                      <span
+                        class="prod-tiers__price"
+                        data-price-inr={tier.priceInrLabel}
+                        data-price-usd={tier.priceUsdLabel}
+                      >
+                        {tier.priceInrLabel}
+                      </span>
+                      <small>{tier.note}</small>
+                    </li>
+                  ))}
+                </ul>
+              )}
+
+              <p class="prod-card__basis">
+                <strong>Source basis:</strong> {item.sourceBasis}
+              </p>
+
+              <ul class="prod-card__list">
+                {item.deliverables.map((d) => (
+                  <li>{d}</li>
+                ))}
+              </ul>
+
+              <p class="prod-card__firewall">
+                <strong>Trust firewall:</strong> {item.trustFirewall}
+              </p>
+
+              <div class="prod-card__actions">
+                <a
+                  href={item.checkout.razorpayUrl}
+                  class:list={['prod-btn', item.highlighted ? 'prod-btn--primary' : 'prod-btn--secondary', 'prod-card__buy']}
+                  data-product-cta={item.id}
+                  data-cta-action="checkout"
+                  data-href-inr={item.checkout.razorpayUrl}
+                  data-href-usd={item.checkout.globalMorUrl}
+                  data-label-inr={item.ctaLabelInr}
+                  data-label-usd={item.ctaLabelUsd}
+                >
+                  {item.ctaLabelInr}
+                </a>
+
+                <div class="prod-card__links">
+                  <a
+                    class="linkish"
+                    href={item.checkout.primaryHref}
+                    data-product-cta={item.id}
+                    data-cta-action="explore"
+                  >
+                    {item.primaryRouteLabel} →
+                  </a>
+                  {item.checkout.secondaryHref && item.secondaryCtaLabel && (
+                    <a
+                      class="linkish"
+                      href={item.checkout.secondaryHref}
+                      data-product-cta={item.id}
+                      data-cta-action="secondary"
+                    >
+                      {item.secondaryCtaLabel} →
+                    </a>
+                  )}
+                </div>
+              </div>
+            </div>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <!-- Ecosystem Architecture Map -->
+    <section class="prod-sec" id="ecosystem" aria-labelledby="eco-heading">
+      <div class="prod-sec__head">
+        <p class="prod-kicker">Ecosystem map</p>
+        <h2 id="eco-heading">How the open knowledge base compounds into products</h2>
+      </div>
+
+      <figure class="diagram prod-diagram">
+        <svg viewBox="0 0 760 250" role="img" aria-label="wAIbi-sabi ecosystem map linking open corpus assets to five commercial products">
+          <rect x="14" y="18" width="228" height="214" rx="10" fill="var(--paper-2)" stroke="var(--mizu)" stroke-width="1.5" />
+          <text x="30" y="44" fill="var(--mizu)" font-family="var(--font)" font-size="13" font-weight="700">Open Corpus (Free Web)</text>
+          <text x="30" y="72" fill="var(--ink)" font-family="var(--font)" font-size="11.5" font-weight="600">{articleCount} Applied-AI Articles (/blog/)</text>
+          <text x="30" y="96" fill="var(--ink)" font-family="var(--font)" font-size="11.5" font-weight="600">{newsCount} B-School News (/news/)</text>
+          <text x="30" y="120" fill="var(--ink)" font-family="var(--font)" font-size="11.5" font-weight="600">5 Free INFERENCE Units + Glossary</text>
+          <text x="30" y="144" fill="var(--ink)" font-family="var(--font)" font-size="11.5" font-weight="600">AI Claims Tracker &amp; Calculator</text>
+          <text x="30" y="206" fill="var(--ink-faint)" font-family="var(--font)" font-size="11">Zero paywall on public reporting</text>
+
+          <line x1="242" y1="125" x2="278" y2="125" stroke="var(--ochre)" stroke-width="1.75" />
+          <polygon points="278,120 288,125 278,130" fill="var(--ochre)" />
+
+          <rect x="290" y="18" width="212" height="214" rx="10" fill="var(--paper-2)" stroke="var(--ochre)" stroke-width="1.5" />
+          <text x="306" y="44" fill="var(--ochre)" font-family="var(--font)" font-size="13" font-weight="700">Structured Products</text>
+          <text x="306" y="74" fill="var(--ink)" font-family="var(--font)" font-size="11.5" font-weight="600">INFERENCE 2027 (36 Units)</text>
+          <text x="306" y="98" fill="var(--ink)" font-family="var(--font)" font-size="11.5" font-weight="600">B-School Interview Dossier</text>
+          <text x="306" y="122" fill="var(--ink)" font-family="var(--font)" font-size="11.5" font-weight="600">NotebookLM Audio &amp; Slides</text>
+          <text x="306" y="146" fill="var(--ink)" font-family="var(--font)" font-size="11.5" font-weight="600">Enterprise Claims Pack</text>
+          <text x="306" y="206" fill="var(--ink-faint)" font-family="var(--font)" font-size="11">Razorpay INR · Global USD MoR</text>
+
+          <line x1="502" y1="125" x2="538" y2="125" stroke="var(--hanko)" stroke-width="1.75" />
+          <polygon points="538,120 548,125 538,130" fill="var(--hanko)" />
+
+          <rect x="550" y="18" width="196" height="214" rx="10" fill="var(--paper-2)" stroke="var(--hanko)" stroke-width="1.5" />
+          <text x="566" y="44" fill="var(--hanko)" font-family="var(--font)" font-size="13" font-weight="700">Institutional &amp; B2B</text>
+          <text x="566" y="76" fill="var(--ink)" font-family="var(--font)" font-size="11.5" font-weight="600">PlaceCom Bulk (50–600 seats)</text>
+          <text x="566" y="102" fill="var(--ink)" font-family="var(--font)" font-size="11.5" font-weight="600">Executive AI Workshops</text>
+          <text x="566" y="128" fill="var(--ink)" font-family="var(--font)" font-size="11.5" font-weight="600">2-Week Red-Team Audit</text>
+          <text x="566" y="154" fill="var(--ink)" font-family="var(--font)" font-size="11.5" font-weight="600">Deterministic Eval Sprint</text>
+          <text x="566" y="206" fill="var(--ink-faint)" font-family="var(--font)" font-size="11">Strict NDA &amp; editorial firewall</text>
+        </svg>
+        <figcaption>
+          Public evidence builds reader trust first; structured digital packs, cohort seats, and B2B engineering sprints monetize synthesis and execution.
+        </figcaption>
+      </figure>
+
+      <div class="eco-grid">
+        {ECOSYSTEM_NODES.map((node) => (
+          <article class="eco-card" style={`--eco-accent:var(--${node.accent})`}>
+            <div class="eco-card__top">
+              <span class="eco-card__metric">{node.sourceMetric}</span>
+              <a class="linkish" href={node.sourceHref}>{node.sourceLabel} →</a>
+            </div>
+            <h3>
+              <a href={node.productHref}>{node.productName}</a>
+            </h3>
+            <p>{node.bridgeSummary}</p>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <!-- Buyer Pathways Summary -->
+    <section class="prod-sec" aria-labelledby="buyers-heading">
+      <div class="prod-sec__head">
+        <p class="prod-kicker">Where to start</p>
+        <h2 id="buyers-heading">Recommended entry path by buyer profile</h2>
+      </div>
+
+      <div class="buyer-grid">
+        <article class="buyer-card" style="--buyer-accent:var(--ochre)">
+          <span class="buyer-card__tag">MBA Candidate</span>
+          <h3>SIP, Finals &amp; Consulting Rounds</h3>
+          <p>
+            Start with the 5 free units in <code>/inference/read/</code>, drill daily cases on{' '}
+            <code>/news/</code>, then bundle the Full 2027 Edition with the 708-Story Interview Dossier.
+          </p>
+          <button type="button" class="linkish buyer-card__jump" data-jump-segment="mba-candidate">
+            Filter MBA products ↑
+          </button>
+        </article>
+
+        <article class="buyer-card" style="--buyer-accent:var(--mizu)">
+          <span class="buyer-card__tag">AI Engineer &amp; PM</span>
+          <h3>Unit Economics, Eval Gates &amp; Due Diligence</h3>
+          <p>
+            Model cache break-evens with the Caching Calculator, audit vendor hype on{' '}
+            <code>/tracker/</code>, or adopt the Deterministic Eval Sprint for CI release safety.
+          </p>
+          <button type="button" class="linkish buyer-card__jump" data-jump-segment="ai-engineer-pm">
+            Filter Engineer &amp; PM products ↑
+          </button>
+        </article>
+
+        <article class="buyer-card" style="--buyer-accent:var(--moss)">
+          <span class="buyer-card__tag">Campus PlaceCom</span>
+          <h3>50-Seat Clubs to 600-Seat Batches</h3>
+          <p>
+            Equip Consulting, ProdMan, or Finance prep cohorts with custom-stamped INFERENCE copies,
+            the 708-story dossier, and a consolidated institutional invoice.
+          </p>
+          <a class="linkish" href="/inference/campus/" data-product-cta="buyer-campus" data-cta-action="explore">
+            Open Campus Licensing →
+          </a>
+        </article>
+
+        <article class="buyer-card" style="--buyer-accent:var(--hanko)">
+          <span class="buyer-card__tag">Enterprise VP Engineering</span>
+          <h3>Red-Teaming, Guardrails &amp; Workshops</h3>
+          <p>
+            Bring Gray Swan #352 offensive testing, AmEx risk validation rigor, and deterministic
+            CI trajectory gates directly to your staging agent pipeline under strict NDA.
+          </p>
+          <a class="linkish" href="/advisory/" data-product-cta="buyer-advisory" data-cta-action="explore">
+            Open Advisory Briefing →
+          </a>
+        </article>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="prod-sec" id="faq" aria-labelledby="prod-faq-heading">
+      <div class="prod-sec__head">
+        <p class="prod-kicker">Questions</p>
+        <h2 id="prod-faq-heading">Licensing, currency, and firewall questions</h2>
+      </div>
+
+      <div class="prod-faqs">
+        {PRODUCTS_FAQS.map((item, idx) => (
+          <details class="prod-faq" open={idx === 0}>
+            <summary>{item.question}</summary>
+            <p>{item.answer}</p>
+          </details>
+        ))}
+      </div>
+    </section>
+  </div>
+</Base>
+
+<script>
+  import { getProductCheckoutUrl, type Currency, type BuyerSegmentId } from '../../data/products';
+
+  const currencyBtns = [...document.querySelectorAll<HTMLButtonElement>('[data-currency-btn]')];
+  const segmentBtns = [...document.querySelectorAll<HTMLButtonElement>('[data-segment-btn]')];
+  const segmentJumpBtns = [...document.querySelectorAll<HTMLButtonElement>('[data-jump-segment]')];
+  const cards = [...document.querySelectorAll<HTMLElement>('[data-product-card]')];
+  const segmentNote = document.getElementById('segment-note');
+  const catalogEl = document.getElementById('catalog');
+
+  let activeCurrency: Currency = 'INR';
+  let activeSegment: BuyerSegmentId = 'all';
+
+  try {
+    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || '';
+    if (tz && !/Kolkata|Calcutta|Asia\/Dhaka|Asia\/Colombo/i.test(tz)) {
+      activeCurrency = 'USD';
+    }
+  } catch {}
+
+  const trackProductEvent = (productId: string, action: string) => {
+    const w = window as unknown as {
+      umami?: { track?: (name: string, data: Record<string, string>) => void };
+    };
+    w.umami?.track?.('product_cta', {
+      product_id: productId,
+      currency: activeCurrency,
+      buyer_segment: activeSegment,
+      action,
+    });
+  };
+
+  const applyCurrency = (curr: Currency) => {
+    activeCurrency = curr;
+    for (const btn of currencyBtns) {
+      const on = btn.dataset.currencyBtn === curr;
+      btn.classList.toggle('is-active', on);
+      btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+    }
+    for (const priceEl of document.querySelectorAll<HTMLElement>('[data-price-inr][data-price-usd]')) {
+      priceEl.textContent = curr === 'INR' ? priceEl.dataset.priceInr || '' : priceEl.dataset.priceUsd || '';
+    }
+    for (const cta of document.querySelectorAll<HTMLAnchorElement>('[data-href-inr][data-href-usd]')) {
+      const id = cta.dataset.productCta || '';
+      cta.href = id ? getProductCheckoutUrl(id, curr) : (curr === 'INR' ? cta.dataset.hrefInr || '#' : cta.dataset.hrefUsd || '#');
+      const nextLabel = curr === 'INR' ? cta.dataset.labelInr : cta.dataset.labelUsd;
+      if (nextLabel) cta.textContent = nextLabel;
+    }
+  };
+
+  const applySegment = (segId: BuyerSegmentId) => {
+    activeSegment = segId;
+    for (const btn of segmentBtns) {
+      const on = btn.dataset.segmentBtn === segId;
+      btn.classList.toggle('is-active', on);
+      btn.setAttribute('aria-selected', on ? 'true' : 'false');
+      if (on && segmentNote && btn.dataset.segmentSummary) {
+        segmentNote.textContent = btn.dataset.segmentSummary;
+      }
+    }
+    for (const card of cards) {
+      const allowed = (card.dataset.segments || '').split(',').filter(Boolean);
+      const visible = segId === 'all' || allowed.includes(segId);
+      card.classList.toggle('is-hidden', !visible);
+    }
+  };
+
+  for (const btn of currencyBtns) {
+    btn.addEventListener('click', () => {
+      const next = btn.dataset.currencyBtn as Currency;
+      if (next) {
+        applyCurrency(next);
+        trackProductEvent('currency-toggle', `switch_${next.toLowerCase()}`);
+      }
+    });
+  }
+
+  for (const btn of segmentBtns) {
+    btn.addEventListener('click', () => {
+      const next = btn.dataset.segmentBtn as BuyerSegmentId;
+      if (next) {
+        applySegment(next);
+        trackProductEvent('segment-filter', `filter_${next}`);
+      }
+    });
+  }
+
+  for (const jumpBtn of segmentJumpBtns) {
+    jumpBtn.addEventListener('click', () => {
+      const next = jumpBtn.dataset.jumpSegment as BuyerSegmentId;
+      if (next) {
+        applySegment(next);
+        catalogEl?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        trackProductEvent('buyer-pathway', `jump_${next}`);
+      }
+    });
+  }
+
+  // Initial URL query match (?buyer=mba-candidate | ai-engineer-pm | campus-placecom | enterprise-vp)
+  const params = new URLSearchParams(location.search);
+  const initialBuyer = params.get('buyer') as BuyerSegmentId | null;
+  if (initialBuyer && segmentBtns.some((b) => b.dataset.segmentBtn === initialBuyer)) {
+    applySegment(initialBuyer);
+  }
+  const initialCurrency = params.get('currency')?.toUpperCase();
+  if (initialCurrency === 'INR' || initialCurrency === 'USD') {
+    activeCurrency = initialCurrency;
+  }
+  applyCurrency(activeCurrency);
+
+  // Cursor-spotlight tracking on product cards (compositor-friendly CSS custom properties)
+  const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (!reduceMotion) {
+    for (const card of cards) {
+      card.addEventListener('pointermove', (e) => {
+        const rect = card.getBoundingClientRect();
+        if (!rect.width || !rect.height) return;
+        const x = ((e.clientX - rect.left) / rect.width) * 100;
+        const y = ((e.clientY - rect.top) / rect.height) * 100;
+        card.style.setProperty('--mouse-x', `${x.toFixed(1)}%`);
+        card.style.setProperty('--mouse-y', `${y.toFixed(1)}%`);
+      });
+    }
+  }
+
+  for (const link of document.querySelectorAll<HTMLAnchorElement>('[data-product-cta]')) {
+    link.addEventListener('click', () => {
+      const id = link.dataset.productCta || 'unknown';
+      const action = link.dataset.ctaAction || 'click';
+      trackProductEvent(id, action);
+    });
+  }
+</script>
+
+<style>
+  .pg-plate {
+    position: relative;
+    color: var(--tldr-ink);
+    background:
+      radial-gradient(56rem 28rem at 90% 8%, color-mix(in srgb, var(--ochre) 16%, transparent), transparent 70%),
+      radial-gradient(48rem 26rem at 8% 110%, color-mix(in srgb, var(--mizu) 15%, transparent), transparent 70%),
+      var(--tldr-bg);
+    overflow: hidden;
+  }
+  .pg-plate::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: var(--paper-noise);
+    opacity: 0.7;
+    pointer-events: none;
+  }
+  .pg-plate__in {
+    position: relative;
+    z-index: 1;
+    padding-block: clamp(2.25rem, 4.5vw, 3.75rem) calc(22px + clamp(2rem, 3.5vw, 3rem));
+  }
+  .prod-hero__top {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: .75rem 1.15rem;
+    margin-bottom: 1.15rem;
+  }
+  .hanko-mark {
+    display: inline-flex;
+    align-items: center;
+    font-family: var(--font);
+    font-size: .75rem;
+    font-weight: 700;
+    color: var(--hanko);
+    background: color-mix(in srgb, var(--hanko) 14%, transparent);
+    border: 1.25px solid color-mix(in srgb, var(--hanko) 65%, transparent);
+    padding: .24rem .65rem;
+    border-radius: 4px;
+  }
+  .prod-hero__sub {
+    font-size: .875rem;
+    font-weight: 500;
+    color: var(--tldr-dim);
+  }
+  .pg-plate__title {
+    margin: 0;
+    max-width: 58rem;
+    font-family: var(--font);
+    font-size: clamp(2.1rem, 4.3vw, 3.4rem);
+    font-weight: 800;
+    line-height: 1.07;
+    letter-spacing: -.03em;
+    color: var(--tldr-ink);
+    text-wrap: balance;
+  }
+  .pg-plate__desc {
+    margin: 1.1rem 0 0;
+    max-width: 47rem;
+    font-size: 1.0625rem;
+    line-height: 1.62;
+    color: var(--tldr-dim);
+  }
+  .prod-hero__actions {
+    margin-top: 1.75rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: .85rem 1.25rem;
+  }
+  .prod-hero__link {
+    color: var(--tldr-ink);
+    font-size: .9375rem;
+    font-weight: 600;
+    text-decoration: none;
+    border-bottom: 1px solid var(--ochre);
+    padding-bottom: .15rem;
+  }
+  .prod-proof {
+    margin: 2.1rem 0 0;
+    padding-top: 1.35rem;
+    border-top: 1px solid var(--tldr-hair);
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+    gap: 1rem;
+  }
+  .prod-proof dt {
+    font-size: .8125rem;
+    font-weight: 600;
+    color: var(--tldr-dim);
+  }
+  .prod-proof dd {
+    margin: .2rem 0 0;
+    font-size: 1.0625rem;
+    font-weight: 700;
+    color: var(--tldr-ink);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .pg-edge {
+    display: block;
+    position: relative;
+    width: 100%;
+    height: 22px;
+    margin-top: -22px;
+    overflow: visible;
+    pointer-events: none;
+  }
+  .pg-edge__glow {
+    fill: none;
+    stroke: color-mix(in srgb, var(--ochre) 40%, transparent);
+    stroke-width: 4;
+    filter: blur(1.5px);
+  }
+  .pg-edge__gold {
+    fill: none;
+    stroke: var(--ochre);
+    stroke-width: 1.75;
+    stroke-linejoin: miter;
+  }
+
+  /* Buttons */
+  .prod-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    padding: .7rem 1.35rem;
+    border-radius: 10px;
+    font-family: var(--font);
+    font-size: .9375rem;
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+    border: 1.5px solid transparent;
+    transition: transform var(--dur-fast) var(--ease), background-color var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease);
+  }
+  .prod-btn:hover {
+    transform: translateY(-1px);
+  }
+  .prod-btn--primary {
+    background: var(--ochre);
+    color: var(--tldr-bg);
+    border-color: var(--ochre);
+  }
+  .prod-btn--ghost {
+    background: transparent;
+    color: var(--tldr-ink);
+    border-color: var(--tldr-hair);
+  }
+  .prod-btn--ghost:hover {
+    border-color: var(--tldr-ink);
+  }
+  .prod-btn--secondary {
+    background: var(--solid);
+    color: var(--on-solid);
+    border-color: var(--border);
+  }
+
+  /* Sections */
+  .prod-body {
+    padding-top: clamp(2.5rem, 4.5vw, 4rem);
+    padding-bottom: 4.5rem;
+  }
+  .prod-sec {
+    margin-top: 4rem;
+  }
+  .prod-sec:first-child {
+    margin-top: 0;
+  }
+  .prod-sec__head {
+    margin-bottom: 1.35rem;
+  }
+  .prod-sec__head--controls {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 1rem;
+  }
+  .prod-kicker {
+    margin: 0 0 .35rem;
+    font-size: .8125rem;
+    font-weight: 700;
+    color: var(--ochre);
+  }
+  .prod-sec h2 {
+    margin: 0;
+    font-size: clamp(1.5rem, 2.8vw, 2.15rem);
+    font-weight: 800;
+    letter-spacing: -.022em;
+    line-height: 1.15;
+    color: var(--ink);
+  }
+
+  /* Currency Switcher */
+  .prod-currency {
+    display: inline-flex;
+    padding: .25rem;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: var(--card);
+    gap: .25rem;
+  }
+  .prod-currency__btn {
+    appearance: none;
+    border: 0;
+    background: transparent;
+    color: var(--ink-soft);
+    font-family: var(--font);
+    font-size: .875rem;
+    font-weight: 700;
+    min-height: 44px;
+    padding: .45rem .95rem;
+    border-radius: 9px;
+    cursor: pointer;
+    transition: background-color var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease);
+  }
+  .prod-currency__btn.is-active {
+    background: var(--solid);
+    color: var(--on-solid);
+  }
+
+  /* Buyer Segment Tabs */
+  .prod-segments {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .5rem;
+    margin-bottom: .75rem;
+  }
+  .prod-seg {
+    appearance: none;
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    min-height: 44px;
+    padding: .5rem .95rem;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--card);
+    color: var(--ink-soft);
+    font-family: var(--font);
+    font-size: .875rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: border-color var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease), background-color var(--dur-fast) var(--ease);
+  }
+  .prod-seg:hover {
+    color: var(--ink);
+    border-color: var(--seg-accent);
+  }
+  .prod-seg.is-active {
+    color: var(--ink);
+    border-color: var(--seg-accent);
+    background: color-mix(in srgb, var(--seg-accent) 12%, var(--card));
+  }
+  .prod-seg__dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--seg-accent);
+    flex-shrink: 0;
+  }
+  .prod-segment-note {
+    margin: 0 0 1.5rem;
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 1rem;
+    color: var(--ink-soft);
+  }
+
+  /* Product Grid & Cursor-Spotlight Cards */
+  .prod-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(19rem, 1fr));
+    gap: 1.15rem;
+    align-items: stretch;
+  }
+  .prod-card {
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-top: 3px solid var(--card-accent, var(--ochre));
+    border-radius: 16px;
+    transition: transform var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease);
+  }
+  .prod-card--hero {
+    background: color-mix(in srgb, var(--card-accent) 6%, var(--card));
+    border-color: color-mix(in srgb, var(--card-accent) 48%, var(--border));
+  }
+  .prod-card:hover {
+    transform: translateY(-2px);
+    border-color: var(--card-accent);
+  }
+  .prod-card.is-hidden {
+    display: none;
+  }
+  .prod-card__spotlight {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(
+      circle 320px at var(--mouse-x, 50%) var(--mouse-y, 20%),
+      color-mix(in srgb, var(--card-accent) 14%, transparent) 0%,
+      transparent 72%
+    );
+    opacity: 0;
+    transition: opacity var(--dur-fast) var(--ease);
+    z-index: 0;
+  }
+  .prod-card:hover .prod-card__spotlight {
+    opacity: 1;
+  }
+  .prod-card__inner {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    padding: 1.4rem;
+  }
+  .prod-card__meta {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: .5rem;
+    margin-bottom: .55rem;
+  }
+  .prod-card__stream {
+    font-size: .8125rem;
+    font-weight: 700;
+    color: var(--card-accent);
+  }
+  .prod-card__badge {
+    font-size: .8125rem;
+    font-weight: 600;
+    padding: .18rem .55rem;
+    border-radius: 999px;
+    background: var(--paper-2);
+    border: 1px solid var(--border);
+    color: var(--ink-soft);
+  }
+  .prod-card__title {
+    margin: 0 0 .45rem;
+    font-size: 1.25rem;
+    font-weight: 800;
+    line-height: 1.22;
+    color: var(--ink);
+  }
+  .prod-card__tagline {
+    margin: 0 0 .55rem;
+    font-family: var(--serif);
+    font-size: 1.02rem;
+    line-height: 1.48;
+    color: var(--ink);
+  }
+  .prod-card__desc {
+    margin: 0 0 .9rem;
+    font-size: .875rem;
+    line-height: 1.58;
+    color: var(--ink-soft);
+  }
+  .prod-card__buyers {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .35rem;
+    margin-bottom: .95rem;
+  }
+  .prod-buyer-pill {
+    font-size: .8125rem;
+    font-weight: 600;
+    padding: .16rem .55rem;
+    border-radius: 6px;
+    background: color-mix(in srgb, var(--card-accent) 10%, var(--paper));
+    color: var(--ink-soft);
+    border: 1px solid var(--border);
+  }
+  .prod-card__pricebox {
+    padding: .9rem 0;
+    margin-bottom: .95rem;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+  .prod-card__amount {
+    display: block;
+    font-size: 1.95rem;
+    font-weight: 800;
+    letter-spacing: -.03em;
+    color: var(--ink);
+    font-variant-numeric: tabular-nums;
+    line-height: 1.1;
+  }
+  .prod-card__cadence {
+    display: block;
+    margin-top: .3rem;
+    font-size: .8125rem;
+    color: var(--ink-faint);
+  }
+  .prod-tiers {
+    list-style: none;
+    margin: 0 0 .95rem;
+    padding: 0;
+    display: grid;
+    gap: .45rem;
+  }
+  .prod-tiers li {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: .15rem .75rem;
+    padding: .55rem .7rem;
+    border-radius: 9px;
+    background: var(--paper-2);
+    border: 1px solid var(--border-soft);
+  }
+  .prod-tiers__name {
+    font-size: .8125rem;
+    font-weight: 700;
+    color: var(--ink);
+  }
+  .prod-tiers__price {
+    font-size: .8125rem;
+    font-weight: 800;
+    color: var(--card-accent);
+    font-variant-numeric: tabular-nums;
+  }
+  .prod-tiers li small {
+    grid-column: 1 / -1;
+    font-size: .8125rem;
+    color: var(--ink-faint);
+  }
+  .prod-card__basis {
+    margin: 0 0 .75rem;
+    font-size: .8125rem;
+    line-height: 1.5;
+    color: var(--ink-soft);
+  }
+  .prod-card__basis strong {
+    color: var(--ink);
+  }
+  .prod-card__list {
+    margin: 0 0 .95rem;
+    padding-left: 1.1rem;
+    font-size: .875rem;
+    line-height: 1.55;
+    color: var(--ink-soft);
+    flex: 1;
+  }
+  .prod-card__list li {
+    margin-bottom: .4rem;
+  }
+  .prod-card__firewall {
+    margin: 0 0 1.15rem;
+    padding: .65rem .8rem;
+    border-radius: 10px;
+    background: var(--stone);
+    border: 1px solid var(--border);
+    font-size: .8125rem;
+    line-height: 1.5;
+    color: var(--ink-soft);
+  }
+  .prod-card__firewall strong {
+    color: var(--ink);
+  }
+  .prod-card__actions {
+    display: grid;
+    gap: .7rem;
+  }
+  .prod-card__buy {
+    width: 100%;
+  }
+  .prod-card__links {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: .5rem 1rem;
+    font-size: .875rem;
+    font-weight: 600;
+  }
+
+  /* Ecosystem Diagram & Cards */
+  .prod-diagram {
+    margin: 0 0 1.35rem;
+    overflow-x: auto;
+  }
+  .eco-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(16.5rem, 1fr));
+    gap: 1rem;
+  }
+  .eco-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--eco-accent, var(--ochre));
+    border-radius: 14px;
+    padding: 1.2rem 1.3rem;
+  }
+  .eco-card__top {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: .4rem .8rem;
+    margin-bottom: .5rem;
+    font-size: .8125rem;
+  }
+  .eco-card__metric {
+    font-weight: 700;
+    color: var(--eco-accent);
+  }
+  .eco-card h3 {
+    margin: 0 0 .45rem;
+    font-size: 1.0625rem;
+    font-weight: 800;
+    line-height: 1.3;
+  }
+  .eco-card h3 a {
+    color: var(--ink);
+    text-decoration: none;
+  }
+  .eco-card h3 a:hover {
+    text-decoration: underline;
+    text-decoration-color: var(--eco-accent);
+  }
+  .eco-card p {
+    margin: 0;
+    font-size: .875rem;
+    line-height: 1.58;
+    color: var(--ink-soft);
+  }
+
+  /* Buyer Pathways */
+  .buyer-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(16.5rem, 1fr));
+    gap: 1rem;
+  }
+  .buyer-card {
+    display: flex;
+    flex-direction: column;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-top: 3px solid var(--buyer-accent, var(--ochre));
+    border-radius: 14px;
+    padding: 1.25rem 1.3rem;
+  }
+  .buyer-card__tag {
+    font-size: .8125rem;
+    font-weight: 700;
+    color: var(--buyer-accent);
+    margin-bottom: .35rem;
+  }
+  .buyer-card h3 {
+    margin: 0 0 .5rem;
+    font-size: 1.1rem;
+    font-weight: 800;
+  }
+  .buyer-card p {
+    margin: 0 0 1rem;
+    font-size: .875rem;
+    line-height: 1.58;
+    color: var(--ink-soft);
+    flex: 1;
+  }
+  .buyer-card code {
+    font-family: monospace;
+    font-size: .8125rem;
+    padding: .08rem .3rem;
+    border-radius: 4px;
+    background: var(--paper-2);
+  }
+  .buyer-card__jump {
+    appearance: none;
+    background: transparent;
+    border: 0;
+    padding: 0;
+    text-align: left;
+    min-height: 44px;
+    font-family: var(--font);
+    font-size: .875rem;
+    font-weight: 700;
+    cursor: pointer;
+    color: var(--ink);
+  }
+
+  /* FAQs */
+  .prod-faqs {
+    display: grid;
+    gap: .75rem;
+    max-width: 56rem;
+  }
+  .prod-faq {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1rem 1.25rem;
+  }
+  .prod-faq summary {
+    font-weight: 700;
+    font-size: 1rem;
+    line-height: 1.4;
+    color: var(--ink);
+    cursor: pointer;
+    min-height: 28px;
+  }
+  .prod-faq p {
+    margin: .75rem 0 0;
+    font-size: .9375rem;
+    line-height: 1.65;
+    color: var(--ink-soft);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .prod-card:hover,
+    .prod-btn:hover {
+      transform: none;
+    }
+    .prod-card__spotlight {
+      display: none;
+    }
+  }
+</style>

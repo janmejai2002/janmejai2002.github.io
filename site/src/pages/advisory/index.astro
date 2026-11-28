@@ -1,0 +1,1151 @@
+---
+import Base from '../../layouts/Base.astro';
+import { plateEdge, EDGE_DEPTH } from '../../lib/bowl';
+import {
+  PRODUCT_CONTACT_EMAIL,
+  ADVISORY_PROOF_METRICS,
+  ADVISORY_PACKAGES,
+  ADVISORY_HARNESS_PILLARS,
+  ADVISORY_FAQS,
+  getAdvisoryPackageHref,
+} from '../../data/products';
+
+const edge = plateEdge('advisory-redteam');
+const clip = `polygon(0 0, 100% 0, ${[...edge].reverse().map(([x, d]) => `${x.toFixed(1)}% calc(100% - ${d.toFixed(1)}px)`).join(',')})`;
+const line = edge.map(([x, d]) => `${(x * 10).toFixed(0)},${(EDGE_DEPTH - d).toFixed(1)}`).join(' ');
+
+const siteOrigin = Astro.site?.href ?? 'https://janmejai2002.github.io/';
+const advisoryUrl = new URL('/advisory/', siteOrigin).href;
+
+const advisorySchema = {
+  mainEntity: {
+    '@type': 'ProfessionalService',
+    name: 'Janmejai Singh Minhas — AI Red-Teaming & Deterministic Eval Advisory',
+    description:
+      'Fixed-scope AI red-teaming audits, deterministic CI evaluation harnesses, and executive AI literacy workshops for BFSI, fintech, GCCs, and enterprise engineering teams.',
+    url: advisoryUrl,
+    provider: { '@id': new URL('/#person', siteOrigin).href },
+    areaServed: ['India', 'United States', 'United Kingdom', 'Singapore'],
+    hasOfferCatalog: {
+      '@type': 'OfferCatalog',
+      name: 'AI Red-Teaming & Eval Advisory Packages',
+      itemListElement: ADVISORY_PACKAGES.map((pkg) => ({
+        '@type': 'Offer',
+        name: pkg.name,
+        description: pkg.summary,
+        priceSpecification: [
+          {
+            '@type': 'PriceSpecification',
+            price: String(pkg.priceInr),
+            priceCurrency: 'INR',
+          },
+          {
+            '@type': 'PriceSpecification',
+            price: String(pkg.priceUsd),
+            priceCurrency: 'USD',
+          },
+        ],
+        url: advisoryUrl,
+      })),
+    },
+  },
+};
+---
+
+<Base
+  title="AI Red-Teaming & Deterministic Eval Advisory — wAIbi-sabi"
+  description="Fixed-scope AI red-team audits, deterministic evaluation harnesses, and executive workshops by Janmejai Singh Minhas. Gray Swan #352, AmEx credit risk, and NDA-firewalled."
+  section="Advisory"
+  pageType="WebPage"
+  keywords={[
+    'AI red-teaming advisory India',
+    'deterministic LLM eval harness',
+    'AI guardrail audit BFSI',
+    'Gray Swan AI red teaming',
+    'agent trajectory evaluation CI',
+    'corporate AI workshop India',
+  ]}
+  breadcrumbs={[
+    { name: 'Home', path: '/' },
+    { name: 'Products', path: '/products/' },
+    { name: 'Advisory' },
+  ]}
+  schema={advisorySchema}
+  faq={ADVISORY_FAQS}
+  immersive={true}
+  wide={true}
+  grain={true}
+>
+  <section class="pg-plate" style={`clip-path:${clip}`} aria-labelledby="adv-hero-title">
+    <div class="wrap pg-plate__in">
+      <div class="adv-hero__top">
+        <span class="hanko-mark">B2B Engineering Advisory</span>
+        <a class="linkish adv-hero__back" href="/products/">← All wAIbi-sabi Products</a>
+      </div>
+
+      <p class="adv-hero__kicker">
+        For VP Engineering, Head of AI, and Chief Risk Officers deploying agents in production.
+      </p>
+
+      <h1 id="adv-hero-title" class="pg-plate__title">
+        Adversarial red-teaming and deterministic eval gates for production AI systems.
+      </h1>
+
+      <p class="pg-plate__desc">
+        Most LLM deployments fail quietly between staging demos and regulated traffic: prompt
+        injections, tool-call privilege escalation, flaky LLM-as-judge suites, and runaway retry
+        costs. I run fixed-scope red-team audits and build deterministic CI evaluation harnesses
+        backed by verifiable engineering proof-of-work.
+      </p>
+
+      <div class="adv-hero__actions">
+        <a
+          class="adv-btn adv-btn--primary"
+          href="#scoping"
+          data-advisory-cta="hero-scope"
+          data-adv-placement="hero"
+        >
+          Scope an Audit or Sprint
+        </a>
+        <a
+          class="adv-btn adv-btn--ghost"
+          href="#packages"
+          data-advisory-cta="hero-packages"
+          data-adv-placement="hero"
+        >
+          Compare 3 Packages
+        </a>
+        <a class="linkish adv-hero__cred" href="/about/">
+          Inspect full credentials on /about/ →
+        </a>
+      </div>
+
+      <dl class="adv-proof-strip" aria-label="Verified practitioner credentials">
+        {ADVISORY_PROOF_METRICS.map((m) => (
+          <div style={`--m-accent:var(--${m.accent})`}>
+            <dt>{m.label}</dt>
+            <dd>{m.value}</dd>
+          </div>
+        ))}
+      </dl>
+    </div>
+  </section>
+
+  <svg class="pg-edge" viewBox={`0 0 1000 ${EDGE_DEPTH}`} preserveAspectRatio="none" aria-hidden="true">
+    <polyline points={line} class="pg-edge__glow" vector-effect="non-scaling-stroke" />
+    <polyline points={line} class="pg-edge__gold" vector-effect="non-scaling-stroke" />
+  </svg>
+
+  <div class="wrap adv-body">
+    <!-- Proof-of-Work Section -->
+    <section class="adv-sec" aria-labelledby="proof-heading">
+      <div class="adv-sec__head">
+        <p class="adv-kicker">Verified proof-of-work</p>
+        <h2 id="proof-heading">Three public track records before any NDA kickoff</h2>
+      </div>
+
+      <div class="adv-proof-grid">
+        <article class="adv-proof-card" style="--card-accent:var(--hanko)">
+          <span class="adv-proof-card__tag">Offensive Safety · Gray Swan Arena</span>
+          <h3>#352 global rank · 36 unique frontier model breaks</h3>
+          <p>
+            Verified across 414 adversarial submissions targeting frontier language and tool-use
+            models. Experience translates directly into structured multi-turn red-team matrices for
+            customer-facing support bots, RAG copilots, and internal agent workflows.
+          </p>
+        </article>
+
+        <article class="adv-proof-card" style="--card-accent:var(--plum)">
+          <span class="adv-proof-card__tag">Regulated Risk · American Express</span>
+          <h3>Credit risk rating models &amp; zero-hallucination validation RAG</h3>
+          <p>
+            Worked inside Credit Risk on short- and long-term Business Card rating models in
+            Bangalore, auditing structural risk variable pipelines and building custom internal GPT
+            interfaces querying dense model validation documentation with strict source attribution.
+          </p>
+        </article>
+
+        <article class="adv-proof-card" style="--card-accent:var(--mizu)">
+          <span class="adv-proof-card__tag">Deterministic Harness · wAIbi-sabi</span>
+          <h3>Production <code>registry.mjs</code> → <code>gate.mjs</code> → <code>repair.mjs</code></h3>
+          <p>
+            Instead of trusting an LLM judge to grade itself, the live publishing pipeline in this
+            repository enforces deterministic checks, rejects unflagged section churn in automated
+            repairs, and escalates to humans after bounded retries.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <!-- Deterministic Harness Architecture -->
+    <section class="adv-sec" aria-labelledby="harness-heading">
+      <div class="adv-sec__head">
+        <p class="adv-kicker">Method in production</p>
+        <h2 id="harness-heading">How the deterministic eval &amp; repair loop works</h2>
+      </div>
+
+      <figure class="diagram adv-diagram">
+        <svg viewBox="0 0 760 220" role="img" aria-label="Architecture of the deterministic eval and red-team gate pipeline">
+          <rect x="14" y="24" width="166" height="168" rx="10" fill="var(--paper-2)" stroke="var(--hanko)" stroke-width="1.5" />
+          <text x="28" y="50" fill="var(--hanko)" font-family="var(--font)" font-size="12.5" font-weight="700">1. Probe &amp; Trace</text>
+          <text x="28" y="76" fill="var(--ink)" font-family="var(--font)" font-size="11">Staging agent endpoint</text>
+          <text x="28" y="96" fill="var(--ink-soft)" font-family="var(--font)" font-size="11">150+ adversarial prompts</text>
+          <text x="28" y="116" fill="var(--ink-soft)" font-family="var(--font)" font-size="11">Tool-call &amp; RAG traces</text>
+          <text x="28" y="168" fill="var(--ink-faint)" font-family="var(--font)" font-size="10.5">Redacted / synthetic PII</text>
+
+          <line x1="180" y1="108" x2="204" y2="108" stroke="var(--ochre)" stroke-width="1.75" />
+          <polygon points="204,103 214,108 204,113" fill="var(--ochre)" />
+
+          <rect x="216" y="24" width="166" height="168" rx="10" fill="var(--paper-2)" stroke="var(--ochre)" stroke-width="1.5" />
+          <text x="230" y="50" fill="var(--ochre)" font-family="var(--font)" font-size="12.5" font-weight="700">2. Rule Registry</text>
+          <text x="230" y="76" fill="var(--ink)" font-family="var(--font)" font-size="11">registry.mjs contract</text>
+          <text x="230" y="96" fill="var(--ink-soft)" font-family="var(--font)" font-size="11">Schema &amp; policy bounds</text>
+          <text x="230" y="116" fill="var(--ink-soft)" font-family="var(--font)" font-size="11">Token &amp; retry ceilings</text>
+          <text x="230" y="168" fill="var(--ink-faint)" font-family="var(--font)" font-size="10.5">Versioned in Git + CI</text>
+
+          <line x1="382" y1="108" x2="406" y2="108" stroke="var(--ochre)" stroke-width="1.75" />
+          <polygon points="406,103 416,108 406,113" fill="var(--ochre)" />
+
+          <rect x="418" y="24" width="166" height="168" rx="10" fill="var(--paper-2)" stroke="var(--mizu)" stroke-width="1.5" />
+          <text x="432" y="50" fill="var(--mizu)" font-family="var(--font)" font-size="12.5" font-weight="700">3. Deterministic Gate</text>
+          <text x="432" y="76" fill="var(--ink)" font-family="var(--font)" font-size="11">gate.mjs pure assertions</text>
+          <text x="432" y="96" fill="var(--ink-soft)" font-family="var(--font)" font-size="11">Citation &amp; tool-arg checks</text>
+          <text x="432" y="116" fill="var(--ink-soft)" font-family="var(--font)" font-size="11">Trajectory replay diff</text>
+          <text x="432" y="168" fill="var(--ink-faint)" font-family="var(--font)" font-size="10.5">Exact failure codes emitted</text>
+
+          <line x1="584" y1="108" x2="608" y2="108" stroke="var(--ochre)" stroke-width="1.75" />
+          <polygon points="608,103 618,108 608,113" fill="var(--ochre)" />
+
+          <rect x="620" y="24" width="126" height="168" rx="10" fill="var(--paper-2)" stroke="var(--moss)" stroke-width="1.5" />
+          <text x="634" y="50" fill="var(--moss)" font-family="var(--font)" font-size="12.5" font-weight="700">4. Bounded Fix</text>
+          <text x="634" y="76" fill="var(--ink)" font-family="var(--font)" font-size="11">repair.mjs verify</text>
+          <text x="634" y="96" fill="var(--ink-soft)" font-family="var(--font)" font-size="11">Rejects unflagged</text>
+          <text x="634" y="112" fill="var(--ink-soft)" font-family="var(--font)" font-size="11">churn; human</text>
+          <text x="634" y="128" fill="var(--ink-soft)" font-family="var(--font)" font-size="11">escalation cap</text>
+          <text x="634" y="168" fill="var(--ink-faint)" font-family="var(--font)" font-size="10.5">Blocks unsafe merge</text>
+        </svg>
+        <figcaption>
+          Client evaluation sprints adapt the same four-stage contract already running in production across wAIbi-sabi.
+        </figcaption>
+      </figure>
+
+      <div class="adv-pillars">
+        {ADVISORY_HARNESS_PILLARS.map((p) => (
+          <article class="adv-pillar" style={`--pillar-accent:var(--${p.accent})`}>
+            <code class="adv-pillar__path">{p.modulePath}</code>
+            <h3>{p.title}</h3>
+            <p class="adv-pillar__sys">{p.summary}</p>
+            <p class="adv-pillar__client">
+              <strong>For client teams:</strong> {p.clientTranslation}
+            </p>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <!-- 3 Engagement Packages + Currency Toggle -->
+    <section class="adv-sec" id="packages" aria-labelledby="pkg-heading">
+      <div class="adv-sec__head adv-sec__head--row">
+        <div>
+          <p class="adv-kicker">Engagements · Zero-threshold fixed scope</p>
+          <h2 id="pkg-heading">Three structured engagement packages</h2>
+        </div>
+
+        <div class="adv-currency" role="group" aria-label="Advisory currency selector">
+          <button
+            type="button"
+            class="adv-currency__btn is-active"
+            data-adv-currency="INR"
+            aria-pressed="true"
+          >
+            India / GCC · ₹ INR
+          </button>
+          <button
+            type="button"
+            class="adv-currency__btn"
+            data-adv-currency="USD"
+            aria-pressed="false"
+          >
+            Global · $ USD
+          </button>
+        </div>
+      </div>
+
+      <div class="adv-packages">
+        {ADVISORY_PACKAGES.map((pkg) => (
+          <article
+            class:list={['adv-pkg', pkg.highlighted && 'adv-pkg--hero']}
+            style={`--pkg-accent:var(--${pkg.accent})`}
+          >
+            <div class="adv-pkg__top">
+              <span class="adv-pkg__badge">{pkg.badge}</span>
+              <span class="adv-pkg__dur">{pkg.duration}</span>
+            </div>
+            <h3>{pkg.name}</h3>
+            <p class="adv-pkg__aud">{pkg.audience}</p>
+
+            <div class="adv-pkg__price">
+              <strong
+                class="adv-pkg__amount"
+                data-adv-inr={pkg.priceInrLabel}
+                data-adv-usd={pkg.priceUsdLabel}
+              >
+                {pkg.priceInrLabel}
+              </strong>
+              <span
+                class="adv-pkg__range"
+                data-adv-inr={pkg.rangeInrLabel}
+                data-adv-usd={pkg.rangeUsdLabel}
+              >
+                {pkg.rangeInrLabel}
+              </span>
+              <span class="adv-pkg__cadence">{pkg.cadenceLabel}</span>
+            </div>
+
+            <p class="adv-pkg__summary">{pkg.summary}</p>
+
+            <ul class="adv-pkg__list">
+              {pkg.deliverables.map((d) => (
+                <li>{d}</li>
+              ))}
+            </ul>
+
+            <a
+              href={getAdvisoryPackageHref(pkg.id, 'INR')}
+              class:list={['adv-btn', pkg.highlighted ? 'adv-btn--primary' : 'adv-btn--secondary', 'adv-pkg__cta']}
+              data-advisory-cta={pkg.id}
+              data-adv-placement="package"
+              data-pkg-id={pkg.id}
+            >
+              {pkg.ctaLabel}
+            </a>
+          </article>
+        ))}
+      </div>
+
+      <div class="adv-retainer">
+        <div>
+          <strong>Ongoing Fractional Advisory Retainers.</strong> After an initial audit or eval
+          sprint, engineering teams can retain ongoing regression review, new-model migration checks,
+          and guardrail sign-off at{' '}
+          <span
+            class="adv-retainer__price"
+            data-adv-inr="₹2,00,000 – ₹4,50,000 / month"
+            data-adv-usd="$3,500 – $8,000 / month"
+          >
+            ₹2,00,000 – ₹4,50,000 / month
+          </span>.
+        </div>
+        <a
+          class="linkish adv-retainer__cta"
+          href={`mailto:${PRODUCT_CONTACT_EMAIL}?subject=${encodeURIComponent('Advisory Inquiry — Ongoing Fractional AI Eval Retainer')}`}
+          data-advisory-cta="retainer"
+          data-adv-placement="retainer"
+        >
+          Discuss retainer availability →
+        </a>
+      </div>
+    </section>
+
+    <!-- Strict Editorial NDA Firewall Disclosure -->
+    <section class="adv-sec" id="firewall" aria-labelledby="firewall-heading">
+      <div class="adv-sec__head">
+        <p class="adv-kicker">Governance &amp; conflicts of interest</p>
+        <h2 id="firewall-heading">Strict editorial &amp; NDA firewall</h2>
+      </div>
+
+      <div class="adv-firewall">
+        <article class="adv-firewall__col">
+          <h3>1. Client confidentiality (Inbound NDA)</h3>
+          <p>
+            Every advisory engagement operates under mutual NDA before staging access or prompt
+            logs are shared. Client architectures, vulnerabilities, model benchmarks, and internal
+            telemetry are never published on wAIbi-sabi, never reused in Case Studies, and never
+            discussed in workshops or INFERENCE chapters.
+          </p>
+        </article>
+        <article class="adv-firewall__col">
+          <h3>2. Editorial independence (Outbound bar)</h3>
+          <p>
+            Advisory fees purchase engineering audits and team training only. No client can buy a
+            favorable mention, suppress a public evidence grade, or preview an article. Any vendor
+            engaging paid advisory is barred from unlabelled mentions in the{' '}
+            <a href="/tracker/">AI Claims Tracker</a> and Case Studies.
+          </p>
+        </article>
+      </div>
+    </section>
+
+    <!-- Direct Scoping & Booking Section -->
+    <section class="adv-sec" id="scoping" aria-labelledby="scoping-heading">
+      <div class="adv-scope-box">
+        <div class="adv-scope-box__intro">
+          <p class="adv-kicker">Direct booking · No middlemen</p>
+          <h2 id="scoping-heading">Send a 60-second scoping brief</h2>
+          <p>
+            Select your engagement package and describe your system surface. Your email client opens
+            with a structured brief addressed directly to{' '}
+            <a href={`mailto:${PRODUCT_CONTACT_EMAIL}`}>{PRODUCT_CONTACT_EMAIL}</a>, or copy the
+            brief to send via LinkedIn or Slack.
+          </p>
+        </div>
+
+        <form class="adv-form" id="adv-scope-form">
+          <label class="adv-field">
+            <span>Engagement package</span>
+            <select id="adv-pkg-select" name="packageId">
+              {ADVISORY_PACKAGES.map((pkg) => (
+                <option value={pkg.id}>{pkg.name} ({pkg.duration})</option>
+              ))}
+            </select>
+          </label>
+
+          <label class="adv-field">
+            <span>Organization &amp; role</span>
+            <input
+              id="adv-org-input"
+              name="org"
+              type="text"
+              placeholder="e.g. Payments fintech · VP Engineering"
+              autocomplete="organization"
+            />
+          </label>
+
+          <label class="adv-field adv-field--wide">
+            <span>Target AI surface &amp; timeline</span>
+            <input
+              id="adv-surface-input"
+              name="surface"
+              type="text"
+              placeholder="e.g. Tool-calling support agent + RAG over internal policies, launching Q1"
+            />
+          </label>
+
+          <div class="adv-form__actions">
+            <a
+              id="adv-submit-link"
+              class="adv-btn adv-btn--primary"
+              href={getAdvisoryPackageHref('red-team-audit', 'INR')}
+              data-advisory-cta="scoping-email"
+              data-adv-placement="scoping"
+            >
+              Open prefilled scoping email
+            </a>
+            <button
+              id="adv-copy-btn"
+              type="button"
+              class="adv-btn adv-btn--secondary"
+              data-advisory-cta="scoping-copy"
+              data-adv-placement="scoping"
+            >
+              Copy scoping brief
+            </button>
+            <span id="adv-copy-status" class="adv-copy-status" aria-live="polite"></span>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="adv-sec" id="faq" aria-labelledby="adv-faq-heading">
+      <div class="adv-sec__head">
+        <p class="adv-kicker">Questions</p>
+        <h2 id="adv-faq-heading">Advisory logistics &amp; data boundaries</h2>
+      </div>
+
+      <div class="adv-faqs">
+        {ADVISORY_FAQS.map((item, idx) => (
+          <details class="adv-faq" open={idx === 0}>
+            <summary>{item.question}</summary>
+            <p>{item.answer}</p>
+          </details>
+        ))}
+      </div>
+    </section>
+  </div>
+</Base>
+
+<script>
+  import {
+    getAdvisoryPackageHref,
+    ADVISORY_PACKAGES,
+    type AdvisoryPackage,
+    type Currency,
+  } from '../../data/products';
+
+  const currencyBtns = [...document.querySelectorAll<HTMLButtonElement>('[data-adv-currency]')];
+  const pkgSelect = document.getElementById('adv-pkg-select') as HTMLSelectElement | null;
+  const orgInput = document.getElementById('adv-org-input') as HTMLInputElement | null;
+  const surfaceInput = document.getElementById('adv-surface-input') as HTMLInputElement | null;
+  const submitLink = document.getElementById('adv-submit-link') as HTMLAnchorElement | null;
+  const copyBtn = document.getElementById('adv-copy-btn') as HTMLButtonElement | null;
+  const copyStatus = document.getElementById('adv-copy-status');
+  const scopeForm = document.getElementById('adv-scope-form') as HTMLFormElement | null;
+
+  let activeCurrency: Currency = 'INR';
+
+  try {
+    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || '';
+    if (tz && !/Kolkata|Calcutta|Asia\/Dhaka|Asia\/Colombo/i.test(tz)) {
+      activeCurrency = 'USD';
+    }
+  } catch {}
+
+  const trackAdvisory = (packageId: string, placement: string) => {
+    const w = window as unknown as {
+      umami?: { track?: (name: string, data: Record<string, string>) => void };
+    };
+    w.umami?.track?.('advisory_cta', {
+      package_id: packageId,
+      currency: activeCurrency,
+      placement,
+    });
+  };
+
+  const refreshScopingHref = () => {
+    const selectedId = (pkgSelect?.value || 'red-team-audit') as AdvisoryPackage['id'];
+    if (submitLink) {
+      submitLink.href = getAdvisoryPackageHref(selectedId, activeCurrency, {
+        org: orgInput?.value,
+        surface: surfaceInput?.value,
+      });
+    }
+  };
+
+  const applyCurrency = (curr: Currency) => {
+    activeCurrency = curr;
+    for (const btn of currencyBtns) {
+      const on = btn.dataset.advCurrency === curr;
+      btn.classList.toggle('is-active', on);
+      btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+    }
+    for (const el of document.querySelectorAll<HTMLElement>('[data-adv-inr][data-adv-usd]')) {
+      el.textContent = curr === 'INR' ? el.dataset.advInr || '' : el.dataset.advUsd || '';
+    }
+    for (const cta of document.querySelectorAll<HTMLAnchorElement>('[data-pkg-id]')) {
+      const pkgId = cta.dataset.pkgId as AdvisoryPackage['id'];
+      if (pkgId) cta.href = getAdvisoryPackageHref(pkgId, curr);
+    }
+    refreshScopingHref();
+  };
+
+  for (const btn of currencyBtns) {
+    btn.addEventListener('click', () => {
+      const next = btn.dataset.advCurrency as Currency;
+      if (next) {
+        applyCurrency(next);
+        trackAdvisory(`currency-${next.toLowerCase()}`, 'pricing-toggle');
+      }
+    });
+  }
+
+  pkgSelect?.addEventListener('change', refreshScopingHref);
+  orgInput?.addEventListener('input', refreshScopingHref);
+  surfaceInput?.addEventListener('input', refreshScopingHref);
+  scopeForm?.addEventListener('submit', (e) => e.preventDefault());
+
+  copyBtn?.addEventListener('click', async () => {
+    const selectedId = (pkgSelect?.value || 'red-team-audit') as AdvisoryPackage['id'];
+    const pkg = ADVISORY_PACKAGES.find((p) => p.id === selectedId);
+    const price = activeCurrency === 'INR' ? pkg?.priceInrLabel : pkg?.priceUsdLabel;
+    const brief = [
+      `Advisory Scope: ${pkg?.name ?? selectedId} (${price ?? activeCurrency})`,
+      `Organization: ${orgInput?.value.trim() || '[Company / Team]'}`,
+      `AI Surface & Timeline: ${surfaceInput?.value.trim() || '[Staging agent / RAG / timeline]'}`,
+      'NDA required before staging access.',
+    ].join('\n');
+
+    try {
+      await navigator.clipboard.writeText(brief);
+      if (copyStatus) copyStatus.textContent = 'Brief copied to clipboard.';
+    } catch {
+      if (copyStatus) copyStatus.textContent = 'Use the email button to open the prefilled brief.';
+    }
+    trackAdvisory(selectedId, 'scoping-copy');
+  });
+
+  for (const el of document.querySelectorAll<HTMLElement>('[data-advisory-cta]')) {
+    if (el === copyBtn) continue;
+    el.addEventListener('click', () => {
+      const id = el.dataset.advisoryCta || 'unknown';
+      const placement = el.dataset.advPlacement || 'page';
+      const pkgId = id === 'scoping-email' ? (pkgSelect?.value || id) : id;
+      trackAdvisory(pkgId, placement);
+    });
+  }
+
+  const params = new URLSearchParams(location.search);
+  const pkgParam = params.get('package') as AdvisoryPackage['id'] | null;
+  if (pkgParam && pkgSelect && ADVISORY_PACKAGES.some((p) => p.id === pkgParam)) {
+    pkgSelect.value = pkgParam;
+  }
+  const currParam = params.get('currency')?.toUpperCase();
+  if (currParam === 'INR' || currParam === 'USD') {
+    activeCurrency = currParam;
+  }
+  applyCurrency(activeCurrency);
+</script>
+
+<style>
+  .pg-plate {
+    position: relative;
+    color: var(--tldr-ink);
+    background:
+      radial-gradient(54rem 28rem at 88% 10%, color-mix(in srgb, var(--hanko) 15%, transparent), transparent 70%),
+      radial-gradient(46rem 24rem at 6% 110%, color-mix(in srgb, var(--mizu) 14%, transparent), transparent 70%),
+      var(--tldr-bg);
+    overflow: hidden;
+  }
+  .pg-plate::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: var(--paper-noise);
+    opacity: 0.7;
+    pointer-events: none;
+  }
+  .pg-plate__in {
+    position: relative;
+    z-index: 1;
+    padding-block: clamp(2.25rem, 4.5vw, 3.75rem) calc(22px + clamp(2rem, 3.5vw, 3rem));
+  }
+  .adv-hero__top {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: .75rem 1.25rem;
+    margin-bottom: 1.15rem;
+  }
+  .hanko-mark {
+    display: inline-flex;
+    align-items: center;
+    font-family: var(--font);
+    font-size: .75rem;
+    font-weight: 700;
+    color: var(--hanko);
+    background: color-mix(in srgb, var(--hanko) 14%, transparent);
+    border: 1.25px solid color-mix(in srgb, var(--hanko) 65%, transparent);
+    padding: .24rem .65rem;
+    border-radius: 4px;
+  }
+  .adv-hero__back {
+    color: var(--tldr-dim);
+    font-size: .9375rem;
+    font-weight: 600;
+    text-decoration: none;
+  }
+  .adv-hero__back:hover {
+    color: var(--tldr-ink);
+  }
+  .adv-hero__kicker {
+    margin: 0 0 .65rem;
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 1.0625rem;
+    line-height: 1.4;
+    color: var(--ochre);
+  }
+  .pg-plate__title {
+    margin: 0;
+    max-width: 58rem;
+    font-family: var(--font);
+    font-size: clamp(2.05rem, 4.3vw, 3.35rem);
+    font-weight: 800;
+    line-height: 1.07;
+    letter-spacing: -.03em;
+    color: var(--tldr-ink);
+    text-wrap: balance;
+  }
+  .pg-plate__desc {
+    margin: 1.1rem 0 0;
+    max-width: 47rem;
+    font-size: 1.0625rem;
+    line-height: 1.62;
+    color: var(--tldr-dim);
+  }
+  .adv-hero__actions {
+    margin-top: 1.75rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: .85rem 1.25rem;
+  }
+  .adv-hero__cred {
+    color: var(--tldr-ink);
+    font-size: .9375rem;
+    font-weight: 600;
+    text-decoration: none;
+    border-bottom: 1px solid var(--ochre);
+    padding-bottom: .15rem;
+  }
+  .adv-proof-strip {
+    margin: 2.1rem 0 0;
+    padding-top: 1.35rem;
+    border-top: 1px solid var(--tldr-hair);
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+    gap: 1rem;
+  }
+  .adv-proof-strip dt {
+    font-size: .8125rem;
+    font-weight: 600;
+    color: var(--tldr-dim);
+  }
+  .adv-proof-strip dd {
+    margin: .2rem 0 0;
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: var(--tldr-ink);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .pg-edge {
+    display: block;
+    position: relative;
+    width: 100%;
+    height: 22px;
+    margin-top: -22px;
+    overflow: visible;
+    pointer-events: none;
+  }
+  .pg-edge__glow {
+    fill: none;
+    stroke: color-mix(in srgb, var(--ochre) 40%, transparent);
+    stroke-width: 4;
+    filter: blur(1.5px);
+  }
+  .pg-edge__gold {
+    fill: none;
+    stroke: var(--ochre);
+    stroke-width: 1.75;
+    stroke-linejoin: miter;
+  }
+
+  /* Buttons */
+  .adv-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    padding: .7rem 1.35rem;
+    border-radius: 10px;
+    font-family: var(--font);
+    font-size: .9375rem;
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+    border: 1.5px solid transparent;
+    transition: transform var(--dur-fast) var(--ease), background-color var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease);
+  }
+  .adv-btn:hover {
+    transform: translateY(-1px);
+  }
+  .adv-btn--primary {
+    background: var(--ochre);
+    color: var(--tldr-bg);
+    border-color: var(--ochre);
+  }
+  .adv-btn--ghost {
+    background: transparent;
+    color: var(--tldr-ink);
+    border-color: var(--tldr-hair);
+  }
+  .adv-btn--ghost:hover {
+    border-color: var(--tldr-ink);
+  }
+  .adv-btn--secondary {
+    background: var(--solid);
+    color: var(--on-solid);
+    border-color: var(--border);
+  }
+
+  /* Body */
+  .adv-body {
+    padding-top: clamp(2.5rem, 4.5vw, 4rem);
+    padding-bottom: 4.5rem;
+  }
+  .adv-sec {
+    margin-top: 4rem;
+  }
+  .adv-sec:first-child {
+    margin-top: 0;
+  }
+  .adv-sec__head {
+    margin-bottom: 1.35rem;
+  }
+  .adv-sec__head--row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 1rem;
+  }
+  .adv-kicker {
+    margin: 0 0 .35rem;
+    font-size: .8125rem;
+    font-weight: 700;
+    color: var(--ochre);
+  }
+  .adv-sec h2 {
+    margin: 0;
+    font-size: clamp(1.5rem, 2.8vw, 2.15rem);
+    font-weight: 800;
+    letter-spacing: -.022em;
+    line-height: 1.15;
+    color: var(--ink);
+  }
+
+  /* Proof cards */
+  .adv-proof-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(17.5rem, 1fr));
+    gap: 1rem;
+  }
+  .adv-proof-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--card-accent, var(--mizu));
+    border-radius: 14px;
+    padding: 1.35rem;
+  }
+  .adv-proof-card__tag {
+    display: block;
+    font-size: .8125rem;
+    font-weight: 700;
+    color: var(--card-accent);
+    margin-bottom: .4rem;
+  }
+  .adv-proof-card h3 {
+    margin: 0 0 .55rem;
+    font-size: 1.125rem;
+    font-weight: 800;
+    line-height: 1.25;
+  }
+  .adv-proof-card code {
+    font-family: monospace;
+    font-size: .92em;
+    padding: .08rem .3rem;
+    border-radius: 4px;
+    background: var(--paper-2);
+  }
+  .adv-proof-card p {
+    margin: 0;
+    font-size: .9375rem;
+    line-height: 1.6;
+    color: var(--ink-soft);
+  }
+
+  /* Diagram + Harness Pillars */
+  .adv-diagram {
+    margin: 0 0 1.35rem;
+    overflow-x: auto;
+  }
+  .adv-pillars {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
+    gap: 1rem;
+  }
+  .adv-pillar {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-top: 3px solid var(--pillar-accent, var(--ochre));
+    border-radius: 14px;
+    padding: 1.25rem 1.3rem;
+  }
+  .adv-pillar__path {
+    display: inline-block;
+    font-family: monospace;
+    font-size: .8125rem;
+    padding: .15rem .45rem;
+    border-radius: 6px;
+    background: var(--paper-2);
+    border: 1px solid var(--border);
+    color: var(--pillar-accent);
+    margin-bottom: .5rem;
+  }
+  .adv-pillar h3 {
+    margin: 0 0 .45rem;
+    font-size: 1.1rem;
+    font-weight: 800;
+  }
+  .adv-pillar__sys {
+    margin: 0 0 .6rem;
+    font-size: .875rem;
+    line-height: 1.58;
+    color: var(--ink-soft);
+  }
+  .adv-pillar__client {
+    margin: 0;
+    font-size: .875rem;
+    line-height: 1.55;
+    color: var(--ink);
+  }
+
+  /* Currency & Packages */
+  .adv-currency {
+    display: inline-flex;
+    padding: .25rem;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: var(--card);
+    gap: .25rem;
+  }
+  .adv-currency__btn {
+    appearance: none;
+    border: 0;
+    background: transparent;
+    color: var(--ink-soft);
+    font-family: var(--font);
+    font-size: .875rem;
+    font-weight: 700;
+    min-height: 44px;
+    padding: .45rem .95rem;
+    border-radius: 9px;
+    cursor: pointer;
+    transition: background-color var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease);
+  }
+  .adv-currency__btn.is-active {
+    background: var(--solid);
+    color: var(--on-solid);
+  }
+
+  .adv-packages {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
+    gap: 1.05rem;
+    align-items: stretch;
+  }
+  .adv-pkg {
+    display: flex;
+    flex-direction: column;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-top: 3px solid var(--pkg-accent, var(--ochre));
+    border-radius: 16px;
+    padding: 1.4rem;
+  }
+  .adv-pkg--hero {
+    border: 2px solid var(--pkg-accent);
+    background: color-mix(in srgb, var(--pkg-accent) 7%, var(--card));
+  }
+  .adv-pkg__top {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: .4rem .75rem;
+    margin-bottom: .45rem;
+  }
+  .adv-pkg__badge {
+    font-size: .8125rem;
+    font-weight: 700;
+    color: var(--pkg-accent);
+  }
+  .adv-pkg__dur {
+    font-size: .8125rem;
+    font-weight: 600;
+    color: var(--ink-faint);
+  }
+  .adv-pkg h3 {
+    margin: 0 0 .4rem;
+    font-size: 1.25rem;
+    font-weight: 800;
+    line-height: 1.22;
+  }
+  .adv-pkg__aud {
+    margin: 0;
+    font-size: .875rem;
+    line-height: 1.5;
+    color: var(--ink-soft);
+  }
+  .adv-pkg__price {
+    margin: 1.1rem 0 1rem;
+    padding: .95rem 0;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+  .adv-pkg__amount {
+    display: block;
+    font-size: 2rem;
+    font-weight: 800;
+    letter-spacing: -.03em;
+    color: var(--ink);
+    font-variant-numeric: tabular-nums;
+    line-height: 1.1;
+  }
+  .adv-pkg__range {
+    display: block;
+    margin-top: .35rem;
+    font-size: .8125rem;
+    font-weight: 600;
+    color: var(--pkg-accent);
+  }
+  .adv-pkg__cadence {
+    display: block;
+    margin-top: .2rem;
+    font-size: .8125rem;
+    color: var(--ink-faint);
+  }
+  .adv-pkg__summary {
+    margin: 0 0 .9rem;
+    font-size: .875rem;
+    line-height: 1.58;
+    color: var(--ink-soft);
+  }
+  .adv-pkg__list {
+    margin: 0 0 1.35rem;
+    padding-left: 1.1rem;
+    font-size: .875rem;
+    line-height: 1.55;
+    color: var(--ink-soft);
+    flex: 1;
+  }
+  .adv-pkg__list li {
+    margin-bottom: .45rem;
+  }
+  .adv-pkg__cta {
+    width: 100%;
+  }
+
+  .adv-retainer {
+    margin-top: 1.15rem;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    background: var(--stone);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.2rem 1.35rem;
+    font-size: .9375rem;
+    line-height: 1.58;
+    color: var(--ink-soft);
+  }
+  .adv-retainer strong {
+    color: var(--ink);
+  }
+  .adv-retainer__price {
+    font-weight: 700;
+    color: var(--ink);
+    font-variant-numeric: tabular-nums;
+  }
+  .adv-retainer__cta {
+    font-weight: 700;
+  }
+
+  /* Firewall */
+  .adv-firewall {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
+    gap: 1rem;
+    background: var(--stone);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--hanko);
+    border-radius: 14px;
+    padding: 1.35rem 1.45rem;
+  }
+  .adv-firewall__col h3 {
+    margin: 0 0 .5rem;
+    font-size: 1.0625rem;
+    font-weight: 800;
+    color: var(--ink);
+  }
+  .adv-firewall__col p {
+    margin: 0;
+    font-size: .9375rem;
+    line-height: 1.62;
+    color: var(--ink-soft);
+  }
+
+  /* Scoping brief form */
+  .adv-scope-box {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: clamp(1.35rem, 3vw, 2rem);
+  }
+  .adv-scope-box__intro p {
+    margin: .65rem 0 0;
+    max-width: 48rem;
+    font-size: .9375rem;
+    line-height: 1.6;
+    color: var(--ink-soft);
+  }
+  .adv-form {
+    margin-top: 1.4rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+    gap: 1rem;
+  }
+  .adv-field {
+    display: flex;
+    flex-direction: column;
+    gap: .35rem;
+    font-size: .875rem;
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .adv-field--wide {
+    grid-column: 1 / -1;
+  }
+  .adv-field input,
+  .adv-field select {
+    width: 100%;
+    min-height: 44px;
+    padding: .55rem .75rem;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font);
+    font-size: .9375rem;
+  }
+  .adv-form__actions {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: .85rem;
+    margin-top: .25rem;
+  }
+  .adv-copy-status {
+    font-size: .875rem;
+    color: var(--moss);
+    font-weight: 600;
+  }
+
+  /* FAQs */
+  .adv-faqs {
+    display: grid;
+    gap: .75rem;
+    max-width: 56rem;
+  }
+  .adv-faq {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1rem 1.25rem;
+  }
+  .adv-faq summary {
+    font-weight: 700;
+    font-size: 1rem;
+    line-height: 1.4;
+    color: var(--ink);
+    cursor: pointer;
+    min-height: 28px;
+  }
+  .adv-faq p {
+    margin: .75rem 0 0;
+    font-size: .9375rem;
+    line-height: 1.65;
+    color: var(--ink-soft);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .adv-btn:hover {
+      transform: none;
+    }
+  }
+</style>
