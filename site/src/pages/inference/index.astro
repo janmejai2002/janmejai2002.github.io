@@ -13,33 +13,104 @@ import {
 } from '../../data/inference';
 
 const edge = plateEdge('inference');
-const clip = `polygon(0 0, 100% 0, ${[...edge].reverse().map(([x, d]) => `${x.toFixed(1)}% calc(100% - ${d.toFixed(1)}px)`).join(',')})`;
+const clip = `polygon(0 0,100% 0,${[...edge].reverse().map(([x, d]) => `${x.toFixed(1)}% calc(100% - ${d.toFixed(1)}px)`).join(',')})`;
 const line = edge.map(([x, d]) => `${(x * 10).toFixed(0)},${(EDGE_DEPTH - d).toFixed(1)}`).join(' ');
 
 const unitsByTrack = Object.fromEntries(
   INFERENCE_TRACK_GROUPS.map((g) => [g.id, INFERENCE_UNITS.filter((u) => u.trackId === g.id)])
 );
 
-/** Approximate word depth per domain summing cleanly to 150,033 words across 36 units. */
 const TRACK_WORD_DEPTH: Record<string, string> = {
-  foundations: '33,400 words',
-  consulting: '27,800 words',
-  finance: '18,600 words',
-  product: '17,900 words',
-  marketing: '16,800 words',
-  operations: '17,400 words',
-  hr: '13,200 words',
-  inserts: '4,933 words',
+  foundations: '33,400 words', consulting: '27,800 words', finance: '18,600 words',
+  product: '17,900 words', marketing: '16,800 words', operations: '17,400 words',
+  hr: '13,200 words', inserts: '4,933 words',
 };
+
+const FALLBACK_CELLS = [
+  [0, 0, 'ochre'], [0, 28, 'mizu'], [28, 28, 'ochre'], [0, 56, 'mizu'], [28, 56, 'plum'],
+  [56, 56, 'ochre'], [0, 84, 'mizu'], [28, 84, 'moss'], [56, 84, 'hanko'], [84, 84, 'ochre'],
+  [0, 112, 'indigo'], [28, 112, 'mizu'], [56, 112, 'plum'], [84, 112, 'moss'], [112, 112, 'ochre'],
+] as const;
+
+const EXHIBIT_CARDS = [
+  { x: 12, stroke: 'ochre', title: 'Written rules', sub: 'Fixed statutory logic', lines: ['Output: yes / no gate', 'Data: policy thresholds', 'Audit: line-by-line rule'], foot: 'Ch 01 · Zero API cost' },
+  { x: 249, stroke: 'mizu', title: 'Predictive ML', sub: 'Structured rows & labels', lines: ['Output: score or forecast', 'Data: bureau, POS, churn', 'Audit: holdout error & SHAP'], foot: 'Ch 01 & Ch 22 · Deterministic' },
+  { x: 486, stroke: 'plum', title: 'Generative AI', sub: 'Unstructured text & PDFs', lines: ['Output: summary, tag, code', 'Data: contracts, calls, logs', 'Audit: eval suite + human QA'], foot: 'Ch 02–07 · Token metered' },
+];
 
 const HERO_DOMAINS = INFERENCE_TRACK_GROUPS.filter((g) => g.id !== 'inserts');
 
 const SKU_SAVINGS: Record<string, { inr: string; usd: string }> = {
   'domain-track': { inr: '100% 14-day upgrade credit', usd: '100% 14-day upgrade credit' },
   'full-edition': { inr: 'Save 33% vs buying 6 tracks', usd: 'Save 57% vs buying 6 tracks' },
-  'placement-accelerator': { inr: 'Full Edition + 25 Drills & Audio', usd: 'Full Edition + 25 Drills & Audio' },
+  'placement-accelerator': { inr: 'Full Edition + 25 drills and audio', usd: 'Full Edition + 25 drills and audio' },
   'campus-bulk': { inr: 'Save 55% · ₹900 per seat', usd: 'Save 49% · $25 per seat' },
 };
+
+const ECON_METRICS = [
+  {
+    k: 'Indic tokenizer tax', val: '2.4× – 3.1×',
+    note: 'Hindi and regional scripts fragment into far more subword tokens than English, tripling API spend at identical ticket volumes.',
+  },
+  {
+    k: 'KV cache & prefix reuse', val: 'Up to 90% off',
+    note: 'Causal self-attention lets prefixes stay cached across calls. Structuring stable system prompts first cuts marginal input cost sharply.',
+  },
+  {
+    k: 'Multi-step compounding', val: '0.95¹² = 54.0%',
+    note: 'An unattended 12-step agent with 95% per-step reliability fails almost half the time without deterministic tool gates and eval checkpoints.',
+  },
+];
+
+const INDIA_MATRIX = [
+  [
+    'DPDP Act 2023 & Rules',
+    'Personal data ingestion into RAG pipelines, fine-tuning, or third-party LLM APIs.',
+    'Explicit purpose-bound notice, PII redaction gateway, zero-retention vendor DPA, erasure pipeline.',
+    'Data-flow lineage map and Data Fiduciary consent ledger (up to ₹250 crore penalty exposure).',
+  ],
+  [
+    'RBI FREE-AI Framework',
+    'Credit underwriting, UPI mule-account detection, collections, and banking copilots.',
+    '7 Sutras governance: board-approved AI policy, explainability (SHAP/reason codes), bias testing, kill switch.',
+    'Model inventory register and human-in-the-loop override logs for adverse credit actions.',
+  ],
+  [
+    'SEBI Algo & Advisory Guardrails',
+    'Brokerage copilots, automated research summaries, and algorithmic execution.',
+    'Deterministic calculation sandboxes, citation traceability, strict separation of execution vs narrative LLM.',
+    'Hallucination benchmark log and pre-trade deterministic validation trace.',
+  ],
+  [
+    'ASCI & IT Rules (Synthetic Media)',
+    'AI-generated ad creatives, influencer avatars, and localized Indic video campaigns.',
+    'Clear synthetic disclosure labels, trademark clearance, brand-safety negative-prompt filters.',
+    'Creative provenance ledger and legal sign-off on likeness and IP indemnification.',
+  ],
+] as const;
+
+const RUBRIC_ROWS = [
+  {
+    axis: 'Deflection claim audit',
+    weak: "Accepts the founder's 80% ticket deflection deck at face value and projects linear gross margin expansion.",
+    strong: 'Separates containment from true resolution: audits reopen rates within 72 hours, silent escalations, and QA sampling overhead.',
+  },
+  {
+    axis: 'Inference margin math',
+    weak: 'Assumes SaaS-like 85% gross margins because API prices are falling every quarter.',
+    strong: 'Models blended cost per resolved ticket: multi-turn context growth, Indic token multiplier, retrieval latency, and human fallback minutes.',
+  },
+  {
+    axis: 'Moat & switching cost',
+    weak: 'Claims proprietary prompt engineering or a fine-tuned open model creates durable defensibility.',
+    strong: 'Checks deep ERP/CRM write-back integration, domain eval suites, and regulated audit logs versus thin wrapper commoditization.',
+  },
+  {
+    axis: 'Liability & valuation call',
+    weak: 'Recommends investing because AI support is a fast-growing market without structuring downside protection.',
+    strong: 'Links valuation multiple to verified net-dollar retention, DPDP indemnity clauses, and a milestone earn-out tied to audited gross margin.',
+  },
+];
 
 const productSchema = {
   sku: 'INFERENCE-2027-V1',
@@ -49,56 +120,16 @@ const productSchema = {
     { '@type': 'Person', name: 'Janmejai Singh Minhas', url: 'https://janmejai2002.github.io/about/' },
     { '@type': 'Person', name: 'Chaitanya Sharma' },
   ],
-  offers: [
+  offers: INFERENCE_SKUS.filter((s) => s.id !== 'campus-bulk').flatMap((s) => [
     {
-      '@type': 'Offer',
-      name: 'Individual Domain Track (INR)',
-      price: '499',
-      priceCurrency: 'INR',
-      availability: 'https://schema.org/InStock',
-      url: 'https://janmejai2002.github.io/inference/#pricing',
+      '@type': 'Offer', name: `${s.name} (INR)`, price: String(s.priceInr), priceCurrency: 'INR',
+      availability: 'https://schema.org/InStock', url: 'https://janmejai2002.github.io/inference/#pricing',
     },
     {
-      '@type': 'Offer',
-      name: 'Individual Domain Track (USD)',
-      price: '19',
-      priceCurrency: 'USD',
-      availability: 'https://schema.org/InStock',
-      url: 'https://janmejai2002.github.io/inference/#pricing',
+      '@type': 'Offer', name: `${s.name} (USD)`, price: String(s.priceUsd), priceCurrency: 'USD',
+      availability: 'https://schema.org/InStock', url: 'https://janmejai2002.github.io/inference/#pricing',
     },
-    {
-      '@type': 'Offer',
-      name: 'Full 36-Unit Edition (INR)',
-      price: '1999',
-      priceCurrency: 'INR',
-      availability: 'https://schema.org/InStock',
-      url: 'https://janmejai2002.github.io/inference/#pricing',
-    },
-    {
-      '@type': 'Offer',
-      name: 'Full 36-Unit Edition (USD)',
-      price: '49',
-      priceCurrency: 'USD',
-      availability: 'https://schema.org/InStock',
-      url: 'https://janmejai2002.github.io/inference/#pricing',
-    },
-    {
-      '@type': 'Offer',
-      name: 'Placement Accelerator Bundle (INR)',
-      price: '3499',
-      priceCurrency: 'INR',
-      availability: 'https://schema.org/InStock',
-      url: 'https://janmejai2002.github.io/inference/#pricing',
-    },
-    {
-      '@type': 'Offer',
-      name: 'Placement Accelerator Bundle (USD)',
-      price: '79',
-      priceCurrency: 'USD',
-      availability: 'https://schema.org/InStock',
-      url: 'https://janmejai2002.github.io/inference/#pricing',
-    },
-  ],
+  ]),
 };
 ---
 
@@ -109,149 +140,103 @@ const productSchema = {
   section="INFERENCE"
   pageType="Product"
   keywords={[
-    'INFERENCE AI Compendium',
-    'AI consulting casebook',
-    'MBA AI placement prep India',
-    'applied AI economics',
-    'RBI FREE-AI DPDP AI guide',
-    'AI product management frameworks',
+    'INFERENCE AI Compendium', 'AI consulting casebook', 'MBA AI placement prep India',
+    'applied AI economics', 'RBI FREE-AI DPDP AI guide', 'AI product management frameworks',
   ]}
   breadcrumbs={[{ name: 'Home', path: '/' }, { name: 'INFERENCE' }]}
   schema={productSchema}
   faq={INFERENCE_FAQS}
-  immersive={true}
-  wide={true}
-  grain={true}
+  immersive
+  wide
+  grain
 >
-  <!-- Split-Stage Cinematic Hero -->
-  <section class="pg-plate inf-hero" style={`clip-path:${clip}`} aria-labelledby="inf-hero-title">
-    <div class="wrap pg-plate__in inf-hero__grid">
+  <section class="plate inf-hero" style={`clip-path:${clip}`} aria-labelledby="inf-hero-title">
+    <div class="wrap plate__in inf-hero__grid">
       <div class="inf-hero__copy">
-        <div class="inf-hero__top fade-up">
-          <span class="hanko-mark">{INFERENCE_STATS.edition}</span>
-          <span class="inf-hero__authors">By Janmejai Singh Minhas &amp; Chaitanya Sharma</span>
-        </div>
+        <p class="inf-hero__byline">
+          <span class="inf-hero__edition">{INFERENCE_STATS.edition}</span>
+          <span aria-hidden="true"> · </span>
+          <span>Janmejai Singh Minhas &amp; Chaitanya Sharma</span>
+        </p>
 
-        <p class="inf-hero__angle fade-up d1" id="inf-angle-kicker">
+        <p class="inf-hero__angle" id="inf-angle-kicker">
           Built for B-school placements, consulting case rounds, and applied-AI operators.
         </p>
 
-        <h1 id="inf-hero-title" class="pg-plate__title fade-up d2">
+        <h1 id="inf-hero-title">
           The applied AI compendium for people who sit in business, product, and placement rooms.
         </h1>
 
-        <p class="pg-plate__desc fade-up d3">
+        <p class="inf-hero__desc">
           From token unit economics and causal attention to six full domain casebooks across
           consulting, finance, product, marketing, operations, and HR. Every claim traces to a
           verified primary source.
         </p>
 
-        <div class="inf-hero__actions fade-up d4">
-          <a
-            class="inf-btn inf-btn--primary"
-            href="#pricing"
-            data-umami-sku="hero-edition"
-          >
-            Get the 2027 Edition
-          </a>
-          <a class="inf-btn inf-btn--ghost" href="/inference/read/">
-            Read 5 Free Units
-          </a>
-          <a class="linkish inf-hero__glossary" href="/inference/glossary/">
-            Browse {INFERENCE_STATS.glossaryTerms}-term glossary →
-          </a>
+        <div class="inf-hero__actions">
+          <a class="inf-btn inf-btn--gold" href="#pricing" data-umami-sku="hero-edition">Get the 2027 Edition</a>
+          <a class="inf-btn inf-btn--plate" href="/inference/read/">Read 5 free units</a>
+          <a class="inf-plate-link" href="/inference/glossary/">Browse {INFERENCE_STATS.glossaryTerms}-term glossary →</a>
         </div>
 
-        <!-- Animated KPI Counter Strip -->
-        <dl class="inf-proof fade-up d5" aria-label="Compendium specifications">
-          <div>
-            <dt>Words</dt>
-            <dd data-kpi-target="150033">{INFERENCE_STATS.words}</dd>
-          </div>
-          <div>
-            <dt>Units</dt>
-            <dd><span data-kpi-target="36">{INFERENCE_STATS.unitsTotal}</span> complete</dd>
-          </div>
-          <div>
-            <dt>Primary sources</dt>
-            <dd><span data-kpi-target="178">{INFERENCE_STATS.sources}</span> verified</dd>
-          </div>
-          <div>
-            <dt>Vector figures</dt>
-            <dd><span data-kpi-target="34">{INFERENCE_STATS.diagrams}</span> SVGs</dd>
-          </div>
+        <dl class="inf-specs" aria-label="Compendium specifications">
+          <div><dt>Words</dt><dd>{INFERENCE_STATS.words}</dd></div>
+          <div><dt>Units</dt><dd>{INFERENCE_STATS.unitsTotal} complete</dd></div>
+          <div><dt>Primary sources</dt><dd>{INFERENCE_STATS.sources} verified</dd></div>
+          <div><dt>Vector figures</dt><dd>{INFERENCE_STATS.diagrams} SVGs</dd></div>
         </dl>
-
-        <p class="inf-hero__hint" aria-hidden="true">
-          <span class="inf-hero__hint-dot"></span>
-          Drag to orbit · Click a domain to shift
-        </p>
       </div>
 
-      <!-- Interactive 3D WebGL2 Compendium Monolith Stage -->
-      <div class="inf-hero__stage">
-        <div class="inf-stage" id="inf-3d-shell" data-active-accent="mizu">
-          <div class="inf-stage__hud">
-            <span class="inf-stage__hud-badge">
-              <span class="inf-stage__hud-dot" aria-hidden="true"></span>
-              <span id="inf-stage-domain-name">Foundations</span>
-            </span>
-            <span class="inf-stage__hud-meta" id="inf-stage-domain-meta">8 units · 2 free</span>
-          </div>
-
+      <div class="inf-hero__vessel">
+        <div class="inf-monolith" id="inf-3d-shell">
           <canvas
-            class="inf-stage__canvas"
+            class="inf-monolith__canvas"
             data-inference-3d
-            aria-label="Interactive 3D INFERENCE compendium hardcover with living causal self-attention matrix and seven orbiting domain nodes"
+            aria-label="Interactive 3D INFERENCE compendium hardcover with etched causal self-attention matrix and seven ceramic domain nodes"
           ></canvas>
 
-          <!-- Graceful no-WebGL fallback monolith cover (hidden once WebGL2 initializes) -->
-          <div class="inf-stage__fallback" aria-hidden="true">
+          <div class="inf-monolith__fallback" aria-hidden="true">
             <svg viewBox="0 0 260 350" class="inf-fallback-svg">
-              <rect x="24" y="16" width="212" height="318" rx="12" fill="var(--tldr-bg)" stroke="var(--ochre)" stroke-width="1.5" />
-              <rect x="38" y="30" width="184" height="290" rx="6" fill="none" stroke="var(--tldr-hair)" stroke-width="1" />
-              <text x="52" y="60" fill="var(--ochre)" font-family="var(--font)" font-size="11" font-weight="800" letter-spacing="2">INFERENCE · 2027</text>
-              <text x="52" y="78" fill="var(--tldr-dim)" font-family="var(--font)" font-size="9">CAUSAL ATTENTION COMPENDIUM</text>
-              <g transform="translate(54, 102)">
-                <rect x="0" y="0" width="20" height="20" rx="3" fill="var(--ochre)" />
-                <rect x="0" y="26" width="20" height="20" rx="3" fill="var(--mizu)" />
-                <rect x="26" y="26" width="20" height="20" rx="3" fill="var(--ochre)" />
-                <rect x="0" y="52" width="20" height="20" rx="3" fill="var(--mizu)" />
-                <rect x="26" y="52" width="20" height="20" rx="3" fill="var(--plum)" />
-                <rect x="52" y="52" width="20" height="20" rx="3" fill="var(--ochre)" />
-                <rect x="0" y="78" width="20" height="20" rx="3" fill="var(--mizu)" />
-                <rect x="26" y="78" width="20" height="20" rx="3" fill="var(--moss)" />
-                <rect x="52" y="78" width="20" height="20" rx="3" fill="var(--hanko)" />
-                <rect x="78" y="78" width="20" height="20" rx="3" fill="var(--ochre)" />
-                <rect x="0" y="104" width="20" height="20" rx="3" fill="var(--indigo)" />
-                <rect x="26" y="104" width="20" height="20" rx="3" fill="var(--mizu)" />
-                <rect x="52" y="104" width="20" height="20" rx="3" fill="var(--plum)" />
-                <rect x="78" y="104" width="20" height="20" rx="3" fill="var(--moss)" />
-                <rect x="104" y="104" width="20" height="20" rx="3" fill="var(--ochre)" />
+              <rect x="24" y="16" width="212" height="318" rx="8" fill="var(--tldr-bg)" stroke="var(--ochre)" stroke-width="1.5" />
+              <rect x="38" y="30" width="184" height="290" rx="4" fill="none" stroke="var(--tldr-hair)" stroke-width="1" />
+              <text x="52" y="60" fill="var(--ochre)" font-family="var(--font)" font-size="13" font-weight="800">INFERENCE · 2027</text>
+              <g transform="translate(54, 96)">
+                <rect x="0" y="0" width="22" height="22" fill="var(--ochre)" />
+                <rect x="0" y="28" width="22" height="22" fill="var(--mizu)" />
+                <rect x="28" y="28" width="22" height="22" fill="var(--ochre)" />
+                <rect x="0" y="56" width="22" height="22" fill="var(--mizu)" />
+                <rect x="28" y="56" width="22" height="22" fill="var(--plum)" />
+                <rect x="56" y="56" width="22" height="22" fill="var(--ochre)" />
+                <rect x="0" y="84" width="22" height="22" fill="var(--mizu)" />
+                <rect x="28" y="84" width="22" height="22" fill="var(--moss)" />
+                <rect x="56" y="84" width="22" height="22" fill="var(--hanko)" />
+                <rect x="84" y="84" width="22" height="22" fill="var(--ochre)" />
+                <rect x="0" y="112" width="22" height="22" fill="var(--indigo)" />
+                <rect x="28" y="112" width="22" height="22" fill="var(--mizu)" />
+                <rect x="56" y="112" width="22" height="22" fill="var(--plum)" />
+                <rect x="84" y="112" width="22" height="22" fill="var(--moss)" />
+                <rect x="112" y="112" width="22" height="22" fill="var(--ochre)" />
               </g>
-              <text x="52" y="294" fill="var(--tldr-dim)" font-family="var(--font)" font-size="9">36 UNITS · 7 BUSINESS DOMAINS</text>
+              <text x="52" y="294" fill="var(--tldr-dim)" font-family="var(--font)" font-size="13">36 units · 7 domains</text>
             </svg>
-          </div>
-
-          <div class="inf-stage__foot">
-            <span>Causal Self-Attention Cover · 7 Orbital Nodes</span>
-            <a class="inf-stage__jump" href="#tracks">Inspect syllabus ↓</a>
           </div>
         </div>
 
-        <!-- Live Domain Pill Switcher synced to 3D monolith -->
-        <div class="inf-stage-pills" role="group" aria-label="Focus 3D monolith on a domain">
+        <p class="inf-monolith__note" id="inf-stage-note" aria-live="polite">
+          Foundations · 8 units, 2 free. Drag to turn, or choose a domain below.
+        </p>
+
+        <div class="cues" role="group" aria-label="Focus 3D monolith on a domain">
           {HERO_DOMAINS.map((g, idx) => (
             <button
               type="button"
-              class:list={['inf-stage-pill', idx === 0 && 'is-active']}
+              class:list={['cue', idx === 0 && 'cue--on']}
               data-hero-domain={g.id}
-              data-accent={g.accent}
               aria-pressed={idx === 0 ? 'true' : 'false'}
-              style={`--pill-accent:var(--${g.accent})`}
+              style={`--accent:var(--${g.accent})`}
             >
-              <span class="inf-stage-pill__dot" aria-hidden="true"></span>
-              <span>{g.label.split(' ')[0]}</span>
+              <span class="cue__dot" aria-hidden="true"></span>{g.label.split(' ')[0]}
+              <span class="cue__bar" aria-hidden="true"></span>
             </button>
           ))}
         </div>
@@ -259,37 +244,35 @@ const productSchema = {
     </div>
   </section>
 
-  <svg class="pg-edge" viewBox={`0 0 1000 ${EDGE_DEPTH}`} preserveAspectRatio="none" aria-hidden="true">
-    <polyline points={line} class="pg-edge__glow" vector-effect="non-scaling-stroke" />
-    <polyline points={line} class="pg-edge__gold" vector-effect="non-scaling-stroke" />
+  <svg class="plate-edge" viewBox={`0 0 1000 ${EDGE_DEPTH}`} preserveAspectRatio="none" aria-hidden="true">
+    <polyline points={line} vector-effect="non-scaling-stroke" />
   </svg>
 
   <div class="wrap inf-body">
-    <!-- Why generic AI content fails -->
-    <section class="inf-sec scroll-reveal" aria-labelledby="contrast-heading">
+    <section class="inf-sec" aria-labelledby="contrast-heading">
       <div class="inf-sec__head">
         <p class="inf-kicker">The gap</p>
         <h2 id="contrast-heading">Why generic AI reading fails when the room pushes back</h2>
       </div>
       <div class="inf-contrast">
-        <article class="inf-card">
-          <span class="inf-card__tag">AI newsletters &amp; threads</span>
+        <article class="inf-col">
+          <p class="inf-col__tag">AI newsletters and threads</p>
           <h3>Model-release noise without P&amp;L math</h3>
           <p>
             Weekly summaries celebrate benchmark leaderboards while skipping inference cost per
             query, human QA overhead, and why 95% of enterprise pilots stall before hitting EBIT.
           </p>
         </article>
-        <article class="inf-card">
-          <span class="inf-card__tag">Engineering textbooks</span>
+        <article class="inf-col">
+          <p class="inf-col__tag">Engineering textbooks</p>
           <h3>CUDA and gradient math built for model trainers</h3>
           <p>
             You do not need backpropagation derivations to evaluate a ₹400 crore due-diligence
             target, audit RBI FREE-AI explainability, or price outcome-based consulting pods.
           </p>
         </article>
-        <article class="inf-card inf-card--accent">
-          <span class="inf-card__tag">INFERENCE · 2027 Edition</span>
+        <article class="inf-col inf-col--mark">
+          <p class="inf-col__tag"><span class="inf-diamond" aria-hidden="true"></span>INFERENCE · 2027 Edition</p>
           <h3>Mechanism to margin math to interview rubric</h3>
           <p>
             Each unit moves in order: how the machinery works, where it fails quantitatively, what
@@ -299,11 +282,10 @@ const productSchema = {
       </div>
     </section>
 
-    <!-- Interactive 7-Track Explorer (Synced live with 3D Monolith) -->
-    <section class="inf-sec scroll-reveal" id="tracks" aria-labelledby="explorer-heading">
+    <section class="inf-sec" id="tracks" aria-labelledby="explorer-heading">
       <div class="inf-sec__head inf-sec__head--row">
         <div>
-          <p class="inf-kicker">Interactive syllabus · 36 of 36 units complete</p>
+          <p class="inf-kicker">Curriculum · 36 of 36 units complete</p>
           <h2 id="explorer-heading">Explore all 7 domains and quarterly inserts</h2>
         </div>
         <div class="inf-sec__links">
@@ -312,7 +294,7 @@ const productSchema = {
         </div>
       </div>
 
-      <div class="inf-tabs" role="tablist" aria-label="INFERENCE domain tracks">
+      <div class="doors" role="tablist" aria-label="INFERENCE domain tracks">
         {INFERENCE_TRACK_GROUPS.map((g, idx) => {
           const trackUnits = unitsByTrack[g.id] ?? [];
           const freeCount = trackUnits.filter((u) => u.isFree).length;
@@ -320,17 +302,19 @@ const productSchema = {
             <button
               type="button"
               role="tab"
-              class:list={['inf-tab', idx === 0 && 'is-active']}
+              class="door"
               aria-selected={idx === 0 ? 'true' : 'false'}
               aria-controls={`panel-${g.id}`}
               data-track-tab={g.id}
-              data-track-accent={g.accent}
-              style={`--tab-accent:var(--${g.accent})`}
+              style={`--accent:var(--${g.accent});--tint:var(--wash-${g.accent})`}
             >
-              <span class="inf-tab__dot" aria-hidden="true"></span>
-              <span class="inf-tab__name">{g.label}</span>
-              <span class="inf-tab__count">
-                {trackUnits.length} units{freeCount > 0 ? ` · ${freeCount} free` : ''}
+              <span class="door__label">
+                <span class="door__dot" aria-hidden="true"></span>
+                {g.label}
+                <span class="door__n">{trackUnits.length}</span>
+              </span>
+              <span class="door__ask">
+                {TRACK_WORD_DEPTH[g.id] ?? '15,000+ words'}{freeCount > 0 ? ` · ${freeCount} free` : ''}
               </span>
             </button>
           );
@@ -352,336 +336,197 @@ const productSchema = {
               role="tabpanel"
               class:list={['inf-panel', idx !== 0 && 'is-hidden']}
               data-track-panel={g.id}
-              style={`--panel-accent:var(--${g.accent})`}
+              style={`--accent:var(--${g.accent})`}
             >
-              <div class="inf-panel__banner">
-                <div class="inf-panel__banner-copy">
-                  <div class="inf-panel__eyebrow">
-                    <span class="inf-panel__dot" aria-hidden="true"></span>
-                    <strong>{g.label}</strong>
-                    <span class="inf-panel__sep" aria-hidden="true">·</span>
-                    <span>{wordDepth}</span>
-                    <span class="inf-panel__sep" aria-hidden="true">·</span>
-                    <span>{freeUnits.length} free / {lockedCount} locked</span>
-                  </div>
-                  <p class="inf-panel__summary">{g.summary}</p>
-                </div>
-
-                <div class="inf-panel__actions">
-                  {firstFree && firstFree.freeSlug ? (
-                    <a class="inf-btn inf-btn--secondary inf-btn--sm" href={`/inference/read/${firstFree.freeSlug}/`}>
-                      Read Free Unit →
-                    </a>
-                  ) : (
-                    <a class="inf-btn inf-btn--secondary inf-btn--sm" href="/inference/read/">
-                      Sample 5 Free Units →
-                    </a>
-                  )}
-                  <a
-                    class="inf-btn inf-btn--primary inf-btn--sm"
-                    href="#pricing"
-                    data-unlock-track={isDomainOption ? g.id : 'full'}
-                  >
-                    {isDomainOption ? `Unlock ${g.label.split(' ')[0]} Track` : 'Unlock Full Edition'}
+              <div class="status">
+                <p class="status__text">
+                  <strong>{g.label}.</strong> {g.summary} ({wordDepth} · {freeUnits.length} free, {lockedCount} in edition.)
+                </p>
+                <div class="status__links">
+                  <a class="linkish" href={firstFree?.freeSlug ? `/inference/read/${firstFree.freeSlug}/` : '/inference/read/'}>
+                    {firstFree?.freeSlug ? 'Read free unit →' : 'Read 5 free units →'}
+                  </a>
+                  <a class="linkish" href="#pricing" data-unlock-track={isDomainOption ? g.id : 'full'}>
+                    {isDomainOption ? `Get ${g.label.split(' ')[0]} track →` : 'Get Full Edition →'}
                   </a>
                 </div>
               </div>
 
-              <div class="inf-unitlist">
+              <ol class="qs">
                 {trackUnits.map((u) => (
-                  <article class:list={['inf-unit', u.isFree && 'inf-unit--free']}>
-                    <div class="inf-unit__meta">
-                      <span class="inf-unit__num">{u.unitNumber}</span>
-                      <span class:list={['inf-badge', u.isFree ? 'inf-badge--free' : 'inf-badge--paid']}>
-                        {u.freeScope ?? 'Locked · Full & Track'}
-                      </span>
-                    </div>
-                    <h3 class="inf-unit__title">{u.title}</h3>
-                    <p class="inf-unit__deck">{u.deck}</p>
-                    {u.questions.length > 0 && (
-                      <p class="inf-unit__prompt">
-                        <span>Room test:</span> {u.questions[0]}
-                      </p>
+                  <li class="q">
+                    {u.isFree && u.freeSlug ? (
+                      <a href={`/inference/read/${u.freeSlug}/`} class="q__row">
+                        <span class="q__ask">{u.title}</span>
+                        <span class="q__deck">{u.deck}</span>
+                        {u.questions.length > 0 && <span class="q__prompt">Room test: “{u.questions[0]}”</span>}
+                        <span class="q__meta">
+                          <span class="q__dot" aria-hidden="true"></span>
+                          {u.unitNumber} · {g.label}
+                          <span class="q__flag">{u.freeScope ?? 'Free unit'}</span>
+                        </span>
+                      </a>
+                    ) : (
+                      <div class="q__row">
+                        <span class="q__ask">{u.title}</span>
+                        <span class="q__deck">{u.deck}</span>
+                        {u.questions.length > 0 && <span class="q__prompt">Room test: “{u.questions[0]}”</span>}
+                        <span class="q__meta">
+                          <span class="q__dot" aria-hidden="true"></span>
+                          {u.unitNumber} · {g.label} · Full Edition &amp; Track ·{' '}
+                          <a class="linkish q__link" href="#pricing" data-unlock-track={isDomainOption ? g.id : 'full'}>
+                            View pricing →
+                          </a>
+                        </span>
+                      </div>
                     )}
-                    <div class="inf-unit__foot">
-                      {u.isFree && u.freeSlug ? (
-                        <a class="linkish inf-unit__cta" href={`/inference/read/${u.freeSlug}/`}>
-                          Read free unit →
-                        </a>
-                      ) : (
-                        <a
-                          class="linkish inf-unit__cta"
-                          href="#pricing"
-                          data-unlock-track={isDomainOption ? g.id : 'full'}
-                        >
-                          Unlock in {g.label} &amp; Full Edition →
-                        </a>
-                      )}
-                    </div>
-                  </article>
+                  </li>
                 ))}
-              </div>
+              </ol>
             </div>
           );
         })}
       </div>
     </section>
 
-    <!-- Interactive Sample Peek: Inside the Compendium -->
-    <section class="inf-sec scroll-reveal" id="inside" aria-labelledby="inside-heading">
+    <section class="inf-sec" id="inside" aria-labelledby="inside-heading">
       <div class="inf-sec__head inf-sec__head--row">
         <div>
-          <p class="inf-kicker">Inside the compendium · Live artifact preview</p>
-          <h2 id="inside-heading">Inspect three real exhibits before opening a single chapter</h2>
+          <p class="inf-kicker">Inside the compendium · 3 exhibits</p>
+          <h2 id="inside-heading">Inspect three real exhibits before opening a chapter</h2>
         </div>
         <a class="linkish" href="/inference/read/">Read all 5 free units in full →</a>
       </div>
 
-      <div class="inf-peek-tabs" role="tablist" aria-label="Sample exhibits inside INFERENCE">
-        <button
-          type="button"
-          role="tab"
-          class="inf-peek-tab is-active"
-          aria-selected="true"
-          aria-controls="peek-panel-economics"
-          data-peek-tab="economics"
-        >
-          <span class="inf-peek-tab__num">01</span>
-          <span>Causal Attention &amp; Inference Economics</span>
+      <div class="inf-exhibit-tabs" role="tablist" aria-label="Sample exhibits inside INFERENCE">
+        <button type="button" role="tab" class="inf-exhibit-tab is-active" aria-selected="true" aria-controls="peek-panel-economics" data-peek-tab="economics">
+          01 · Causal attention &amp; inference economics
         </button>
-        <button
-          type="button"
-          role="tab"
-          class="inf-peek-tab"
-          aria-selected="false"
-          aria-controls="peek-panel-india"
-          data-peek-tab="india"
-        >
-          <span class="inf-peek-tab__num">02</span>
-          <span>India DPDP + RBI FREE-AI Matrix</span>
+        <button type="button" role="tab" class="inf-exhibit-tab" aria-selected="false" aria-controls="peek-panel-india" data-peek-tab="india">
+          02 · India DPDP + RBI FREE-AI matrix
         </button>
-        <button
-          type="button"
-          role="tab"
-          class="inf-peek-tab"
-          aria-selected="false"
-          aria-controls="peek-panel-rubric"
-          data-peek-tab="rubric"
-        >
-          <span class="inf-peek-tab__num">03</span>
-          <span>Consulting Casebook Recruiter Rubric</span>
+        <button type="button" role="tab" class="inf-exhibit-tab" aria-selected="false" aria-controls="peek-panel-rubric" data-peek-tab="rubric">
+          03 · Consulting casebook recruiter rubric
         </button>
       </div>
 
-      <div class="inf-peek-stage">
-        <!-- Artifact 1: Causal Attention & Inference Economics -->
-        <article
-          id="peek-panel-economics"
-          role="tabpanel"
-          class="inf-peek-panel"
-          data-peek-panel="economics"
-        >
-          <div class="inf-peek-panel__head">
+      <div class="inf-exhibit-stage">
+        <article id="peek-panel-economics" role="tabpanel" class="inf-exhibit" data-peek-panel="economics">
+          <div class="inf-exhibit__head">
             <div>
-              <span class="inf-peek-kicker">Ch 01, Ch 02 &amp; Ch 19 · Architecture to Unit Economics</span>
+              <p class="inf-exhibit__kicker">Ch 01, Ch 02 &amp; Ch 19 · Architecture to unit economics</p>
               <h3>Matching the right model class and pricing every token before deployment</h3>
             </div>
-            <a class="inf-btn inf-btn--secondary inf-btn--sm" href="/inference/read/ai-in-one-sitting/">
-              Read Ch 00 Free →
-            </a>
+            <a class="linkish" href="/inference/read/ai-in-one-sitting/">Read Ch 00 free →</a>
           </div>
 
-          <figure class="diagram inf-peek-diagram">
-            <svg viewBox="0 0 720 220" role="img" aria-label="Sample diagram from INFERENCE comparing rules, predictive ML, and generative AI">
-              <rect x="16" y="18" width="218" height="184" rx="10" fill="var(--paper-2)" stroke="var(--ochre)" stroke-width="1.5" />
-              <text x="32" y="46" fill="var(--ochre)" font-family="var(--font)" font-size="13" font-weight="700">Written Rules</text>
-              <text x="32" y="72" fill="var(--ink)" font-family="var(--font)" font-size="12" font-weight="600">Fixed statutory logic</text>
-              <text x="32" y="94" fill="var(--ink-soft)" font-family="var(--font)" font-size="11">Output: yes / no gate</text>
-              <text x="32" y="114" fill="var(--ink-soft)" font-family="var(--font)" font-size="11">Data: policy thresholds</text>
-              <text x="32" y="134" fill="var(--ink-soft)" font-family="var(--font)" font-size="11">Audit: line-by-line rule</text>
-              <text x="32" y="176" fill="var(--ink-faint)" font-family="var(--font)" font-size="11">Ch 01 · Zero API cost</text>
+          <figure class="diagram inf-diagram">
+            <svg viewBox="0 0 720 230" role="img" aria-label="Sample diagram from INFERENCE comparing written rules, predictive ML, and generative AI">
+              <rect x="12" y="14" width="222" height="198" rx="4" fill="var(--paper-2)" stroke="var(--ochre)" stroke-width="1.5" />
+              <text x="28" y="44" fill="var(--ochre)" font-family="var(--font)" font-size="14" font-weight="700">Written rules</text>
+              <text x="28" y="72" fill="var(--ink)" font-family="var(--font)" font-size="13" font-weight="600">Fixed statutory logic</text>
+              <text x="28" y="98" fill="var(--ink-soft)" font-family="var(--font)" font-size="13">Output: yes / no gate</text>
+              <text x="28" y="120" fill="var(--ink-soft)" font-family="var(--font)" font-size="13">Data: policy thresholds</text>
+              <text x="28" y="142" fill="var(--ink-soft)" font-family="var(--font)" font-size="13">Audit: line-by-line rule</text>
+              <text x="28" y="188" fill="var(--ink-faint)" font-family="var(--font)" font-size="13">Ch 01 · Zero API cost</text>
 
-              <rect x="251" y="18" width="218" height="184" rx="10" fill="var(--paper-2)" stroke="var(--mizu)" stroke-width="1.5" />
-              <text x="267" y="46" fill="var(--mizu)" font-family="var(--font)" font-size="13" font-weight="700">Predictive ML</text>
-              <text x="267" y="72" fill="var(--ink)" font-family="var(--font)" font-size="12" font-weight="600">Structured rows &amp; labels</text>
-              <text x="267" y="94" fill="var(--ink-soft)" font-family="var(--font)" font-size="11">Output: score or forecast</text>
-              <text x="267" y="114" fill="var(--ink-soft)" font-family="var(--font)" font-size="11">Data: bureau, POS, churn</text>
-              <text x="267" y="134" fill="var(--ink-soft)" font-family="var(--font)" font-size="11">Audit: holdout error &amp; SHAP</text>
-              <text x="267" y="176" fill="var(--ink-faint)" font-family="var(--font)" font-size="11">Ch 01 &amp; Ch 22 · Deterministic</text>
+              <rect x="249" y="14" width="222" height="198" rx="4" fill="var(--paper-2)" stroke="var(--mizu)" stroke-width="1.5" />
+              <text x="265" y="44" fill="var(--mizu)" font-family="var(--font)" font-size="14" font-weight="700">Predictive ML</text>
+              <text x="265" y="72" fill="var(--ink)" font-family="var(--font)" font-size="13" font-weight="600">Structured rows &amp; labels</text>
+              <text x="265" y="98" fill="var(--ink-soft)" font-family="var(--font)" font-size="13">Output: score or forecast</text>
+              <text x="265" y="120" fill="var(--ink-soft)" font-family="var(--font)" font-size="13">Data: bureau, POS, churn</text>
+              <text x="265" y="142" fill="var(--ink-soft)" font-family="var(--font)" font-size="13">Audit: holdout error &amp; SHAP</text>
+              <text x="265" y="188" fill="var(--ink-faint)" font-family="var(--font)" font-size="13">Ch 01 &amp; Ch 22 · Deterministic</text>
 
-              <rect x="486" y="18" width="218" height="184" rx="10" fill="var(--paper-2)" stroke="var(--plum)" stroke-width="1.5" />
-              <text x="502" y="46" fill="var(--plum)" font-family="var(--font)" font-size="13" font-weight="700">Generative AI</text>
-              <text x="502" y="72" fill="var(--ink)" font-family="var(--font)" font-size="12" font-weight="600">Unstructured text &amp; PDFs</text>
-              <text x="502" y="94" fill="var(--ink-soft)" font-family="var(--font)" font-size="11">Output: summary, tag, code</text>
-              <text x="502" y="114" fill="var(--ink-soft)" font-family="var(--font)" font-size="11">Data: contracts, calls, logs</text>
-              <text x="502" y="134" fill="var(--ink-soft)" font-family="var(--font)" font-size="11">Audit: eval suite + human QA</text>
-              <text x="502" y="176" fill="var(--ink-faint)" font-family="var(--font)" font-size="11">Ch 02–07 · Token metered</text>
+              <rect x="486" y="14" width="222" height="198" rx="4" fill="var(--paper-2)" stroke="var(--plum)" stroke-width="1.5" />
+              <text x="502" y="44" fill="var(--plum)" font-family="var(--font)" font-size="14" font-weight="700">Generative AI</text>
+              <text x="502" y="72" fill="var(--ink)" font-family="var(--font)" font-size="13" font-weight="600">Unstructured text &amp; PDFs</text>
+              <text x="502" y="98" fill="var(--ink-soft)" font-family="var(--font)" font-size="13">Output: summary, tag, code</text>
+              <text x="502" y="120" fill="var(--ink-soft)" font-family="var(--font)" font-size="13">Data: contracts, calls, logs</text>
+              <text x="502" y="142" fill="var(--ink-soft)" font-family="var(--font)" font-size="13">Audit: eval suite + human QA</text>
+              <text x="502" y="188" fill="var(--ink-faint)" font-family="var(--font)" font-size="13">Ch 02–07 · Token metered</text>
             </svg>
             <figcaption>
               Exhibit 01 · Tokenised vector figure from INFERENCE (re-skinned automatically for light and dark themes across all 34 figures).
             </figcaption>
           </figure>
 
-          <div class="inf-econ-grid">
-            <div class="inf-econ-card">
-              <span class="inf-econ-card__k">Indic Tokenizer Tax</span>
-              <strong>2.4× – 3.1×</strong>
-              <p>Hindi and regional scripts fragment into far more subword tokens than English, tripling API spend at identical ticket volumes.</p>
-            </div>
-            <div class="inf-econ-card">
-              <span class="inf-econ-card__k">KV Cache &amp; Prefix Reuse</span>
-              <strong>Up to 90% off</strong>
-              <p>Causal self-attention lets prefixes stay cached across calls. Structuring stable system prompts first cuts marginal input cost sharply.</p>
-            </div>
-            <div class="inf-econ-card">
-              <span class="inf-econ-card__k">Multi-Step Compounding</span>
-              <strong>0.95¹² = 54.0%</strong>
-              <p>An unattended 12-step agent with 95% per-step reliability fails almost half the time without deterministic tool gates and eval checkpoints.</p>
-            </div>
-          </div>
+          <dl class="inf-econ">
+            {ECON_METRICS.map((m) => (
+              <div>
+                <dt>{m.k}</dt>
+                <dd class="inf-econ__val">{m.val}</dd>
+                <dd class="inf-econ__note">{m.note}</dd>
+              </div>
+            ))}
+          </dl>
         </article>
 
-        <!-- Artifact 2: India DPDP + RBI FREE-AI Matrix -->
-        <article
-          id="peek-panel-india"
-          role="tabpanel"
-          class="inf-peek-panel is-hidden"
-          data-peek-panel="india"
-        >
-          <div class="inf-peek-panel__head">
+        <article id="peek-panel-india" role="tabpanel" class="inf-exhibit is-hidden" data-peek-panel="india">
+          <div class="inf-exhibit__head">
             <div>
-              <span class="inf-peek-kicker">Insert B &amp; Ch 24 · Statutory Governance in India</span>
+              <p class="inf-exhibit__kicker">Insert B &amp; Ch 24 · Statutory governance in India</p>
               <h3>India DPDP Act, RBI FREE-AI, and sector compliance matrix</h3>
             </div>
-            <a class="inf-btn inf-btn--secondary inf-btn--sm" href="/inference/read/india-briefing/">
-              Read Insert B Free →
-            </a>
+            <a class="linkish" href="/inference/read/india-briefing/">Read Insert B free →</a>
           </div>
 
-          <div class="inf-matrix-wrap">
-            <table class="inf-matrix">
+          <div class="inf-table-wrap">
+            <table class="inf-table">
               <thead>
                 <tr>
-                  <th>Regulatory Regime</th>
-                  <th>Scope &amp; Trigger</th>
-                  <th>Mandatory Control</th>
-                  <th>Room-Ready Audit Artifact</th>
+                  <th>Regulatory regime</th>
+                  <th>Scope &amp; trigger</th>
+                  <th>Mandatory control</th>
+                  <th>Room-ready audit artifact</th>
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td><strong>DPDP Act 2023 &amp; Rules</strong></td>
-                  <td>Personal data ingestion into RAG pipelines, fine-tuning, or third-party LLM APIs.</td>
-                  <td>Explicit purpose-bound notice, PII redaction gateway, zero-retention vendor DPA, erasure pipeline.</td>
-                  <td>Data-flow lineage map + Data Fiduciary consent ledger (up to ₹250 crore penalty exposure).</td>
-                </tr>
-                <tr>
-                  <td><strong>RBI FREE-AI Framework</strong></td>
-                  <td>Credit underwriting, UPI mule-account detection, collections, and banking copilots.</td>
-                  <td>7 Sutras governance: board-approved AI policy, explainability (SHAP/reason codes), bias testing, kill switch.</td>
-                  <td>Model inventory register + human-in-the-loop override logs for adverse credit actions.</td>
-                </tr>
-                <tr>
-                  <td><strong>SEBI Algo &amp; Advisory Guardrails</strong></td>
-                  <td>Brokerage copilots, automated research summaries, and algorithmic execution.</td>
-                  <td>Deterministic calculation sandboxes, citation traceability, strict separation of execution vs narrative LLM.</td>
-                  <td>Hallucination benchmark log + pre-trade deterministic validation trace.</td>
-                </tr>
-                <tr>
-                  <td><strong>ASCI &amp; IT Rules (Synthetic Media)</strong></td>
-                  <td>AI-generated ad creatives, influencer avatars, and localized Indic video campaigns.</td>
-                  <td>Clear synthetic disclosure labels, trademark clearance, brand-safety negative-prompt filters.</td>
-                  <td>Creative provenance ledger + legal sign-off on likeness and IP indemnification.</td>
-                </tr>
+                {INDIA_MATRIX.map(([regime, scope, control, artifact]) => (
+                  <tr>
+                    <td><strong>{regime}</strong></td>
+                    <td>{scope}</td>
+                    <td>{control}</td>
+                    <td>{artifact}</td>
+                  </tr>
+                ))}
               </tbody>
             </table>
           </div>
         </article>
 
-        <!-- Artifact 3: Consulting Casebook Recruiter Rubric -->
-        <article
-          id="peek-panel-rubric"
-          role="tabpanel"
-          class="inf-peek-panel is-hidden"
-          data-peek-panel="rubric"
-        >
-          <div class="inf-peek-panel__head">
+        <article id="peek-panel-rubric" role="tabpanel" class="inf-exhibit is-hidden" data-peek-panel="rubric">
+          <div class="inf-exhibit__head">
             <div>
-              <span class="inf-peek-kicker">Ch 12 · Case 01 PE Due Diligence (AI Support Startup)</span>
-              <h3>Interviewer scoring rubric: Weak answer vs Offer-ready defense</h3>
+              <p class="inf-exhibit__kicker">Ch 12 · Case 01 PE due diligence (AI support startup)</p>
+              <h3>Interviewer scoring rubric: weak answer vs offer-ready defense</h3>
             </div>
-            <a class="inf-btn inf-btn--secondary inf-btn--sm" href="/inference/read/ai-casebook-preview/">
-              Read Case 01 Free →
-            </a>
+            <a class="linkish" href="/inference/read/ai-casebook-preview/">Read Case 01 free →</a>
           </div>
 
-          <div class="inf-rubric-grid">
-            <div class="inf-rubric-row">
-              <div class="inf-rubric-axis">
-                <span class="inf-rubric-wt">25%</span>
-                <h4>Deflection Claim Audit</h4>
+          <div class="inf-rubric">
+            {RUBRIC_ROWS.map((r) => (
+              <div class="inf-rubric__row">
+                <div class="inf-rubric__axis">
+                  <span class="inf-rubric__wt">25% weight</span>
+                  <h4>{r.axis}</h4>
+                </div>
+                <div class="inf-rubric__weak">
+                  <span class="inf-rubric__k">Weak response</span>
+                  <p>{r.weak}</p>
+                </div>
+                <div class="inf-rubric__strong">
+                  <span class="inf-rubric__k">Offer-ready INFERENCE response</span>
+                  <p>{r.strong}</p>
+                </div>
               </div>
-              <div class="inf-rubric-weak">
-                <span class="inf-rubric-label">Weak response</span>
-                <p>Accepts the founder's 80% ticket deflection deck at face value and projects linear gross margin expansion.</p>
-              </div>
-              <div class="inf-rubric-strong">
-                <span class="inf-rubric-label">Offer-ready INFERENCE response</span>
-                <p>Separates containment from true resolution: audits reopen rates within 72 hours, silent escalations, and QA sampling overhead.</p>
-              </div>
-            </div>
-
-            <div class="inf-rubric-row">
-              <div class="inf-rubric-axis">
-                <span class="inf-rubric-wt">25%</span>
-                <h4>Inference Margin Math</h4>
-              </div>
-              <div class="inf-rubric-weak">
-                <span class="inf-rubric-label">Weak response</span>
-                <p>Assumes SaaS-like 85% gross margins because API prices are falling every quarter.</p>
-              </div>
-              <div class="inf-rubric-strong">
-                <span class="inf-rubric-label">Offer-ready INFERENCE response</span>
-                <p>Models blended cost per resolved ticket: multi-turn context growth, Indic token multiplier, retrieval latency, and human fallback minutes.</p>
-              </div>
-            </div>
-
-            <div class="inf-rubric-row">
-              <div class="inf-rubric-axis">
-                <span class="inf-rubric-wt">25%</span>
-                <h4>Moat &amp; Switching Cost</h4>
-              </div>
-              <div class="inf-rubric-weak">
-                <span class="inf-rubric-label">Weak response</span>
-                <p>Claims proprietary prompt engineering or a fine-tuned open model creates durable defensibility.</p>
-              </div>
-              <div class="inf-rubric-strong">
-                <span class="inf-rubric-label">Offer-ready INFERENCE response</span>
-                <p>Checks deep ERP/CRM write-back integration, domain eval suites, and regulated audit logs versus thin wrapper commoditization.</p>
-              </div>
-            </div>
-
-            <div class="inf-rubric-row">
-              <div class="inf-rubric-axis">
-                <span class="inf-rubric-wt">25%</span>
-                <h4>Liability &amp; Valuation Call</h4>
-              </div>
-              <div class="inf-rubric-weak">
-                <span class="inf-rubric-label">Weak response</span>
-                <p>Recommends investing because AI support is a fast-growing market without structuring downside protection.</p>
-              </div>
-              <div class="inf-rubric-strong">
-                <span class="inf-rubric-label">Offer-ready INFERENCE response</span>
-                <p>Links valuation multiple to verified net-dollar retention, DPDP indemnity clauses, and a milestone earn-out tied to audited gross margin.</p>
-              </div>
-            </div>
+            ))}
           </div>
         </article>
       </div>
     </section>
 
-    <!-- Cursor-Spotlight Pricing Matrix with INR / USD Currency Toggle -->
-    <section class="inf-sec scroll-reveal" id="pricing" aria-labelledby="pricing-heading">
+    <section class="inf-sec" id="pricing" aria-labelledby="pricing-heading">
       <div class="inf-sec__head inf-sec__head--row">
         <div>
           <p class="inf-kicker">Editions &amp; licensing</p>
@@ -689,65 +534,37 @@ const productSchema = {
         </div>
 
         <div class="inf-currency" role="group" aria-label="Currency selector">
-          <button
-            type="button"
-            class="inf-currency__btn is-active"
-            data-currency-btn="INR"
-            aria-pressed="true"
-          >
-            India · ₹ INR
-          </button>
-          <button
-            type="button"
-            class="inf-currency__btn"
-            data-currency-btn="USD"
-            aria-pressed="false"
-          >
-            Global · $ USD
-          </button>
+          <button type="button" class="inf-currency__btn is-active" data-currency-btn="INR" aria-pressed="true">India · ₹ INR</button>
+          <button type="button" class="inf-currency__btn" data-currency-btn="USD" aria-pressed="false">Global · $ USD</button>
         </div>
       </div>
 
-      <div class="inf-pricing">
+      <div class="inf-ledger">
         {INFERENCE_SKUS.map((sku) => {
           const saving = SKU_SAVINGS[sku.id];
           return (
-            <article
-              class:list={['inf-sku', sku.highlighted && 'inf-sku--hero']}
-              data-sku-card={sku.id}
-              data-spotlight-card
-            >
+            <article class:list={['inf-sku', sku.highlighted && 'inf-sku--hero']} data-sku-card={sku.id}>
               <div class="inf-sku__top">
-                <div class="inf-sku__badges">
-                  <span class="inf-sku__badge">{sku.badge}</span>
-                  {saving && (
-                    <span
-                      class:list={['inf-sku__saving', sku.highlighted && 'inf-sku__saving--hero']}
-                      data-saving-inr={saving.inr}
-                      data-saving-usd={saving.usd}
-                    >
-                      {saving.inr}
-                    </span>
-                  )}
-                </div>
+                <p class="inf-sku__badge">{sku.badge}</p>
                 <h3>{sku.name}</h3>
                 <p class="inf-sku__tag">{sku.tagline}</p>
               </div>
 
               <div class="inf-sku__price">
-                <strong
-                  class="inf-sku__amount"
-                  data-price-inr={sku.priceInrLabel}
-                  data-price-usd={sku.priceUsdLabel}
-                >
+                <strong class="inf-sku__amount" data-price-inr={sku.priceInrLabel} data-price-usd={sku.priceUsdLabel}>
                   {sku.priceInrLabel}
                 </strong>
                 <span class="inf-sku__cadence">{sku.cadenceLabel}</span>
+                {saving && (
+                  <span class="inf-sku__note" data-saving-inr={saving.inr} data-saving-usd={saving.usd}>
+                    {saving.inr}
+                  </span>
+                )}
               </div>
 
               {sku.id === 'domain-track' && (
                 <div class="inf-sku__select-wrap">
-                  <label for="domain-track-select" class="inf-sku__select-label">Choose domain track</label>
+                  <label for="domain-track-select" class="inf-sku__select-label">Domain track</label>
                   <select id="domain-track-select" class="inf-sku__select">
                     {INFERENCE_DOMAIN_OPTIONS.map((opt) => (
                       <option value={opt.id}>{opt.label}</option>
@@ -757,14 +574,12 @@ const productSchema = {
               )}
 
               <ul class="inf-sku__features">
-                {sku.features.map((f) => (
-                  <li>{f}</li>
-                ))}
+                {sku.features.map((f) => <li>{f}</li>)}
               </ul>
 
               <a
                 href={getCheckoutHref(sku.id, 'INR', sku.id === 'domain-track' ? 'consulting' : undefined)}
-                class:list={['inf-btn', sku.highlighted ? 'inf-btn--primary' : 'inf-btn--secondary', 'inf-sku__cta']}
+                class:list={['inf-btn', sku.highlighted ? 'inf-btn--gold' : 'inf-btn--solid', 'inf-sku__cta']}
                 data-checkout-cta={sku.id}
                 data-href-inr={getCheckoutHref(sku.id, 'INR', sku.id === 'domain-track' ? 'consulting' : undefined)}
                 data-href-usd={getCheckoutHref(sku.id, 'USD', sku.id === 'domain-track' ? 'consulting' : undefined)}
@@ -777,67 +592,62 @@ const productSchema = {
       </div>
 
       <div class="inf-guarantee">
-        <div>
+        <p>
           <strong>7-day evidence-first refund guarantee.</strong> Read Chapters 00 to 05 and a full
           domain track. If INFERENCE does not sharpen how you frame AI economics, cases, or
           deployment decisions, reply with your order ID for a full refund.
-        </div>
-        <div>
+        </p>
+        <p>
           <strong>14-day 100% upgrade credit.</strong> Start with any Individual Domain Track (₹499 /
           $19) and apply 100% of what you paid toward the Full 36-Unit Edition or Accelerator Bundle
           within 14 days.
-        </div>
+        </p>
       </div>
     </section>
+  </div>
 
-    <!-- Credibility & Authors -->
-    <section class="inf-sec scroll-reveal" aria-labelledby="authors-heading">
-      <div class="inf-sec__head">
+  <section class="working" aria-labelledby="authors-heading">
+    <div class="wrap working__in">
+      <div class="working__lead">
         <p class="inf-kicker">Authors &amp; verification standard</p>
         <h2 id="authors-heading">Built by practitioners who audit models and publish the evidence</h2>
-      </div>
-
-      <div class="inf-authors">
-        {INFERENCE_AUTHORS.map((a) => (
-          <article class="inf-author" style={`--author-accent:var(--${a.accent})`}>
-            <p class="inf-author__role">{a.role}</p>
-            <h3>{a.name}</h3>
-            <p class="inf-author__bio">{a.bio}</p>
-            <a class="linkish" href={a.linkHref}>{a.linkLabel} →</a>
-          </article>
-        ))}
-      </div>
-
-      <div class="inf-bridge">
-        <div>
-          <strong>Open-ledger verification on wAIbi-sabi.</strong> INFERENCE shares its citation
-          standard with wAIbi-sabi: 178 primary sources (SEC filings, RBI circulars, MeitY rules,
-          peer-reviewed studies), 34 zero-overflow vector diagrams, and zero synthetic case studies.
-        </div>
-        <div class="inf-bridge__links">
+        <p>
+          INFERENCE shares its citation standard with wAIbi-sabi: 178 primary sources (SEC filings,
+          RBI circulars, MeitY rules, peer-reviewed studies), 34 vector diagrams, and zero synthetic
+          case studies.
+        </p>
+        <div class="working__links">
           <a class="linkish" href="/tracker/">Inspect AI Claims Tracker →</a>
           <a class="linkish" href="/news/">Browse B-School Interview Archive →</a>
         </div>
       </div>
-    </section>
 
-    <!-- Objection-Crushing FAQ -->
-    <section class="inf-sec scroll-reveal" id="faq" aria-labelledby="faq-heading">
-      <div class="inf-sec__head">
-        <p class="inf-kicker">Questions</p>
-        <h2 id="faq-heading">Frequently asked questions</h2>
-      </div>
+      {INFERENCE_AUTHORS.map((a) => (
+        <article class="working__author" style={`--accent:var(--${a.accent})`}>
+          <p class="working__role">{a.role}</p>
+          <h3>{a.name}</h3>
+          <p>{a.bio}</p>
+          <a class="linkish" href={a.linkHref}>{a.linkLabel} →</a>
+        </article>
+      ))}
+    </div>
+  </section>
 
-      <div class="inf-faqs">
-        {INFERENCE_FAQS.map((item, i) => (
-          <details class="inf-faq" open={i === 0}>
-            <summary>{item.question}</summary>
-            <p>{item.answer}</p>
-          </details>
-        ))}
-      </div>
-    </section>
-  </div>
+  <section class="wrap inf-sec inf-faq-sec" id="faq" aria-labelledby="faq-heading">
+    <div class="inf-sec__head">
+      <p class="inf-kicker">Questions</p>
+      <h2 id="faq-heading">Frequently asked questions</h2>
+    </div>
+
+    <div class="inf-faqs">
+      {INFERENCE_FAQS.map((item, i) => (
+        <details class="inf-faq" open={i === 0}>
+          <summary>{item.question}</summary>
+          <p>{item.answer}</p>
+        </details>
+      ))}
+    </div>
+  </section>
 </Base>
 
 <script>
@@ -851,164 +661,94 @@ const productSchema = {
   import { createInference3DStage, type Inference3DStage } from '../../scripts/inference-3d';
 
   const params = new URLSearchParams(location.search);
-  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  // 1. Query param ?angle=mba | exec message match
   const angle = params.get('angle');
   const kicker = document.getElementById('inf-angle-kicker');
   if (kicker && angle === 'mba') {
-    kicker.textContent =
-      'Built for 2026-27 B-school SIP, Finals, and AI case interviews across consulting, finance, and product.';
+    kicker.textContent = 'Built for 2026-27 B-school SIP, Finals, and AI case interviews across consulting, finance, and product.';
   } else if (kicker && angle === 'exec') {
-    kicker.textContent =
-      'Built for operators, product managers, and consultants auditing AI margins, governance, and deployment failures.';
+    kicker.textContent = 'Built for operators, product managers, and consultants auditing AI margins, governance, and deployment failures.';
   }
 
-  // 2. Animated KPI Counter Strip (SSR displays exact numbers; animates gently on capable browsers)
-  if (!reducedMotion) {
-    const kpis = [...document.querySelectorAll<HTMLElement>('[data-kpi-target]')];
-    const duration = 950;
-    const start = performance.now();
-    const tickKpi = (now: number) => {
-      const t = Math.min(1, (now - start) / duration);
-      const eased = 1 - Math.pow(1 - t, 3);
-      for (const el of kpis) {
-        const target = Number(el.dataset.kpiTarget || '0');
-        const val = Math.round(target * eased);
-        el.textContent = target >= 1000 ? val.toLocaleString('en-US') : String(val);
-      }
-      if (t < 1) requestAnimationFrame(tickKpi);
-    };
-    requestAnimationFrame(tickKpi);
-  }
-
-  // 3. Synchronised 3D Monolith + Hero Domain Pills + 7-Track Explorer
   const stageShell = document.getElementById('inf-3d-shell');
   const stageCanvas = document.querySelector<HTMLCanvasElement>('[data-inference-3d]');
-  const hudName = document.getElementById('inf-stage-domain-name');
-  const hudMeta = document.getElementById('inf-stage-domain-meta');
-  const heroPills = [...document.querySelectorAll<HTMLButtonElement>('[data-hero-domain]')];
+  const stageNote = document.getElementById('inf-stage-note');
+  const heroCues = [...document.querySelectorAll<HTMLButtonElement>('[data-hero-domain]')];
   const tabs = [...document.querySelectorAll<HTMLButtonElement>('[data-track-tab]')];
   const panels = [...document.querySelectorAll<HTMLElement>('[data-track-panel]')];
 
   const trackLookup = new Map(
     INFERENCE_TRACK_GROUPS.map((g) => {
       const units = INFERENCE_UNITS.filter((u) => u.trackId === g.id);
-      const freeCount = units.filter((u) => u.isFree).length;
-      return [g.id, { ...g, total: units.length, free: freeCount }];
+      return [g.id, { ...g, total: units.length, free: units.filter((u) => u.isFree).length }];
     })
   );
 
   let stage3d: Inference3DStage | null = null;
   let activeTrackId = 'foundations';
 
-  const updateHud = (trackId: string) => {
+  const updateNote = (trackId: string) => {
     const info = trackLookup.get(trackId);
-    if (!info) return;
-    if (hudName) hudName.textContent = info.label;
-    if (hudMeta) {
-      hudMeta.textContent = `${info.total} units${info.free > 0 ? ` · ${info.free} free` : ' · Full & Track'}`;
-    }
-    if (stageShell) {
-      stageShell.dataset.activeAccent = info.accent;
-    }
+    if (!info || !stageNote) return;
+    const scope = info.free > 0 ? `${info.total} units, ${info.free} free` : `${info.total} units`;
+    stageNote.textContent = `${info.label} · ${scope}. Drag to turn, or choose a domain below.`;
   };
 
   const activateTrack = (trackId: string, sync3d = true) => {
     if (!trackLookup.has(trackId)) return;
     activeTrackId = trackId;
-
-    for (const t of tabs) {
-      const active = t.dataset.trackTab === trackId;
-      t.classList.toggle('is-active', active);
-      t.setAttribute('aria-selected', active ? 'true' : 'false');
+    for (const t of tabs) t.setAttribute('aria-selected', String(t.dataset.trackTab === trackId));
+    for (const p of panels) p.classList.toggle('is-hidden', p.dataset.trackPanel !== trackId);
+    for (const cue of heroCues) {
+      const active = cue.dataset.heroDomain === trackId;
+      cue.classList.toggle('cue--on', active);
+      cue.setAttribute('aria-pressed', String(active));
     }
-    for (const p of panels) {
-      p.classList.toggle('is-hidden', p.dataset.trackPanel !== trackId);
-    }
-    for (const pill of heroPills) {
-      const active = pill.dataset.heroDomain === trackId;
-      pill.classList.toggle('is-active', active);
-      pill.setAttribute('aria-pressed', active ? 'true' : 'false');
-    }
-
-    updateHud(trackId);
+    updateNote(trackId);
     if (sync3d) stage3d?.setTrack(trackId);
   };
 
-  // Mount WebGL2 Compendium Monolith
   if (stageCanvas) {
     stage3d = createInference3DStage(stageCanvas, {
       initialTrack: activeTrackId,
       onSelectTrack: (trackId) => activateTrack(trackId, false),
-      onHoverTrack: (trackId) => {
-        if (trackId) updateHud(trackId);
-        else updateHud(activeTrackId);
-      },
+      onHoverTrack: (trackId) => updateNote(trackId ?? activeTrackId),
     });
-    if (stage3d && stageShell) {
-      stageShell.classList.add('is-gl-ready');
-    }
+    if (stage3d && stageShell) stageShell.classList.add('is-gl-ready');
   }
 
-  let hoverTimer = 0;
-  const scheduleHoverTrack = (trackId: string) => {
-    window.clearTimeout(hoverTimer);
-    hoverTimer = window.setTimeout(() => activateTrack(trackId), 65);
-  };
-
-  for (const pill of heroPills) {
-    const id = pill.dataset.heroDomain;
-    if (!id) continue;
-    pill.addEventListener('click', () => activateTrack(id));
-    pill.addEventListener('pointerenter', () => scheduleHoverTrack(id));
-    pill.addEventListener('focus', () => activateTrack(id));
+  for (const cue of heroCues) {
+    cue.addEventListener('click', () => cue.dataset.heroDomain && activateTrack(cue.dataset.heroDomain));
   }
-
   for (const t of tabs) {
-    const id = t.dataset.trackTab;
-    if (!id) continue;
-    t.addEventListener('click', () => activateTrack(id));
-    t.addEventListener('pointerenter', () => scheduleHoverTrack(id));
-    t.addEventListener('focus', () => activateTrack(id));
+    t.addEventListener('click', () => t.dataset.trackTab && activateTrack(t.dataset.trackTab));
   }
 
   const initialTrack = params.get('track');
-  if (initialTrack && trackLookup.has(initialTrack)) {
-    activateTrack(initialTrack);
-  } else {
-    updateHud(activeTrackId);
-  }
+  if (initialTrack && trackLookup.has(initialTrack)) activateTrack(initialTrack);
+  else updateNote(activeTrackId);
 
-  // 4. Interactive Sample Peek ("Inside the Compendium") Tabs
   const peekTabs = [...document.querySelectorAll<HTMLButtonElement>('[data-peek-tab]')];
   const peekPanels = [...document.querySelectorAll<HTMLElement>('[data-peek-panel]')];
-  const activatePeek = (peekId: string) => {
-    for (const pt of peekTabs) {
-      const on = pt.dataset.peekTab === peekId;
-      pt.classList.toggle('is-active', on);
-      pt.setAttribute('aria-selected', on ? 'true' : 'false');
-    }
-    for (const pp of peekPanels) {
-      pp.classList.toggle('is-hidden', pp.dataset.peekPanel !== peekId);
-    }
-  };
   for (const pt of peekTabs) {
     pt.addEventListener('click', () => {
-      if (pt.dataset.peekTab) activatePeek(pt.dataset.peekTab);
+      const id = pt.dataset.peekTab;
+      if (!id) return;
+      for (const t of peekTabs) {
+        const on = t.dataset.peekTab === id;
+        t.classList.toggle('is-active', on);
+        t.setAttribute('aria-selected', String(on));
+      }
+      for (const p of peekPanels) p.classList.toggle('is-hidden', p.dataset.peekPanel !== id);
     });
   }
 
-  // 5. INR / USD Currency Toggle + Domain Selector + Pre-select from Explorer + Umami CTA tracking
   const currencyBtns = [...document.querySelectorAll<HTMLButtonElement>('[data-currency-btn]')];
   const domainSelect = document.getElementById('domain-track-select') as HTMLSelectElement | null;
   let activeCurrency: Currency = 'INR';
-
   try {
     const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || '';
-    if (tz && !/Kolkata|Calcutta|Asia\/Dhaka|Asia\/Colombo/i.test(tz)) {
-      activeCurrency = 'USD';
-    }
+    if (tz && !/Kolkata|Calcutta|Asia\/Dhaka|Asia\/Colombo/i.test(tz)) activeCurrency = 'USD';
   } catch {}
 
   const applyCurrency = (curr: Currency) => {
@@ -1016,7 +756,7 @@ const productSchema = {
     for (const b of currencyBtns) {
       const on = b.dataset.currencyBtn === curr;
       b.classList.toggle('is-active', on);
-      b.setAttribute('aria-pressed', on ? 'true' : 'false');
+      b.setAttribute('aria-pressed', String(on));
     }
     for (const el of document.querySelectorAll<HTMLElement>('.inf-sku__amount')) {
       el.textContent = curr === 'INR' ? el.dataset.priceInr || '' : el.dataset.priceUsd || '';
@@ -1032,41 +772,21 @@ const productSchema = {
   };
 
   for (const b of currencyBtns) {
-    b.addEventListener('click', () => {
-      const next = b.dataset.currencyBtn as Currency;
-      if (next) applyCurrency(next);
-    });
+    b.addEventListener('click', () => b.dataset.currencyBtn && applyCurrency(b.dataset.currencyBtn as Currency));
   }
   domainSelect?.addEventListener('change', () => applyCurrency(activeCurrency));
   applyCurrency(activeCurrency);
 
-  // Clicking "Unlock <Track>" inside the Track Explorer pre-selects that domain in Pricing
   for (const trigger of document.querySelectorAll<HTMLAnchorElement>('[data-unlock-track]')) {
     trigger.addEventListener('click', () => {
       const track = trigger.dataset.unlockTrack;
-      if (domainSelect && track && track !== 'full') {
-        const hasOpt = [...domainSelect.options].some((o) => o.value === track);
-        if (hasOpt) {
-          domainSelect.value = track;
-          applyCurrency(activeCurrency);
-        }
+      if (domainSelect && track && track !== 'full' && [...domainSelect.options].some((o) => o.value === track)) {
+        domainSelect.value = track;
+        applyCurrency(activeCurrency);
       }
     });
   }
 
-  // 6. Cursor-Spotlight Magnetic Illumination on Pricing Cards
-  const spotlightCards = [...document.querySelectorAll<HTMLElement>('[data-spotlight-card]')];
-  for (const card of spotlightCards) {
-    card.addEventListener('pointermove', (e) => {
-      const rect = card.getBoundingClientRect();
-      const x = ((e.clientX - rect.left) / Math.max(1, rect.width)) * 100;
-      const y = ((e.clientY - rect.top) / Math.max(1, rect.height)) * 100;
-      card.style.setProperty('--mx', `${x.toFixed(1)}%`);
-      card.style.setProperty('--my', `${y.toFixed(1)}%`);
-    });
-  }
-
-  // 7. Umami Conversion Tracking
   for (const link of document.querySelectorAll<HTMLAnchorElement>('[data-umami-sku], [data-checkout-cta]')) {
     link.addEventListener('click', () => {
       const sku = link.dataset.checkoutCta || link.dataset.umamiSku || 'unknown';
@@ -1079,1146 +799,259 @@ const productSchema = {
 </script>
 
 <style>
-  /* ── Split-Stage Cinematic Hero ── */
-  .pg-plate {
-    position: relative;
-    color: var(--tldr-ink);
+  /* ---------- the plate & broken gold edge (matching index.astro) ---------- */
+  .plate {
+    position: relative; color: var(--tldr-ink);
     background:
-      radial-gradient(56rem 30rem at 82% 24%, color-mix(in srgb, var(--ochre) 18%, transparent), transparent 72%),
-      radial-gradient(46rem 28rem at 10% 108%, color-mix(in srgb, var(--mizu) 16%, transparent), transparent 70%),
+      radial-gradient(70rem 34rem at 82% -8%, color-mix(in srgb, var(--mizu) 10%, transparent), transparent 70%),
+      radial-gradient(56rem 32rem at 4% 108%, color-mix(in srgb, var(--plum) 14%, transparent), transparent 70%),
       var(--tldr-bg);
-    overflow: hidden;
   }
-  .pg-plate::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background-image: var(--paper-noise);
-    opacity: 0.7;
-    pointer-events: none;
-  }
-  .pg-plate__in {
-    position: relative;
-    z-index: 1;
-    padding-block: clamp(2rem, 4vw, 3.25rem) calc(24px + clamp(2rem, 3.5vw, 3rem));
-  }
-  .inf-hero__grid {
-    display: grid;
-    grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.92fr);
-    gap: clamp(1.75rem, 3.5vw, 3.5rem);
-    align-items: center;
-  }
-  @media (max-width: 62rem) {
-    .inf-hero__grid {
-      grid-template-columns: 1fr;
-    }
-  }
-  .inf-hero__top {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: .7rem 1.1rem;
-    margin-bottom: 1rem;
-  }
-  .hanko-mark {
-    display: inline-flex;
-    align-items: center;
-    font-family: var(--font);
-    font-size: .6875rem;
-    font-weight: 800;
-    letter-spacing: .1em;
-    text-transform: uppercase;
-    color: var(--hanko);
-    background: color-mix(in srgb, var(--hanko) 14%, transparent);
-    border: 1.25px solid color-mix(in srgb, var(--hanko) 65%, transparent);
-    padding: .24rem .65rem;
-    border-radius: 4px;
-  }
-  .inf-hero__authors {
-    font-size: .875rem;
-    font-weight: 500;
-    color: var(--tldr-dim);
-  }
-  .inf-hero__angle {
-    margin: 0 0 .65rem;
-    font-family: var(--serif);
-    font-style: italic;
-    font-size: 1.0625rem;
-    line-height: 1.4;
-    color: var(--ochre);
-  }
-  .pg-plate__title {
-    margin: 0;
-    max-width: 38rem;
-    font-family: var(--font);
-    font-size: clamp(2rem, 3.8vw, 3.15rem);
-    font-weight: 800;
-    line-height: 1.06;
-    letter-spacing: -.03em;
-    color: var(--tldr-ink);
-    text-wrap: balance;
-  }
-  .pg-plate__desc {
-    margin: 1rem 0 0;
-    max-width: 37rem;
-    font-size: 1.03125rem;
-    line-height: 1.62;
-    color: var(--tldr-dim);
-  }
-  .inf-hero__actions {
-    margin-top: 1.6rem;
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: .8rem 1.15rem;
-  }
-  .inf-hero__glossary {
-    color: var(--tldr-ink);
-    font-size: .9375rem;
-    font-weight: 600;
-    text-decoration: none;
-    border-bottom: 1px solid var(--ochre);
-    padding-bottom: .15rem;
-  }
-  .inf-proof {
-    margin: 1.85rem 0 0;
-    padding-top: 1.25rem;
-    border-top: 1px solid var(--tldr-hair);
-    display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: .85rem 1rem;
-  }
-  @media (max-width: 38rem) {
-    .inf-proof {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-  }
-  .inf-proof dt {
-    font-size: .75rem;
-    font-weight: 600;
-    color: var(--tldr-dim);
-  }
-  .inf-proof dd {
-    margin: .2rem 0 0;
-    font-size: 1.0625rem;
-    font-weight: 800;
-    color: var(--tldr-ink);
-    font-variant-numeric: tabular-nums;
-  }
-  .inf-hero__hint {
-    margin: 1.1rem 0 0;
-    display: inline-flex;
-    align-items: center;
-    gap: .5rem;
-    font-size: .75rem;
-    font-weight: 600;
-    letter-spacing: .04em;
-    color: var(--tldr-dim);
-  }
-  .inf-hero__hint-dot {
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    background: var(--ochre);
-    box-shadow: 0 0 10px var(--ochre);
-  }
+  .plate__in { position: relative; padding-block: clamp(2rem, 4vw, 3.5rem) calc(22px + clamp(2rem, 4vw, 3.25rem)); }
+  .plate-edge { display: block; position: relative; width: 100%; height: 22px; margin-top: -22px; overflow: visible; pointer-events: none; }
+  .plate-edge polyline { fill: none; stroke: var(--ochre); stroke-width: 1.75; stroke-linejoin: miter; }
 
-  /* ── 3D WebGL2 Monolith Stage ── */
-  .inf-hero__stage {
-    display: flex;
-    flex-direction: column;
-    gap: .85rem;
+  .inf-hero__grid { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr); gap: clamp(2rem, 4vw, 4rem); align-items: center; }
+  .inf-hero__byline { margin: 0 0 .85rem; font-size: .875rem; font-weight: 600; color: var(--tldr-dim); }
+  .inf-hero__edition { color: var(--ochre); font-weight: 700; }
+  .inf-hero__angle { margin: 0 0 .65rem; font-family: var(--serif); font-style: italic; font-size: 1.0625rem; line-height: 1.4; color: var(--ochre); }
+  .inf-hero h1 { margin: 0; max-width: 36rem; font-family: var(--font); font-size: clamp(2rem, 3.8vw, 3.25rem); font-weight: 800; line-height: 1.06; letter-spacing: -.032em; text-wrap: balance; }
+  .inf-hero__desc { margin: 1rem 0 0; max-width: 36rem; font-size: 1.03125rem; line-height: 1.6; color: var(--tldr-dim); text-wrap: pretty; }
+  .inf-hero__actions { margin-top: 1.65rem; display: flex; flex-wrap: wrap; align-items: center; gap: .75rem 1.25rem; }
+  .inf-plate-link { font-size: .9375rem; font-weight: 700; color: var(--tldr-ink); text-decoration: none; border-bottom: 1px solid var(--tldr-hair); padding-bottom: 2px; transition: border-color var(--dur-fast) var(--ease); }
+  .inf-plate-link:hover { border-color: var(--ochre); }
+
+  .inf-specs { margin: 2rem 0 0; padding-top: 1.25rem; border-top: 1px solid var(--tldr-hair); display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .85rem 1.25rem; }
+  .inf-specs dt { font-size: .8125rem; font-weight: 600; color: var(--tldr-dim); }
+  .inf-specs dd { margin: .2rem 0 0; font-size: 1.0625rem; font-weight: 800; color: var(--tldr-ink); font-variant-numeric: tabular-nums; }
+
+  /* ---------- naked 3D monolith directly on .plate (matching Bowl.astro) ---------- */
+  .inf-hero__vessel { display: flex; flex-direction: column; min-width: 0; }
+  .inf-monolith { position: relative; aspect-ratio: 10 / 9; min-height: clamp(19rem, 36vw, 28rem); width: 100%; }
+  .inf-monolith__canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; touch-action: pan-y; }
+  .inf-monolith__fallback { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; pointer-events: none; transition: opacity var(--dur-fast) var(--ease); }
+  .inf-monolith.is-gl-ready .inf-monolith__fallback { opacity: 0; }
+  .inf-fallback-svg { width: min(14rem, 62%); height: auto; }
+  .inf-monolith__note { margin: .25rem 0 0; font-size: .8125rem; line-height: 1.45; color: var(--tldr-dim); }
+
+  /* ---------- .cues / .cue strip (from index.astro) ---------- */
+  .cues { display: flex; flex-wrap: wrap; align-items: center; gap: .25rem 1.35rem; margin-top: .5rem; }
+  .cue {
+    font: inherit; background: none; border: 0; cursor: pointer; position: relative;
+    display: inline-flex; align-items: center; gap: .45rem; min-height: 2.75rem; padding: 0;
+    font-size: .875rem; font-weight: 600; color: var(--tldr-dim); transition: color var(--dur-fast) var(--ease);
   }
-  .inf-stage {
-    --stage-accent: var(--mizu);
-    position: relative;
-    min-height: clamp(22rem, 42vw, 31rem);
-    border-radius: 20px;
-    border: 1px solid color-mix(in srgb, var(--stage-accent) 34%, var(--tldr-hair));
-    background:
-      radial-gradient(24rem 24rem at 54% 46%, color-mix(in srgb, var(--stage-accent) 18%, transparent), transparent 68%),
-      radial-gradient(18rem 16rem at 44% 58%, color-mix(in srgb, var(--ochre) 14%, transparent), transparent 72%),
-      color-mix(in srgb, var(--tldr-bg) 86%, transparent);
-    box-shadow:
-      inset 0 1px 0 color-mix(in srgb, var(--tldr-ink) 12%, transparent),
-      0 24px 56px -24px var(--shadow);
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+  .cue:hover, .cue--on { color: var(--tldr-ink); }
+  .cue:focus-visible { outline-color: var(--ochre); }
+  .cue__dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
+  .cue__bar { position: absolute; left: 0; right: 0; bottom: 6px; height: 2px; background: var(--ochre); transform: scaleX(0); transform-origin: left; transition: transform var(--dur-fast) var(--ease); }
+  .cue--on .cue__bar { transform: scaleX(1); }
+
+  /* ---------- buttons & shared editorial primitives ---------- */
+  .inf-btn {
+    display: inline-flex; align-items: center; justify-content: center; min-height: 2.75rem; padding: 0 1.35rem;
+    border-radius: 999px; font: inherit; font-size: .9375rem; font-weight: 700; text-decoration: none;
+    cursor: pointer; border: 1px solid transparent; white-space: nowrap;
+    transition: background-color var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease);
+  }
+  .inf-btn--gold { background: var(--ochre); color: var(--tldr-bg); }
+  .inf-btn--gold:hover { background: color-mix(in srgb, var(--ochre) 86%, var(--tldr-ink)); }
+  .inf-btn--plate { background: none; color: var(--tldr-ink); border-color: var(--tldr-hair); }
+  .inf-btn--plate:hover { border-color: var(--tldr-ink); }
+  .inf-btn--solid { background: var(--solid); color: var(--on-solid); }
+  .inf-btn--solid:hover { background: color-mix(in srgb, var(--solid) 86%, var(--gold)); }
+  .linkish {
+    font: inherit; font-size: .9375rem; font-weight: 700; color: var(--ink); background: none; border: 0;
+    border-bottom: 1px solid var(--border); padding: 0 0 1px; cursor: pointer; text-decoration: none;
     transition: border-color var(--dur-fast) var(--ease);
   }
-  .inf-stage[data-active-accent='mizu'] { --stage-accent: var(--mizu); }
-  .inf-stage[data-active-accent='hanko'] { --stage-accent: var(--hanko); }
-  .inf-stage[data-active-accent='ochre'] { --stage-accent: var(--ochre); }
-  .inf-stage[data-active-accent='plum'] { --stage-accent: var(--plum); }
-  .inf-stage[data-active-accent='moss'] { --stage-accent: var(--moss); }
-  .inf-stage[data-active-accent='indigo'] { --stage-accent: var(--indigo); }
+  .linkish:hover { border-color: var(--ink); }
+  .inf-diamond { display: inline-block; width: 6px; height: 6px; margin-right: .45rem; background: var(--ochre); transform: rotate(45deg); vertical-align: 1px; }
 
-  .inf-stage__canvas {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    display: block;
-    touch-action: pan-y;
-    z-index: 1;
-  }
-  .inf-stage__fallback {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 2.5rem 1.5rem;
-    pointer-events: none;
-    transition: opacity var(--dur-fast) var(--ease);
-  }
-  .inf-stage.is-gl-ready .inf-stage__fallback {
-    opacity: 0;
-  }
-  .inf-fallback-svg {
-    width: min(14rem, 62%);
-    height: auto;
-  }
+  /* ---------- body & section headings ---------- */
+  .inf-body { padding-top: clamp(2.75rem, 5vw, 4.5rem); }
+  .inf-sec { margin-top: clamp(3.5rem, 6vw, 5.5rem); }
+  .inf-body > .inf-sec:first-child { margin-top: 0; }
+  .inf-sec__head { margin-bottom: 1.75rem; }
+  .inf-sec__head--row { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 1rem 2.5rem; }
+  .inf-sec__links { display: flex; flex-wrap: wrap; gap: .75rem 1.5rem; }
+  .inf-kicker { margin: 0 0 .35rem; font-size: .875rem; font-weight: 700; color: var(--ochre); }
+  .inf-sec h2 { margin: 0; font-size: clamp(1.625rem, 3vw, 2.35rem); font-weight: 800; letter-spacing: -.03em; line-height: 1.1; color: var(--ink); text-wrap: balance; }
 
-  .inf-stage__hud,
-  .inf-stage__foot {
-    position: relative;
-    z-index: 2;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: .75rem;
-    padding: .85rem 1.05rem;
-    pointer-events: none;
-  }
-  .inf-stage__hud-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: .48rem;
-    padding: .3rem .72rem;
-    border-radius: 999px;
-    background: color-mix(in srgb, var(--tldr-bg) 82%, transparent);
-    border: 1px solid color-mix(in srgb, var(--stage-accent) 45%, var(--tldr-hair));
-    backdrop-filter: blur(8px);
-    font-size: .75rem;
-    font-weight: 700;
-    color: var(--tldr-ink);
-  }
-  .inf-stage__hud-dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: var(--stage-accent);
-    box-shadow: 0 0 10px var(--stage-accent);
-  }
-  .inf-stage__hud-meta {
-    font-size: .75rem;
-    font-weight: 600;
-    color: var(--tldr-dim);
-    background: color-mix(in srgb, var(--tldr-bg) 72%, transparent);
-    padding: .24rem .6rem;
-    border-radius: 999px;
-    backdrop-filter: blur(6px);
-  }
-  .inf-stage__foot {
-    font-size: .72rem;
-    font-weight: 600;
-    color: var(--tldr-dim);
-  }
-  .inf-stage__jump {
-    pointer-events: auto;
-    color: var(--ochre);
-    text-decoration: none;
-    font-weight: 700;
-  }
-  .inf-stage__jump:hover {
-    color: var(--tldr-ink);
-  }
+  /* ---------- 3-column hairline gap ledger ---------- */
+  .inf-contrast { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-block: 1px solid var(--border); }
+  .inf-col { padding: 1.5rem 1.5rem 1.65rem 0; }
+  .inf-col + .inf-col { padding-left: 1.5rem; box-shadow: inset 1px 0 0 var(--border); }
+  .inf-col--mark { border-top: 2px solid var(--ochre); margin-top: -1px; }
+  .inf-col__tag { margin: 0 0 .5rem; font-size: .875rem; font-weight: 700; color: var(--ink-soft); }
+  .inf-col--mark .inf-col__tag { color: var(--ink); }
+  .inf-col h3 { margin: 0 0 .6rem; font-size: 1.125rem; font-weight: 800; letter-spacing: -.015em; line-height: 1.25; }
+  .inf-col p:last-child { margin: 0; font-size: .9375rem; line-height: 1.6; color: var(--ink-soft); text-wrap: pretty; }
 
-  /* Live Domain Pill Switcher under the 3D Stage */
-  .inf-stage-pills {
-    display: flex;
-    flex-wrap: wrap;
-    gap: .42rem;
+  /* ---------- .doors / .door strip + .q unit index (from index.astro) ---------- */
+  .doors { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border-top: 1px solid var(--border); }
+  .door {
+    font: inherit; color: inherit; text-align: left; cursor: pointer; background: none; border: 0; border-bottom: 1px solid var(--border);
+    display: flex; flex-direction: column; gap: .25rem; min-height: 4.5rem; padding: 1rem 1.1rem; position: relative;
+    transition: background-color var(--dur-fast) var(--ease);
   }
-  .inf-stage-pill {
-    appearance: none;
-    display: inline-flex;
-    align-items: center;
-    gap: .42rem;
-    min-height: 36px;
-    padding: .35rem .72rem;
-    border-radius: 999px;
-    border: 1px solid var(--tldr-hair);
-    background: color-mix(in srgb, var(--tldr-bg) 72%, transparent);
-    color: var(--tldr-dim);
-    font-family: var(--font);
-    font-size: .75rem;
-    font-weight: 700;
-    cursor: pointer;
-    transition:
-      border-color var(--dur-fast) var(--ease),
-      color var(--dur-fast) var(--ease),
-      background-color var(--dur-fast) var(--ease),
-      transform var(--dur-fast) var(--ease);
-  }
-  .inf-stage-pill:hover {
-    color: var(--tldr-ink);
-    border-color: var(--pill-accent);
-    transform: translateY(-1px);
-  }
-  .inf-stage-pill.is-active {
-    color: var(--tldr-ink);
-    border-color: var(--pill-accent);
-    background: color-mix(in srgb, var(--pill-accent) 22%, var(--tldr-bg));
-  }
-  .inf-stage-pill__dot {
-    width: 7px;
-    height: 7px;
-    border-radius: 50%;
-    background: var(--pill-accent);
-    flex-shrink: 0;
-  }
+  .door:not(:nth-child(4n + 1)) { box-shadow: inset 1px 0 0 var(--border); }
+  .door:hover, .door[aria-selected='true'] { background: var(--tint); }
+  .door[aria-selected='true']::after { content: ''; position: absolute; left: 0; right: 0; bottom: -1px; height: 3px; background: var(--accent); }
+  .door__label { display: flex; align-items: baseline; gap: .45rem; font-size: 1rem; font-weight: 800; letter-spacing: -.018em; line-height: 1.25; }
+  .door__dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); flex-shrink: 0; align-self: center; }
+  .door__n { margin-left: auto; font-size: .8125rem; font-weight: 600; color: var(--ink-soft); font-variant-numeric: tabular-nums; }
+  .door__ask { font-size: .8125rem; line-height: 1.35; color: var(--ink-soft); padding-left: 1rem; }
 
-  .pg-edge {
-    display: block;
-    position: relative;
-    width: 100%;
-    height: 22px;
-    margin-top: -22px;
-    overflow: visible;
-    pointer-events: none;
-  }
-  .pg-edge__glow {
-    fill: none;
-    stroke: color-mix(in srgb, var(--ochre) 40%, transparent);
-    stroke-width: 4;
-    filter: blur(1.5px);
-  }
-  .pg-edge__gold {
-    fill: none;
-    stroke: var(--ochre);
-    stroke-width: 1.75;
-    stroke-linejoin: miter;
-  }
+  .inf-panel.is-hidden { display: none; }
+  .status { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: .6rem 1.5rem; padding: 1.25rem 0; border-bottom: 1px solid var(--border); }
+  .status__text { margin: 0; flex: 1 1 36rem; font-size: .9375rem; line-height: 1.55; color: var(--ink-soft); }
+  .status__text strong { color: var(--ink); }
+  .status__links { display: flex; flex-wrap: wrap; gap: .6rem 1.25rem; }
 
-  /* ── Buttons ── */
-  .inf-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 44px;
-    padding: .7rem 1.35rem;
-    border-radius: 10px;
-    font-family: var(--font);
-    font-size: .9375rem;
-    font-weight: 700;
-    text-decoration: none;
-    cursor: pointer;
-    border: 1.5px solid transparent;
-    transition: transform var(--dur-fast) var(--ease), background-color var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease);
+  .qs { list-style: none; margin: 0; padding: 0; }
+  .q { border-bottom: 1px solid var(--border); }
+  .q__row { display: block; padding: 1.15rem 0; text-decoration: none; }
+  .q__ask {
+    font-family: var(--serif); font-size: clamp(1.2rem, 1.7vw, 1.45rem); font-weight: 500; line-height: 1.28; letter-spacing: -.008em;
+    color: var(--ink); display: inline; background-image: linear-gradient(var(--accent), var(--accent));
+    background-repeat: no-repeat; background-size: 0 1.5px; background-position: 0 100%; transition: background-size .45s var(--ease);
   }
-  .inf-btn--sm {
-    min-height: 40px;
-    padding: .5rem 1rem;
-    font-size: .875rem;
-  }
-  .inf-btn:hover {
-    transform: translateY(-1px);
-  }
-  .inf-btn--primary {
-    background: var(--ochre);
-    color: var(--tldr-bg);
-    border-color: var(--ochre);
-  }
-  .inf-btn--ghost {
-    background: transparent;
-    color: var(--tldr-ink);
-    border-color: var(--tldr-hair);
-  }
-  .inf-btn--ghost:hover {
-    border-color: var(--tldr-ink);
-  }
-  .inf-btn--secondary {
-    background: var(--solid);
-    color: var(--on-solid);
-    border-color: var(--border);
-  }
+  a.q__row:hover .q__ask, a.q__row:focus-visible .q__ask { background-size: 100% 1.5px; }
+  .q__deck { display: block; margin-top: .4rem; max-width: 54rem; font-size: .9375rem; line-height: 1.55; color: var(--ink-soft); }
+  .q__prompt { display: block; margin-top: .45rem; max-width: 54rem; font-family: var(--serif); font-style: italic; font-size: .9375rem; line-height: 1.45; color: var(--ink); }
+  .q__meta { display: block; margin-top: .45rem; font-size: .8125rem; color: var(--ink-soft); font-variant-numeric: tabular-nums; }
+  .q__dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--accent); margin-right: .45rem; vertical-align: 1px; }
+  .q__flag { margin-left: .6rem; font-weight: 700; color: var(--ink); white-space: nowrap; }
+  .q__flag::before { content: ''; display: inline-block; width: 6px; height: 6px; margin-right: .35rem; background: var(--ochre); transform: rotate(45deg); vertical-align: 1px; }
+  .q__link { font-size: .8125rem; }
 
-  /* ── Body Sections ── */
-  .inf-body {
-    padding-top: clamp(2.5rem, 4.5vw, 4rem);
-    padding-bottom: 4.5rem;
+  /* ---------- exhibits: hairline tabs directly on paper ---------- */
+  .inf-exhibit-tabs { display: flex; flex-wrap: wrap; gap: .25rem 2rem; border-bottom: 1px solid var(--border); }
+  .inf-exhibit-tab {
+    font: inherit; background: none; border: 0; border-bottom: 2px solid transparent; margin-bottom: -1px;
+    padding: .75rem 0; min-height: 2.75rem; font-size: .9375rem; font-weight: 700; color: var(--ink-soft);
+    cursor: pointer; text-align: left; transition: color var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease);
   }
-  .inf-sec {
-    margin-top: 4.5rem;
-  }
-  .inf-sec:first-child {
-    margin-top: 0;
-  }
-  .inf-sec__head {
-    margin-bottom: 1.5rem;
-  }
-  .inf-sec__head--row {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    align-items: flex-end;
-    gap: 1rem;
-  }
-  .inf-sec__links {
-    display: flex;
-    flex-wrap: wrap;
-    gap: .75rem 1.35rem;
-    font-size: .9375rem;
-    font-weight: 600;
-  }
-  .inf-kicker {
-    margin: 0 0 .35rem;
-    font-size: .8125rem;
-    font-weight: 700;
-    color: var(--ochre);
-  }
-  .inf-sec h2 {
-    margin: 0;
-    font-size: clamp(1.5rem, 2.8vw, 2.15rem);
-    font-weight: 800;
-    letter-spacing: -.022em;
-    line-height: 1.15;
-    color: var(--ink);
-  }
+  .inf-exhibit-tab:hover, .inf-exhibit-tab.is-active { color: var(--ink); }
+  .inf-exhibit-tab.is-active { border-bottom-color: var(--ochre); }
 
-  /* ── Contrast Grid ── */
-  .inf-contrast {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
-    gap: 1rem;
-  }
-  .inf-card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    padding: 1.35rem 1.4rem;
-  }
-  .inf-card--accent {
-    border-left: 3px solid var(--ochre);
-    background: color-mix(in srgb, var(--ochre) 6%, var(--card));
-  }
-  .inf-card__tag {
-    display: block;
-    font-size: .8125rem;
-    font-weight: 700;
-    color: var(--ink-faint);
-    margin-bottom: .4rem;
-  }
-  .inf-card--accent .inf-card__tag {
-    color: var(--ochre);
-  }
-  .inf-card h3 {
-    margin: 0 0 .55rem;
-    font-size: 1.125rem;
-    font-weight: 800;
-    line-height: 1.25;
-  }
-  .inf-card p {
-    margin: 0;
-    font-size: .9375rem;
-    line-height: 1.6;
-    color: var(--ink-soft);
-  }
+  .inf-exhibit-stage { padding-top: 1.75rem; }
+  .inf-exhibit.is-hidden { display: none; }
+  .inf-exhibit__head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: .75rem 2rem; padding-bottom: 1.25rem; border-bottom: 1px solid var(--border); }
+  .inf-exhibit__kicker { margin: 0 0 .3rem; font-size: .8125rem; font-weight: 700; color: var(--ochre); }
+  .inf-exhibit__head h3 { margin: 0; font-size: clamp(1.1875rem, 2vw, 1.45rem); font-weight: 800; letter-spacing: -.02em; line-height: 1.2; }
+  .inf-diagram { margin: 1.5rem 0 0; padding: 1rem 0; border: 0; border-radius: 0; background: transparent; overflow-x: auto; }
+  .inf-diagram svg { display: block; width: 100%; height: auto; min-width: 40rem; }
+  .inf-diagram figcaption { margin-top: .75rem; font-size: .8125rem; color: var(--ink-soft); }
 
-  /* ── Interactive 7-Track Explorer ── */
-  .inf-tabs {
-    display: flex;
-    flex-wrap: wrap;
-    gap: .5rem;
-    margin-bottom: 1.25rem;
-  }
-  .inf-tab {
-    appearance: none;
-    display: inline-flex;
-    align-items: center;
-    gap: .5rem;
-    min-height: 44px;
-    padding: .5rem .9rem;
-    border-radius: 10px;
-    border: 1px solid var(--border);
-    background: var(--card);
-    color: var(--ink-soft);
-    font-family: var(--font);
-    font-size: .875rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: border-color var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease), background-color var(--dur-fast) var(--ease), transform var(--dur-fast) var(--ease);
-  }
-  .inf-tab:hover {
-    color: var(--ink);
-    border-color: var(--tab-accent);
-    transform: translateY(-1px);
-  }
-  .inf-tab.is-active {
-    color: var(--ink);
-    border-color: var(--tab-accent);
-    background: color-mix(in srgb, var(--tab-accent) 13%, var(--card));
-  }
-  .inf-tab__dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: var(--tab-accent);
-    flex-shrink: 0;
-  }
-  .inf-tab__count {
-    font-size: .8125rem;
-    color: var(--ink-faint);
-    font-weight: 500;
-  }
+  .inf-econ { margin: 1.25rem 0 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-block: 1px solid var(--border); }
+  .inf-econ > div { padding: 1.25rem 1.25rem 1.25rem 0; }
+  .inf-econ > div + div { padding-left: 1.25rem; box-shadow: inset 1px 0 0 var(--border); }
+  .inf-econ dt { font-size: .8125rem; font-weight: 700; color: var(--mizu); }
+  .inf-econ__val { margin: .3rem 0 .45rem; font-size: 1.375rem; font-weight: 800; letter-spacing: -.02em; color: var(--ink); font-variant-numeric: tabular-nums; }
+  .inf-econ__note { margin: 0; font-size: .875rem; line-height: 1.55; color: var(--ink-soft); }
 
-  .inf-panel.is-hidden {
-    display: none;
-  }
-  .inf-panel__banner {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    align-items: center;
-    gap: 1rem 1.5rem;
-    padding: 1.2rem 1.35rem;
-    margin-bottom: 1.15rem;
-    border-radius: 14px;
-    border: 1px solid color-mix(in srgb, var(--panel-accent) 32%, var(--border));
-    background: color-mix(in srgb, var(--panel-accent) 6%, var(--card));
-  }
-  .inf-panel__banner-copy {
-    flex: 1 1 28rem;
-  }
-  .inf-panel__eyebrow {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: .45rem;
-    font-size: .8125rem;
-    font-weight: 600;
-    color: var(--ink-soft);
-    margin-bottom: .45rem;
-  }
-  .inf-panel__eyebrow strong {
-    color: var(--ink);
-    font-weight: 800;
-  }
-  .inf-panel__dot {
-    width: 9px;
-    height: 9px;
-    border-radius: 50%;
-    background: var(--panel-accent);
-  }
-  .inf-panel__sep {
-    color: var(--ink-faint);
-  }
-  .inf-panel__summary {
-    margin: 0;
-    font-size: .96875rem;
-    line-height: 1.58;
-    color: var(--ink-soft);
-    max-width: 50rem;
-  }
-  .inf-panel__actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: .65rem;
-    align-items: center;
-  }
-  .inf-unitlist {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));
-    gap: .9rem;
-  }
-  .inf-unit {
-    display: flex;
-    flex-direction: column;
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-left: 3px solid var(--panel-accent, var(--border));
-    border-radius: 14px;
-    padding: 1.15rem 1.25rem;
-    transition: transform var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease);
-  }
-  .inf-unit:hover {
-    transform: translateY(-2px);
-    border-color: var(--panel-accent, var(--border));
-  }
-  .inf-unit--free {
-    background: color-mix(in srgb, var(--panel-accent) 7%, var(--card));
-  }
-  .inf-unit__meta {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: .5rem;
-    margin-bottom: .5rem;
-  }
-  .inf-unit__num {
-    font-size: .8125rem;
-    font-weight: 700;
-    color: var(--ink-faint);
-  }
-  .inf-badge {
-    display: inline-flex;
-    align-items: center;
-    padding: .18rem .55rem;
-    border-radius: 999px;
-    font-size: .75rem;
-    font-weight: 700;
-  }
-  .inf-badge--free {
-    background: color-mix(in srgb, var(--moss) 18%, transparent);
-    color: var(--moss);
-    border: 1px solid color-mix(in srgb, var(--moss) 45%, transparent);
-  }
-  .inf-badge--paid {
-    background: var(--paper-2);
-    color: var(--ink-faint);
-    border: 1px solid var(--border);
-  }
-  .inf-unit__title {
-    margin: 0 0 .45rem;
-    font-size: 1.0625rem;
-    font-weight: 700;
-    line-height: 1.3;
-    color: var(--ink);
-  }
-  .inf-unit__deck {
-    margin: 0 0 .85rem;
-    font-size: .875rem;
-    line-height: 1.55;
-    color: var(--ink-soft);
-    flex: 1;
-  }
-  .inf-unit__prompt {
-    margin: 0 0 .85rem;
-    padding: .6rem .75rem;
-    border-radius: 8px;
-    background: var(--paper-2);
-    border: 1px solid var(--border-soft);
-    font-size: .8125rem;
-    line-height: 1.48;
-    color: var(--ink-soft);
-  }
-  .inf-unit__prompt span {
-    font-weight: 700;
-    color: var(--ink);
-  }
-  .inf-unit__cta {
-    font-size: .875rem;
-    font-weight: 600;
-  }
+  .inf-table-wrap { margin-top: 1.25rem; overflow-x: auto; border-bottom: 1px solid var(--border); }
+  .inf-table { width: 100%; border-collapse: collapse; font-size: .875rem; line-height: 1.55; min-width: 42rem; }
+  .inf-table th, .inf-table td { text-align: left; padding: .9rem 1rem .9rem .75rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+  .inf-table th { font-size: .875rem; font-weight: 700; color: var(--ink); background: var(--paper-2); }
+  .inf-table td { color: var(--ink-soft); }
+  .inf-table td strong { color: var(--ink); }
+  .inf-table tbody tr:last-child td { border-bottom: 0; }
 
-  /* ── Inside the Compendium Interactive Sample Peek ── */
-  .inf-peek-tabs {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: .65rem;
-    margin-bottom: 1.15rem;
-  }
-  @media (max-width: 52rem) {
-    .inf-peek-tabs {
-      grid-template-columns: 1fr;
-    }
-  }
-  .inf-peek-tab {
-    appearance: none;
-    display: flex;
-    align-items: center;
-    gap: .7rem;
-    text-align: left;
-    min-height: 52px;
-    padding: .75rem 1rem;
-    border-radius: 12px;
-    border: 1px solid var(--border);
-    background: var(--card);
-    color: var(--ink-soft);
-    font-family: var(--font);
-    font-size: .9rem;
-    font-weight: 700;
-    cursor: pointer;
-    transition: border-color var(--dur-fast) var(--ease), background-color var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease);
-  }
-  .inf-peek-tab:hover {
-    color: var(--ink);
-    border-color: var(--ochre);
-  }
-  .inf-peek-tab.is-active {
-    color: var(--ink);
-    border-color: var(--ochre);
-    background: color-mix(in srgb, var(--ochre) 11%, var(--card));
-  }
-  .inf-peek-tab__num {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 1.75rem;
-    height: 1.75rem;
-    border-radius: 8px;
-    background: var(--paper-2);
-    border: 1px solid var(--border);
-    font-size: .75rem;
-    font-weight: 800;
-    color: var(--ochre);
-    flex-shrink: 0;
-  }
-  .inf-peek-tab.is-active .inf-peek-tab__num {
-    background: var(--ochre);
-    color: var(--tldr-bg);
-    border-color: var(--ochre);
-  }
+  .inf-rubric { margin-top: .5rem; }
+  .inf-rubric__row { display: grid; grid-template-columns: minmax(10rem, .75fr) minmax(0, 1fr) minmax(0, 1.15fr); gap: 1rem 1.75rem; padding: 1.25rem 0; border-bottom: 1px solid var(--border); align-items: start; }
+  .inf-rubric__wt { display: block; font-size: .8125rem; font-weight: 700; color: var(--ochre); margin-bottom: .25rem; }
+  .inf-rubric__axis h4 { margin: 0; font-size: 1rem; font-weight: 800; }
+  .inf-rubric__k { display: block; font-size: .8125rem; font-weight: 700; margin-bottom: .3rem; }
+  .inf-rubric__weak .inf-rubric__k { color: var(--hanko); }
+  .inf-rubric__strong { padding-left: 1rem; border-left: 2px solid var(--moss); }
+  .inf-rubric__strong .inf-rubric__k { color: var(--moss); }
+  .inf-rubric__weak p, .inf-rubric__strong p { margin: 0; font-size: .875rem; line-height: 1.55; color: var(--ink-soft); }
 
-  .inf-peek-stage {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 18px;
-    padding: clamp(1.25rem, 2.5vw, 1.85rem);
-  }
-  .inf-peek-panel.is-hidden {
-    display: none;
-  }
-  .inf-peek-panel__head {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    align-items: flex-end;
-    gap: 1rem;
-    margin-bottom: 1.25rem;
-    padding-bottom: 1rem;
-    border-bottom: 1px solid var(--border);
-  }
-  .inf-peek-kicker {
-    display: block;
-    font-size: .75rem;
-    font-weight: 700;
-    color: var(--ochre);
-    margin-bottom: .3rem;
-  }
-  .inf-peek-panel__head h3 {
-    margin: 0;
-    font-size: 1.2rem;
-    font-weight: 800;
-    line-height: 1.25;
-    color: var(--ink);
-  }
-  .inf-peek-diagram {
-    margin: 0 0 1.25rem;
-  }
-  .inf-econ-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(15.5rem, 1fr));
-    gap: .9rem;
-  }
-  .inf-econ-card {
-    background: var(--paper-2);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 1rem 1.1rem;
-  }
-  .inf-econ-card__k {
-    display: block;
-    font-size: .75rem;
-    font-weight: 700;
-    color: var(--mizu);
-    margin-bottom: .25rem;
-  }
-  .inf-econ-card strong {
-    display: block;
-    font-size: 1.35rem;
-    font-weight: 800;
-    letter-spacing: -.02em;
-    color: var(--ink);
-    font-variant-numeric: tabular-nums;
-    margin-bottom: .4rem;
-  }
-  .inf-econ-card p {
-    margin: 0;
-    font-size: .875rem;
-    line-height: 1.55;
-    color: var(--ink-soft);
-  }
-
-  .inf-matrix-wrap {
-    overflow-x: auto;
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    background: var(--paper-2);
-  }
-  .inf-matrix {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: .875rem;
-    line-height: 1.5;
-    min-width: 42rem;
-  }
-  .inf-matrix th,
-  .inf-matrix td {
-    text-align: left;
-    padding: .85rem 1rem;
-    border-bottom: 1px solid var(--border);
-    vertical-align: top;
-  }
-  .inf-matrix th {
-    font-size: .75rem;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: .06em;
-    color: var(--ink);
-    background: var(--stone);
-  }
-  .inf-matrix td {
-    color: var(--ink-soft);
-  }
-  .inf-matrix td strong {
-    color: var(--ink);
-  }
-  .inf-matrix tr:last-child td {
-    border-bottom: 0;
-  }
-
-  .inf-rubric-grid {
-    display: grid;
-    gap: .75rem;
-  }
-  .inf-rubric-row {
-    display: grid;
-    grid-template-columns: minmax(10rem, 0.72fr) minmax(0, 1fr) minmax(0, 1.15fr);
-    gap: .85rem;
-    padding: 1rem 1.1rem;
-    border-radius: 12px;
-    border: 1px solid var(--border);
-    background: var(--paper-2);
-    align-items: start;
-  }
-  @media (max-width: 52rem) {
-    .inf-rubric-row {
-      grid-template-columns: 1fr;
-    }
-  }
-  .inf-rubric-wt {
-    display: inline-block;
-    font-size: .72rem;
-    font-weight: 800;
-    color: var(--ochre);
-    margin-bottom: .25rem;
-  }
-  .inf-rubric-axis h4 {
-    margin: 0;
-    font-size: .95rem;
-    font-weight: 800;
-    color: var(--ink);
-  }
-  .inf-rubric-label {
-    display: block;
-    font-size: .72rem;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: .06em;
-    margin-bottom: .3rem;
-  }
-  .inf-rubric-weak .inf-rubric-label {
-    color: var(--hanko);
-  }
-  .inf-rubric-strong .inf-rubric-label {
-    color: var(--moss);
-  }
-  .inf-rubric-weak p,
-  .inf-rubric-strong p {
-    margin: 0;
-    font-size: .875rem;
-    line-height: 1.52;
-    color: var(--ink-soft);
-  }
-  .inf-rubric-strong {
-    padding-left: .85rem;
-    border-left: 2px solid var(--moss);
-  }
-
-  /* ── Cursor-Spotlight Pricing Matrix ── */
-  .inf-currency {
-    display: inline-flex;
-    padding: .25rem;
-    border-radius: 12px;
-    border: 1px solid var(--border);
-    background: var(--card);
-    gap: .25rem;
-  }
+  /* ---------- pricing: hairline-divided editorial ledger ---------- */
+  .inf-currency { display: inline-flex; gap: .5rem; flex-wrap: wrap; }
   .inf-currency__btn {
-    appearance: none;
-    border: 0;
-    background: transparent;
-    color: var(--ink-soft);
-    font-family: var(--font);
-    font-size: .875rem;
-    font-weight: 700;
-    min-height: 44px;
-    padding: .45rem .95rem;
-    border-radius: 9px;
-    cursor: pointer;
-    transition: background-color var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease);
+    font: inherit; font-size: .875rem; font-weight: 700; min-height: 2.75rem; padding: 0 1rem; border-radius: 999px;
+    border: 1px solid var(--border); background: none; color: var(--ink-soft); cursor: pointer;
+    transition: background-color var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease);
   }
-  .inf-currency__btn.is-active {
-    background: var(--solid);
-    color: var(--on-solid);
-  }
+  .inf-currency__btn:hover { color: var(--ink); border-color: var(--ink); }
+  .inf-currency__btn.is-active { background: var(--solid); color: var(--on-solid); border-color: var(--solid); }
 
-  .inf-pricing {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(16.5rem, 1fr));
-    gap: 1rem;
-    align-items: stretch;
-  }
-  .inf-sku {
-    --mx: 50%;
-    --my: 0%;
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 16px;
-    padding: 1.4rem;
-    overflow: hidden;
-    transition: transform var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease), box-shadow var(--dur-fast) var(--ease);
-  }
-  .inf-sku::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    background: radial-gradient(
-      22rem circle at var(--mx) var(--my),
-      color-mix(in srgb, var(--mizu) 14%, transparent),
-      transparent 65%
-    );
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity var(--dur-fast) var(--ease);
-  }
-  .inf-sku:hover {
-    transform: translateY(-3px);
-    border-color: color-mix(in srgb, var(--ochre) 65%, var(--border));
-    box-shadow: 0 18px 36px -22px var(--shadow);
-  }
-  .inf-sku:hover::before {
-    opacity: 1;
-  }
-  .inf-sku > * {
-    position: relative;
-    z-index: 1;
-  }
-  .inf-sku--hero {
-    border: 2px solid var(--ochre);
-    background: color-mix(in srgb, var(--ochre) 8%, var(--card));
-  }
-  .inf-sku--hero::before {
-    background: radial-gradient(
-      24rem circle at var(--mx) var(--my),
-      color-mix(in srgb, var(--ochre) 20%, transparent),
-      transparent 65%
-    );
-  }
-  .inf-sku__badges {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-    gap: .4rem;
-    margin-bottom: .5rem;
-  }
-  .inf-sku__badge {
-    display: inline-block;
-    font-size: .78rem;
-    font-weight: 700;
-    color: var(--ochre);
-  }
-  .inf-sku__saving {
-    display: inline-flex;
-    align-items: center;
-    padding: .16rem .52rem;
-    border-radius: 999px;
-    font-size: .7rem;
-    font-weight: 700;
-    color: var(--moss);
-    background: color-mix(in srgb, var(--moss) 15%, transparent);
-    border: 1px solid color-mix(in srgb, var(--moss) 40%, transparent);
-  }
-  .inf-sku__saving--hero {
-    color: var(--tldr-bg);
-    background: var(--ochre);
-    border-color: var(--ochre);
-  }
-  .inf-sku h3 {
-    margin: 0 0 .4rem;
-    font-size: 1.25rem;
-    font-weight: 800;
-    line-height: 1.2;
-  }
-  .inf-sku__tag {
-    margin: 0;
-    font-size: .875rem;
-    line-height: 1.5;
-    color: var(--ink-soft);
-  }
-  .inf-sku__price {
-    margin: 1.2rem 0 1rem;
-    padding: 1rem 0;
-    border-top: 1px solid var(--border);
-    border-bottom: 1px solid var(--border);
-  }
-  .inf-sku__amount {
-    display: block;
-    font-size: 2rem;
-    font-weight: 800;
-    letter-spacing: -.03em;
-    color: var(--ink);
-    font-variant-numeric: tabular-nums;
-    line-height: 1.1;
-  }
-  .inf-sku__cadence {
-    display: block;
-    margin-top: .35rem;
-    font-size: .8125rem;
-    color: var(--ink-faint);
-  }
-  .inf-sku__select-wrap {
-    margin-bottom: 1rem;
-  }
-  .inf-sku__select-label {
-    display: block;
-    font-size: .8125rem;
-    font-weight: 600;
-    color: var(--ink-soft);
-    margin-bottom: .35rem;
-  }
-  .inf-sku__select {
-    width: 100%;
-    min-height: 44px;
-    padding: .5rem .65rem;
-    border-radius: 8px;
-    border: 1px solid var(--border);
-    background: var(--paper);
-    color: var(--ink);
-    font-family: var(--font);
-    font-size: .875rem;
-  }
-  .inf-sku__features {
-    margin: 0 0 1.35rem;
-    padding-left: 1.1rem;
-    font-size: .875rem;
-    line-height: 1.55;
-    color: var(--ink-soft);
-    flex: 1;
-  }
-  .inf-sku__features li {
-    margin-bottom: .45rem;
-  }
-  .inf-sku__cta {
-    width: 100%;
-  }
+  .inf-ledger { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border-block: 1px solid var(--border); align-items: stretch; }
+  .inf-sku { display: flex; flex-direction: column; padding: 1.65rem 1.35rem; background: var(--paper); }
+  .inf-sku + .inf-sku { box-shadow: inset 1px 0 0 var(--border); }
+  .inf-sku--hero { background: var(--tldr-bg); color: var(--tldr-ink); border-top: 3px solid var(--ochre); margin-top: -1px; box-shadow: none; }
+  .inf-sku--hero + .inf-sku { box-shadow: none; }
+  .inf-sku__badge { margin: 0 0 .45rem; font-size: .8125rem; font-weight: 700; color: var(--ochre); }
+  .inf-sku h3 { margin: 0 0 .4rem; font-size: 1.25rem; font-weight: 800; letter-spacing: -.02em; line-height: 1.2; }
+  .inf-sku__tag { margin: 0; font-size: .875rem; line-height: 1.5; color: var(--ink-soft); }
+  .inf-sku--hero .inf-sku__tag { color: var(--tldr-dim); }
+  .inf-sku__price { margin: 1.25rem 0 1rem; padding: 1rem 0; border-block: 1px solid var(--border); }
+  .inf-sku--hero .inf-sku__price { border-color: var(--tldr-hair); }
+  .inf-sku__amount { display: block; font-size: 2rem; font-weight: 800; letter-spacing: -.03em; line-height: 1.1; font-variant-numeric: tabular-nums; }
+  .inf-sku__cadence { display: block; margin-top: .35rem; font-size: .8125rem; color: var(--ink-soft); }
+  .inf-sku--hero .inf-sku__cadence { color: var(--tldr-dim); }
+  .inf-sku__note { display: block; margin-top: .4rem; font-size: .8125rem; font-weight: 700; color: var(--moss); }
+  .inf-sku--hero .inf-sku__note { color: var(--ochre); }
+  .inf-sku__select-wrap { margin-bottom: 1rem; }
+  .inf-sku__select-label { display: block; font-size: .8125rem; font-weight: 600; color: var(--ink-soft); margin-bottom: .35rem; }
+  .inf-sku__select { width: 100%; min-height: 2.75rem; padding: .5rem .65rem; border-radius: 8px; border: 1px solid var(--border); background: var(--paper-2); color: var(--ink); font: inherit; font-size: .875rem; }
+  .inf-sku__features { list-style: none; margin: 0 0 1.5rem; padding: 0; font-size: .875rem; line-height: 1.55; color: var(--ink-soft); flex: 1; }
+  .inf-sku--hero .inf-sku__features { color: var(--tldr-dim); }
+  .inf-sku__features li { position: relative; padding-left: 1rem; margin-bottom: .5rem; }
+  .inf-sku__features li::before { content: ''; position: absolute; left: 0; top: .58em; width: 5px; height: 5px; background: var(--ochre); transform: rotate(45deg); }
+  .inf-sku__cta { width: 100%; }
 
-  .inf-guarantee {
-    margin-top: 1.25rem;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
-    gap: 1rem;
-    background: var(--stone);
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    padding: 1.25rem 1.35rem;
-    font-size: .9375rem;
-    line-height: 1.58;
-    color: var(--ink-soft);
-  }
-  .inf-guarantee strong {
-    color: var(--ink);
-  }
+  .inf-guarantee { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.25rem 2.5rem; padding: 1.4rem 0; border-bottom: 1px solid var(--border); font-size: .9375rem; line-height: 1.6; color: var(--ink-soft); }
+  .inf-guarantee p { margin: 0; }
+  .inf-guarantee strong { color: var(--ink); }
 
-  /* ── Authors ── */
-  .inf-authors {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
-    gap: 1rem;
-  }
-  .inf-author {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-left: 3px solid var(--author-accent, var(--mizu));
-    border-radius: 14px;
-    padding: 1.35rem;
-  }
-  .inf-author__role {
-    margin: 0 0 .35rem;
-    font-size: .8125rem;
-    font-weight: 700;
-    color: var(--author-accent, var(--mizu));
-  }
-  .inf-author h3 {
-    margin: 0 0 .55rem;
-    font-size: 1.2rem;
-    font-weight: 800;
-  }
-  .inf-author__bio {
-    margin: 0 0 .9rem;
-    font-size: .9375rem;
-    line-height: 1.6;
-    color: var(--ink-soft);
-  }
-  .inf-bridge {
-    margin-top: 1rem;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    align-items: center;
-    gap: 1rem;
-    background: var(--paper-2);
-    border: 1px solid var(--border);
-    border-radius: 14px;
-    padding: 1.15rem 1.35rem;
-    font-size: .9375rem;
-    line-height: 1.55;
-    color: var(--ink-soft);
-  }
-  .inf-bridge strong {
-    color: var(--ink);
-  }
-  .inf-bridge__links {
-    display: flex;
-    flex-wrap: wrap;
-    gap: .75rem 1.25rem;
-    font-weight: 600;
-  }
+  /* ---------- authors band (matching .working in index.astro) ---------- */
+  .working { margin-top: clamp(3.5rem, 6vw, 5.5rem); background: var(--paper-2); border-block: 1px solid var(--border); }
+  .working__in { display: grid; grid-template-columns: minmax(0, 4.5fr) minmax(0, 3.75fr) minmax(0, 3.75fr); gap: 2.5rem clamp(2rem, 4vw, 3.5rem); padding-block: clamp(2.5rem, 5vw, 4rem); align-items: start; }
+  .working h2 { margin: 0; font-size: clamp(1.5rem, 2.5vw, 2.1rem); font-weight: 800; letter-spacing: -.03em; line-height: 1.12; text-wrap: balance; }
+  .working p { margin: .75rem 0 1rem; font-size: .9375rem; line-height: 1.6; color: var(--ink-soft); text-wrap: pretty; }
+  .working__links { display: flex; flex-wrap: wrap; gap: .6rem 1.25rem; }
+  .working__author { padding-left: 1.25rem; border-left: 2px solid var(--accent, var(--border)); }
+  .working__role { margin: 0 0 .35rem !important; font-size: .8125rem !important; font-weight: 700; color: var(--accent, var(--ink-soft)) !important; }
+  .working__author h3 { margin: 0; font-size: 1.125rem; font-weight: 800; letter-spacing: -.015em; }
 
-  /* ── FAQs ── */
-  .inf-faqs {
-    display: grid;
-    gap: .75rem;
-    max-width: 56rem;
-  }
-  .inf-faq {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 1rem 1.25rem;
-  }
+  /* ---------- FAQ: hairline-divided, questions in Newsreader --serif ---------- */
+  .inf-faq-sec { padding-bottom: 1rem; }
+  .inf-faqs { max-width: 56rem; border-top: 1px solid var(--border); }
+  .inf-faq { border-bottom: 1px solid var(--border); }
   .inf-faq summary {
-    font-weight: 700;
-    font-size: 1rem;
-    line-height: 1.4;
-    color: var(--ink);
-    cursor: pointer;
-    min-height: 28px;
+    list-style: none; display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+    min-height: 3.25rem; padding: 1rem 0; font-family: var(--serif); font-size: clamp(1.125rem, 1.6vw, 1.3125rem);
+    font-weight: 500; line-height: 1.35; color: var(--ink); cursor: pointer;
   }
-  .inf-faq p {
-    margin: .75rem 0 0;
-    font-size: .9375rem;
-    line-height: 1.65;
-    color: var(--ink-soft);
+  .inf-faq summary::-webkit-details-marker { display: none; }
+  .inf-faq summary::after { content: '+'; font-family: var(--font); font-size: 1.25rem; font-weight: 600; color: var(--ochre); flex-shrink: 0; }
+  .inf-faq[open] summary::after { content: '−'; }
+  .inf-faq p { margin: 0 0 1.25rem; max-width: 48rem; font-size: .9375rem; line-height: 1.65; color: var(--ink-soft); }
+
+  /* ---------- responsive breakpoints (DESIGN-SYSTEM.md) ---------- */
+  @media (max-width: 68rem) {
+    .inf-hero__grid, .working__in { grid-template-columns: minmax(0, 1fr); }
+    .doors { display: flex; overflow-x: auto; scroll-snap-type: x proximity; scrollbar-width: none; border-bottom: 1px solid var(--border); }
+    .doors::-webkit-scrollbar { display: none; }
+    .door { flex: 0 0 min(15.5rem, 72vw); scroll-snap-align: start; border-bottom: 0; }
+    .door + .door { box-shadow: inset 1px 0 0 var(--border); }
+    .inf-ledger { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .inf-sku { border-bottom: 1px solid var(--border); }
+    .inf-sku:nth-child(odd) { box-shadow: none; }
+  }
+  @media (max-width: 48rem) {
+    .inf-contrast, .inf-econ, .inf-rubric__row, .inf-guarantee { grid-template-columns: minmax(0, 1fr); }
+    .inf-col, .inf-col + .inf-col, .inf-econ > div, .inf-econ > div + div { padding: 1.25rem 0; box-shadow: none; }
+    .inf-col + .inf-col, .inf-econ > div + div { border-top: 1px solid var(--border); }
+  }
+  @media (max-width: 40rem) {
+    .inf-specs { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .inf-ledger { grid-template-columns: minmax(0, 1fr); }
+    .inf-sku + .inf-sku { box-shadow: none; }
   }
 </style>
