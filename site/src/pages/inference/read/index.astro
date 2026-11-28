@@ -2,7 +2,7 @@
 import { getCollection } from 'astro:content';
 import Base from '../../../layouts/Base.astro';
 import { plateEdge, EDGE_DEPTH } from '../../../lib/bowl';
-import { INFERENCE_STATS, INFERENCE_TRACK_GROUPS, INFERENCE_UNITS } from '../../../data/inference';
+import { INFERENCE_STATS, INFERENCE_TRACK_GROUPS, INFERENCE_UNITS, type InferenceUnit } from '../../../data/inference';
 
 const freeEntries = (await getCollection('inference')).sort((a, b) => a.data.order - b.data.order);
 
@@ -11,6 +11,34 @@ const clip = `polygon(0 0, 100% 0, ${[...edge].reverse().map(([x, d]) => `${x.to
 const line = edge.map(([x, d]) => `${(x * 10).toFixed(0)},${(EDGE_DEPTH - d).toFixed(1)}`).join(' ');
 
 const lockedUnits = INFERENCE_UNITS.filter((u) => !u.isFree);
+
+const FILTER_BAR = [
+  { id: 'all', label: `All ${INFERENCE_UNITS.length}`, accent: 'ochre' },
+  { id: 'free', label: `Free Only (${INFERENCE_STATS.unitsFree})`, accent: 'moss' },
+  { id: 'foundations', label: 'Foundations', accent: 'mizu' },
+  { id: 'consulting', label: 'Consulting', accent: 'hanko' },
+  { id: 'marketing', label: 'Marketing', accent: 'mizu' },
+  { id: 'product', label: 'Product', accent: 'plum' },
+  { id: 'operations', label: 'Operations', accent: 'moss' },
+  { id: 'finance', label: 'Finance', accent: 'ochre' },
+  { id: 'hr', label: 'HR & People', accent: 'indigo' },
+  { id: 'inserts', label: 'Inserts', accent: 'ochre' },
+] as const;
+
+function getUnitDepth(u: InferenceUnit): string {
+  if (u.id === 'ai-casebook') return 'Casebook · 10 cases & 10 guesstimates (~25 min study)';
+  if (u.id === 'hr-casebook') return 'Casebook · 4 cases & 4 guesstimates (~16 min study)';
+  if (u.id.endsWith('casebook')) return 'Casebook · 8 worked cases & rubrics (~22 min study)';
+  if (u.id === 'interview-room') return 'Interview drills · Screening & live rubric (~15 min study)';
+  return 'Core mechanism & economics · ~14 min study';
+}
+
+function getUnitTierLabel(u: InferenceUnit): string {
+  if (u.trackId === 'foundations' || u.trackId === 'inserts') {
+    return 'Full 36-Unit Edition (₹1,999 / $49) & Accelerator';
+  }
+  return `Single Domain Track (₹499 / $19) & Full Edition (₹1,999 / $49)`;
+}
 ---
 
 <Base
@@ -66,30 +94,45 @@ const lockedUnits = INFERENCE_UNITS.filter((u) => !u.isFree);
 
   <div class="wrap hub-body">
     <section class="hub-sec" aria-labelledby="free-units-heading">
-      <p class="hub-kicker">Available in full · zero signup required</p>
-      <h2 id="free-units-heading">The 5 Free Edition units</h2>
+      <div class="hub-sec__head">
+        <div>
+          <p class="hub-kicker">Available in full · zero signup required</p>
+          <h2 id="free-units-heading">The 5 Free Edition units</h2>
+        </div>
+        <p class="hub-sec__note">Move your pointer across any folio plate to inspect the unit brief.</p>
+      </div>
 
       <div class="free-grid">
-        {freeEntries.map((entry) => (
+        {freeEntries.map((entry, idx) => (
           <a
             class="free-card"
             href={`/inference/read/${entry.id}/`}
             style={`--card-accent:var(--${entry.data.accent})`}
+            data-tilt-card
           >
-            <div class="free-card__meta">
-              <span class="free-card__unit">{entry.data.unitNumber} · {entry.data.track}</span>
-              <span class="free-card__time">{entry.data.readingTime}</span>
+            <div class="free-card__surface">
+              <div class="free-card__meta">
+                <span class="free-card__unit">{entry.data.unitNumber} · {entry.data.track}</span>
+                <span class="free-card__folio">0{idx + 1} / 0{freeEntries.length}</span>
+              </div>
+              <div class="free-card__submeta">
+                <span class="free-card__part">{entry.data.part}</span>
+                <span class="free-card__time">{entry.data.readingTime}</span>
+              </div>
+              <h3>{entry.data.title}</h3>
+              <p class="free-card__hook">{entry.data.hook}</p>
+              <p class="free-card__deck">{entry.data.deck}</p>
+              <div class="free-card__foot">
+                <span class="free-card__cta">Read full unit →</span>
+                <span class="free-card__open">Open reader</span>
+              </div>
             </div>
-            <h3>{entry.data.title}</h3>
-            <p class="free-card__hook">{entry.data.hook}</p>
-            <p class="free-card__deck">{entry.data.deck}</p>
-            <span class="free-card__cta">Read full unit →</span>
           </a>
         ))}
       </div>
     </section>
 
-    <section class="hub-sec" aria-labelledby="locked-roadmap-heading">
+    <section class="hub-sec" id="syllabus" aria-labelledby="locked-roadmap-heading">
       <div class="hub-sec__head">
         <div>
           <p class="hub-kicker">Paid Edition roadmap · {lockedUnits.length} remaining units</p>
@@ -100,39 +143,137 @@ const lockedUnits = INFERENCE_UNITS.filter((u) => !u.isFree);
         </a>
       </div>
 
-      <div class="roadmap">
+      <div class="syllabus-toolbar">
+        <div class="syllabus-filters" role="group" aria-label="Filter syllabus units by track">
+          {FILTER_BAR.map((f, idx) => (
+            <button
+              type="button"
+              class:list={['syllabus-pill', idx === 0 && 'is-active']}
+              data-syllabus-filter={f.id}
+              aria-pressed={idx === 0 ? 'true' : 'false'}
+              style={`--pill-accent:var(--${f.accent})`}
+            >
+              {f.id !== 'all' && <span class="syllabus-pill__dot" aria-hidden="true"></span>}
+              <span>{f.label}</span>
+            </button>
+          ))}
+        </div>
+        <p class="syllabus-status" id="syllabus-status" aria-live="polite">
+          Showing {INFERENCE_UNITS.length} of {INFERENCE_UNITS.length} units · Select any Paid unit to preview its scope
+        </p>
+      </div>
+
+      <div class="roadmap" id="syllabus-roadmap">
         {INFERENCE_TRACK_GROUPS.map((g) => {
           const list = INFERENCE_UNITS.filter((u) => u.trackId === g.id);
           return (
-            <section class="roadmap-group" style={`--group-accent:var(--${g.accent})`}>
+            <section
+              class="roadmap-group"
+              data-track-group={g.id}
+              style={`--group-accent:var(--${g.accent})`}
+            >
               <header class="roadmap-group__head">
                 <div>
                   <h3>{g.label}</h3>
                   <p>{g.summary}</p>
                 </div>
-                <span class="roadmap-group__count">{list.length} units</span>
+                <span class="roadmap-group__count" data-group-count={list.length}>{list.length} units</span>
               </header>
               <ol class="roadmap-list">
                 {list.map((u) => (
-                  <li class:list={['roadmap-item', u.isFree && 'roadmap-item--free']}>
-                    <div class="roadmap-item__left">
-                      <span class="roadmap-item__num">{u.unitNumber}</span>
-                      <div>
-                        <strong>{u.title}</strong>
-                        <p>{u.deck}</p>
+                  <li
+                    class:list={['roadmap-item', u.isFree ? 'roadmap-item--free' : 'roadmap-item--locked']}
+                    data-syllabus-item
+                    data-item-track={u.trackId}
+                    data-item-free={u.isFree ? 'true' : 'false'}
+                  >
+                    {u.isFree && u.freeSlug ? (
+                      <div class="roadmap-item__row">
+                        <div class="roadmap-item__left">
+                          <span class="roadmap-item__num">{u.unitNumber}</span>
+                          <div>
+                            <strong>{u.title}</strong>
+                            <p>{u.deck}</p>
+                          </div>
+                        </div>
+                        <div class="roadmap-item__right">
+                          <a class="roadmap-badge roadmap-badge--free" href={`/inference/read/${u.freeSlug}/`}>
+                            {u.freeScope ?? 'Free'} →
+                          </a>
+                        </div>
                       </div>
-                    </div>
-                    <div class="roadmap-item__right">
-                      {u.isFree && u.freeSlug ? (
-                        <a class="roadmap-badge roadmap-badge--free" href={`/inference/read/${u.freeSlug}/`}>
-                          {u.freeScope ?? 'Free'} →
-                        </a>
-                      ) : (
-                        <a class="roadmap-badge roadmap-badge--locked" href="/inference/#pricing">
-                          Paid Edition
-                        </a>
-                      )}
-                    </div>
+                    ) : (
+                      <div class="roadmap-locked-shell">
+                        <button
+                          type="button"
+                          class="roadmap-item__trigger"
+                          aria-expanded="false"
+                          aria-controls={`peek-${u.id}`}
+                          data-peek-unit={u.id}
+                        >
+                          <div class="roadmap-item__left">
+                            <span class="roadmap-item__num">{u.unitNumber}</span>
+                            <div>
+                              <strong>{u.title}</strong>
+                              <p>{u.deck}</p>
+                            </div>
+                          </div>
+                          <div class="roadmap-item__right">
+                            <span class="roadmap-badge roadmap-badge--locked">
+                              <span class="roadmap-badge__label">Peek unit</span>
+                              <span class="roadmap-badge__chevron" aria-hidden="true">+</span>
+                            </span>
+                          </div>
+                        </button>
+
+                        <div id={`peek-${u.id}`} class="roadmap-peek" hidden>
+                          <div class="roadmap-peek__inner">
+                            <div class="roadmap-peek__grid">
+                              <div class="roadmap-peek__main">
+                                <p class="roadmap-peek__kicker">Unit brief · {u.partTitle}</p>
+                                <p class="roadmap-peek__deck">{u.deck}</p>
+                                {u.questions.length > 0 && (
+                                  <div class="roadmap-peek__questions">
+                                    <p class="roadmap-peek__qlabel">Questions this unit prepares you to answer</p>
+                                    <ul>
+                                      {u.questions.map((q) => (
+                                        <li>{q}</li>
+                                      ))}
+                                    </ul>
+                                  </div>
+                                )}
+                              </div>
+                              <dl class="roadmap-peek__meta">
+                                <div>
+                                  <dt>Track membership</dt>
+                                  <dd>{u.trackLabel} · {u.partTitle}</dd>
+                                </div>
+                                <div>
+                                  <dt>Estimated reading depth</dt>
+                                  <dd>{getUnitDepth(u)}</dd>
+                                </div>
+                                <div>
+                                  <dt>Included in</dt>
+                                  <dd>{getUnitTierLabel(u)}</dd>
+                                </div>
+                              </dl>
+                            </div>
+                            <div class="roadmap-peek__foot">
+                              <a
+                                class="inf-btn inf-btn--primary roadmap-peek__cta"
+                                href={`/inference/?track=${u.trackId}#pricing`}
+                                data-peek-cta={u.id}
+                              >
+                                Get {u.trackLabel} or Full Edition →
+                              </a>
+                              <a class="linkish roadmap-peek__glossary" href="/inference/glossary/">
+                                Inspect related glossary terms
+                              </a>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    )}
                   </li>
                 ))}
               </ol>
@@ -140,9 +281,170 @@ const lockedUnits = INFERENCE_UNITS.filter((u) => !u.isFree);
           );
         })}
       </div>
+
+      <p class="syllabus-empty is-hidden" id="syllabus-empty">
+        No units match that track selection. Choose All 36 to restore the complete roadmap.
+      </p>
     </section>
   </div>
 </Base>
+
+<script>
+  // 1. 3D-perspective tilt + radial cursor spotlight on the 5 Free Edition folio cards
+  const canHoverTilt =
+    window.matchMedia('(hover: hover) and (pointer: fine)').matches &&
+    !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (canHoverTilt) {
+    for (const card of document.querySelectorAll<HTMLElement>('[data-tilt-card]')) {
+      card.addEventListener('pointermove', (e) => {
+        const rect = card.getBoundingClientRect();
+        if (!rect.width || !rect.height) return;
+        const px = Math.min(1, Math.max(0, (e.clientX - rect.left) / rect.width));
+        const py = Math.min(1, Math.max(0, (e.clientY - rect.top) / rect.height));
+        const rx = ((0.5 - py) * 7.5).toFixed(2);
+        const ry = ((px - 0.5) * 8.5).toFixed(2);
+        card.style.setProperty('--mx', `${(px * 100).toFixed(1)}%`);
+        card.style.setProperty('--my', `${(py * 100).toFixed(1)}%`);
+        card.style.setProperty('--rx', `${rx}deg`);
+        card.style.setProperty('--ry', `${ry}deg`);
+        card.style.setProperty('--lift', '-4px');
+      });
+
+      card.addEventListener('pointerleave', () => {
+        card.style.setProperty('--rx', '0deg');
+        card.style.setProperty('--ry', '0deg');
+        card.style.setProperty('--lift', '0px');
+      });
+    }
+  }
+
+  // 2. Interactive Track Filter Bar for the 36-unit syllabus
+  const filterBtns = [...document.querySelectorAll<HTMLButtonElement>('[data-syllabus-filter]')];
+  const groups = [...document.querySelectorAll<HTMLElement>('[data-track-group]')];
+  const items = [...document.querySelectorAll<HTMLElement>('[data-syllabus-item]')];
+  const statusEl = document.getElementById('syllabus-status');
+  const emptyEl = document.getElementById('syllabus-empty');
+
+  const FILTER_LABELS: Record<string, string> = {
+    all: 'all tracks',
+    free: 'Free Edition',
+    foundations: 'Foundations',
+    consulting: 'Consulting & Strategy',
+    marketing: 'Marketing & Brand',
+    product: 'Product Management',
+    operations: 'Operations & Supply Chain',
+    finance: 'Finance & Banking',
+    hr: 'HR & People',
+    inserts: 'Quarterly Inserts',
+  };
+
+  function applySyllabusFilter(filterId: string) {
+    for (const btn of filterBtns) {
+      const on = btn.dataset.syllabusFilter === filterId;
+      btn.classList.toggle('is-active', on);
+      btn.setAttribute('aria-pressed', on ? 'true' : 'false');
+    }
+
+    let totalVisible = 0;
+    let visibleTracks = 0;
+
+    for (const group of groups) {
+      const groupItems = [...group.querySelectorAll<HTMLElement>('[data-syllabus-item]')];
+      let groupVisible = 0;
+
+      for (const item of groupItems) {
+        const match =
+          filterId === 'all' ||
+          (filterId === 'free' && item.dataset.itemFree === 'true') ||
+          item.dataset.itemTrack === filterId;
+
+        item.classList.toggle('is-hidden', !match);
+        if (match) {
+          groupVisible += 1;
+          totalVisible += 1;
+        }
+      }
+
+      group.classList.toggle('is-hidden', groupVisible === 0);
+      if (groupVisible > 0) {
+        visibleTracks += 1;
+        group.classList.remove('is-filtering-in');
+        void group.offsetWidth;
+        group.classList.add('is-filtering-in');
+      }
+
+      const countBadge = group.querySelector<HTMLElement>('[data-group-count]');
+      if (countBadge) {
+        const baseCount = countBadge.dataset.groupCount || String(groupItems.length);
+        countBadge.textContent =
+          filterId === 'free'
+            ? `${groupVisible} of ${baseCount} free`
+            : `${groupVisible} ${groupVisible === 1 ? 'unit' : 'units'}`;
+      }
+    }
+
+    if (statusEl) {
+      if (filterId === 'all') {
+        statusEl.textContent = `Showing ${totalVisible} of ${items.length} units · Select any Paid unit to preview its scope`;
+      } else {
+        const label = FILTER_LABELS[filterId] || filterId;
+        statusEl.textContent = `Showing ${totalVisible} of ${items.length} units in ${label} (${visibleTracks} ${visibleTracks === 1 ? 'section' : 'sections'})`;
+      }
+    }
+
+    emptyEl?.classList.toggle('is-hidden', totalVisible > 0);
+  }
+
+  for (const btn of filterBtns) {
+    btn.addEventListener('click', () => {
+      const id = btn.dataset.syllabusFilter || 'all';
+      applySyllabusFilter(id);
+    });
+  }
+
+  const initialTrack = new URLSearchParams(location.search).get('track');
+  if (initialTrack && filterBtns.some((b) => b.dataset.syllabusFilter === initialTrack)) {
+    applySyllabusFilter(initialTrack);
+  }
+
+  // 3. Peek Locked Unit inline expandable drawer + Umami event
+  for (const trigger of document.querySelectorAll<HTMLButtonElement>('[data-peek-unit]')) {
+    trigger.addEventListener('click', () => {
+      const unitId = trigger.dataset.peekUnit || '';
+      const panelId = trigger.getAttribute('aria-controls');
+      const panel = panelId ? document.getElementById(panelId) : null;
+      if (!panel) return;
+
+      const isOpen = trigger.getAttribute('aria-expanded') === 'true';
+      const nextOpen = !isOpen;
+      trigger.setAttribute('aria-expanded', nextOpen ? 'true' : 'false');
+
+      const shell = trigger.closest('.roadmap-item');
+      shell?.classList.toggle('is-expanded', nextOpen);
+
+      const label = trigger.querySelector('.roadmap-badge__label');
+      const chevron = trigger.querySelector('.roadmap-badge__chevron');
+      if (label) label.textContent = nextOpen ? 'Close preview' : 'Peek unit';
+      if (chevron) chevron.textContent = nextOpen ? '−' : '+';
+
+      if (nextOpen) {
+        panel.hidden = false;
+        panel.classList.remove('is-opening');
+        void panel.offsetWidth;
+        panel.classList.add('is-opening');
+
+        const w = window as unknown as {
+          umami?: { track?: (name: string, data: Record<string, string>) => void };
+        };
+        w.umami?.track?.('inference_locked_peek', { unit: unitId });
+      } else {
+        panel.hidden = true;
+        panel.classList.remove('is-opening');
+      }
+    });
+  }
+</script>
 
 <style>
   .pg-plate {
@@ -233,6 +535,10 @@ const lockedUnits = INFERENCE_UNITS.filter((u) => !u.isFree);
     font-weight: 700;
     text-decoration: none;
     border: 1.5px solid transparent;
+    transition: transform var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease), background-color var(--dur-fast) var(--ease);
+  }
+  .inf-btn:hover {
+    transform: translateY(-1px);
   }
   .inf-btn--primary {
     background: var(--ochre);
@@ -243,6 +549,9 @@ const lockedUnits = INFERENCE_UNITS.filter((u) => !u.isFree);
     background: transparent;
     color: var(--tldr-ink);
     border-color: var(--tldr-hair);
+  }
+  .inf-btn--ghost:hover {
+    border-color: var(--tldr-ink);
   }
 
   .pg-edge {
@@ -285,6 +594,11 @@ const lockedUnits = INFERENCE_UNITS.filter((u) => !u.isFree);
     gap: 1rem;
     margin-bottom: 1.5rem;
   }
+  .hub-sec__note {
+    margin: 0;
+    font-size: .875rem;
+    color: var(--ink-faint);
+  }
   .hub-kicker {
     margin: 0 0 .35rem;
     font-size: .8125rem;
@@ -301,73 +615,210 @@ const lockedUnits = INFERENCE_UNITS.filter((u) => !u.isFree);
     margin-bottom: 0;
   }
 
+  /* 3D-perspective tilt book-card showcase */
   .free-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(19rem, 1fr));
-    gap: 1rem;
+    gap: 1.15rem;
+    perspective: 1200px;
   }
   .free-card {
+    --mx: 50%;
+    --my: 50%;
+    --rx: 0deg;
+    --ry: 0deg;
+    --lift: 0px;
+    position: relative;
     display: flex;
     flex-direction: column;
     background: var(--card);
     border: 1px solid var(--border);
-    border-left: 3px solid var(--card-accent, var(--ochre));
+    border-left: 4px solid var(--card-accent, var(--ochre));
     border-radius: 16px;
-    padding: 1.35rem 1.45rem;
+    padding: 1.4rem 1.5rem;
     text-decoration: none;
-    transition: transform var(--dur-fast) var(--ease), box-shadow var(--dur-fast) var(--ease);
+    overflow: hidden;
+    transform-style: preserve-3d;
+    transform: perspective(1000px) rotateX(var(--rx)) rotateY(var(--ry)) translateY(var(--lift));
+    transition: transform .22s var(--ease), box-shadow var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease);
+    will-change: transform;
+  }
+  .free-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: radial-gradient(
+      26rem circle at var(--mx) var(--my),
+      color-mix(in srgb, var(--card-accent, var(--ochre)) 15%, transparent),
+      transparent 65%
+    );
+    opacity: 0;
+    transition: opacity .25s var(--ease);
+    pointer-events: none;
+  }
+  .free-card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 3.5rem;
+    height: 3.5rem;
+    background: linear-gradient(
+      225deg,
+      color-mix(in srgb, var(--ochre) 20%, transparent) 0%,
+      transparent 55%
+    );
+    pointer-events: none;
   }
   .free-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 12px 26px var(--shadow);
+    border-color: color-mix(in srgb, var(--card-accent, var(--ochre)) 55%, var(--border));
+    box-shadow: 0 18px 36px var(--shadow);
+  }
+  .free-card:hover::before {
+    opacity: 1;
+  }
+  .free-card__surface {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    transform: translateZ(12px);
   }
   .free-card__meta {
     display: flex;
     justify-content: space-between;
     align-items: center;
     gap: .5rem;
-    margin-bottom: .6rem;
+    margin-bottom: .3rem;
     font-size: .8125rem;
     font-weight: 700;
   }
   .free-card__unit {
     color: var(--card-accent, var(--ochre));
   }
-  .free-card__time {
+  .free-card__folio {
+    font-variant-numeric: tabular-nums;
     color: var(--ink-faint);
-    font-weight: 500;
+    font-weight: 600;
+  }
+  .free-card__submeta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: .5rem;
+    margin-bottom: .8rem;
+    padding-bottom: .65rem;
+    border-bottom: 1px solid var(--border-soft);
+    font-size: .8125rem;
+    color: var(--ink-faint);
+  }
+  .free-card__part {
+    font-weight: 600;
   }
   .free-card h3 {
-    margin: 0 0 .6rem;
+    margin: 0 0 .65rem;
     font-size: 1.25rem;
     font-weight: 800;
     line-height: 1.25;
     color: var(--ink);
   }
   .free-card__hook {
-    margin: 0 0 .6rem;
+    margin: 0 0 .65rem;
     font-family: var(--serif);
     font-style: italic;
     font-size: .9375rem;
-    line-height: 1.5;
+    line-height: 1.52;
     color: var(--ink);
   }
   .free-card__deck {
-    margin: 0 0 1rem;
+    margin: 0 0 1.1rem;
     font-size: .875rem;
     line-height: 1.55;
     color: var(--ink-soft);
     flex: 1;
+  }
+  .free-card__foot {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: .75rem;
+    padding-top: .7rem;
+    border-top: 1px solid var(--border-soft);
   }
   .free-card__cta {
     font-size: .875rem;
     font-weight: 700;
     color: var(--card-accent, var(--ochre));
   }
+  .free-card__open {
+    font-size: .8125rem;
+    font-weight: 600;
+    color: var(--ink-faint);
+  }
 
+  /* Track filter bar */
+  .syllabus-toolbar {
+    display: grid;
+    gap: .8rem;
+    margin-bottom: 1.4rem;
+    padding: 1rem 1.1rem;
+    background: var(--paper-2);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+  }
+  .syllabus-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .45rem;
+  }
+  .syllabus-pill {
+    appearance: none;
+    display: inline-flex;
+    align-items: center;
+    gap: .45rem;
+    min-height: 44px;
+    padding: .45rem .9rem;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: var(--card);
+    color: var(--ink-soft);
+    font-family: var(--font);
+    font-size: .8125rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease), transform var(--dur-fast) var(--ease);
+  }
+  .syllabus-pill:hover {
+    color: var(--ink);
+    border-color: var(--pill-accent, var(--ochre));
+    transform: translateY(-1px);
+  }
+  .syllabus-pill.is-active {
+    background: var(--solid);
+    color: var(--on-solid);
+    border-color: var(--solid);
+  }
+  .syllabus-pill__dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--pill-accent, var(--ochre));
+    flex-shrink: 0;
+  }
+  .syllabus-status {
+    margin: 0;
+    font-size: .875rem;
+    font-weight: 600;
+    color: var(--ink-faint);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Syllabus roadmap & Peek drawer */
   .roadmap {
     display: grid;
-    gap: 1.5rem;
+    gap: 1.4rem;
   }
   .roadmap-group {
     background: var(--card);
@@ -375,6 +826,24 @@ const lockedUnits = INFERENCE_UNITS.filter((u) => !u.isFree);
     border-top: 3px solid var(--group-accent, var(--ochre));
     border-radius: 16px;
     padding: 1.35rem 1.45rem;
+  }
+  .roadmap-group.is-hidden,
+  .roadmap-item.is-hidden,
+  .syllabus-empty.is-hidden {
+    display: none;
+  }
+  .roadmap-group.is-filtering-in {
+    animation: syllabusReveal .28s var(--ease) both;
+  }
+  @keyframes syllabusReveal {
+    from {
+      opacity: 0;
+      transform: translateY(6px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
   }
   .roadmap-group__head {
     display: flex;
@@ -402,6 +871,7 @@ const lockedUnits = INFERENCE_UNITS.filter((u) => !u.isFree);
     font-size: .8125rem;
     font-weight: 700;
     color: var(--ink-faint);
+    font-variant-numeric: tabular-nums;
   }
   .roadmap-list {
     list-style: none;
@@ -411,18 +881,49 @@ const lockedUnits = INFERENCE_UNITS.filter((u) => !u.isFree);
     gap: .75rem;
   }
   .roadmap-item {
+    border-radius: 12px;
+    background: var(--paper-2);
+    border: 1px solid var(--border-soft);
+    transition: border-color var(--dur-fast) var(--ease), background-color var(--dur-fast) var(--ease);
+  }
+  .roadmap-item--free {
+    border-color: color-mix(in srgb, var(--moss) 42%, var(--border));
+  }
+  .roadmap-item--locked:hover {
+    border-color: color-mix(in srgb, var(--group-accent, var(--ochre)) 48%, var(--border));
+  }
+  .roadmap-item.is-expanded {
+    border-color: var(--group-accent, var(--ochre));
+    background: color-mix(in srgb, var(--group-accent, var(--ochre)) 5%, var(--paper-2));
+  }
+  .roadmap-item__row {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
     align-items: center;
     gap: .75rem 1.25rem;
-    padding: .75rem .9rem;
-    border-radius: 10px;
-    background: var(--paper-2);
-    border: 1px solid var(--border-soft);
+    padding: .8rem .95rem;
   }
-  .roadmap-item--free {
-    border-color: color-mix(in srgb, var(--moss) 40%, var(--border));
+  .roadmap-locked-shell {
+    width: 100%;
+  }
+  .roadmap-item__trigger {
+    appearance: none;
+    width: 100%;
+    min-height: 44px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: .75rem 1.25rem;
+    padding: .8rem .95rem;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font-family: var(--font);
+    text-align: left;
+    cursor: pointer;
+    border-radius: 11px;
   }
   .roadmap-item__left {
     display: flex;
@@ -452,8 +953,9 @@ const lockedUnits = INFERENCE_UNITS.filter((u) => !u.isFree);
   .roadmap-badge {
     display: inline-flex;
     align-items: center;
-    min-height: 36px;
-    padding: .3rem .75rem;
+    gap: .4rem;
+    min-height: 38px;
+    padding: .35rem .8rem;
     border-radius: 999px;
     font-size: .8125rem;
     font-weight: 700;
@@ -461,13 +963,139 @@ const lockedUnits = INFERENCE_UNITS.filter((u) => !u.isFree);
     white-space: nowrap;
   }
   .roadmap-badge--free {
+    min-height: 44px;
     background: color-mix(in srgb, var(--moss) 18%, transparent);
     color: var(--moss);
     border: 1px solid color-mix(in srgb, var(--moss) 45%, transparent);
   }
   .roadmap-badge--locked {
     background: var(--paper);
-    color: var(--ink-faint);
+    color: var(--ink-soft);
     border: 1px solid var(--border);
+    transition: border-color var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease);
+  }
+  .roadmap-item__trigger:hover .roadmap-badge--locked,
+  .roadmap-item.is-expanded .roadmap-badge--locked {
+    border-color: var(--group-accent, var(--ochre));
+    color: var(--ink);
+  }
+  .roadmap-badge__chevron {
+    font-weight: 800;
+    color: var(--group-accent, var(--ochre));
+  }
+
+  /* Inline peek drawer */
+  .roadmap-peek {
+    padding: 0 .95rem 1rem;
+  }
+  .roadmap-peek.is-opening {
+    animation: syllabusReveal .24s var(--ease) both;
+  }
+  .roadmap-peek__inner {
+    border-top: 1px dashed var(--border);
+    padding-top: .95rem;
+    display: grid;
+    gap: 1rem;
+  }
+  .roadmap-peek__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.5fr) minmax(14rem, 1fr);
+    gap: 1rem 1.5rem;
+    align-items: start;
+  }
+  .roadmap-peek__kicker {
+    margin: 0 0 .35rem;
+    font-size: .8125rem;
+    font-weight: 700;
+    color: var(--group-accent, var(--ochre));
+  }
+  .roadmap-peek__deck {
+    margin: 0;
+    font-size: .9375rem;
+    line-height: 1.6;
+    color: var(--ink);
+  }
+  .roadmap-peek__questions {
+    margin-top: .9rem;
+    padding-top: .75rem;
+    border-top: 1px solid var(--border-soft);
+  }
+  .roadmap-peek__qlabel {
+    margin: 0 0 .45rem;
+    font-size: .8125rem;
+    font-weight: 700;
+    color: var(--ink-soft);
+  }
+  .roadmap-peek__questions ul {
+    margin: 0;
+    padding-left: 1.15rem;
+    display: grid;
+    gap: .4rem;
+    font-family: var(--serif);
+    font-size: .9375rem;
+    line-height: 1.5;
+    color: var(--ink-soft);
+  }
+  .roadmap-peek__meta {
+    margin: 0;
+    padding: .85rem 1rem;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    display: grid;
+    gap: .65rem;
+  }
+  .roadmap-peek__meta dt {
+    font-size: .8125rem;
+    font-weight: 700;
+    color: var(--ink-faint);
+  }
+  .roadmap-peek__meta dd {
+    margin: .15rem 0 0;
+    font-size: .875rem;
+    font-weight: 600;
+    line-height: 1.4;
+    color: var(--ink);
+  }
+  .roadmap-peek__foot {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: .75rem 1.25rem;
+  }
+  .roadmap-peek__glossary {
+    font-size: .875rem;
+    font-weight: 600;
+  }
+  .syllabus-empty {
+    padding: 2rem 0;
+    font-size: 1rem;
+    color: var(--ink-faint);
+  }
+
+  @media (max-width: 48rem) {
+    .roadmap-peek__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .free-card,
+    .syllabus-pill,
+    .inf-btn {
+      transition: none;
+      transform: none;
+    }
+    .free-card:hover,
+    .syllabus-pill:hover,
+    .inf-btn:hover {
+      transform: none;
+    }
+    .free-card__surface {
+      transform: none;
+    }
+    .roadmap-group.is-filtering-in,
+    .roadmap-peek.is-opening {
+      animation: none;
+    }
   }
 </style>

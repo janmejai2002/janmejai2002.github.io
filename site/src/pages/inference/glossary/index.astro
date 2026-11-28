@@ -7,12 +7,30 @@ const edge = plateEdge('inference-glossary');
 const clip = `polygon(0 0, 100% 0, ${[...edge].reverse().map(([x, d]) => `${x.toFixed(1)}% calc(100% - ${d.toFixed(1)}px)`).join(',')})`;
 const line = edge.map(([x, d]) => `${(x * 10).toFixed(0)},${(EDGE_DEPTH - d).toFixed(1)}`).join(' ');
 
+const sortedGlossary = [...INFERENCE_GLOSSARY].sort((a, b) => a.term.localeCompare(b.term));
+
+const ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+const letterCounts = Object.fromEntries(
+  ALPHABET.map((letter) => [
+    letter,
+    sortedGlossary.filter((item) => item.term.trim().charAt(0).toUpperCase() === letter).length,
+  ])
+);
+
 const trackCounts = Object.fromEntries(
   INFERENCE_TRACK_GROUPS.map((g) => [
     g.id,
-    INFERENCE_GLOSSARY.filter((item) => item.trackId === g.id).length,
+    sortedGlossary.filter((item) => item.trackId === g.id).length,
   ])
 );
+
+const seenLetters = new Set<string>();
+const glossaryEntries = sortedGlossary.map((item) => {
+  const letter = item.term.trim().charAt(0).toUpperCase();
+  const isFirstOfLetter = !seenLetters.has(letter);
+  if (isFirstOfLetter) seenLetters.add(letter);
+  return { ...item, letter, isFirstOfLetter };
+});
 ---
 
 <Base
@@ -27,11 +45,11 @@ const trackCounts = Object.fromEntries(
     { name: 'Glossary' },
   ]}
   schema={{
-    hasDefinedTerm: INFERENCE_GLOSSARY.slice(0, 30).map((g) => ({
+    hasDefinedTerm: sortedGlossary.slice(0, 30).map((g) => ({
       '@type': 'DefinedTerm',
       name: g.term,
       description: g.def,
-      url: `https://janmejai2002.github.io/inference/glossary/#${g.id}`,
+      url: `https://janmejai2002.github.io/inference/glossary/#term-${g.id}`,
     })),
   }}
   immersive={true}
@@ -41,7 +59,7 @@ const trackCounts = Object.fromEntries(
   <section class="pg-plate" style={`clip-path:${clip}`} aria-labelledby="glossary-title">
     <div class="wrap pg-plate__in">
       <div class="gl-top">
-        <span class="hanko-mark">Reference · {INFERENCE_GLOSSARY.length} Defined Terms</span>
+        <span class="hanko-mark">Reference · {sortedGlossary.length} Defined Terms</span>
         <a class="linkish gl-back" href="/inference/">← Back to INFERENCE</a>
       </div>
 
@@ -52,7 +70,7 @@ const trackCounts = Object.fromEntries(
       <p class="pg-plate__desc">
         Plain-language definitions across inference economics, consulting due diligence, RBI
         FREE-AI, DPDP compliance, product evaluation harnesses, and industrial operations. Every
-        term links to its parent INFERENCE unit.
+        term links to its parent INFERENCE unit and carries a direct citation anchor.
       </p>
     </div>
   </section>
@@ -65,22 +83,53 @@ const trackCounts = Object.fromEntries(
   <div class="wrap gl-body">
     <div class="gl-controls">
       <div class="gl-search-wrap">
-        <label for="glossary-search" class="sr">Search glossary terms and definitions</label>
-        <input
-          id="glossary-search"
-          class="gl-search"
-          type="search"
-          placeholder="Search 116 terms (e.g. KV cache, FREE-AI, DPDP, base rate, MMM, Weibull)..."
-          autocomplete="off"
-        />
+        <div class="gl-search-box">
+          <label for="glossary-search" class="sr">Search glossary terms and definitions</label>
+          <svg class="gl-search-icon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="11" cy="11" r="8" />
+            <path d="m21 21-4.3-4.3" />
+          </svg>
+          <input
+            id="glossary-search"
+            class="gl-search"
+            type="search"
+            placeholder="Search 116 terms (e.g. KV cache, FREE-AI, DPDP, base rate, MMM, Weibull)..."
+            autocomplete="off"
+          />
+          <button type="button" class="gl-clear is-hidden" id="glossary-clear" aria-label="Clear search query">
+            Clear
+          </button>
+          <kbd class="gl-kbd" aria-hidden="true" title="Press / to focus search">/</kbd>
+        </div>
+
         <span class="gl-count" id="glossary-count" aria-live="polite">
-          Showing {INFERENCE_GLOSSARY.length} of {INFERENCE_GLOSSARY.length} terms
+          Showing {sortedGlossary.length} of {sortedGlossary.length} terms
         </span>
+      </div>
+
+      <div class="gl-az" role="navigation" aria-label="Jump to glossary letter">
+        <span class="gl-az__label">Jump A–Z</span>
+        <div class="gl-az__list">
+          {ALPHABET.map((letter) => {
+            const count = letterCounts[letter] ?? 0;
+            return (
+              <button
+                type="button"
+                class="gl-az__btn"
+                data-az-jump={letter}
+                disabled={count === 0}
+                aria-label={count > 0 ? `Jump to ${letter} (${count} terms)` : `No terms starting with ${letter}`}
+              >
+                {letter}
+              </button>
+            );
+          })}
+        </div>
       </div>
 
       <div class="gl-filters" role="group" aria-label="Filter terms by INFERENCE track">
         <button type="button" class="gl-pill is-active" data-track-filter="all" aria-pressed="true">
-          All ({INFERENCE_GLOSSARY.length})
+          All ({sortedGlossary.length})
         </button>
         {INFERENCE_TRACK_GROUPS.filter((g) => (trackCounts[g.id] ?? 0) > 0).map((g) => (
           <button
@@ -98,7 +147,7 @@ const trackCounts = Object.fromEntries(
     </div>
 
     <div class="gl-grid" id="glossary-grid">
-      {INFERENCE_GLOSSARY.map((item) => (
+      {glossaryEntries.map((item) => (
         <article
           id={item.id}
           class="gl-card"
@@ -106,50 +155,94 @@ const trackCounts = Object.fromEntries(
           data-def={item.def.toLowerCase()}
           data-track={item.trackId}
           data-unit={item.unitTitle.toLowerCase()}
+          data-letter={item.letter}
+          data-slug={item.id}
           style={`--term-accent:var(--${item.accent})`}
         >
+          <span id={`term-${item.id}`} class="gl-card__anchor" aria-hidden="true"></span>
           <div class="gl-card__top">
             <span class="gl-card__track">{item.trackLabel}</span>
-            <span class="gl-card__unit">{item.unitNumber}</span>
+            <div class="gl-card__badges">
+              <span class="gl-card__unit">{item.unitNumber}</span>
+            </div>
           </div>
           <h2>{item.term}</h2>
           <p class="gl-card__def">{item.def}</p>
           <div class="gl-card__foot">
-            {item.isFreeUnit && item.freeSlug ? (
-              <a class="linkish" href={`/inference/read/${item.freeSlug}/`}>
-                Free unit: {item.unitTitle} →
-              </a>
-            ) : (
-              <a class="linkish" href={`/inference/?track=${item.trackId}#pricing`}>
-                Applied in {item.unitNumber}: {item.unitTitle} →
-              </a>
-            )}
-            {item.blogSlug && (
-              <a class="gl-card__blog" href={`/blog/${item.blogSlug}/`}>
-                wAIbi-sabi deep dive
-              </a>
-            )}
+            <div class="gl-card__links">
+              {item.isFreeUnit && item.freeSlug ? (
+                <a class="linkish" href={`/inference/read/${item.freeSlug}/`}>
+                  Free unit: {item.unitTitle} →
+                </a>
+              ) : (
+                <a class="linkish" href={`/inference/?track=${item.trackId}#pricing`}>
+                  {item.unitNumber}: {item.unitTitle} →
+                </a>
+              )}
+              {item.blogSlug && (
+                <a class="gl-card__blog" href={`/blog/${item.blogSlug}/`}>
+                  wAIbi-sabi deep dive
+                </a>
+              )}
+            </div>
+            <button
+              type="button"
+              class="gl-copy"
+              data-copy-term={item.id}
+              aria-label={`Copy citation link for ${item.term}`}
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+                <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+              </svg>
+              <span class="gl-copy__text">Copy link</span>
+            </button>
           </div>
         </article>
       ))}
     </div>
 
-    <p class="gl-empty is-hidden" id="glossary-empty">
-      No glossary terms match that query in the selected track. Clear the filter or search another term.
-    </p>
+    <div class="gl-empty is-hidden" id="glossary-empty">
+      <p>No glossary terms match that query in the selected track.</p>
+      <button type="button" class="gl-reset-btn" id="glossary-reset">
+        Show all {sortedGlossary.length} terms
+      </button>
+    </div>
   </div>
 </Base>
 
 <script>
   const input = document.getElementById('glossary-search') as HTMLInputElement | null;
+  const clearBtn = document.getElementById('glossary-clear') as HTMLButtonElement | null;
+  const resetBtn = document.getElementById('glossary-reset') as HTMLButtonElement | null;
   const countEl = document.getElementById('glossary-count');
   const emptyEl = document.getElementById('glossary-empty');
+  const grid = document.getElementById('glossary-grid');
   const cards = [...document.querySelectorAll<HTMLElement>('.gl-card')];
   const pills = [...document.querySelectorAll<HTMLButtonElement>('[data-track-filter]')];
+  const azButtons = [...document.querySelectorAll<HTMLButtonElement>('[data-az-jump]')];
+  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   let activeTrack = 'all';
+
+  function updateAzAvailability() {
+    const visibleLetters = new Set<string>();
+    for (const c of cards) {
+      if (!c.classList.contains('is-hidden') && c.dataset.letter) {
+        visibleLetters.add(c.dataset.letter);
+      }
+    }
+    for (const btn of azButtons) {
+      const letter = btn.dataset.azJump || '';
+      const hasMatch = visibleLetters.has(letter);
+      btn.disabled = !hasMatch;
+      btn.classList.remove('is-current');
+    }
+  }
 
   function applyFilter() {
     const q = (input?.value || '').trim().toLowerCase();
+    clearBtn?.classList.toggle('is-hidden', q.length === 0);
+
     let visible = 0;
     for (const c of cards) {
       const matchTrack = activeTrack === 'all' || c.dataset.track === activeTrack;
@@ -162,22 +255,176 @@ const trackCounts = Object.fromEntries(
       c.classList.toggle('is-hidden', !show);
       if (show) visible += 1;
     }
-    if (countEl) countEl.textContent = `Showing ${visible} of ${cards.length} terms`;
+
+    if (countEl) {
+      countEl.textContent =
+        visible === cards.length
+          ? `Showing ${visible} of ${cards.length} terms`
+          : `Showing ${visible} of ${cards.length} matching terms`;
+    }
     emptyEl?.classList.toggle('is-hidden', visible > 0);
+    updateAzAvailability();
+  }
+
+  function setTrack(trackId: string) {
+    activeTrack = trackId;
+    for (const b of pills) {
+      const on = (b.dataset.trackFilter || 'all') === trackId;
+      b.classList.toggle('is-active', on);
+      b.setAttribute('aria-pressed', on ? 'true' : 'false');
+    }
+    applyFilter();
   }
 
   input?.addEventListener('input', applyFilter);
+
+  clearBtn?.addEventListener('click', () => {
+    if (!input) return;
+    input.value = '';
+    applyFilter();
+    input.focus();
+  });
+
+  resetBtn?.addEventListener('click', () => {
+    if (input) input.value = '';
+    setTrack('all');
+    input?.focus();
+  });
+
   for (const p of pills) {
     p.addEventListener('click', () => {
-      activeTrack = p.dataset.trackFilter || 'all';
-      for (const b of pills) {
-        const on = b === p;
-        b.classList.toggle('is-active', on);
-        b.setAttribute('aria-pressed', on ? 'true' : 'false');
-      }
-      applyFilter();
+      setTrack(p.dataset.trackFilter || 'all');
     });
   }
+
+  // Keyboard `/` shortcut to focus search, `Escape` to clear/blur
+  document.addEventListener('keydown', (e) => {
+    if (e.key === '/' && !e.ctrlKey && !e.metaKey && !e.altKey) {
+      const active = document.activeElement as HTMLElement | null;
+      const tag = active?.tagName;
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || active?.isContentEditable) {
+        return;
+      }
+      e.preventDefault();
+      input?.focus();
+      input?.select();
+    } else if (e.key === 'Escape' && document.activeElement === input && input) {
+      if (input.value) {
+        input.value = '';
+        applyFilter();
+      } else {
+        input.blur();
+      }
+    }
+  });
+
+  // A–Z quick-jump ribbon
+  function highlightCard(card: HTMLElement) {
+    for (const c of cards) c.classList.remove('is-targeted');
+    card.classList.add('is-targeted');
+    window.setTimeout(() => card.classList.remove('is-targeted'), 2200);
+  }
+
+  for (const btn of azButtons) {
+    btn.addEventListener('click', () => {
+      const letter = btn.dataset.azJump || '';
+      const target = cards.find(
+        (c) => !c.classList.contains('is-hidden') && c.dataset.letter === letter
+      );
+      if (!target) return;
+      for (const b of azButtons) b.classList.toggle('is-current', b === btn);
+      target.scrollIntoView({ behavior: prefersReduced ? 'auto' : 'smooth', block: 'start' });
+      highlightCard(target);
+    });
+  }
+
+  // Pointer-spotlight hover borders via single delegated listener
+  if (
+    grid &&
+    window.matchMedia('(hover: hover) and (pointer: fine)').matches &&
+    !prefersReduced
+  ) {
+    grid.addEventListener('pointermove', (e) => {
+      const card = (e.target as HTMLElement | null)?.closest<HTMLElement>('.gl-card');
+      if (!card) return;
+      const rect = card.getBoundingClientRect();
+      if (!rect.width || !rect.height) return;
+      const x = ((e.clientX - rect.left) / rect.width) * 100;
+      const y = ((e.clientY - rect.top) / rect.height) * 100;
+      card.style.setProperty('--mx', `${x.toFixed(1)}%`);
+      card.style.setProperty('--my', `${y.toFixed(1)}%`);
+    });
+  }
+
+  // 1-click Copy link per glossary term (#term-<slug>)
+  async function copyText(text: string): Promise<boolean> {
+    try {
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(text);
+        return true;
+      }
+    } catch {}
+    try {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.setAttribute('readonly', '');
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      const ok = document.execCommand('copy');
+      ta.remove();
+      return ok;
+    } catch {
+      return false;
+    }
+  }
+
+  for (const btn of document.querySelectorAll<HTMLButtonElement>('[data-copy-term]')) {
+    btn.addEventListener('click', async () => {
+      const slug = btn.dataset.copyTerm || '';
+      if (!slug) return;
+      const hash = `#term-${slug}`;
+      const shareUrl = `${location.origin}${location.pathname}${hash}`;
+      const ok = await copyText(shareUrl);
+
+      if (ok) {
+        try {
+          history.replaceState(null, '', hash);
+        } catch {}
+        const label = btn.querySelector('.gl-copy__text');
+        if (label) label.textContent = 'Copied';
+        btn.classList.add('is-copied');
+        window.setTimeout(() => {
+          if (label) label.textContent = 'Copy link';
+          btn.classList.remove('is-copied');
+        }, 1800);
+      }
+
+      const w = window as unknown as {
+        umami?: { track?: (name: string, data: Record<string, string>) => void };
+      };
+      w.umami?.track?.('inference_glossary_copy', { term: slug });
+    });
+  }
+
+  // Handle direct deep links to #term-<slug> or #<slug>
+  function syncTargetFromHash() {
+    const raw = location.hash.replace(/^#/, '');
+    if (!raw) return;
+    const slug = raw.startsWith('term-') ? raw.slice(5) : raw;
+    const card = cards.find((c) => c.dataset.slug === slug);
+    if (!card) return;
+    if (card.classList.contains('is-hidden')) {
+      if (input) input.value = '';
+      setTrack('all');
+    }
+    card.scrollIntoView({ behavior: prefersReduced ? 'auto' : 'smooth', block: 'start' });
+    highlightCard(card);
+  }
+
+  syncTargetFromHash();
+  window.addEventListener('hashchange', syncTargetFromHash);
 </script>
 
 <style>
@@ -280,8 +527,12 @@ const trackCounts = Object.fromEntries(
   }
   .gl-controls {
     display: grid;
-    gap: 1rem;
+    gap: .95rem;
     margin-bottom: 1.75rem;
+    padding: 1.1rem 1.2rem;
+    background: var(--paper-2);
+    border: 1px solid var(--border);
+    border-radius: 16px;
   }
   .gl-search-wrap {
     display: flex;
@@ -289,23 +540,134 @@ const trackCounts = Object.fromEntries(
     align-items: center;
     gap: .75rem 1.25rem;
   }
-  .gl-search {
+  .gl-search-box {
+    position: relative;
     flex: 1 1 20rem;
-    min-height: 44px;
-    padding: .65rem .95rem;
-    border-radius: 10px;
-    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
     background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding-inline: .85rem;
+    min-height: 46px;
+    transition: border-color var(--dur-fast) var(--ease);
+  }
+  .gl-search-box:focus-within {
+    border-color: var(--mizu);
+  }
+  .gl-search-icon {
+    color: var(--ink-faint);
+    flex-shrink: 0;
+  }
+  .gl-search {
+    width: 100%;
+    min-width: 0;
+    min-height: 44px;
+    padding: .6rem .65rem;
+    border: 0;
+    background: transparent;
     color: var(--ink);
     font-family: var(--font);
     font-size: .9375rem;
   }
+  .gl-search:focus {
+    outline: none;
+  }
+  .gl-clear {
+    appearance: none;
+    border: 1px solid var(--border);
+    background: var(--paper);
+    color: var(--ink-soft);
+    font-family: var(--font);
+    font-size: .8125rem;
+    font-weight: 600;
+    min-height: 32px;
+    padding: .2rem .55rem;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-right: .4rem;
+  }
+  .gl-clear.is-hidden {
+    display: none;
+  }
+  .gl-kbd {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 1.65rem;
+    height: 1.65rem;
+    padding: 0 .35rem;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: var(--paper);
+    color: var(--ink-faint);
+    font-family: monospace;
+    font-size: .8125rem;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
   .gl-count {
     font-size: .875rem;
-    font-weight: 600;
-    color: var(--ink-faint);
+    font-weight: 700;
+    color: var(--ink-soft);
     font-variant-numeric: tabular-nums;
   }
+
+  /* A-Z quick-jump ribbon */
+  .gl-az {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: .5rem .8rem;
+    padding-block: .25rem;
+  }
+  .gl-az__label {
+    font-size: .8125rem;
+    font-weight: 700;
+    color: var(--ink-faint);
+    white-space: nowrap;
+  }
+  .gl-az__list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .25rem;
+    max-width: 100%;
+  }
+  .gl-az__btn {
+    appearance: none;
+    min-width: 2rem;
+    min-height: 34px;
+    padding: .2rem .42rem;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--card);
+    color: var(--ink);
+    font-family: var(--font);
+    font-size: .8125rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease);
+  }
+  .gl-az__btn:hover:not(:disabled) {
+    border-color: var(--ochre);
+    color: var(--ochre);
+  }
+  .gl-az__btn.is-current {
+    background: var(--solid);
+    color: var(--on-solid);
+    border-color: var(--solid);
+  }
+  .gl-az__btn:disabled {
+    opacity: .35;
+    cursor: default;
+  }
+  @media (pointer: coarse) {
+    .gl-az__btn {
+      min-width: 44px;
+      min-height: 44px;
+    }
+  }
+
   .gl-filters {
     display: flex;
     flex-wrap: wrap;
@@ -326,6 +688,11 @@ const trackCounts = Object.fromEntries(
     font-size: .8125rem;
     font-weight: 600;
     cursor: pointer;
+    transition: border-color var(--dur-fast) var(--ease), background-color var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease);
+  }
+  .gl-pill:hover {
+    color: var(--ink);
+    border-color: var(--pill-accent, var(--ochre));
   }
   .gl-pill.is-active {
     background: var(--solid);
@@ -337,14 +704,19 @@ const trackCounts = Object.fromEntries(
     height: 7px;
     border-radius: 50%;
     background: var(--pill-accent, var(--ochre));
+    flex-shrink: 0;
   }
 
+  /* Term cards with pointer-spotlight hover borders */
   .gl-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(19.5rem, 1fr));
-    gap: .9rem;
+    gap: .95rem;
   }
   .gl-card {
+    --mx: 50%;
+    --my: 50%;
+    position: relative;
     display: flex;
     flex-direction: column;
     background: var(--card);
@@ -353,10 +725,75 @@ const trackCounts = Object.fromEntries(
     border-radius: 14px;
     padding: 1.15rem 1.25rem;
     scroll-margin-top: 5.5rem;
+    overflow: hidden;
+    transition: border-color var(--dur-fast) var(--ease), box-shadow var(--dur-fast) var(--ease), transform var(--dur-fast) var(--ease);
+  }
+  .gl-card__anchor {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 1px;
+    height: 1px;
+    scroll-margin-top: 5.5rem;
+    pointer-events: none;
+  }
+  .gl-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1.5px;
+    background: radial-gradient(
+      16rem circle at var(--mx) var(--my),
+      color-mix(in srgb, var(--term-accent, var(--ochre)) 78%, transparent),
+      transparent 65%
+    );
+    -webkit-mask-image: linear-gradient(var(--ink), var(--ink)), linear-gradient(var(--ink), var(--ink));
+    -webkit-mask-clip: content-box, border-box;
+    -webkit-mask-composite: xor;
+    mask-image: linear-gradient(var(--ink), var(--ink)), linear-gradient(var(--ink), var(--ink));
+    mask-clip: content-box, border-box;
+    mask-composite: exclude;
+    opacity: 0;
+    transition: opacity .22s var(--ease);
+    pointer-events: none;
+  }
+  .gl-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: radial-gradient(
+      20rem circle at var(--mx) var(--my),
+      color-mix(in srgb, var(--term-accent, var(--ochre)) 9%, transparent),
+      transparent 62%
+    );
+    opacity: 0;
+    transition: opacity .22s var(--ease);
+    pointer-events: none;
+  }
+  .gl-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 24px var(--shadow);
+  }
+  .gl-card:hover::before,
+  .gl-card:hover::after {
+    opacity: 1;
+  }
+  .gl-card.is-targeted {
+    border-color: var(--ochre);
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--ochre) 38%, transparent);
   }
   .gl-card.is-hidden,
   .gl-empty.is-hidden {
     display: none;
+  }
+  .gl-card__top,
+  .gl-card h2,
+  .gl-card__def,
+  .gl-card__foot {
+    position: relative;
+    z-index: 1;
   }
   .gl-card__top {
     display: flex;
@@ -381,7 +818,7 @@ const trackCounts = Object.fromEntries(
     color: var(--ink);
   }
   .gl-card__def {
-    margin: 0 0 .9rem;
+    margin: 0 0 .95rem;
     font-size: .875rem;
     line-height: 1.58;
     color: var(--ink-soft);
@@ -392,20 +829,90 @@ const trackCounts = Object.fromEntries(
     flex-wrap: wrap;
     justify-content: space-between;
     align-items: center;
-    gap: .4rem .8rem;
+    gap: .55rem .8rem;
     padding-top: .7rem;
     border-top: 1px solid var(--border-soft);
     font-size: .8125rem;
     font-weight: 600;
+  }
+  .gl-card__links {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: .35rem .75rem;
+    flex: 1 1 11rem;
   }
   .gl-card__blog {
     color: var(--ink-faint);
     text-decoration: underline;
     text-underline-offset: 3px;
   }
+  .gl-copy {
+    appearance: none;
+    display: inline-flex;
+    align-items: center;
+    gap: .35rem;
+    min-height: 36px;
+    padding: .3rem .65rem;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--paper-2);
+    color: var(--ink-soft);
+    font-family: var(--font);
+    font-size: .8125rem;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: border-color var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease), background-color var(--dur-fast) var(--ease);
+  }
+  .gl-copy:hover {
+    color: var(--ink);
+    border-color: var(--term-accent, var(--ochre));
+  }
+  .gl-copy.is-copied {
+    background: color-mix(in srgb, var(--moss) 18%, var(--card));
+    border-color: var(--moss);
+    color: var(--moss);
+  }
+  @media (pointer: coarse) {
+    .gl-copy {
+      min-height: 44px;
+    }
+  }
+
   .gl-empty {
     padding: 2.5rem 0;
+  }
+  .gl-empty p {
+    margin: 0 0 .9rem;
     font-size: 1rem;
     color: var(--ink-faint);
+  }
+  .gl-reset-btn {
+    appearance: none;
+    min-height: 44px;
+    padding: .55rem 1rem;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--card);
+    color: var(--ink);
+    font-family: var(--font);
+    font-size: .875rem;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .gl-card,
+    .gl-card::before,
+    .gl-card::after,
+    .gl-pill,
+    .gl-az__btn,
+    .gl-copy {
+      transition: none;
+    }
+    .gl-card:hover {
+      transform: none;
+    }
   }
 </style>

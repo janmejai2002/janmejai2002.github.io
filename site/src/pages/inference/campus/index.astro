@@ -48,6 +48,12 @@ const line = edge.map(([x, d]) => `${(x * 10).toFixed(0)},${(EDGE_DEPTH - d).toF
       <div class="campus-actions">
         <a
           class="inf-btn inf-btn--primary"
+          href="#cohort-calculator"
+        >
+          Configure cohort &amp; ROI
+        </a>
+        <a
+          class="inf-btn inf-btn--ghost"
           href={INFERENCE_CHECKOUT.campusInquiry.fiftySeats}
           data-campus-sku="campus-50"
         >
@@ -70,6 +76,127 @@ const line = edge.map(([x, d]) => `${(x * 10).toFixed(0)},${(EDGE_DEPTH - d).toF
   </svg>
 
   <div class="wrap campus-body">
+    <!-- Interactive Live Campus Cohort & ROI Calculator -->
+    <section class="campus-sec" id="cohort-calculator" aria-labelledby="calc-heading">
+      <p class="campus-kicker">Interactive cohort configurator</p>
+      <h2 id="calc-heading">Live Campus Cohort &amp; ROI Calculator</h2>
+
+      <div class="calc-shell">
+        <div class="calc-controls">
+          <div class="calc-head">
+            <div>
+              <label for="campus-seats-slider" class="calc-label">Cohort size (seats)</label>
+              <p class="calc-sub">Slide from 30 to 600 seats to compute volume rate, B2C savings, and founder AMA eligibility.</p>
+            </div>
+            <div class="calc-seat-readout">
+              <strong id="calc-seats-value">200</strong>
+              <span>seats</span>
+            </div>
+          </div>
+
+          <div class="calc-slider-wrap">
+            <input
+              id="campus-seats-slider"
+              class="calc-slider"
+              type="range"
+              min="30"
+              max="600"
+              step="5"
+              value="200"
+              aria-describedby="calc-tier-note"
+            />
+            <div class="calc-ticks" aria-hidden="true">
+              <span>30</span>
+              <span>150 (AMA threshold)</span>
+              <span>300</span>
+              <span>600</span>
+            </div>
+          </div>
+
+          <div class="calc-presets" role="group" aria-label="Preset cohort sizes">
+            <button type="button" class="calc-preset" data-preset-seats="50">50 · Club Pack</button>
+            <button type="button" class="calc-preset" data-preset-seats="150">150 · Full Batch + AMA</button>
+            <button type="button" class="calc-preset is-active" data-preset-seats="200">200 · Standard Batch</button>
+            <button type="button" class="calc-preset" data-preset-seats="400">400 · Full PGP</button>
+          </div>
+
+          <div class="calc-org-row">
+            <label for="calc-org-input" class="calc-org-label">Club or PlaceCom name (optional, customises proposal)</label>
+            <input
+              id="calc-org-input"
+              class="calc-org-input"
+              type="text"
+              placeholder="e.g. Consulting Club / Academic Committee"
+              maxlength="80"
+              autocomplete="organization"
+            />
+          </div>
+
+          <div class="calc-compare" aria-label="Institutional price versus individual B2C comparison">
+            <div class="calc-compare__head">
+              <span>Institutional cohort cost vs individual B2C (₹1,999/student)</span>
+              <strong id="calc-discount-pct">65% lower</strong>
+            </div>
+            <div class="calc-bar-track">
+              <div class="calc-bar-fill" id="calc-bar-fill" style="--fill-pct:35%"></div>
+            </div>
+            <div class="calc-compare__foot">
+              <span>Institutional total: <strong id="calc-compare-inst">₹1,40,000</strong></span>
+              <span>B2C equivalent: <strong id="calc-compare-b2c">₹3,99,800</strong></span>
+            </div>
+          </div>
+        </div>
+
+        <div class="calc-summary">
+          <div class="calc-tier-banner">
+            <span class="calc-tier-pill" id="calc-tier-badge">Full Batch</span>
+            <span class="calc-tier-note" id="calc-tier-note">Volume batch licensing for PlaceCom cohorts</span>
+          </div>
+
+          <dl class="calc-metrics">
+            <div class="calc-metric">
+              <dt>Per-seat rate</dt>
+              <dd id="calc-per-seat">₹700</dd>
+            </div>
+            <div class="calc-metric">
+              <dt>Total investment</dt>
+              <dd id="calc-total">₹1,40,000</dd>
+            </div>
+            <div class="calc-metric calc-metric--accent">
+              <dt>Savings vs B2C (₹1,999/seat)</dt>
+              <dd id="calc-savings">₹2,59,800</dd>
+            </div>
+            <div class="calc-metric">
+              <dt>Live 90-min Founder AI/Case AMA</dt>
+              <dd id="calc-ama-status" class="is-included">Included (150+ seats)</dd>
+            </div>
+          </dl>
+
+          <div class="calc-actions">
+            <button type="button" class="inf-btn inf-btn--primary calc-copy-btn" id="calc-copy-proposal">
+              Copy PlaceCom Proposal Summary
+            </button>
+            <a
+              class="inf-btn inf-btn--secondary calc-mail-btn"
+              id="calc-mail-cta"
+              href={INFERENCE_CHECKOUT.campusInquiry.twoHundredSeats}
+            >
+              Email invoice request →
+            </a>
+          </div>
+
+          <p class="calc-copy-status" id="calc-copy-status" aria-live="polite">
+            Copies a clean, ready-to-paste WhatsApp or email brief for your Placement Committee.
+          </p>
+
+          <details class="calc-preview-details">
+            <summary>Inspect generated proposal text</summary>
+            <pre class="calc-preview-pre" id="calc-proposal-preview"></pre>
+          </details>
+        </div>
+      </div>
+    </section>
+
     <section class="campus-sec" aria-labelledby="campus-tiers-heading">
       <p class="campus-kicker">Cohort pricing</p>
       <h2 id="campus-tiers-heading">Institutional &amp; student club packs</h2>
@@ -138,6 +265,211 @@ const line = edge.map(([x, d]) => `${(x * 10).toFixed(0)},${(EDGE_DEPTH - d).toF
 </Base>
 
 <script>
+  const slider = document.getElementById('campus-seats-slider') as HTMLInputElement | null;
+  const orgInput = document.getElementById('calc-org-input') as HTMLInputElement | null;
+  const seatsValEl = document.getElementById('calc-seats-value');
+  const tierBadgeEl = document.getElementById('calc-tier-badge');
+  const tierNoteEl = document.getElementById('calc-tier-note');
+  const perSeatEl = document.getElementById('calc-per-seat');
+  const totalEl = document.getElementById('calc-total');
+  const savingsEl = document.getElementById('calc-savings');
+  const amaEl = document.getElementById('calc-ama-status');
+  const discountPctEl = document.getElementById('calc-discount-pct');
+  const barFillEl = document.getElementById('calc-bar-fill');
+  const compareInstEl = document.getElementById('calc-compare-inst');
+  const compareB2cEl = document.getElementById('calc-compare-b2c');
+  const copyBtn = document.getElementById('calc-copy-proposal') as HTMLButtonElement | null;
+  const copyStatusEl = document.getElementById('calc-copy-status');
+  const mailCtaEl = document.getElementById('calc-mail-cta') as HTMLAnchorElement | null;
+  const previewEl = document.getElementById('calc-proposal-preview');
+  const presetBtns = [...document.querySelectorAll<HTMLButtonElement>('[data-preset-seats]')];
+
+  const B2C_PRICE = 1999;
+  const fmtInr = new Intl.NumberFormat('en-IN');
+  const money = (n: number) => `₹${fmtInr.format(n)}`;
+
+  interface CohortQuote {
+    seats: number;
+    tier: 'Club Pack' | 'Full Batch';
+    tierNote: string;
+    perSeat: number;
+    total: number;
+    b2cTotal: number;
+    savings: number;
+    discountPct: number;
+    amaIncluded: boolean;
+  }
+
+  function calculateQuote(seats: number): CohortQuote {
+    const clamped = Math.min(600, Math.max(30, Math.round(seats)));
+    const isFullBatch = clamped >= 150;
+    const tier: CohortQuote['tier'] = isFullBatch ? 'Full Batch' : 'Club Pack';
+
+    let perSeat = 900;
+    let tierNote = 'Section and club licensing (30–149 seats)';
+    if (clamped >= 250) {
+      perSeat = 650;
+      tierNote = 'Volume Full Batch rate (250–600 seats)';
+    } else if (clamped >= 150) {
+      perSeat = 700;
+      tierNote = 'Full Batch licensing with live founder AMA';
+    } else if (clamped >= 100) {
+      perSeat = 800;
+      tierNote = 'Multi-section Club Pack (100–149 seats)';
+    }
+
+    const total = clamped * perSeat;
+    const b2cTotal = clamped * B2C_PRICE;
+    const savings = b2cTotal - total;
+    const discountPct = Math.round(((B2C_PRICE - perSeat) / B2C_PRICE) * 100);
+    const amaIncluded = clamped >= 150;
+
+    return {
+      seats: clamped,
+      tier,
+      tierNote,
+      perSeat,
+      total,
+      b2cTotal,
+      savings,
+      discountPct,
+      amaIncluded,
+    };
+  }
+
+  function buildProposalText(q: CohortQuote, orgName: string): string {
+    const org = orgName.trim() || 'our campus cohort';
+    const amaLine = q.amaIncluded
+      ? 'Included — Live 90-min Founder AI & Case AMA workshop (included at 150+ seats)'
+      : 'Optional add-on below 150 seats (included at no extra fee from 150 seats upward)';
+
+    return [
+      `INFERENCE (2027 Edition) — Campus Cohort Proposal for ${org}`,
+      '',
+      `Cohort Size: ${q.seats} student seats`,
+      `Licensing Tier: ${q.tier}`,
+      `Institutional Rate: ${money(q.perSeat)} per seat (vs ${money(B2C_PRICE)} individual B2C)`,
+      `Total Investment: ${money(q.total)} (consolidated institutional invoice)`,
+      `Total Cohort Savings: ${money(q.savings)} (${q.discountPct}% below individual pricing)`,
+      `Live 90-min Founder AI/Case AMA: ${amaLine}`,
+      '',
+      'Included per seat:',
+      '- All 36 units (150,033 words across Foundations, Consulting, Finance, Product, Marketing, Ops, HR)',
+      '- 116-term AI & business glossary + 34 vector diagrams + 178 verified primary sources',
+      '- 1 year of quarterly Insert A (Model Landscape) & Insert B (India Policy) updates',
+      '- Custom club/PlaceCom cover stamp + coordinator redemption sheet within 24 hours',
+      '',
+      'Next step: Confirm batch size at janmejai2002@gmail.com or inspect details at https://janmejai2002.github.io/inference/campus/',
+    ].join('\n');
+  }
+
+  let latestQuote = calculateQuote(Number(slider?.value || 200));
+
+  function renderQuote() {
+    const seats = Number(slider?.value || 200);
+    const q = calculateQuote(seats);
+    latestQuote = q;
+
+    if (seatsValEl) seatsValEl.textContent = String(q.seats);
+    if (tierBadgeEl) {
+      tierBadgeEl.textContent = q.tier;
+      tierBadgeEl.classList.toggle('is-batch', q.tier === 'Full Batch');
+    }
+    if (tierNoteEl) tierNoteEl.textContent = q.tierNote;
+    if (perSeatEl) perSeatEl.textContent = money(q.perSeat);
+    if (totalEl) totalEl.textContent = money(q.total);
+    if (savingsEl) savingsEl.textContent = money(q.savings);
+
+    if (amaEl) {
+      amaEl.textContent = q.amaIncluded
+        ? 'Included (90-min live AMA)'
+        : 'Not included (150+ seats)';
+      amaEl.classList.toggle('is-included', q.amaIncluded);
+    }
+
+    if (discountPctEl) discountPctEl.textContent = `${q.discountPct}% lower`;
+    if (compareInstEl) compareInstEl.textContent = money(q.total);
+    if (compareB2cEl) compareB2cEl.textContent = money(q.b2cTotal);
+    if (barFillEl) {
+      const pct = Math.round((q.total / q.b2cTotal) * 100);
+      barFillEl.style.setProperty('--fill-pct', `${pct}%`);
+    }
+
+    for (const btn of presetBtns) {
+      const active = Number(btn.dataset.presetSeats) === q.seats;
+      btn.classList.toggle('is-active', active);
+    }
+
+    const org = orgInput?.value || '';
+    const proposal = buildProposalText(q, org);
+    if (previewEl) previewEl.textContent = proposal;
+
+    if (mailCtaEl) {
+      const subject = `INFERENCE Campus ${q.tier} — ${q.seats} Seats (${money(q.total)})`;
+      mailCtaEl.href = `mailto:janmejai2002@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(proposal)}`;
+    }
+  }
+
+  slider?.addEventListener('input', renderQuote);
+  orgInput?.addEventListener('input', renderQuote);
+
+  for (const btn of presetBtns) {
+    btn.addEventListener('click', () => {
+      if (!slider) return;
+      slider.value = btn.dataset.presetSeats || '200';
+      renderQuote();
+    });
+  }
+
+  async function copyText(text: string): Promise<boolean> {
+    try {
+      if (navigator.clipboard?.writeText) {
+        await navigator.clipboard.writeText(text);
+        return true;
+      }
+    } catch {}
+    try {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.setAttribute('readonly', '');
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      const ok = document.execCommand('copy');
+      ta.remove();
+      return ok;
+    } catch {
+      return false;
+    }
+  }
+
+  copyBtn?.addEventListener('click', async () => {
+    const proposal = buildProposalText(latestQuote, orgInput?.value || '');
+    const ok = await copyText(proposal);
+    if (ok && copyBtn) {
+      const original = 'Copy PlaceCom Proposal Summary';
+      copyBtn.textContent = 'Copied PlaceCom Proposal';
+      copyBtn.classList.add('is-copied');
+      if (copyStatusEl) {
+        copyStatusEl.textContent = `Copied ${latestQuote.seats}-seat ${latestQuote.tier} proposal (${money(latestQuote.total)}) to clipboard.`;
+      }
+      window.setTimeout(() => {
+        copyBtn.textContent = original;
+        copyBtn.classList.remove('is-copied');
+      }, 2200);
+    }
+    const w = window as unknown as {
+      umami?: { track?: (name: string, data: Record<string, string>) => void };
+    };
+    w.umami?.track?.('inference_campus_calc_copy', {
+      seats: String(latestQuote.seats),
+      tier: latestQuote.tier,
+    });
+  });
+
+  renderQuote();
+
   for (const link of document.querySelectorAll<HTMLAnchorElement>('[data-campus-sku]')) {
     link.addEventListener('click', () => {
       const sku = link.dataset.campusSku || 'campus-bulk';
@@ -235,7 +567,12 @@ const line = edge.map(([x, d]) => `${(x * 10).toFixed(0)},${(EDGE_DEPTH - d).toF
     font-size: .9375rem;
     font-weight: 700;
     text-decoration: none;
+    cursor: pointer;
     border: 1.5px solid transparent;
+    transition: transform var(--dur-fast) var(--ease), background-color var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease);
+  }
+  .inf-btn:hover {
+    transform: translateY(-1px);
   }
   .inf-btn--primary {
     background: var(--ochre);
@@ -246,6 +583,9 @@ const line = edge.map(([x, d]) => `${(x * 10).toFixed(0)},${(EDGE_DEPTH - d).toF
     background: transparent;
     color: var(--tldr-ink);
     border-color: var(--tldr-hair);
+  }
+  .inf-btn--ghost:hover {
+    border-color: var(--tldr-ink);
   }
   .inf-btn--secondary {
     background: var(--solid);
@@ -304,6 +644,311 @@ const line = edge.map(([x, d]) => `${(x * 10).toFixed(0)},${(EDGE_DEPTH - d).toF
     line-height: 1.6;
     color: var(--ink-soft);
   }
+
+  /* Live Cohort & ROI Calculator */
+  .calc-shell {
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+    gap: 1.25rem;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-top: 3px solid var(--ochre);
+    border-radius: 18px;
+    padding: clamp(1.2rem, 2.5vw, 1.8rem);
+  }
+  .calc-controls {
+    display: grid;
+    gap: 1.15rem;
+    align-content: start;
+  }
+  .calc-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  .calc-label {
+    display: block;
+    font-size: 1.0625rem;
+    font-weight: 800;
+    color: var(--ink);
+  }
+  .calc-sub {
+    margin: .25rem 0 0;
+    font-size: .875rem;
+    line-height: 1.5;
+    color: var(--ink-soft);
+  }
+  .calc-seat-readout {
+    display: flex;
+    align-items: baseline;
+    gap: .35rem;
+    background: var(--paper-2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: .5rem .85rem;
+    white-space: nowrap;
+  }
+  .calc-seat-readout strong {
+    font-size: 1.75rem;
+    font-weight: 800;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+    color: var(--ochre);
+  }
+  .calc-seat-readout span {
+    font-size: .8125rem;
+    font-weight: 700;
+    color: var(--ink-faint);
+  }
+
+  .calc-slider-wrap {
+    display: grid;
+    gap: .4rem;
+  }
+  .calc-slider {
+    width: 100%;
+    min-height: 44px;
+    accent-color: var(--ochre);
+    cursor: pointer;
+  }
+  .calc-ticks {
+    display: flex;
+    justify-content: space-between;
+    gap: .5rem;
+    font-size: .8125rem;
+    font-weight: 600;
+    color: var(--ink-faint);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .calc-presets {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .45rem;
+  }
+  .calc-preset {
+    appearance: none;
+    min-height: 44px;
+    padding: .4rem .8rem;
+    border-radius: 999px;
+    border: 1px solid var(--border);
+    background: var(--paper-2);
+    color: var(--ink-soft);
+    font-family: var(--font);
+    font-size: .8125rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: border-color var(--dur-fast) var(--ease), background-color var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease);
+  }
+  .calc-preset:hover {
+    color: var(--ink);
+    border-color: var(--ochre);
+  }
+  .calc-preset.is-active {
+    background: var(--solid);
+    color: var(--on-solid);
+    border-color: var(--solid);
+  }
+
+  .calc-org-row {
+    display: grid;
+    gap: .35rem;
+  }
+  .calc-org-label {
+    font-size: .8125rem;
+    font-weight: 700;
+    color: var(--ink-soft);
+  }
+  .calc-org-input {
+    width: 100%;
+    min-height: 44px;
+    padding: .55rem .85rem;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font);
+    font-size: .9375rem;
+  }
+
+  .calc-compare {
+    padding: .95rem 1rem;
+    border-radius: 12px;
+    background: var(--paper-2);
+    border: 1px solid var(--border-soft);
+    display: grid;
+    gap: .55rem;
+  }
+  .calc-compare__head,
+  .calc-compare__foot {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: .5rem;
+    font-size: .8125rem;
+    color: var(--ink-soft);
+    font-variant-numeric: tabular-nums;
+  }
+  .calc-compare__head strong {
+    color: var(--moss);
+  }
+  .calc-compare__foot strong {
+    color: var(--ink);
+  }
+  .calc-bar-track {
+    position: relative;
+    height: 10px;
+    border-radius: 999px;
+    background: var(--stone);
+    overflow: hidden;
+  }
+  .calc-bar-fill {
+    height: 100%;
+    width: var(--fill-pct, 35%);
+    border-radius: inherit;
+    background: linear-gradient(90deg, var(--moss), var(--ochre));
+    transition: width .25s var(--ease);
+  }
+
+  .calc-summary {
+    display: grid;
+    gap: 1rem;
+    align-content: start;
+    background: var(--paper-2);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.2rem;
+  }
+  .calc-tier-banner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: .6rem;
+  }
+  .calc-tier-pill {
+    display: inline-flex;
+    align-items: center;
+    padding: .25rem .7rem;
+    border-radius: 999px;
+    font-size: .8125rem;
+    font-weight: 800;
+    background: color-mix(in srgb, var(--mizu) 16%, transparent);
+    color: var(--mizu);
+    border: 1px solid color-mix(in srgb, var(--mizu) 45%, transparent);
+  }
+  .calc-tier-pill.is-batch {
+    background: color-mix(in srgb, var(--ochre) 18%, transparent);
+    color: var(--ochre);
+    border-color: color-mix(in srgb, var(--ochre) 50%, transparent);
+  }
+  .calc-tier-note {
+    font-size: .8125rem;
+    font-weight: 600;
+    color: var(--ink-faint);
+  }
+
+  .calc-metrics {
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: .75rem;
+  }
+  .calc-metric {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: .85rem .95rem;
+  }
+  .calc-metric--accent {
+    border-color: color-mix(in srgb, var(--moss) 48%, var(--border));
+    background: color-mix(in srgb, var(--moss) 8%, var(--card));
+  }
+  .calc-metric dt {
+    font-size: .8125rem;
+    font-weight: 600;
+    color: var(--ink-faint);
+  }
+  .calc-metric dd {
+    margin: .3rem 0 0;
+    font-size: 1.25rem;
+    font-weight: 800;
+    line-height: 1.2;
+    color: var(--ink);
+    font-variant-numeric: tabular-nums;
+  }
+  #calc-ama-status {
+    font-size: .9375rem;
+    font-weight: 700;
+  }
+  #calc-ama-status.is-included {
+    color: var(--moss);
+  }
+
+  .calc-actions {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+    gap: .65rem;
+  }
+  .calc-copy-btn.is-copied {
+    background: var(--moss);
+    border-color: var(--moss);
+    color: var(--tldr-bg);
+  }
+  .calc-copy-status {
+    margin: 0;
+    font-size: .8125rem;
+    line-height: 1.45;
+    color: var(--ink-faint);
+  }
+  .calc-preview-details {
+    border-top: 1px solid var(--border);
+    padding-top: .75rem;
+  }
+  .calc-preview-details summary {
+    font-size: .8125rem;
+    font-weight: 700;
+    color: var(--ink-soft);
+    cursor: pointer;
+    min-height: 32px;
+  }
+  .calc-preview-pre {
+    margin: .65rem 0 0;
+    padding: .85rem;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--paper);
+    color: var(--ink-soft);
+    font-family: monospace;
+    font-size: .8125rem;
+    line-height: 1.5;
+    white-space: pre-wrap;
+    word-break: break-word;
+    max-height: 15rem;
+    overflow: auto;
+  }
+
+  @media (max-width: 58rem) {
+    .calc-shell {
+      grid-template-columns: 1fr;
+    }
+  }
+  @media (max-width: 34rem) {
+    .calc-metrics {
+      grid-template-columns: 1fr;
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .inf-btn,
+    .calc-preset,
+    .calc-bar-fill {
+      transition: none;
+    }
+    .inf-btn:hover {
+      transform: none;
+    }
+  }
+
   .campus-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
