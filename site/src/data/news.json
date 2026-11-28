@@ -1,5 +1,45 @@
 [
   {
+    "headline": "EY Opens 70,000 Sq Ft Birmingham Hub for 1,000+ Staff, 60 Partners",
+    "date": "2026-11-28",
+    "category": "Consulting",
+    "summary": "EY opened a 70,000-square-foot regional hub in Birmingham for more than 1,000 employees and 60 partners, anchoring a West Midlands practice that now exceeds 1,200 staff. The Big Four firm will also launch a Birmingham Talent Academy in 2027 to train part of its 3,500-strong UK student pipeline.",
+    "angle": "A consulting panel will ask why a Big Four firm is investing in 70,000 sq ft of regional delivery hubs and in-person Talent Academies outside London even as remote work and AI tools spread. Be ready to explain how regional onshore delivery lowers client billing costs compared with capital-city rates while preserving junior apprenticeship.",
+    "source": "https://www.consultancy.uk/news/amp/46350/ey-opens-new-birmingham-office-as-part-of-continued-investment-in-west-midlands"
+  },
+  {
+    "headline": "India Quick-Commerce Logistics to Hit $9.03B by 2031 Amid Metro Glut",
+    "date": "2026-11-28",
+    "category": "Operations",
+    "summary": "ResearchAndMarkets projects India's quick-commerce logistics market will grow from $3.97 billion in 2026 to $9.03 billion by 2031 at a 17.85% CAGR. Although top platforms operate roughly 6,650-6,750 dark stores, 4,300 metro outlets already exceed the estimated 3,600 profitable threshold, pushing per-order delivery costs of Rs 98-100 toward Tier 2 expansion.",
+    "angle": "An IIM or XLRI operations panel will ask how quick-commerce operators fix dark-store overcapacity when 80% of new stores open in already-served pincodes and Mumbai rents cost 4x Indore. Expect questions on scheduled inbound replenishment (like Shiprocket's 98% on-time slot model) and batching to bring delivery costs below Rs 100.",
+    "source": "https://www.globenewswire.com/news-release/2026/11/27/3411411/28124/en/india-quick-commerce-logistics-market-size-share-industry-trends-and-growth-forecasts-2026-2031-mfcs-and-reverse-logistics-drive-17-85-cagr.html"
+  },
+  {
+    "headline": "Indian D2C Black Friday Spend Jumps 63% as Non-Metros Drive 61%",
+    "date": "2026-11-28",
+    "category": "Marketing",
+    "summary": "GoKwik data for the opening 12 hours of Black Friday shows Indian D2C spending rose 63% year over year, with 2.38 lakh orders at an average order value of Rs 1,524. Non-metro buyers across 22,400 pincodes accounted for 61% of spend and prepaid payments reached 54%, while fashion's share slipped from 52% to 42% as cookware and fragrances surged.",
+    "angle": "An IIM marketing panel will ask how Indian D2C brands capture Tier 2 and Tier 3 Black Friday demand without eroding margins through 20.7% average discounts. Expect follow-ups on why rising UPI share (45%) and prepaid conversion (54%) improve contribution margins by cutting COD return-to-origin losses.",
+    "source": "https://www.medianews4u.com/black-friday-d2c-spending-rises-63-as-orders-jump-55-gokwik/"
+  },
+  {
+    "headline": "RBI Caps Post-Free ATM Fees at Rs 23 in Consolidated Card Norms",
+    "date": "2026-11-28",
+    "category": "Finance",
+    "summary": "The RBI consolidated 42 earlier circulars into new card and cash-withdrawal directions on November 27, keeping Rs 5,000 contactless PIN-free limits and capping post-free ATM fees at Rs 23 plus taxes. Customers get five free own-bank ATM transactions and three metro or five non-metro other-bank withdrawals monthly, while merchant cashback limits stay at Rs 2,000 per transaction and 1% maximum fee.",
+    "angle": "An IIM finance panel will ask how a Rs 23 ATM fee cap affects bank branch economics versus White Label ATM operators in semi-urban India. Be ready to discuss why regulatory consolidation lowers compliance overhead for issuers while mandatory network choice and transaction toggles reshape card monetisation.",
+    "source": "https://www.aninews.in/news/business/rbi-issues-consolidated-atm-card-payment-norms-charges-capped-at-rs-23-beyond-free-atm-transaction-limits20261127190048"
+  },
+  {
+    "headline": "US Compute Curbs and Distillation Blocks Double AI Release Cycles",
+    "date": "2026-11-28",
+    "category": "Product Management",
+    "summary": "Anthropic's anti-distillation blocks across nearly 200 million exchanges and a November 19 US rule capping overseas compute at 750 H100-equivalent chips have stalled Chinese AI releases, Reuters reports. Moonshot AI scrapped a $150 million Indonesian Blackwell chip deal and expects its major model release cycle to double from six months to 12 months or longer.",
+    "angle": "A PM panel will ask how frontier AI product teams detect and rate-limit unauthorised API distillation without degrading latency for legitimate enterprise customers. You should also discuss how a 6-to-12-month slowdown in low-cost rival models changes API pricing power and model-routing strategies.",
+    "source": "https://telecom.economictimes.indiatimes.com/amp/news/internet/us-chip-curbs-distillation-crackdown-threaten-chinese-ai-model-development/136207013"
+  },
+  {
     "headline": "BFS Agentic Ops Market Hits $500M-$800M, Growing 2x-3x in Production",
     "date": "2026-11-27",
     "category": "Product Management",
