@@ -1,0 +1,22 @@
+<svg viewBox="0 0 1600 900" width="1600" height="900" role="img" xmlns="http://www.w3.org/2000/svg">
+  <title>Minimal Four-Tool Harness vs. Scaffolding Bloat</title>
+  <desc>Minimal geometric diagram of four solid tool blocks inside a central harness frame with a vermilion hanko core, surrounded by four dashed outer frames of omitted features.</desc>
+  <defs>
+    <filter id="grain">
+      <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch"/>
+      <feColorMatrix type="saturate" values="0"/>
+    </filter>
+  </defs>
+  <rect width="1600" height="900" fill="{{paper}}"/>
+  <rect x="200" y="150" width="260" height="220" fill="none" stroke="{{border}}" stroke-width="3" stroke-dasharray="12 8"/>
+  <rect x="1140" y="150" width="260" height="220" fill="none" stroke="{{border}}" stroke-width="3" stroke-dasharray="12 8"/>
+  <rect x="200" y="530" width="260" height="220" fill="none" stroke="{{border}}" stroke-width="3" stroke-dasharray="12 8"/>
+  <rect x="1140" y="530" width="260" height="220" fill="none" stroke="{{border}}" stroke-width="3" stroke-dasharray="12 8"/>
+  <rect x="570" y="220" width="460" height="460" fill="none" stroke="{{ink}}" stroke-width="4"/>
+  <rect x="620" y="270" width="150" height="150" fill="{{ink}}"/>
+  <rect x="830" y="270" width="150" height="150" fill="{{ink}}"/>
+  <rect x="620" y="480" width="150" height="150" fill="{{ink}}"/>
+  <rect x="830" y="480" width="150" height="150" fill="{{ink}}"/>
+  <rect x="765" y="415" width="70" height="70" fill="{{hanko}}"/>
+  <rect width="1600" height="900" filter="url(#grain)" opacity="0.05"/>
+</svg>
